@@ -1,0 +1,29 @@
+{
+  "name": "@formdown/core",
+  "version": "0.1.0",
+  "description": "Core parsing and generation engine for Formdown",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --test",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  },
+  "keywords": [
+    "form",
+    "parser",
+    "generator",
+    "markdown"
+  ],
+  "author": "Formdown Team",
+  "license": "MIT"
+}

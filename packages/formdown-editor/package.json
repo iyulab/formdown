@@ -1,0 +1,54 @@
+{
+  "name": "@formdown/editor",
+  "private": false,
+  "version": "0.1.0",
+  "description": "Development tool for Formdown syntax with advanced editing features",
+  "type": "module",
+  "main": "dist/index.es.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "lit": "^3.3.0",
+    "@formdown/core": "file:../formdown-core",
+    "@formdown/ui": "file:../formdown-ui"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  },
+  "keywords": [
+    "formdown",
+    "editor",
+    "web-component",
+    "lit",
+    "form",
+    "markdown"
+  ],
+  "author": "iyulab",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/formdown/formdown.git",
+    "directory": "packages/formdown-editor"
+  },
+  "homepage": "https://github.com/formdown/formdown#readme",
+  "bugs": {
+    "url": "https://github.com/formdown/formdown/issues"
+  }
+}

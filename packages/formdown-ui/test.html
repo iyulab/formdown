@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formdown UI Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #f9fafb;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            color: #374151;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .test-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2563eb;
+        }
+
+        .output {
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Formdown Viewer Web Component Test</h1>
+
+        <h2>1. Basic Usage</h2> <formdown-ui content="@name: [text required placeholder='Enter your name']
+@email: [email required]
+@age: [number min=18 max=100]
+@bio: [textarea rows=4 placeholder='Tell us about yourself']
+@gender: [radio] Male, Female, Other
+@interests: [checkbox] Programming, Design, Music, Sports
+@country: [select] USA, Canada, UK, Other" form-id="test-form-1" submit-text="Submit Form">
+        </formdown-ui>
+
+        <div class="test-buttons">
+            <button onclick="getFormData()">Get Form Data</button>
+            <button onclick="resetForm()">Reset Form</button>
+            <button onclick="updateContent()">Update Content</button>
+        </div>
+
+        <div id="output" class="output"></div>
+    </div>
+
+    <div class="container">
+        <h2>2. SDK Usage</h2>
+        <div id="sdk-container"></div>
+        <button onclick="createSDKViewer()">Create Viewer via SDK</button>
+    </div>
+
+    <script type="module">
+        // Import and use the web component
+        import { createFormdownViewer } from './dist/index.es.js'
+
+        let viewer1, viewer2;
+
+        // Get references to the viewers
+        document.addEventListener('DOMContentLoaded', () => {
+            viewer1 = document.querySelector('formdown-ui')
+
+            // Add event listeners
+            viewer1.addEventListener('formSubmit', (event) => {
+                document.getElementById('output').textContent =
+                    'Form Submitted:\n' + JSON.stringify(event.detail.data, null, 2)
+            })
+
+            viewer1.addEventListener('fieldChange', (event) => {
+                console.log('Field changed:', event.detail)
+            })
+        })
+
+        // Test functions
+        window.getFormData = () => {
+            const data = viewer1.getFormData()
+            document.getElementById('output').textContent =
+                'Current Form Data:\n' + JSON.stringify(data, null, 2)
+        }
+
+        window.resetForm = () => {
+            viewer1.resetForm()
+            document.getElementById('output').textContent = 'Form reset!'
+        }
+
+        window.updateContent = () => {
+            viewer1.content = `@newField: [text placeholder="This is a new field"]
+@rating: [number min=1 max=5 value=3]
+@feedback: [textarea placeholder="Your feedback"]`
+            document.getElementById('output').textContent = 'Content updated!'
+        }
+
+        window.createSDKViewer = () => {
+            const container = document.getElementById('sdk-container')
+            container.innerHTML = '' // Clear previous
+
+            viewer2 = createFormdownViewer(container, {
+                content: `@title: [text placeholder="Enter title"]
+@priority: [select] Low, Medium, High
+@urgent: [checkbox] This is urgent`,
+                formId: 'sdk-form',
+                submitText: 'Save'
+            })
+
+            viewer2.addEventListener('formSubmit', (event) => {
+                alert('SDK Form submitted: ' + JSON.stringify(event.detail.data))
+            })
+        }
+    </script>
+</body>
+
+</html>
