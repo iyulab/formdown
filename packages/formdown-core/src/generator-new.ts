@@ -1,45 +1,9 @@
-import { marked } from 'marked'
 import { Field, FormdownContent } from './types'
 
 export class FormdownGenerator {
     generateHTML(content: FormdownContent): string {
-        const markdownHTML = content.markdown ? marked(content.markdown) : ''
-
-        // Handle both sync and async marked results
-        if (typeof markdownHTML === 'string') {
-            return this.processFieldPlaceholders(markdownHTML, content.forms)
-        } else {
-            // If marked returns a Promise, we need to handle it differently
-            // For now, fallback to the old method
-            return this.generateLegacyHTML(content)
-        }
-    } private processFieldPlaceholders(html: string, fields: Field[]): string {
-        let result = html
-
-        // Replace field placeholders with actual form fields
-        fields.forEach((field, index) => {
-            const placeholder = `<!--FORMDOWN_FIELD_${index}-->`
-            const fieldHTML = this.generateStandaloneFieldHTML(field)
-            result = result.replace(
-                new RegExp(placeholder, 'g'),
-                fieldHTML
-            )
-        })
-
-        return result
-    }
-
-    private generateLegacyHTML(content: FormdownContent): string {
-        const markdownHTML = content.markdown ? marked(content.markdown) as string : ''
-        const formHTML = this.generateFormHTML(content.forms)
-        return markdownHTML + formHTML
-    }
-
-    generateStandaloneFieldHTML(field: Field): string {
-        return `
-<form class="formdown-form">
-${this.generateFieldHTML(field)}
-</form>`
+        // For now, just generate form HTML until marked is installed
+        return this.generateFormHTML(content.forms)
     }
 
     generateFormHTML(fields: Field[]): string {

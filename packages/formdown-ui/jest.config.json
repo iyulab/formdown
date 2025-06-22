@@ -1,0 +1,43 @@
+{
+    "preset": "ts-jest",
+    "testEnvironment": "jsdom",
+    "roots": [
+        "<rootDir>/src",
+        "<rootDir>/__tests__"
+    ],
+    "testMatch": [
+        "**/__tests__/**/*.test.ts"
+    ],
+    "collectCoverageFrom": [
+        "src/**/*.ts",
+        "!src/**/*.d.ts",
+        "!src/vite-env.d.ts"
+    ],
+    "setupFilesAfterEnv": [
+        "<rootDir>/__tests__/setup.ts"
+    ],
+    "moduleNameMapping": {
+        "\\.(css|less|scss)$": "identity-obj-proxy"
+    },
+    "globals": {
+        "ts-jest": {
+            "useESM": true,
+            "tsconfig": {
+                "verbatimModuleSyntax": false,
+                "esModuleInterop": true,
+                "allowSyntheticDefaultImports": true
+            }
+        }
+    },
+    "extensionsToTreatAsEsm": [
+        ".ts"
+    ],
+    "transform": {
+        "^.+\\.ts$": [
+            "ts-jest",
+            {
+                "useESM": true
+            }
+        ]
+    }
+}

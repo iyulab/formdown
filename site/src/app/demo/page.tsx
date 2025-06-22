@@ -1,151 +1,302 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
 
 interface CustomElement extends HTMLElement {
     setAttribute(name: string, value: string): void
     addEventListener(type: string, listener: (event: CustomEvent) => void): void
+    content?: string
+}
+
+interface Sample {
+    name: string
+    filename: string
+    description: string
 }
 
 export default function DemoPage() {
     const [isComponentsLoaded, setIsComponentsLoaded] = useState(false)
     const [formData, setFormData] = useState<Record<string, unknown>>({})
-    const [content, setContent] = useState(
-        '@name: [text required placeholder="Enter your full name"]\n' +
-        '@email: [email required placeholder="your@email.com"]\n' +
-        '@user_name(User Name): [text placeholder="Username"]\n' +
-        '@bio: [textarea rows=4 placeholder="Tell us about yourself"]\n' +
-        '@gender: [radio] Male, Female, Other\n' +
-        '@interests: [checkbox] Programming, Design, Music, Sports\n' +
-        '@country: [select] USA, Canada, UK, Germany, Japan, Other'
-    )
+    const [samples, setSamples] = useState<Sample[]>([])
+    const [selectedSample, setSelectedSample] = useState<Sample | null>(null)
+    const [content, setContent] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
+    const [lastLoadedSample, setLastLoadedSample] = useState<string | null>(null)
+    const isUpdatingFromEditor = useRef(false)
 
     useEffect(() => {
         const loadComponents = async () => {
             if (typeof window !== "undefined") {
                 try {
+                    console.log('Loading formdown components...')
+
+                    // Import editor
                     await import("@formdown/editor")
-                    await import("@formdown/ui")
+                    console.log('Formdown editor loaded')
+
+                    // Import UI component and ensure registration
+                    const uiModule = await import("@formdown/ui")
+                    console.log('Formdown UI loaded')
+
+                    // Force registration if needed
+                    if (uiModule.registerFormdownUI) {
+                        uiModule.registerFormdownUI()
+                        console.log('FormdownUI registration forced')
+                    }
+
+                    // Wait a bit for custom elements to register
+                    await new Promise(resolve => setTimeout(resolve, 100))
+
+                    // Check if the element is properly registered
+                    const isRegistered = customElements.get('formdown-ui')
+                    console.log('formdown-ui registered:', !!isRegistered)
+
                     setIsComponentsLoaded(true)
+                    console.log('Components loaded successfully')
                 } catch (error) {
                     console.error("Failed to load components:", error)
                 }
             }
         }
         loadComponents()
+
+        // Load samples from API
+        loadSamples()
     }, [])
 
+    const loadSamples = async () => {
+        try {
+            const response = await fetch('/api/samples')
+            if (response.ok) {
+                const samplesData = await response.json()
+                setSamples(samplesData)
+                if (samplesData.length > 0) {
+                    setSelectedSample(samplesData[0])
+                }
+            }
+        } catch (error) {
+            console.error('Error loading samples:', error)
+        }
+    }
+
     useEffect(() => {
-        if (isComponentsLoaded) {
+        if (selectedSample) {
+            loadSample(selectedSample.filename)
+        }
+    }, [selectedSample])
+
+    const loadSample = async (filename: string) => {
+        setIsLoading(true)
+        try {
+            const response = await fetch(`/samples/${filename}`)
+            if (response.ok) {
+                const text = await response.text()
+                setContent(text)
+            } else {
+                console.error(`Failed to load sample: ${filename}`)
+                setContent(`# Error\n\nCould not load sample file: ${filename}`)
+            }
+        } catch (error) {
+            console.error('Error loading sample:', error)
+            setContent(`# Error\n\nFailed to load sample file.`)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        if (isComponentsLoaded && content && (selectedSample?.filename !== lastLoadedSample)) {
             const editorContainer = document.getElementById("editor-container")
+            const rendererContainer = document.getElementById("renderer-container")
+
+            // Clear containers when loading new sample
             if (editorContainer) {
-                const editor = document.createElement("formdown-editor") as CustomElement
-                editor.setAttribute("content", content)
-                editor.setAttribute("mode", "edit")
-                editor.style.height = "100%"
-                editor.style.width = "100%"
-                editor.style.display = "block"
-
-                editor.addEventListener('contentChange', (e: CustomEvent) => {
-                    setContent(e.detail.content)
-                })
-
-                editorContainer.innerHTML = ""
-                editorContainer.appendChild(editor)
+                editorContainer.innerHTML = ''
+            }
+            if (rendererContainer) {
+                rendererContainer.innerHTML = ''
             }
 
-            const uiContainer = document.getElementById("ui-container")
-            if (uiContainer) {
-                const ui = document.createElement("formdown-ui") as CustomElement
-                ui.setAttribute("content", content)
-                ui.setAttribute("form-id", "demo-form")
-                ui.style.width = "100%"
-                ui.style.display = "block"
+            setLastLoadedSample(selectedSample?.filename || null)
+        }
+    }, [isComponentsLoaded, content, selectedSample?.filename, lastLoadedSample])
 
-                ui.addEventListener('formDataChanged', (e: CustomEvent) => {
-                    setFormData(e.detail || {})
-                })
+    useEffect(() => {
+        if (isComponentsLoaded && content) {
+            const editorContainer = document.getElementById("editor-container")
+            if (editorContainer) {
+                // Only create editor if it doesn't exist
+                let editor = editorContainer.querySelector("formdown-editor") as CustomElement
 
-                uiContainer.innerHTML = ""
-                uiContainer.appendChild(ui)
+                if (!editor) {
+                    editor = document.createElement("formdown-editor") as CustomElement
+                    editor.setAttribute("mode", "edit")
+                    editor.style.height = "100%"
+                    editor.style.width = "100%"
+                    editor.style.display = "block"
+                    editor.addEventListener('contentChange', (e: CustomEvent) => {
+                        isUpdatingFromEditor.current = true
+                        setContent(e.detail.content)
+                        setTimeout(() => {
+                            isUpdatingFromEditor.current = false
+                        }, 100)
+                    })
+
+                    editorContainer.appendChild(editor)
+                }                // Update content property only if not updating from editor
+                if (!isUpdatingFromEditor.current) {
+                    (editor as CustomElement).content = content
+                }
+            }
+
+            const rendererContainer = document.getElementById("renderer-container")
+            if (rendererContainer) {
+                console.log('Setting up renderer with content:', content)
+                console.log('Content length:', content.length)
+
+                // Only create renderer if it doesn't exist
+                let renderer = rendererContainer.querySelector("formdown-ui") as CustomElement
+
+                if (!renderer) {
+                    // Check if formdown-ui is available
+                    const FormdownUIElement = customElements.get('formdown-ui')
+                    if (!FormdownUIElement) {
+                        console.error('formdown-ui custom element not registered')
+                        rendererContainer.innerHTML = '<div style="color: red;">Error: formdown-ui component not registered</div>'
+                        return
+                    } renderer = document.createElement("formdown-ui") as CustomElement
+                    renderer.style.height = "100%"
+                    renderer.style.width = "100%"
+                    renderer.style.display = "block"
+
+                    console.log('Created formdown-ui element:', renderer)
+
+                    renderer.addEventListener('formSubmit', (e: CustomEvent) => {
+                        setFormData(e.detail)
+                        console.log('Form data:', e.detail)
+                    })
+
+                    rendererContainer.appendChild(renderer)
+                    console.log('Appended renderer to container')
+
+                    // Check if the element has any content after a short delay
+                    setTimeout(() => {
+                        console.log('Renderer innerHTML after 500ms:', renderer.innerHTML ? 'Has content' : 'Empty')
+                        console.log('Renderer shadowRoot after 500ms:', renderer.shadowRoot ? 'Has shadow DOM' : 'No shadow DOM')
+                    }, 500)
+                }                // Always update content property
+                (renderer as CustomElement).content = content
+                console.log('Element content property updated:', (renderer as CustomElement).content)
+            } else {
+                console.error('Renderer container not found')
             }
         }
     }, [isComponentsLoaded, content])
 
-    // Separate effect for updating content
-    useEffect(() => {
-        if (isComponentsLoaded) {
-            const ui = document.getElementById("ui-container")?.firstElementChild as CustomElement
-            if (ui && ui.setAttribute) {
-                ui.setAttribute("content", content)
-            }
-        }
-    }, [content, isComponentsLoaded])
-
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-            {/* Header */}
-            <header className="bg-white shadow-sm">
-                <div className="max-w-6xl mx-auto px-4 py-6">
-                    <nav className="flex items-center justify-between">
-                        <div className="flex items-center space-x-2">
-                            <h1 className="text-2xl font-bold text-gray-900">Formdown</h1>
-                            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">v0.1.0</span>
+        <div className="h-screen bg-gray-50 flex flex-col">
+            <header className="bg-white shadow-sm border-b flex-shrink-0">
+                <div className="px-4 sm:px-6 lg:px-8 py-3">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h1 className="text-xl font-bold text-gray-900">Formdown Demo</h1>
+                            <p className="text-sm text-gray-600">Interactive editor and renderer</p>
                         </div>
-                        <div className="flex items-center space-x-6">
-                            <Link href="/demo" className="text-blue-600 font-semibold">Demo</Link>
-                            <Link href="/docs" className="text-gray-600 hover:text-gray-900">Docs</Link>
-                            <a href="https://github.com/formdown/formdown" className="text-gray-600 hover:text-gray-900">GitHub</a>
-                        </div>
-                    </nav>
+                        <Link
+                            href="/"
+                            className="text-blue-600 hover:text-blue-800 font-medium"
+                        >
+                            ← Back to Home
+                        </Link>
+                    </div>
                 </div>
-            </header>            {/* Demo Section */}
-            <section className="max-w-full mx-auto px-0 py-0" style={{ height: "calc(100vh - 80px)" }}>
-                {!isComponentsLoaded ? (
-                    <div className="text-center pt-20">
-                        <p className="text-lg text-gray-600">Loading components...</p>
-                    </div>) : (
-                    <div className="h-full flex flex-col">
-                        {/* Top: Editor and Viewer */}
-                        <div className="flex-1 grid grid-cols-2">
-                            {/* Editor */}
-                            <div className="border-r border-gray-200 flex flex-col">
-                                <div className="bg-gray-800 text-white px-4 py-2 text-sm font-medium">
-                                    Editor
-                                </div>
-                                <div className="flex-1">
-                                    <div id="editor-container" style={{ height: "100%", width: "100%" }}></div>
-                                </div>
-                            </div>
+            </header>
 
-                            {/* Viewer */}
-                            <div className="bg-gray-50 flex flex-col">
-                                <div className="bg-gray-700 text-white px-4 py-2 text-sm font-medium">
-                                    Viewer
-                                </div>
-                                <div className="flex-1 p-8">
-                                    <div id="ui-container" style={{ height: "100%" }}></div>
-                                </div>
+            <main className="flex-1 px-4 sm:px-6 lg:px-8 py-4 overflow-y-auto">{/* Sample Selector */}
+                <div className="mb-6">
+                    <label htmlFor="sample-select" className="block text-sm font-medium text-gray-700 mb-2">
+                        Choose a sample:
+                    </label>
+                    <select
+                        id="sample-select" value={selectedSample?.filename || ''}
+                        onChange={(e) => {
+                            const sample = samples.find(s => s.filename === e.target.value)
+                            if (sample) setSelectedSample(sample)
+                        }}
+                        className="block w-full max-w-md px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                        disabled={samples.length === 0}
+                    >
+                        {samples.length === 0 ? (
+                            <option>Loading samples...</option>
+                        ) : (
+                            samples.map((sample) => (
+                                <option key={sample.filename} value={sample.filename}>
+                                    {sample.name}
+                                </option>
+                            ))
+                        )}
+                    </select>
+                    <p className="mt-1 text-sm text-gray-500">
+                        {selectedSample?.description || 'Select a sample to see its description'}
+                    </p>
+                </div>                {isLoading && (
+                    <div className="text-center py-8">
+                        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                        <p className="mt-2 text-gray-600">Loading sample...</p>
+                    </div>
+                )}                {!isLoading && (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-12rem)]">
+                        {/* Editor Panel */}
+                        <div className="bg-white rounded-lg shadow-sm border">
+                            <div className="border-b px-4 py-3">
+                                <h2 className="text-lg font-semibold text-gray-800">Editor</h2>
+                                <p className="text-sm text-gray-600">Edit the Formdown content</p>
+                            </div>                            <div className="p-4 h-[calc(100%-4rem)]">
+                                {isComponentsLoaded ? (
+                                    <div id="editor-container" className="h-full border rounded"></div>
+                                ) : (
+                                    <div className="flex items-center justify-center h-full text-gray-500">
+                                        Loading editor...
+                                    </div>
+                                )}
                             </div>
                         </div>
 
-                        {/* Bottom: Data - Fixed height */}
-                        <div className="border-t border-gray-200 flex flex-col h-48">
-                            <div className="bg-gray-600 text-white px-4 py-2 text-sm font-medium">
-                                Data
+                        {/* Renderer Panel */}
+                        <div className="bg-white rounded-lg shadow-sm border">
+                            <div className="border-b px-4 py-3">
+                                <h2 className="text-lg font-semibold text-gray-800">Preview</h2>
+                                <p className="text-sm text-gray-600">Live preview of the generated form</p>
                             </div>
-                            <div className="flex-1 p-4 bg-gray-900">
-                                <pre className="text-green-400 text-sm font-mono h-full overflow-auto">
-                                    {Object.keys(formData).length > 0
-                                        ? JSON.stringify(formData, null, 2)
-                                        : '{\n  // Form data will appear here as you interact with the form...\n}'}
-                                </pre>
+                            <div className="p-4 h-[calc(100%-4rem)] overflow-auto">
+                                {isComponentsLoaded ? (
+                                    <div id="renderer-container" className="h-full"></div>
+                                ) : (
+                                    <div className="flex items-center justify-center h-full text-gray-500">
+                                        Loading renderer...
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
                 )}
-            </section>
+
+                {/* Form Data Display */}
+                {Object.keys(formData).length > 0 && (
+                    <div className="mt-6 bg-white rounded-lg shadow-sm border">
+                        <div className="border-b px-4 py-3">
+                            <h2 className="text-lg font-semibold text-gray-800">Form Data</h2>
+                            <p className="text-sm text-gray-600">Latest form submission</p>
+                        </div>
+                        <div className="p-4">
+                            <pre className="bg-gray-100 p-3 rounded text-sm overflow-auto">
+                                {JSON.stringify(formData, null, 2)}
+                            </pre>
+                        </div>
+                    </div>
+                )}
+            </main>
         </div>
     )
 }

@@ -1,0 +1,54 @@
+# Basic FormDown Examples
+
+## Minimal Syntax
+
+Simple fields with minimal syntax (defaults to text input):
+
+@name: []
+@email: []
+@phone: []
+
+## Label Definition Methods
+
+Choose between two ways to define labels:
+
+### Method 1: Parentheses (Recommended)
+@user_name(Full Name): [text required]
+@email_address(Email Address): [email required]
+@phone_number(Phone): [tel]
+
+### Method 2: Label Attribute
+@username: [text required label="Full Name"]
+@email: [email required label="Email Address"]
+@phone: [tel label="Phone"]
+
+## Basic Input Types
+
+@age: [number min=18 max=100]
+@website: [url placeholder="https://example.com"]
+@birth_date: [date]
+@appointment_time: [time]
+
+## Text Areas
+
+@bio(Short Bio): [textarea rows=3]
+@description: [textarea rows=6 placeholder="Describe yourself..."]
+
+## Selection Types
+
+@gender: [radio options="Male,Female,Other"]
+@interests: [checkbox options="Reading,Gaming,Sports,Music"]
+@country: [select options="USA,Canada,UK,Germany,Japan"]
+
+## Inline Examples
+
+### Minimal Inline Syntax
+Hello ___@visitor_name! Welcome to our site.
+Your age is ___@visitor_age and email is ___@visitor_email.
+
+### Full Inline Syntax
+Welcome back, ___@user_name[text required]!
+Rate our service: ___@rating[number min=1 max=5] out of 5 stars.
+Delivery date: ___@delivery[date required]
+
+Total amount: $___@amount[number min=0 step=0.01 required]

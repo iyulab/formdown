@@ -1,0 +1,44 @@
+# Product Feedback Survey
+
+Help us improve our product with your valuable feedback.
+
+## Quick Rating
+
+Rate your overall experience: ___@overall_rating[number min=1 max=5 required class="rating-input"] out of 5 stars
+
+Likelihood to recommend: ___@nps_score[number min=0 max=10 required data-type="nps"] (0-10 scale)
+
+## Experience Evaluation
+
+@satisfaction(Overall Satisfaction): [radio options="Excellent,Good,Average,Below Average,Poor" required]
+@ease_of_use(Ease of Use): [radio options="Very Easy,Easy,Moderate,Difficult,Very Difficult"]
+
+## Feature Feedback
+
+@most_valuable(Most Valuable Feature): [select options="Dashboard,Reports,Settings,Notifications,Mobile App,API,Support"]
+@least_valuable(Least Valuable Feature): [select options="Dashboard,Reports,Settings,Notifications,Mobile App,API,Support"]
+
+@missing_features(What features are missing?): [textarea rows=3 placeholder="Tell us what features you'd like to see..."]
+@improvement_suggestions: [textarea rows=3 label="How can we improve?" placeholder="Any suggestions for improvement?"]
+
+## User Profile
+
+@role(Your Role): [select options="Developer,Designer,Manager,Executive,Student,Consultant,Other" required]
+@company_size(Company Size): [radio options="1-10 employees,11-50 employees,51-200 employees,201-1000 employees,1000+ employees"]
+@industry: [text placeholder="What industry do you work in?" label="Industry"]
+
+## Usage Patterns
+
+How often do you use our product: ___@usage_frequency[select options="Daily,Weekly,Monthly,Rarely"]
+
+Primary use case: ___@primary_use[text placeholder="Describe your main use case"]
+
+## Additional Feedback
+
+@pain_points: [textarea rows=4 placeholder="What are your biggest pain points?" label="Pain Points"]
+@feature_requests: [textarea rows=3 placeholder="Any specific feature requests?" label="Feature Requests"]
+
+@contact_followup: [checkbox options="You can contact me for follow-up questions" label="Follow-up Contact"]
+@beta_tester: [checkbox options="I'm interested in testing new features" label="Beta Testing"]
+
+@submit_survey: [submit label="Submit Feedback"]

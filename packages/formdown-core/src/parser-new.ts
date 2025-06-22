@@ -33,12 +33,15 @@ export class FormdownParser {
         const cleanedLines: string[] = []
 
         for (let i = 0; i < lines.length; i++) {
-            const line = lines[i]            // Extract block fields
+            const line = lines[i]
+
+            // Extract block fields
             const blockField = this.parseBlockField(line)
             if (blockField) {
                 fields.push(blockField)
-                // Insert placeholder for field position (using a format that won't be interpreted as markdown)
-                cleanedLines.push(`<!--FORMDOWN_FIELD_${fields.length - 1}-->`)
+                if (this.options.preserveMarkdown) {
+                    cleanedLines.push('') // Preserve line structure
+                }
                 continue
             }
 
@@ -52,12 +55,11 @@ export class FormdownParser {
             fields,
             cleanedMarkdown: cleanedLines.join('\n')
         }
-    } private parseBlockField(line: string): Field | null {
+    }
+
+    private parseBlockField(line: string): Field | null {
         // Match pattern: @fieldName: [type attributes] options or @fieldName(Label): [type attributes] options
-        // Allow empty brackets: @name: []
-        // Handle Windows line endings by trimming the line
-        const trimmedLine = line.trim()
-        const match = trimmedLine.match(/^@(\w+)(?:\(([^)]+)\))?\s*:\s*\[([^\]]*)\](.*)$/)
+        const match = line.match(/^@(\w+)(?:\(([^)]+)\))?\s*:\s*\[([^\]]+)\](.*)$/)
 
         if (!match) return null
 
@@ -69,53 +71,36 @@ export class FormdownParser {
             if (['radio', 'checkbox', 'select'].includes(field.type)) {
                 field.options = optionsStr.trim().split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
             }
-        } return field
-    } private parseInlineFields(line: string): { cleanedLine: string, inlineFields: Field[] } {
+        }
+
+        return field
+    }
+
+    private parseInlineFields(line: string): { cleanedLine: string, inlineFields: Field[] } {
         const inlineFields: Field[] = []
         const delimiter = this.options.inlineFieldDelimiter!
 
-        // Updated pattern to make brackets optional:
-        // ___@fieldName[type attributes] optional_options (with brackets)
-        // ___@fieldName (without brackets - defaults to text)
-        // Allow empty brackets: ___@name[]
-        // Support options for radio/checkbox/select: ___@field[radio] option1, option2
-        const pattern = new RegExp(`${delimiter}@(\\w+)(?:\\(([^)]+)\\))?(?:\\[([^\\]]*)\\])?(?:\\s+([^${delimiter}\\n]+?)(?=\\s|$|\\n|${delimiter}))?`, 'g')
+        // Match pattern: ___@fieldName[type attributes] optional_options
+        const pattern = new RegExp(`${delimiter}@(\\w+)(?:\\(([^)]+)\\))?\\[([^\\]]+)\\]\\s*([^${delimiter}]*)`, 'g')
 
         const cleanedLine = line.replace(pattern, (match, name, customLabel, typeAndAttributes, optionsStr) => {
-            // If no brackets provided, default to text type
-            const finalTypeAndAttributes = typeAndAttributes !== undefined ? typeAndAttributes : 'text'
-
-            const field = this.createField(name, customLabel, finalTypeAndAttributes)
+            const field = this.createField(name, customLabel, typeAndAttributes)
             if (field) {
                 // Handle options for radio, checkbox, select
-                if (typeof optionsStr === 'string' && optionsStr.trim() && ['radio', 'checkbox', 'select'].includes(field.type)) {
-                    const options = optionsStr.trim().split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
-                    if (options.length > 0) {
-                        field.options = options
-                    }
+                if (optionsStr.trim() && ['radio', 'checkbox', 'select'].includes(field.type)) {
+                    field.options = optionsStr.trim().split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
                 }
                 inlineFields.push(field)
-                return `<span contenteditable="true" data-field-name="${name}" data-field-type="${field.type}" data-placeholder="${field.label || name}" class="formdown-inline-field">${field.label || name}</span>`
             }
-            return match // Return original match if field creation failed
+            return `<formdown-field data-name="${name}"></formdown-field>`
         })
 
         return { cleanedLine, inlineFields }
     }
 
     private createField(name: string, customLabel: string | undefined, typeAndAttributes: string): Field | null {
-        // Handle empty brackets - default to text input
-        if (!typeAndAttributes.trim()) {
-            return {
-                name,
-                type: 'text',
-                label: customLabel || this.formatLabel(name),
-                attributes: {}
-            }
-        }
-
-        // Parse attributes more carefully using regex to handle quoted values and hyphenated attributes
-        const attributePattern = /([\w-]+)(?:=(?:"([^"]*)"|'([^']*)'|([^\s]+)))?/g
+        // Parse attributes more carefully using regex to handle quoted values
+        const attributePattern = /(\w+)(?:=(?:"([^"]*)"|'([^']*)'|([^\s]+)))?/g
         const matches = Array.from(typeAndAttributes.matchAll(attributePattern))
 
         if (matches.length === 0) return null

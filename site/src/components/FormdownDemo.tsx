@@ -1,108 +1,96 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const FormdownDemo = () => {
     const viewerRef = useRef<HTMLDivElement>(null);
+    const [componentLoaded, setComponentLoaded] = useState(false);
+    const [debugInfo, setDebugInfo] = useState<string[]>([]); const formdownContent = `# Simple Inline Field Demo
 
-    const formdownContent = `@name: [text required placeholder="Enter your name"]
-@email: [email required]
-@age: [number min=18 max=100]
-@bio: [textarea rows=4]
-@gender: [radio] Male, Female, Other
-@interests: [checkbox] Development, Design, Music`;
+안녕하세요 ___@name 님 반갑습니다.
+
+저는 ___@age[number]세이고, ___@city에 살고 있습니다.
+
+제 이메일은 ___@email[email]이고, 직업은 ___@job입니다.
+
+## 선택적 브래킷 문법
+
+- 브래킷 없음 (기본 텍스트): ___@company
+- 빈 브래킷 (기본 텍스트): ___@department[]  
+- 타입 지정: ___@phone[tel]
+- 이메일 타입: ___@contact[email]
+
+## 추가 정보
+
+제가 가장 좋아하는 색깔은 ___@color이고, 취미는 ___@hobby입니다.
+
+연락처는 ___@mobile[tel]이며, 웹사이트는 ___@website[url]입니다.
+
+감사합니다!`;
+
+    const addDebugInfo = (message: string) => {
+        setDebugInfo(prev => [...prev, `${new Date().toLocaleTimeString()}: ${message}`]);
+    };
 
     useEffect(() => {
-        const showFallbackForm = () => {
-            if (viewerRef.current) {
-                viewerRef.current.innerHTML = `
-                    <form class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                            <input
-                                type="text"
-                                placeholder="Enter your name"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                            <input
-                                type="email"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Age</label>
-                            <input
-                                type="number"
-                                min="18"
-                                max="100"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
-                            <textarea
-                                rows="4"
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            ></textarea>
-                        </div>
-                        <fieldset class="border border-gray-300 rounded-md p-4">
-                            <legend class="text-sm font-medium text-gray-700 px-2">Gender</legend>
-                            <div class="space-y-2">
-                                <label class="flex items-center">
-                                    <input type="radio" name="gender" value="Male" class="mr-2" />
-                                    Male
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="gender" value="Female" class="mr-2" />
-                                    Female
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="gender" value="Other" class="mr-2" />
-                                    Other
-                                </label>
-                            </div>
-                        </fieldset>
-                        <fieldset class="border border-gray-300 rounded-md p-4">
-                            <legend class="text-sm font-medium text-gray-700 px-2">Interests</legend>
-                            <div class="space-y-2">
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="interests" value="Development" class="mr-2" />
-                                    Development
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="interests" value="Design" class="mr-2" />
-                                    Design
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="interests" value="Music" class="mr-2" />
-                                    Music
-                                </label>
-                            </div>
-                        </fieldset>
-                    </form>
-                `;
+        const loadComponents = async () => {
+            try {
+                addDebugInfo('Starting to load formdown components...');
+
+                // Load the formdown-ui component
+                await import('@formdown/ui');
+                addDebugInfo('Formdown UI component imported successfully');
+
+                setComponentLoaded(true);
+                addDebugInfo('Component loaded state set to true');
+
+                // Wait a bit for the component to register
+                setTimeout(() => {
+                    if (viewerRef.current) {
+                        addDebugInfo('Creating formdown-ui element...');
+
+                        // Create the formdown-ui element
+                        const formdownElement = document.createElement('formdown-ui');
+                        formdownElement.setAttribute('content', formdownContent);
+
+                        // Clear and append
+                        viewerRef.current.innerHTML = '';
+                        viewerRef.current.appendChild(formdownElement);
+
+                        addDebugInfo('Formdown-ui element created and appended');
+                    }
+                }, 100);
+
+            } catch (error) {
+                addDebugInfo(`Error loading components: ${error}`);
+                console.error('Error loading formdown components:', error);
             }
         };
 
-        showFallbackForm();
+        loadComponents();
     }, [formdownContent]);
 
     return (
         <div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Generated Form</h3>
+
+            {/* Debug information */}
+            <div className="mb-4 p-3 bg-gray-100 rounded text-xs">
+                <h4 className="font-semibold mb-2">Debug Info:</h4>
+                {debugInfo.map((info, index) => (
+                    <div key={index} className="text-gray-700">{info}</div>
+                ))}
+            </div>
+
             <div ref={viewerRef} className="space-y-4">
-                {/* Fallback content while loading */}
-                <div className="animate-pulse">
-                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-                    <div className="h-10 bg-gray-200 rounded mb-4"></div>
-                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
-                    <div className="h-10 bg-gray-200 rounded mb-4"></div>
-                </div>
+                {!componentLoaded && (
+                    <div className="animate-pulse">
+                        <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+                        <div className="h-10 bg-gray-200 rounded mb-4"></div>
+                        <div className="h-4 bg-gray-200 rounded w-1/4 mb-2"></div>
+                        <div className="h-10 bg-gray-200 rounded mb-4"></div>
+                    </div>
+                )}
             </div>
         </div>
     );

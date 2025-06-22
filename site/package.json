@@ -6,7 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:packages": "npm run build:core && npm run build:ui && npm run build:editor",
+    "build:core": "cd ../packages/formdown-core && npm run build",
+    "build:ui": "cd ../packages/formdown-ui && npm run build",
+    "build:editor": "cd ../packages/formdown-editor && npm run build",
+    "rebuild:all": "npm run build:packages && npm run build",
+    "dev:fresh": "npm run build:packages && npm run dev",
+    "test:packages": "npm run test:core && npm run test:ui && npm run test:editor",
+    "test:core": "cd ../packages/formdown-core && npm test",
+    "test:ui": "cd ../packages/formdown-ui && npm test",
+    "test:editor": "cd ../packages/formdown-editor && npm test"
   },
   "dependencies": {
     "@formdown/core": "file:../packages/formdown-core",

@@ -1,0 +1,27 @@
+{
+    "name": "formdown",
+    "version": "0.1.0",
+    "description": "A declarative form builder using markdown-like syntax",
+    "private": true,
+    "workspaces": [
+        "packages/*",
+        "site"
+    ],
+    "scripts": {
+        "test": "npm run test --workspaces --if-present",
+        "test:core": "cd packages/formdown-core && npm test",
+        "test:ui": "cd packages/formdown-ui && npm test",
+        "test:editor": "cd packages/formdown-editor && npm test",
+        "build": "npm run build --workspaces --if-present",
+        "dev": "npm run dev --workspaces --if-present",
+        "lint": "echo 'Linting all packages...'",
+        "clean": "rm -rf */node_modules */dist"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0"
+    },
+    "engines": {
+        "node": ">=16.0.0",
+        "npm": ">=8.0.0"
+    }
+}

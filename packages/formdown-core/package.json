@@ -12,10 +12,15 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "test": "node --test",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "clean": "rimraf dist"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/marked": "^5.0.2",
+    "jest": "^30.0.2",
+    "ts-jest": "^29.4.0",
     "typescript": "^5.8.3"
   },
   "keywords": [
@@ -25,5 +30,8 @@
     "markdown"
   ],
   "author": "Formdown Team",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "marked": "^15.0.12"
+  }
 }

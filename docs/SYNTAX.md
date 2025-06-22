@@ -4,21 +4,106 @@ FormDown extends Markdown with form field syntax while maintaining **100% compat
 
 ## Core Principle
 
-FormDown fields require **both** `@` and `[...]` to be recognized, preventing conflicts with existing Markdown syntax.
+FormDown fields use the pattern `@field_name: [type attributes]` for clarity and Markdown compatibility.
+
+**Two ways to define field labels:**
 
 ```formdown
-@field_name: [type attributes]              // Label: "field_name"
-@field_name(Custom Label): [type attributes] // Label: "Custom Label"
+// Method 1: Using parentheses (recommended for readability)
+@field_name(Custom Label): [type attributes]
+
+// Method 2: Using label attribute 
+@field_name: [type label="Custom Label" attributes]
+
+// Examples
+@user_name(Full Name): [text required]
+@user_name: [text required label="Full Name"]
 ```
 
-## Conflict Prevention
+Both methods are equivalent and produce the same result.
 
-| Syntax | Type | Status |
-|--------|------|---------|
-| `@username hello` | Text mention | ✅ Regular Markdown |
-| `[link](url)` | Link | ✅ Regular Markdown |
-| `![image](url)` | Image | ✅ Regular Markdown |
-| `@field: [text]` | FormDown field | ✅ FormDown syntax |
+## Label Definition Methods
+
+### Method 1: Parentheses Syntax (Recommended)
+```formdown
+@user_name(Full Name): [text required]
+@email_address(Email Address): [email required]
+@phone_number(Phone): [tel]
+```
+
+**Benefits:**
+- **Cleaner syntax** - Separates label from attributes
+- **Better readability** - Label stands out visually
+- **Less verbose** - No need for `label=` attribute
+
+### Method 2: Label Attribute
+```formdown
+@user_name: [text required label="Full Name"]
+@email_address: [email required label="Email Address"]
+@phone_number: [tel label="Phone"]
+```
+
+**Benefits:**
+- **Attribute consistency** - Treats label like any other attribute
+- **Familiar pattern** - Similar to HTML attributes
+- **Conditional labels** - Can use dynamic values in frameworks
+
+### When to Use Which?
+
+**Use parentheses `@field(Label):` when:**
+- Writing static forms with fixed labels
+- Prioritizing readability and clean syntax
+- Labels are simple text without special characters
+
+**Use `label=` attribute when:**
+- Labels contain quotes or special characters
+- Building dynamic forms with template engines
+- Consistency with other attribute patterns is important
+
+**Mixed usage is perfectly fine:**
+```formdown
+@name(Full Name): [text required]
+@description: [textarea label="Tell us about yourself" rows=4]
+@submit_btn: [submit label="Send Application"]
+```
+
+## Minimal Syntax
+
+FormDown supports minimal syntax for common use cases:
+
+### Block Fields - Empty Brackets
+```formdown
+// Minimal syntax (defaults to text input)
+@name: []
+@email: []
+@phone: []
+
+// Equivalent to
+@name: [text]
+@email: [text] 
+@phone: [text]
+```
+
+### Inline Fields - Optional Brackets
+```formdown
+// Minimal inline syntax
+Hello ___@name!
+Your age is ___@age.
+
+// Equivalent to
+Hello ___@name[text]!
+Your age is ___@age[text].
+```
+
+**When to use minimal syntax:**
+- ✅ **Simple text inputs** without validation
+- ✅ **Rapid prototyping** and quick forms
+- ✅ **Default behavior** is sufficient
+
+**When to use full syntax:**
+- 🔧 **Specific input types** (email, number, date, etc.)
+- 🛡️ **Validation rules** (required, min/max, pattern)
+- 🎨 **Custom attributes** (classes, data attributes)
 
 ## Field Types
 
@@ -30,155 +115,233 @@ FormDown fields require **both** `@` and `[...]` to be recognized, preventing co
 @phone: [tel]
 @website: [url]
 @age: [number min=18 max=100]
-@date: [date]
-@time: [time]
+@birth_date: [date]
+@appointment_time: [time]
+
+// Minimal syntax - defaults to text input
+@name: []
+@description: []
 ```
 
 ### Text Areas
 ```formdown
-@description: [textarea rows=4 cols=50]
+@description: [textarea rows=4]
 @comments: [textarea required placeholder="Your thoughts..."]
 ```
 
-### Selection
+### Selection Fields
 ```formdown
-// Radio buttons
-@gender: [radio] Male, Female, Other
+// Radio buttons - single selection
+@gender: [radio options="Male,Female,Other"]
 
-// Checkboxes
-@interests: [checkbox] Web, Mobile, AI, Design
+// Checkboxes - multiple selection  
+@interests: [checkbox options="Web,Mobile,AI,Design"]
 
 // Select dropdown
-@country: [select] 
-- USA
-- Canada  
-- UK
-- Other
-```
-
-### File Upload
-```formdown
-@avatar: [file accept="image/*"]
-@documents: [file multiple accept=".pdf,.doc"]
-```
-
-### Special Types
-```formdown
-@color: [color]
-@range: [range min=0 max=100 step=10]
-@hidden_id: [hidden value="12345"]
+@country: [select options="USA,Canada,UK,Other"]
 ```
 
 ### Actions
 ```formdown
-@submit: [submit "Submit Form"]
-@reset: [reset]
+@submit_btn: [submit label="Submit Form"]
+@reset_btn: [reset label="Clear Form"]
 ```
+
+## Inline Fields 
+
+For embedding fields within text flow, use the `___@field[type attributes]` pattern:
+
+```formdown
+Welcome back, ___@user_name[text required]!
+
+Your order details:
+- Quantity: ___@quantity[number min=1 max=100] items
+- Delivery date: ___@delivery_date[date required]
+- Total amount: $___@amount[number min=0 step=0.01]
+
+Special instructions: ___@notes[textarea rows=2 placeholder="Optional notes"]
+
+Contact preference: ___@contact_method[radio options="Email,Phone,SMS"]
+
+// Minimal inline syntax - brackets optional for simple cases
+Welcome ___@user_name!
+Please enter ___@age and ___@email.
+```
+
+**Benefits of `___` prefix:**
+- **Consistency**: Uses same `@field[type]` syntax as block fields
+- **Visibility**: Easy to spot inline fields in text
+- **No conflicts**: Unlikely to clash with existing Markdown syntax
+- **Parsing simplicity**: Clear delimiter for parsers
+- **Minimal syntax**: Brackets can be omitted for simple text fields
 
 ## Attributes
 
-### Common Attributes
+### Universal Attributes
+- `label="text"` - Custom field label (overrides field name)
 - `required` - Field is mandatory
 - `placeholder="text"` - Placeholder text
 - `value="default"` - Default value
 - `disabled` - Disable field
-- `readonly` - Read-only field
 
 ### Validation Attributes
-- `minlength=n` - Minimum length
-- `maxlength=n` - Maximum length  
-- `min=n` - Minimum value (numbers/dates)
-- `max=n` - Maximum value (numbers/dates)
-- `step=n` - Step value for numbers
-- `pattern="regex"` - Regex validation
+- `minlength=n` / `maxlength=n` - Text length constraints
+- `min=n` / `max=n` - Numeric/date constraints
+- `pattern="regex"` - Custom validation pattern
 
-### File Attributes
-- `accept="mime-types"` - Accepted file types
-- `multiple` - Allow multiple files
+### Selection Attributes
+- `options="item1,item2,item3"` - Available choices
 
 ### Text Area Attributes
-- `rows=n` - Number of rows
-- `cols=n` - Number of columns
+- `rows=n` - Number of visible rows
+
+### HTML Extensibility
+
+**All HTML attributes are supported** - FormDown passes through any attributes you specify:
+
+```formdown
+// Standard HTML attributes
+@email: [email required autocomplete="email" spellcheck="false"]
+@phone: [tel maxlength=15 inputmode="tel"]
+@search: [text autocomplete="off" aria-label="Search products"]
+
+// CSS classes and styling
+@username: [text class="form-control" style="border: 2px solid blue"]
+@password: [password data-strength="true" aria-describedby="pwd-help"]
+
+// Custom data attributes for JavaScript
+@slider: [range min=0 max=100 step=5 data-unit="%" data-live-update="true"]
+@upload: [file accept="image/*" data-max-size="5MB" data-preview="true"]
+
+// Accessibility attributes
+@bio: [textarea rows=4 aria-required="true" aria-describedby="bio-hint"]
+```
+
+**Attribute Processing:**
+- Boolean attributes: `required`, `disabled`, `readonly`
+- String attributes: Quoted values `placeholder="Enter name"`
+- Numeric attributes: Unquoted numbers `min=18`, `max=100`
+- All attributes are passed directly to HTML elements
 
 ## Examples
 
-### Basic Contact Form
+### Contact Form
 ```formdown
 # Contact Us
 
 @name(Full Name): [text required]
 @email(Email Address): [email required]
 @subject: [text required maxlength=100]
-@message: [textarea required rows=5 placeholder="Your message here..."]
+@message: [textarea required rows=5 placeholder="Your message..."]
 
-@priority(Priority): [radio] Low, Medium, High
-@newsletter(Subscribe to newsletter): [checkbox] Yes
+@priority: [radio options="Low,Medium,High"]
+@newsletter(Subscribe to newsletter): [checkbox options="Yes"]
 
-@submit(Send Message): [submit]
+@submit_form: [submit label="Send Message"]
 ```
 
-### API Testing Form
+### Registration Form  
 ```formdown
-# User Registration API
+# User Registration
 
 @username: [text required minlength=4 pattern="[a-zA-Z0-9_]+"]
 @email: [email required]
 @password: [password required minlength=8]
 @age: [number min=13 max=120]
 
-@terms(I agree to terms): [checkbox required] Accept
+@terms(I agree to terms and conditions): [checkbox required options="Accept"]
 
-@test_api(Test API): [submit "POST /api/users"]
+@register: [submit label="Create Account"]
 ```
 
-### Survey Form
+### Order Form with Inline Fields
 ```formdown
-# User Feedback
+# Order Confirmation
 
-@satisfaction(How satisfied are you?): [range min=1 max=10]
-@recommend(Would you recommend us?): [radio] Yes, No, Maybe
-@improvements: [textarea rows=3 placeholder="Suggestions for improvement..."]
+Dear ___@customer_name[text required],
 
-@contact_email(Email for follow-up): [email]
-@contact_ok(Contact me about this feedback): [checkbox] Yes
+Please confirm your order:
+- Product: ___@product[select options="Laptop,Phone,Tablet"]
+- Quantity: ___@quantity[number min=1 max=10] units
+- Delivery by: ___@delivery_date[date required]
 
-@submit_survey: [submit "Submit Feedback"]
+Payment method: ___@payment[radio options="Credit Card,PayPal,Bank Transfer"]
+
+Additional notes: ___@notes[textarea rows=3 placeholder="Special delivery instructions"]
+
+@confirm_order: [submit label="Confirm Order"]
 ```
 
-## Parsing Rules
+### Advanced Form with Custom Attributes
+```formdown
+# User Profile
 
-1. **Recognition Pattern**: `@identifier: [type ...]` or `@identifier(label): [type ...]`
-2. **Markdown Priority**: Standard Markdown syntax takes precedence
-3. **Label Resolution**: 
-   - With parentheses: `@field(Custom Label)` → Label: "Custom Label"  
-   - Without parentheses: `@field_name` → Label: "field_name"
-4. **Safe Coexistence**: Single `@mentions` or `[links]` remain regular Markdown
+@avatar(Profile Picture): [file accept="image/*" class="file-upload"]
+@username: [text required minlength=3 autocomplete="username" spellcheck="false"]
+@email(Email Address): [email required autocomplete="email" class="form-control"]
+@birth_date(Date of Birth): [date max="2010-12-31"]
+@bio: [textarea rows=4 maxlength=500 placeholder="Tell us about yourself..."]
 
-## Field Name Guidelines
+@theme(Theme Preference): [radio options="Light,Dark,Auto"]
+@notifications(Notification Settings): [checkbox options="Email,SMS,Push" class="notification-options"]
 
-- Use snake_case for API compatibility: `@user_name`, `@email_address`
-- Keep labels user-friendly: `@user_name(Full Name)`, `@email_address(Email)`
+@privacy_level(Privacy Level): [range min=1 max=5 step=1 style="width: 200px"]
+
+@save_profile: [submit label="Save Changes" class="btn btn-primary"]
+```
+
+## Implementation Notes
+
+### Field Names
+- Use snake_case for API compatibility: `user_name`, `email_address`
 - Field names become HTML `name` attributes
-- Labels become user-visible text
-
-## Integration Notes
+- Labels can be customized using `label="Custom Text"`
 
 ### HTML Output
 ```formdown
-@email(Email Address): [email required]
+@email(Email Address): [email required autocomplete="email" class="form-control"]
 ```
 
 Renders to:
 ```html
-<label for="email">Email Address</label>
-<input type="email" name="email" id="email" required>
+<div class="formdown-field">
+    <label for="email">Email Address *</label>
+    <input type="email" id="email" name="email" required autocomplete="email" class="form-control">
+</div>
+```
+
+**Custom attributes are preserved:**
+```formdown
+@slider(Volume Control): [range min=0 max=100 step=5 class="custom-slider"]
+```
+
+Renders to:
+```html
+<div class="formdown-field">
+    <label for="slider">Volume Control</label>
+    <input type="range" id="slider" name="slider" min="0" max="100" step="5" class="custom-slider">
+</div>
 ```
 
 ### Data Collection
-Form submission collects data using field names:
 ```json
 {
   "email": "user@example.com",
   "user_name": "John Doe"
 }
+```
+
+## Migration from Complex Syntax
+
+If you're using complex syntax patterns, migrate to the simplified approach:
+
+```formdown
+// Old complex syntax
+@country: [select]
+- USA  
+- Canada
+- UK
+
+// New simplified syntax
+@country: [select options="USA,Canada,UK"]
 ```

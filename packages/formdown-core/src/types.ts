@@ -18,3 +18,14 @@ export interface ParseResult {
     errors: ParseError[]
 }
 
+export interface FormdownContent {
+    markdown: string
+    forms: Field[]
+}
+
+export interface FormdownOptions {
+    preserveMarkdown?: boolean
+    fieldPrefix?: string
+    inlineFieldDelimiter?: string
+}
+
