@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "build:static": "next build",
     "start": "next start",
     "lint": "next lint",
     "build:packages": "npm run build:core && npm run build:ui && npm run build:editor",
@@ -12,6 +13,7 @@
     "build:ui": "cd ../packages/formdown-ui && npm run build",
     "build:editor": "cd ../packages/formdown-editor && npm run build",
     "rebuild:all": "npm run build:packages && npm run build",
+    "rebuild:static": "npm run build:packages && npm run build:static",
     "dev:fresh": "npm run build:packages && npm run dev",
     "test:packages": "npm run test:core && npm run test:ui && npm run test:editor",
     "test:core": "cd ../packages/formdown-core && npm test",
