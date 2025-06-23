@@ -19,6 +19,72 @@ Formdown follows a simple, modular architecture:
 - **formdown-ui**: Pure renderer (formdown syntax → HTML)
 - **formdown-editor**: Optional development tool with enhanced editing features
 
+## Installation
+
+Install the packages you need for your project:
+
+```bash
+# Core functionality
+npm install @formdown/core
+
+# Web component renderer  
+npm install @formdown/ui
+
+# Optional: Development editor
+npm install @formdown/editor
+```
+
+## Quick Start
+
+### Basic Usage with HTML
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@formdown/ui/dist/index.es.js"></script>
+</head>
+<body>
+    <formdown-ui>
+        # Contact Form
+        
+        **Name**: ___@name
+        **Email**: ___@email[type=email]
+        **Message**: 
+        ```
+        @message
+        ```
+        
+        [Submit](@submit)
+    </formdown-ui>
+</body>
+</html>
+```
+
+### Usage with JavaScript
+
+```javascript
+import { parse, generate } from '@formdown/core';
+import '@formdown/ui';
+
+// Parse formdown syntax
+const ast = parse('**Name**: ___@name');
+
+// Generate HTML
+const html = generate(ast);
+
+// Or use the web component
+const formElement = document.createElement('formdown-ui');
+formElement.textContent = '**Name**: ___@name';
+document.body.appendChild(formElement);
+```
+
+## Documentation
+
+- [Syntax Guide](./docs/SYNTAX.md) - Complete formdown syntax reference
+- [Publishing Guide](./docs/PUBLISHING.md) - How to publish packages to npm
+- [Tasks & Roadmap](./docs/TASKS.md) - Current development status
+
 ## Project Structure
 
 ```
@@ -34,7 +100,10 @@ formdown/
 
 ## Packages
 
-### formdown-ui
+### @formdown/core
+Core parsing and generation engine for Formdown syntax.
+
+### @formdown/ui
 A lightweight web component that renders Formdown syntax into HTML forms.
 
 **Features:**
@@ -43,7 +112,7 @@ A lightweight web component that renders Formdown syntax into HTML forms.
 - Customizable styling
 - Form data collection and validation
 
-### formdown-editor
+### @formdown/editor
 An optional development tool for enhanced Formdown editing experience.
 
 **Features:**
@@ -53,4 +122,18 @@ An optional development tool for enhanced Formdown editing experience.
 - Error validation and display
 - Live preview integration with formdown-ui
 
-**Note**: formdown-editor is not required for basic usage. Any text editor can be used to write formdown syntax.
+**Note**: @formdown/editor is not required for basic usage. Any text editor can be used to write formdown syntax.
+
+## Contributing
+
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Build packages: `npm run build:packages`
+4. Run tests: `npm test`
+5. Start development: `npm run dev`
+
+For publishing packages, see the [Publishing Guide](./docs/PUBLISHING.md).
+
+## License
+
+MIT License - see [LICENSE](./LICENSE) file for details.

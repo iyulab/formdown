@@ -250,29 +250,58 @@ export class FormdownUI extends LitElement {
       max-width: 100%;
       overflow-wrap: break-word;
       word-wrap: break-word;
-    }
-
-    /* Radio and checkbox groups */
+    }    /* Radio and checkbox groups */
     .radio-group, .checkbox-group {
       display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.75rem;
+      flex-wrap: wrap;
     }
 
+    /* Inline layout (default) */
+    .radio-group.inline, .checkbox-group.inline {
+      flex-direction: row;
+      align-items: center;
+    }
+
+    /* Vertical layout */
+    .radio-group.vertical, .checkbox-group.vertical {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .formdown-option-label {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0;
+      font-weight: normal;
+      cursor: pointer;
+      font-size: 0.875rem;
+      white-space: nowrap;
+    }
+
+    .formdown-option-label input {
+      margin-right: 0.5rem;
+      margin-bottom: 0;
+    }
+
+    .formdown-option-label span {
+      user-select: none;
+    }
+
+    /* Legacy support for old structure */
     .radio-group label, .checkbox-group label {
       display: flex;
       align-items: center;
       margin-bottom: 0;
       font-weight: normal;
       cursor: pointer;
-    }    /* Better spacing for form elements */
+    }/* Better spacing for form elements */
     .formdown-form > * + * {
       margin-top: 1rem;
     }
   `
   @property()
   content = ''
-
   @property({ type: Boolean, attribute: 'select-on-focus' })
   selectOnFocus = true
 
@@ -284,8 +313,34 @@ export class FormdownUI extends LitElement {
 
   @property({ attribute: 'submit-text' })
   submitText = 'Submit'
+  // Reactive data source - this is the single source of truth
+  private _data: Record<string, any> = {}
+
+  @property({ type: Object })
+  get data() {
+    return this._data
+  }
+
+  set data(newData: Record<string, any>) {
+    const oldData = this._data
+    this._data = { ...newData }
+    this.requestUpdate('data', oldData)
+  }
+
+  // Public method to update data programmatically
+  updateData(newData: Record<string, any>) {
+    this.data = newData
+  }
+
+  // Public method to update single field
+  updateField(fieldName: string, value: any) {
+    this.data = { ...this.data, [fieldName]: value }
+  }
   private parser = new FormdownParser()
   private generator = new FormdownGenerator()
+  private fieldRegistry: Map<string, Set<HTMLElement>> = new Map()
+  private _isUpdatingUI = false  // Prevent infinite loops
+
   constructor() {
     super()
   }
@@ -307,17 +362,24 @@ export class FormdownUI extends LitElement {
       const errorMessage = error instanceof Error ? error.message : String(error)
       return html`<div class="error">Error rendering content: ${errorMessage}</div>`
     }
-  }
-  // Override firstUpdated to set innerHTML after the initial render
+  }  // Override firstUpdated to set innerHTML after the initial render
   override firstUpdated() {
     this.updateContent()
+    // Initialize UI with existing data
+    if (Object.keys(this.data).length > 0) {
+      this.syncUIFromData()
+    }
   }
-
   // Override updated to update content when properties change
   override updated(changedProperties: Map<string | number | symbol, unknown>) {
     super.updated(changedProperties)
     if (changedProperties.has('content')) {
       this.updateContent()
+    }
+
+    // React to data changes - sync UI when data property changes
+    if (changedProperties.has('data')) {
+      this.syncUIFromData()
     }
   }
   private updateContent() {
@@ -350,12 +412,40 @@ export class FormdownUI extends LitElement {
         container.innerHTML = `<div class="error">Error: ${errorMessage}</div>`
       }
     }
-  }
-  private setupFieldHandlers(container: Element) {
+  } private setupFieldHandlers(container: Element) {
+    // Clear previous registry
+    this.fieldRegistry.clear()
+
     // Handle Enter key navigation for all input fields
     const allInputs = container.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), [contenteditable="true"]')
+    this.setupKeyboardNavigation(allInputs)    // Universal field discovery and setup
+    const allFields = container.querySelectorAll('input, textarea, select, [contenteditable="true"]')
 
-    allInputs.forEach((input, index) => {
+    allFields.forEach(element => {
+      const htmlElement = element as HTMLElement
+      const fieldName = this.getFieldName(htmlElement)
+
+      if (fieldName) {
+        // Register field in universal registry
+        this.registerField(fieldName, htmlElement)
+
+        // Initialize field with existing data
+        const existingValue = this.data[fieldName]
+        if (existingValue !== undefined) {
+          this.setElementValue(htmlElement, String(existingValue))
+        }
+
+        // Setup universal event handlers
+        this.setupFieldEventHandlers(htmlElement, fieldName)
+
+        // Setup field-specific behaviors
+        this.setupFieldSpecificBehaviors(htmlElement)
+      }
+    })
+  }
+
+  private setupKeyboardNavigation(inputs: NodeListOf<Element>) {
+    inputs.forEach((input, index) => {
       input.addEventListener('keydown', (e) => {
         const keyEvent = e as KeyboardEvent
         if (keyEvent.key === 'Enter') {
@@ -368,110 +458,180 @@ export class FormdownUI extends LitElement {
 
           // Move to next field
           const nextIndex = index + 1
-          if (nextIndex < allInputs.length) {
-            const nextInput = allInputs[nextIndex] as HTMLElement
+          if (nextIndex < inputs.length) {
+            const nextInput = inputs[nextIndex] as HTMLElement
             nextInput.focus()
           }
         }
       })
     })
+  }
 
-    // Handle contentEditable inline fields
-    const inlineFields = container.querySelectorAll('[contenteditable="true"]')
-    inlineFields.forEach(field => {
-      const htmlField = field as HTMLElement
+  private setupFieldEventHandlers(element: HTMLElement, fieldName: string) {    // Universal input/change handler
+    const handleValueChange = () => {
+      const value = this.getFieldValue(element)
+      this.updateDataReactively(fieldName, value, element)
+    }
 
-      // Handle placeholder behavior
-      if (htmlField.textContent?.trim() === htmlField.dataset.placeholder) {
-        htmlField.textContent = ''
-      }      // Focus handler
-      htmlField.addEventListener('focus', () => {
-        if (htmlField.textContent?.trim() === htmlField.dataset.placeholder) {
-          htmlField.textContent = ''
-        }
+    // Add appropriate event listeners based on element type
+    if (element.hasAttribute('contenteditable')) {
+      element.addEventListener('input', handleValueChange)
+    } else {
+      element.addEventListener('input', handleValueChange)
+      element.addEventListener('change', handleValueChange)
+    }
+  }
 
-        // Select all text on focus if enabled
-        if (this.selectOnFocus) {
-          const selection = window.getSelection()
-          const range = document.createRange()
-          range.selectNodeContents(htmlField)
-          selection?.removeAllRanges()
-          selection?.addRange(range)
-        }
-      })
+  private setupFieldSpecificBehaviors(element: HTMLElement) {
+    // Handle contentEditable specific behaviors
+    if (element.hasAttribute('contenteditable')) {
+      this.setupContentEditableBehaviors(element)
+    }
+  }
 
-      // Blur handler
-      htmlField.addEventListener('blur', () => {
-        if (!htmlField.textContent?.trim()) {
-          htmlField.textContent = htmlField.dataset.placeholder || ''
-        }
-      })
+  private setupContentEditableBehaviors(element: HTMLElement) {
+    const placeholder = element.dataset.placeholder
 
-      // Input handler for validation/formatting
-      htmlField.addEventListener('input', () => {
-        const fieldType = htmlField.dataset.fieldType
-        const fieldName = htmlField.dataset.fieldName
+    // Handle placeholder behavior
+    if (element.textContent?.trim() === placeholder) {
+      element.textContent = ''
+    }
 
-        if (fieldType === 'email') {
-          // Basic email validation styling
-          const email = htmlField.textContent?.trim() || ''
-          if (email && !email.includes('@')) {
-            htmlField.style.color = '#dc2626'
-          } else {
-            htmlField.style.color = '#1e40af'
-          }
-        }
+    // Focus handler
+    element.addEventListener('focus', () => {
+      if (element.textContent?.trim() === placeholder) {
+        element.textContent = ''
+      }
 
-        // Update form data
-        if (fieldName) {
-          this.updateFormData(fieldName, htmlField.textContent?.trim() || '')
-        }
-      })
+      // Select all text on focus if enabled
+      if (this.selectOnFocus) {
+        const selection = window.getSelection()
+        const range = document.createRange()
+        range.selectNodeContents(element)
+        selection?.removeAllRanges()
+        selection?.addRange(range)
+      }
     })
-  }
 
-  private updateFormData(fieldName: string, value: string) {
-    // Create or update form data for inline fields
-    if (!this.formData) {
-      this.formData = {}
-    }
-    this.formData[fieldName] = value
+    // Blur handler
+    element.addEventListener('blur', () => {
+      if (!element.textContent?.trim()) {
+        element.textContent = placeholder || ''
+      }
+    })
 
-    // Dispatch change event
-    this.dispatchEvent(new CustomEvent('formdown-change', {
-      detail: { fieldName, value, formData: this.formData }
-    }))
-  }
-
-  private formData: Record<string, any> = {}
-  // Get form data programmatically
-  getFormData() {
-    const form = this.shadowRoot?.querySelector('form')
-    const container = this.shadowRoot?.querySelector('#content-container')
-    let formData: Record<string, any> = {}
-
-    // Get traditional form data
-    if (form) {
-      const fd = new FormData(form)
-      formData = Object.fromEntries(fd.entries())
-    }
-
-    // Get inline field data
-    if (container) {
-      const inlineFields = container.querySelectorAll('[contenteditable="true"]')
-      inlineFields.forEach(field => {
-        const htmlField = field as HTMLElement
-        const fieldName = htmlField.dataset.fieldName
-        const value = htmlField.textContent?.trim() || ''
-
-        if (fieldName && value !== htmlField.dataset.placeholder) {
-          formData[fieldName] = value
+    // Field-specific validation/formatting
+    const fieldType = element.dataset.fieldType
+    if (fieldType === 'email') {
+      element.addEventListener('input', () => {
+        const value = element.textContent?.trim() || ''
+        if (value && !value.includes('@')) {
+          element.style.color = '#dc2626'
+        } else {
+          element.style.color = '#1e40af'
         }
       })
     }
+  }
 
-    // Merge with internal form data
-    return { ...this.formData, ...formData }
+  // Reactive data management - data is the single source of truth
+  private updateDataReactively(fieldName: string, value: string, sourceElement?: HTMLElement) {
+    if (this._isUpdatingUI) return // Prevent infinite loops
+
+    // Update the reactive data property (source of truth)
+    this.data = { ...this.data, [fieldName]: value }
+
+    // Sync UI elements based on data
+    this.syncUIFromData(fieldName, sourceElement)
+
+    // Emit events
+    this.emitFieldEvents(fieldName, value)
+  }
+
+  private syncUIFromData(fieldName?: string, sourceElement?: HTMLElement) {
+    this._isUpdatingUI = true
+
+    try {
+      const fieldsToSync = fieldName ? [fieldName] : Object.keys(this.data)
+
+      fieldsToSync.forEach(field => {
+        const value = this.data[field] || ''
+        const boundElements = this.fieldRegistry.get(field)
+
+        if (boundElements) {
+          boundElements.forEach(element => {
+            if (element === sourceElement) return // Skip source element
+            this.setElementValue(element, value)
+          })
+        }
+      })
+    } finally {
+      this._isUpdatingUI = false
+    }
+  }
+
+  // Universal element value setter
+  private setElementValue(element: HTMLElement, value: string) {
+    if (element.hasAttribute('contenteditable')) {
+      if (element.textContent !== value) {
+        element.textContent = value
+      }
+    } else if (element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement ||
+      element instanceof HTMLSelectElement) {
+      if (element.value !== value) {
+        element.value = value
+      }
+    }
+  }
+
+  // Universal field name extractor
+  private getFieldName(element: HTMLElement): string | null {
+    // Priority: name > data-field-name > id
+    if (element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement ||
+      element instanceof HTMLSelectElement) {
+      return element.name || element.id || null
+    }
+    return element.dataset.fieldName || element.id || null
+  }
+
+  // Universal field value extractor
+  private getFieldValue(element: HTMLElement): string {
+    if (element.hasAttribute('contenteditable')) {
+      return element.textContent?.trim() || ''
+    } else if (element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement ||
+      element instanceof HTMLSelectElement) {
+      return element.value || ''
+    }
+    return ''
+  }
+
+  // Register field in the universal registry
+  private registerField(fieldName: string, element: HTMLElement) {
+    if (!this.fieldRegistry.has(fieldName)) {
+      this.fieldRegistry.set(fieldName, new Set())
+    }
+    this.fieldRegistry.get(fieldName)!.add(element)
+  }
+
+  // Emit standardized events
+  private emitFieldEvents(fieldName: string, value: string) {
+    const currentFormData = this.getFormData()
+
+    this.dispatchEvent(new CustomEvent('formdown-change', {
+      detail: { fieldName, value, formData: currentFormData },
+      bubbles: true
+    }))
+
+    this.dispatchEvent(new CustomEvent('formdown-data-update', {
+      detail: { formData: currentFormData },
+      bubbles: true
+    }))
+  }  // Get form data programmatically - use reactive data as source of truth
+  getFormData() {
+    return { ...this.data }
   }
 
   // Reset form method

@@ -24,13 +24,24 @@
     "typescript": "^5.8.3"
   },
   "keywords": [
-    "form",
+    "core",
     "parser",
-    "generator",
-    "markdown"
+    "generator"
   ],
-  "author": "Formdown Team",
+  "author": {
+    "name": "iyulab",
+    "url": "https://www.iyulab.com"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iyulab/formdown.git",
+    "directory": "packages/formdown-core"
+  },
+  "homepage": "https://formdown.dev",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "marked": "^15.0.12"
   }

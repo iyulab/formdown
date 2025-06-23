@@ -41,23 +41,25 @@
     "vite": "^6.3.5"
   },
   "keywords": [
-    "formdown",
     "ui",
     "renderer",
-    "web-component",
-    "lit",
-    "form",
-    "markdown"
+    "html-forms"
   ],
-  "author": "iyulab",
+  "author": {
+    "name": "iyulab",
+    "url": "https://www.iyulab.com"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/formdown/formdown.git",
-    "directory": "packages/formdown-viewer"
+    "url": "https://github.com/iyulab/formdown.git",
+    "directory": "packages/formdown-ui"
   },
-  "homepage": "https://github.com/formdown/formdown#readme",
+  "homepage": "https://formdown.dev",
+  "publishConfig": {
+    "access": "public"
+  },
   "bugs": {
-    "url": "https://github.com/formdown/formdown/issues"
+    "url": "https://github.com/iyulab/formdown/issues"
   }
 }

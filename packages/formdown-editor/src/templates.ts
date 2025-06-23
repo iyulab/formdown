@@ -74,21 +74,7 @@ export function renderPreviewPanel(header: boolean, parseResult: ParseResult) {
                         `)}
                     </div>
                 ` : ''}
-                <div>
-                    ${parseResult.fields.map(field => html`
-                        <div style="margin-bottom: 1rem;">
-                            <label style="display: block; font-weight: 500; margin-bottom: 0.25rem;">
-                                ${field.label}
-                            </label>
-                            <input 
-                                type="text" 
-                                name="${field.name}"
-                                style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 0.25rem;"
-                                ?required=${field.required}
-                            />
-                        </div>
-                    `)}
-                </div>
+                <div id="formdown-ui-container"></div>
             </div>
         </div>
     `

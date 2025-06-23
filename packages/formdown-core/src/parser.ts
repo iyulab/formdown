@@ -53,47 +53,34 @@ export class FormdownParser {
             cleanedMarkdown: cleanedLines.join('\n')
         }
     } private parseBlockField(line: string): Field | null {
-        // Match pattern: @fieldName: [type attributes] options or @fieldName(Label): [type attributes] options
+        // Match pattern: @fieldName: [type attributes] or @fieldName(Label): [type attributes]
         // Allow empty brackets: @name: []
         // Handle Windows line endings by trimming the line
         const trimmedLine = line.trim()
-        const match = trimmedLine.match(/^@(\w+)(?:\(([^)]+)\))?\s*:\s*\[([^\]]*)\](.*)$/)
+        const match = trimmedLine.match(/^@(\w+)(?:\(([^)]+)\))?\s*:\s*\[([^\]]*)\].*$/)
 
         if (!match) return null
 
-        const [, name, customLabel, typeAndAttributes, optionsStr] = match
+        const [, name, customLabel, typeAndAttributes] = match
         const field = this.createField(name, customLabel, typeAndAttributes)
 
-        if (field && optionsStr.trim()) {
-            // Handle options for radio, checkbox, select
-            if (['radio', 'checkbox', 'select'].includes(field.type)) {
-                field.options = optionsStr.trim().split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
-            }
-        } return field
+        return field
     } private parseInlineFields(line: string): { cleanedLine: string, inlineFields: Field[] } {
         const inlineFields: Field[] = []
         const delimiter = this.options.inlineFieldDelimiter!
 
         // Updated pattern to make brackets optional:
-        // ___@fieldName[type attributes] optional_options (with brackets)
+        // ___@fieldName[type attributes] (with brackets)
         // ___@fieldName (without brackets - defaults to text)
         // Allow empty brackets: ___@name[]
-        // Support options for radio/checkbox/select: ___@field[radio] option1, option2
-        const pattern = new RegExp(`${delimiter}@(\\w+)(?:\\(([^)]+)\\))?(?:\\[([^\\]]*)\\])?(?:\\s+([^${delimiter}\\n]+?)(?=\\s|$|\\n|${delimiter}))?`, 'g')
+        const pattern = new RegExp(`${delimiter}@(\\w+)(?:\\(([^)]+)\\))?(?:\\[([^\\]]*)\\])?`, 'g')
 
-        const cleanedLine = line.replace(pattern, (match, name, customLabel, typeAndAttributes, optionsStr) => {
+        const cleanedLine = line.replace(pattern, (match, name, customLabel, typeAndAttributes) => {
             // If no brackets provided, default to text type
             const finalTypeAndAttributes = typeAndAttributes !== undefined ? typeAndAttributes : 'text'
 
             const field = this.createField(name, customLabel, finalTypeAndAttributes)
             if (field) {
-                // Handle options for radio, checkbox, select
-                if (typeof optionsStr === 'string' && optionsStr.trim() && ['radio', 'checkbox', 'select'].includes(field.type)) {
-                    const options = optionsStr.trim().split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
-                    if (options.length > 0) {
-                        field.options = options
-                    }
-                }
                 inlineFields.push(field)
                 return `<span contenteditable="true" data-field-name="${name}" data-field-type="${field.type}" data-placeholder="${field.label || name}" class="formdown-inline-field">${field.label || name}</span>`
             }
@@ -128,14 +115,18 @@ export class FormdownParser {
             type,
             label: customLabel || this.formatLabel(name),
             attributes: {}
-        }
-
-        // Process attributes starting from the second match
+        }        // Process attributes starting from the second match
         for (let i = 1; i < matches.length; i++) {
             const [, key, quotedValue1, quotedValue2, unquotedValue] = matches[i]
 
             if (key === 'required') {
                 field.required = true
+            } else if (key === 'options' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+                // Handle options attribute for radio, checkbox, select
+                const optionsValue = quotedValue1 || quotedValue2 || unquotedValue
+                if (['radio', 'checkbox', 'select'].includes(type)) {
+                    field.options = optionsValue.split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
+                }
             } else if (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined) {
                 const value = quotedValue1 || quotedValue2 || unquotedValue
 

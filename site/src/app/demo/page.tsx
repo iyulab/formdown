@@ -83,6 +83,8 @@ export default function DemoPage() {
     useEffect(() => {
         if (selectedSample) {
             loadSample(selectedSample.filename)
+            // Clear form data when sample changes
+            setFormData({})
         }
     }, [selectedSample])
 
@@ -135,6 +137,7 @@ export default function DemoPage() {
                     editor.style.height = "100%"
                     editor.style.width = "100%"
                     editor.style.display = "block"
+
                     editor.addEventListener('contentChange', (e: CustomEvent) => {
                         isUpdatingFromEditor.current = true
                         setContent(e.detail.content)
@@ -144,7 +147,9 @@ export default function DemoPage() {
                     })
 
                     editorContainer.appendChild(editor)
-                }                // Update content property only if not updating from editor
+                }
+
+                // Update content property only if not updating from editor
                 if (!isUpdatingFromEditor.current) {
                     (editor as CustomElement).content = content
                 }
@@ -165,7 +170,9 @@ export default function DemoPage() {
                         console.error('formdown-ui custom element not registered')
                         rendererContainer.innerHTML = '<div style="color: red;">Error: formdown-ui component not registered</div>'
                         return
-                    } renderer = document.createElement("formdown-ui") as CustomElement
+                    }
+
+                    renderer = document.createElement("formdown-ui") as CustomElement
                     renderer.style.height = "100%"
                     renderer.style.width = "100%"
                     renderer.style.display = "block"
@@ -177,6 +184,18 @@ export default function DemoPage() {
                         console.log('Form data:', e.detail)
                     })
 
+                    // Add real-time data update listener
+                    renderer.addEventListener('formdown-data-update', (e: CustomEvent) => {
+                        setFormData(e.detail.formData || {})
+                        console.log('Real-time form data update:', e.detail.formData)
+                    })
+
+                    // Add form change listener for backward compatibility
+                    renderer.addEventListener('formdown-change', (e: CustomEvent) => {
+                        setFormData(e.detail.formData || {})
+                        console.log('Form field changed:', e.detail)
+                    })
+
                     rendererContainer.appendChild(renderer)
                     console.log('Appended renderer to container')
 
@@ -185,7 +204,9 @@ export default function DemoPage() {
                         console.log('Renderer innerHTML after 500ms:', renderer.innerHTML ? 'Has content' : 'Empty')
                         console.log('Renderer shadowRoot after 500ms:', renderer.shadowRoot ? 'Has shadow DOM' : 'No shadow DOM')
                     }, 500)
-                }                // Always update content property
+                }
+
+                // Always update content property
                 (renderer as CustomElement).content = content
                 console.log('Element content property updated:', (renderer as CustomElement).content)
             } else {
@@ -194,109 +215,128 @@ export default function DemoPage() {
         }
     }, [isComponentsLoaded, content])
 
-    return (
-        <div className="h-screen bg-gray-50 flex flex-col">
-            <header className="bg-white shadow-sm border-b flex-shrink-0">
-                <div className="px-4 sm:px-6 lg:px-8 py-3">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h1 className="text-xl font-bold text-gray-900">Formdown Demo</h1>
-                            <p className="text-sm text-gray-600">Interactive editor and renderer</p>
+    return (<div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
+        <header className="bg-white shadow-sm border-b flex-shrink-0">
+            <div className="px-4 sm:px-6 lg:px-8 py-3">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-xl font-bold text-gray-900">Formdown Demo</h1>
+                        <p className="text-sm text-gray-600">Interactive editor and renderer</p>
+                    </div>
+                    <Link
+                        href="/"
+                        className="text-blue-600 hover:text-blue-800 font-medium"
+                    >
+                        ← Back to Home
+                    </Link>
+                </div>
+            </div>
+        </header>
+
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-4 flex flex-col overflow-hidden">
+            {/* Sample Selector */}
+            <div className="mb-6">
+                <label htmlFor="sample-select" className="block text-sm font-medium text-gray-700 mb-2">
+                    Choose a sample:
+                </label>
+                <select
+                    id="sample-select" value={selectedSample?.filename || ''}
+                    onChange={(e) => {
+                        const sample = samples.find(s => s.filename === e.target.value)
+                        if (sample) setSelectedSample(sample)
+                    }}
+                    className="block w-full max-w-md px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    disabled={samples.length === 0}
+                >
+                    {samples.length === 0 ? (
+                        <option>Loading samples...</option>
+                    ) : (
+                        samples.map((sample) => (
+                            <option key={sample.filename} value={sample.filename}>
+                                {sample.name}
+                            </option>
+                        ))
+                    )}
+                </select>
+                <p className="mt-1 text-sm text-gray-500">
+                    {selectedSample?.description || 'Select a sample to see its description'}
+                </p>
+            </div>
+
+            {isLoading && (
+                <div className="text-center py-8">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    <p className="mt-2 text-gray-600">Loading sample...</p>
+                </div>
+            )}            {!isLoading && (
+                <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-0 overflow-hidden">
+                    {/* Editor Panel */}
+                    <div className="bg-white rounded-lg shadow-sm border flex flex-col overflow-hidden">
+                        <div className="border-b px-4 py-3 flex-shrink-0">
+                            <h2 className="text-lg font-semibold text-gray-800">Editor</h2>
+                            <p className="text-sm text-gray-600">Edit the Formdown content</p>
                         </div>
-                        <Link
-                            href="/"
-                            className="text-blue-600 hover:text-blue-800 font-medium"
-                        >
-                            ← Back to Home
-                        </Link>
+                        <div className="p-4 flex-1 min-h-0 overflow-hidden">
+                            {isComponentsLoaded ? (
+                                <div id="editor-container" className="h-full border rounded"></div>
+                            ) : (
+                                <div className="flex items-center justify-center h-full text-gray-500">
+                                    Loading editor...
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Renderer Panel */}
+                    <div className="bg-white rounded-lg shadow-sm border flex flex-col overflow-hidden">
+                        <div className="border-b px-4 py-3 flex-shrink-0">
+                            <h2 className="text-lg font-semibold text-gray-800">Preview</h2>
+                            <p className="text-sm text-gray-600">Live preview of the generated form</p>
+                        </div>
+                        <div className="p-4 flex-1 min-h-0 overflow-auto">
+                            {isComponentsLoaded ? (
+                                <div id="renderer-container" className="h-full"></div>
+                            ) : (
+                                <div className="flex items-center justify-center h-full text-gray-500">
+                                    Loading renderer...
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </header>
+            )}
 
-            <main className="flex-1 px-4 sm:px-6 lg:px-8 py-4 overflow-y-auto">{/* Sample Selector */}
-                <div className="mb-6">
-                    <label htmlFor="sample-select" className="block text-sm font-medium text-gray-700 mb-2">
-                        Choose a sample:
-                    </label>
-                    <select
-                        id="sample-select" value={selectedSample?.filename || ''}
+            {/* Data Panel - Fixed at bottom of main */}
+            <div className="mt-6 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col overflow-hidden" style={{ height: '200px' }}>
+                <div className="border-b px-4 py-2 bg-gray-50 rounded-t-lg flex-shrink-0">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-semibold text-gray-800">
+                            Data {Object.keys(formData).length > 0 && `(${Object.keys(formData).length} fields)`}
+                        </h3>
+                        <button
+                            onClick={() => setFormData({})}
+                            className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded transition-colors"
+                        >
+                            Clear
+                        </button>
+                    </div>
+                </div>
+                <div className="p-3 flex-1 min-h-0">
+                    <textarea
+                        value={Object.keys(formData).length > 0 ? JSON.stringify(formData, null, 2) : ''}
                         onChange={(e) => {
-                            const sample = samples.find(s => s.filename === e.target.value)
-                            if (sample) setSelectedSample(sample)
+                            try {
+                                const parsed = JSON.parse(e.target.value)
+                                setFormData(parsed)
+                            } catch (error) {
+                                // Invalid JSON, don't update
+                            }
                         }}
-                        className="block w-full max-w-md px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                        disabled={samples.length === 0}
-                    >
-                        {samples.length === 0 ? (
-                            <option>Loading samples...</option>
-                        ) : (
-                            samples.map((sample) => (
-                                <option key={sample.filename} value={sample.filename}>
-                                    {sample.name}
-                                </option>
-                            ))
-                        )}
-                    </select>
-                    <p className="mt-1 text-sm text-gray-500">
-                        {selectedSample?.description || 'Select a sample to see its description'}
-                    </p>
-                </div>                {isLoading && (
-                    <div className="text-center py-8">
-                        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        <p className="mt-2 text-gray-600">Loading sample...</p>
-                    </div>
-                )}                {!isLoading && (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-[calc(100vh-12rem)]">
-                        {/* Editor Panel */}
-                        <div className="bg-white rounded-lg shadow-sm border">
-                            <div className="border-b px-4 py-3">
-                                <h2 className="text-lg font-semibold text-gray-800">Editor</h2>
-                                <p className="text-sm text-gray-600">Edit the Formdown content</p>
-                            </div>                            <div className="p-4 h-[calc(100%-4rem)]">
-                                {isComponentsLoaded ? (
-                                    <div id="editor-container" className="h-full border rounded"></div>
-                                ) : (
-                                    <div className="flex items-center justify-center h-full text-gray-500">
-                                        Loading editor...
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Renderer Panel */}
-                        <div className="bg-white rounded-lg shadow-sm border">
-                            <div className="border-b px-4 py-3">
-                                <h2 className="text-lg font-semibold text-gray-800">Preview</h2>
-                                <p className="text-sm text-gray-600">Live preview of the generated form</p>
-                            </div>
-                            <div className="p-4 h-[calc(100%-4rem)] overflow-auto">
-                                {isComponentsLoaded ? (
-                                    <div id="renderer-container" className="h-full"></div>
-                                ) : (
-                                    <div className="flex items-center justify-center h-full text-gray-500">
-                                        Loading renderer...
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Form Data Display */}
-                {Object.keys(formData).length > 0 && (
-                    <div className="mt-6 bg-white rounded-lg shadow-sm border">
-                        <div className="border-b px-4 py-3">
-                            <h2 className="text-lg font-semibold text-gray-800">Form Data</h2>
-                            <p className="text-sm text-gray-600">Latest form submission</p>
-                        </div>
-                        <div className="p-4">
-                            <pre className="bg-gray-100 p-3 rounded text-sm overflow-auto">
-                                {JSON.stringify(formData, null, 2)}
-                            </pre>
-                        </div>
-                    </div>
-                )}
-            </main>
-        </div>
+                        placeholder="Start typing in the form fields to see real-time data updates..."
+                        className="w-full h-full resize-none border border-gray-200 rounded p-2 text-xs font-mono text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                </div>                </div>
+        </main>
+    </div>
     )
 }

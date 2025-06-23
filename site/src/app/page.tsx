@@ -9,13 +9,25 @@ interface CustomElement extends HTMLElement {
 
 export default function Home() {
     const [isComponentsLoaded, setIsComponentsLoaded] = useState(false)
-
     useEffect(() => {
         const loadComponents = async () => {
             if (typeof window !== "undefined") {
                 try {
+                    console.log('Loading formdown components...')
+
+                    // Import editor
                     await import("@formdown/editor")
+                    console.log('Formdown editor loaded')
+
+                    // Import UI component
+                    await import("@formdown/ui")
+                    console.log('Formdown UI loaded')
+
+                    // Wait a bit for custom elements to register
+                    await new Promise(resolve => setTimeout(resolve, 100))
+
                     setIsComponentsLoaded(true)
+                    console.log('Components loaded successfully')
                 } catch (error) {
                     console.error("Failed to load components:", error)
                 }
@@ -32,12 +44,20 @@ export default function Home() {
                 editor.setAttribute("mode", "split")
                 editor.setAttribute("header", "true")
                 editor.setAttribute("content",
-                    '@name: [text required placeholder="Enter your name"]\n' +
-                    '@email: [email required]\n' +
-                    '@user_name(User Name): [text]\n' +
-                    '@bio: [textarea rows=4]\n' +
-                    '@gender: [radio] Male, Female, Other\n' +
-                    '@interests: [checkbox] Development, Design, Music'
+                    '### Contact Form\n' +
+                    '\n' +
+                    'Please fill out the form below to get in touch with us.\n' +
+                    '\n' +
+                    '@name(Your Name): [text required placeholder="Enter your full name"]\n' +
+                    '@email(Email Address): [email required]\n' +
+                    '@message: [textarea rows=4 placeholder="Your message..."]\n' +
+                    '\n' +
+                    'How did you hear about us?\n' +
+                    '@source: [radio options="Website,Social Media,Friend,Other"]\n' +
+                    '\n' +
+                    '@newsletter(Subscribe to newsletter): [checkbox options="Yes"]\n' +
+                    '\n' +
+                    '@submit_btn: [submit label="Send Message"]'
                 )
                 editor.style.height = "500px"
                 editor.style.width = "100%"
@@ -75,8 +95,8 @@ export default function Home() {
                         Write Forms Like<br />
                         <span className="text-blue-600">Markdown</span>
                     </h2>                    <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                        Formdown extends Markdown syntax to easily create HTML documents and form elements.
-                        Create complex web forms with simple text syntax.
+                        Formdown extends Markdown with form syntax. Write regular Markdown content,
+                        add form fields with simple @field syntax, and get interactive forms.
                     </p>
                     <div className="flex justify-center space-x-4">                        <Link
                         href="/demo"
@@ -94,10 +114,9 @@ export default function Home() {
                 </div>
             </section>            {/* Code Example */}
             <section className="max-w-6xl mx-auto px-4 py-16">
-                <div className="text-center mb-8">
-                    <h3 className="text-3xl font-bold text-gray-900 mb-4">Try It Now</h3>
+                <div className="text-center mb-8">                    <h3 className="text-3xl font-bold text-gray-900 mb-4">Try It Now</h3>
                     <p className="text-gray-600">
-                        See how Formdown syntax transforms into interactive forms
+                        See how Markdown with @field syntax becomes interactive forms. Edit the left panel and watch the form update in real-time.
                     </p>
                 </div>
                 <div className="bg-white rounded-lg shadow-lg overflow-hidden">
@@ -125,9 +144,9 @@ export default function Home() {
                             <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
-                        </div>                        <h4 className="text-xl font-semibold text-gray-900 mb-2">Simple Syntax</h4>
+                        </div>                        <h4 className="text-xl font-semibold text-gray-900 mb-2">Markdown Compatible</h4>
                         <p className="text-gray-600">
-                            Create complex HTML forms easily with intuitive Markdown-based syntax.
+                            Write standard Markdown content and add form fields with @field syntax. 100% Markdown compatible.
                         </p>
                     </div>
 
@@ -137,9 +156,9 @@ export default function Home() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             </svg>
-                        </div>                        <h4 className="text-xl font-semibold text-gray-900 mb-2">Extensible</h4>
+                        </div>                        <h4 className="text-xl font-semibold text-gray-900 mb-2">Interactive Forms</h4>
                         <p className="text-gray-600">
-                            Extend existing Markdown syntax to express all HTML form elements.
+                            Transform your Markdown documents into fully functional web forms with real-time data binding.
                         </p>
                     </div>
 

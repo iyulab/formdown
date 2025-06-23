@@ -92,6 +92,69 @@ export class FormdownEditor extends LitElement {
                 ${this.mode !== 'edit' ? renderPreviewPanel(this.header, this.parseResult) : ''}
             </div>
         `
+    } updated(changedProperties: Map<string | number | symbol, unknown>) {
+        super.updated(changedProperties)
+
+        // Update formdown-ui component when content changes
+        if (this.mode !== 'edit' && (changedProperties.has('content') || changedProperties.has('parseResult'))) {
+            this.updateFormdownUI()
+        }
+    } firstUpdated(changedProperties: Map<string | number | symbol, unknown>) {
+        super.firstUpdated(changedProperties)
+
+        // Initialize formdown-ui component on first render
+        if (this.mode !== 'edit') {
+            this.updateFormdownUI()
+        }
+    } private updateFormdownUI() {
+        console.log('updateFormdownUI called, mode:', this.mode, 'content:', this.content.substring(0, 50))
+        const container = this.shadowRoot?.querySelector('#formdown-ui-container')
+        console.log('Container found:', !!container)
+        if (!container) return
+
+        // Remove existing formdown-ui if present
+        const existingUI = container.querySelector('formdown-ui')
+        if (existingUI) {
+            existingUI.remove()
+        }
+
+        // Check if formdown-ui is registered
+        const isRegistered = customElements.get('formdown-ui')
+        console.log('formdown-ui registered:', !!isRegistered)
+        if (!isRegistered) {
+            console.warn('formdown-ui custom element not registered')
+            container.innerHTML = '<div style="padding: 1rem; color: #666;">Loading form preview...</div>'
+            return
+        }
+
+        // Create new formdown-ui component
+        const formdownUI = document.createElement('formdown-ui')
+        formdownUI.setAttribute('content', this.content)
+        formdownUI.style.width = '100%'
+        formdownUI.style.height = '100%'
+
+        console.log('Created formdown-ui element:', formdownUI)
+        // Listen for form data changes and dispatch them
+        formdownUI.addEventListener('formdown-data-update', (e: Event) => {
+            const customEvent = e as CustomEvent
+            this.dispatchEvent(new CustomEvent('formdown-data-update', {
+                detail: customEvent.detail,
+                bubbles: true,
+                composed: true
+            }))
+        })
+
+        formdownUI.addEventListener('formdown-change', (e: Event) => {
+            const customEvent = e as CustomEvent
+            this.dispatchEvent(new CustomEvent('formdown-change', {
+                detail: customEvent.detail,
+                bubbles: true,
+                composed: true
+            }))
+        })
+
+        container.appendChild(formdownUI)
+        console.log('Appended formdown-ui to container')
     }
 
     private handleInput(e: Event) {

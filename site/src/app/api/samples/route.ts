@@ -9,7 +9,34 @@ export async function GET() {
 
         const samples = await Promise.all(
             files
-                .filter(file => file.endsWith('.fd'))
+                .filter(file => file.endsWith('.fd')).sort((a, b) => {
+                    // Define preferred order for main samples
+                    const preferredOrder = [
+                        'complete-fields.fd',
+                        'contact.fd',
+                        'registration.fd',
+                        'survey.fd',
+                        'ecommerce.fd',
+                        'event.fd',
+                        'markdown-demo.fd',
+                        'minimal.fd'
+                    ]
+
+                    const aIndex = preferredOrder.indexOf(a)
+                    const bIndex = preferredOrder.indexOf(b)
+
+                    // If both are in preferred list, use that order
+                    if (aIndex !== -1 && bIndex !== -1) {
+                        return aIndex - bIndex
+                    }
+
+                    // Preferred files come first
+                    if (aIndex !== -1) return -1
+                    if (bIndex !== -1) return 1
+
+                    // Regular alphabetical order for other files
+                    return a.localeCompare(b)
+                })
                 .map(async (file) => {
                     const filePath = join(samplesDir, file)
                     const content = await readFile(filePath, 'utf-8')

@@ -131,15 +131,22 @@ Your age is ___@age[text].
 
 ### Selection Fields
 ```formdown
-// Radio buttons - single selection
+// Radio buttons - single selection (inline by default)
 @gender: [radio options="Male,Female,Other"]
 
-// Checkboxes - multiple selection  
+// Checkboxes - multiple selection (inline by default)
 @interests: [checkbox options="Web,Mobile,AI,Design"]
+
+// Vertical layout for longer option lists
+@preferences: [checkbox layout="vertical" options="Email Notifications,SMS Alerts,Phone Calls,Push Notifications"]
 
 // Select dropdown
 @country: [select options="USA,Canada,UK,Other"]
 ```
+
+**Layout Options:**
+- **Default (inline)**: Options are displayed horizontally, wrapping to new lines as needed
+- **`layout="vertical"`**: Options are displayed vertically, each on its own line
 
 ### Actions
 ```formdown

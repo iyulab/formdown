@@ -38,22 +38,24 @@
     "vite": "^6.3.5"
   },
   "keywords": [
-    "formdown",
     "editor",
-    "web-component",
-    "lit",
-    "form",
-    "markdown"
+    "development-tool"
   ],
-  "author": "iyulab",
+  "author": {
+    "name": "iyulab",
+    "url": "https://www.iyulab.com"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/formdown/formdown.git",
+    "url": "https://github.com/iyulab/formdown.git",
     "directory": "packages/formdown-editor"
   },
-  "homepage": "https://github.com/formdown/formdown#readme",
+  "homepage": "https://formdown.dev",
+  "publishConfig": {
+    "access": "public"
+  },
   "bugs": {
-    "url": "https://github.com/formdown/formdown/issues"
+    "url": "https://github.com/iyulab/formdown/issues"
   }
 }

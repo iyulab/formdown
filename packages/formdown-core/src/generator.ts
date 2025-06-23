@@ -97,17 +97,23 @@ ${fieldsHTML}
                 const inputsHTML = options?.map((opt, index) => {
                     const inputId = `${name}_${index}`
                     return `
-    <div class="formdown-option">
-        <input type="${type}" id="${inputId}" name="${name}" value="${opt}" ${required && index === 0 ? 'required' : ''}>
-        <label for="${inputId}">${opt}</label>
-    </div>`
+        <label for="${inputId}" class="formdown-option-label">
+            <input type="${type}" id="${inputId}" name="${name}" value="${opt}" ${required && index === 0 ? 'required' : ''}>
+            <span>${opt}</span>
+        </label>`
                 }).join('\n') || ''
+
+                // Check if vertical layout is requested
+                const isVertical = attributes?.layout === 'vertical'
+                const groupClass = isVertical ? `${type}-group vertical` : `${type}-group inline`
 
                 return `
 <div class="formdown-field">
     <fieldset>
         <legend>${label}${required ? ' *' : ''}</legend>
-        ${inputsHTML}
+        <div class="${groupClass}">
+${inputsHTML}
+        </div>
     </fieldset>
 </div>`
 
