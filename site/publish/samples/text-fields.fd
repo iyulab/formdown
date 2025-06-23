@@ -1,0 +1,37 @@
+# Text Input Fields Test
+
+This sample demonstrates all text-based input field types in Formdown.
+
+## Basic Text Fields
+
+@name(Full Name): [text required placeholder="Enter your full name"]
+@username: [text minlength=3 maxlength=20 placeholder="Choose a username"]
+@bio: [text maxlength=100 placeholder="Brief bio (optional)"]
+
+## Email and URL Fields
+
+@email(Email Address): [email required placeholder="user@example.com"]
+@website(Website URL): [url placeholder="https://yourwebsite.com"]
+
+## Password Fields
+
+@password(Password): [password required minlength=8 placeholder="Enter password"]
+@confirm_password(Confirm Password): [password required placeholder="Confirm your password"]
+
+## Telephone and Search
+
+@phone(Phone Number): [tel placeholder="+1 (555) 123-4567"]
+@search_query(Search): [search placeholder="Search products..."]
+
+## Textarea Fields
+
+@message(Message): [textarea rows=3 placeholder="Enter your message here..."]
+@description(Detailed Description): [textarea rows=5 maxlength=500 placeholder="Provide a detailed description..."]
+@notes(Additional Notes): [textarea rows=2 placeholder="Any additional notes (optional)"]
+
+## Hidden and Readonly Fields
+
+@user_id: [hidden value="12345"]
+@created_at(Created): [text readonly value="2025-06-23"]
+
+@submit_btn: [submit label="Test Text Fields"]
