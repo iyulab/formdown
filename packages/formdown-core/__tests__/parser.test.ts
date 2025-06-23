@@ -97,7 +97,7 @@ describe('FormdownParser', () => {
                 required: true,
                 attributes: {}
             })
-            expect(result.markdown).toContain('<formdown-field data-name="username"></formdown-field>')
+            expect(result.markdown).toContain('<span contenteditable="true" data-field-name="username"')
         })
 
         test('should parse multiple inline fields', () => {
@@ -141,7 +141,7 @@ Your username is ___@username[text required] and you are ___@age[number min=18] 
             expect(result.forms).toHaveLength(4)
             expect(result.markdown).toContain('# User Profile')
             expect(result.markdown).toContain('Please fill out your information:')
-            expect(result.markdown).toContain('<formdown-field data-name="username"></formdown-field>')
+            expect(result.markdown).toContain('<span contenteditable="true" data-field-name="username"')
         })
 
         test('should preserve markdown structure while extracting fields', () => {

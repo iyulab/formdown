@@ -13,7 +13,9 @@ export class FormdownGenerator {
             // For now, fallback to the old method
             return this.generateLegacyHTML(content)
         }
-    } private processFieldPlaceholders(html: string, fields: Field[]): string {
+    }
+
+    private processFieldPlaceholders(html: string, fields: Field[]): string {
         let result = html
 
         // Replace field placeholders with actual form fields

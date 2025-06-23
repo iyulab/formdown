@@ -67,7 +67,7 @@ Welcome ___@visitor_name[text]! Please tell us about yourself.
         expect(html).toContain('<textarea')
 
         // Verify inline fields are handled
-        expect(html).toContain('<formdown-field data-name="visitor_name">')
+        expect(html).toContain('<span contenteditable="true" data-field-name="visitor_name"')
     })
 
     test('should handle edge cases with @ symbols and brackets', () => {

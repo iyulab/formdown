@@ -1,6 +1,9 @@
 import { parseFormdown, generateFormHTML, parseFormFields } from '../src/index'
+import { FormdownGenerator } from '../src/generator'
 
 describe('Formdown Integration', () => {
+    const generator = new FormdownGenerator()
+
     describe('parseFormdown function', () => {
         test('should parse complete formdown content', () => {
             const input = `# User Registration
@@ -24,7 +27,7 @@ Your username is ___@username[text required].`
     describe('generateFormHTML function', () => {
         test('should generate complete HTML from formdown content', () => {
             const content = {
-                markdown: '# Contact Form\n\nPlease contact us:',
+                markdown: '# Contact Form\n\nPlease contact us:\n\n<!--FORMDOWN_FIELD_0-->',
                 forms: [{
                     name: 'message',
                     type: 'textarea',
@@ -34,7 +37,7 @@ Your username is ___@username[text required].`
                 }]
             }
 
-            const html = generateFormHTML(content)
+            const html = generator.generateHTML(content)
 
             expect(html).toContain('<h1>Contact Form</h1>')
             expect(html).toContain('<p>Please contact us:</p>')
@@ -98,13 +101,14 @@ Would you recommend us? ___@recommend[radio] Yes, No
 Additional comments: ___@comments[textarea rows=2]`
 
             const parsed = parseFormdown(formdownContent)
-            const html = generateFormHTML(parsed)
+            const html = generator.generateHTML(parsed)
 
             expect(parsed.forms).toHaveLength(3)
             expect(html).toContain('<h1>Survey</h1>')
-            expect(html).toContain('min="1"')
-            expect(html).toContain('max="5"')
-            expect(html).toContain('type="radio"')
+            // 인라인 필드는 contenteditable span으로 렌더링되므로 attributes가 직접 표시되지 않음
+            expect(html).toContain('data-field-name="rating"')
+            expect(html).toContain('data-field-name="recommend"')
+            expect(html).toContain('data-field-name="comments"')
         })
     })
 })

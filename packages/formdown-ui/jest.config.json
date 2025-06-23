@@ -16,18 +16,11 @@
     "setupFilesAfterEnv": [
         "<rootDir>/__tests__/setup.ts"
     ],
-    "moduleNameMapping": {
-        "\\.(css|less|scss)$": "identity-obj-proxy"
-    },
-    "globals": {
-        "ts-jest": {
-            "useESM": true,
-            "tsconfig": {
-                "verbatimModuleSyntax": false,
-                "esModuleInterop": true,
-                "allowSyntheticDefaultImports": true
-            }
-        }
+    "moduleNameMapper": {
+        "\\.(css|less|scss)$": "identity-obj-proxy",
+        "^lit$": "<rootDir>/__tests__/mocks/lit.js",
+        "^lit/decorators.js$": "<rootDir>/__tests__/mocks/lit-decorators.js",
+        "^@formdown/core$": "<rootDir>/__tests__/mocks/formdown-core.js"
     },
     "extensionsToTreatAsEsm": [
         ".ts"
@@ -36,8 +29,16 @@
         "^.+\\.ts$": [
             "ts-jest",
             {
-                "useESM": true
+                "useESM": true,
+                "tsconfig": {
+                    "verbatimModuleSyntax": false,
+                    "esModuleInterop": true,
+                    "allowSyntheticDefaultImports": true
+                }
             }
         ]
-    }
+    },
+    "transformIgnorePatterns": [
+        "node_modules/(?!(lit|@lit|lit-element|lit-html|@lit/reactive-element)/)"
+    ]
 }

@@ -328,7 +328,7 @@ export default function DemoPage() {
                             try {
                                 const parsed = JSON.parse(e.target.value)
                                 setFormData(parsed)
-                            } catch (error) {
+                            } catch {
                                 // Invalid JSON, don't update
                             }
                         }}

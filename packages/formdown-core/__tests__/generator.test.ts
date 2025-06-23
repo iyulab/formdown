@@ -26,7 +26,7 @@ describe('FormdownGenerator', () => {
 
         test('should combine markdown and form HTML', () => {
             const content: FormdownContent = {
-                markdown: '# Contact Us\n\nPlease fill out the form below:',
+                markdown: '# Contact Us\n\nPlease fill out the form below:\n\n<!--FORMDOWN_FIELD_0-->',
                 forms: [{
                     name: 'name',
                     type: 'text',
