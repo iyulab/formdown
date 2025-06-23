@@ -13,13 +13,15 @@ const packages = [
 function checkPublishReadiness() {
     console.log('🔍 Checking publish readiness...\n');
 
-    let allGood = true;
-
-    // Check if we're in a git repository and working directory is clean
+    let allGood = true;    // Check if we're in a git repository and working directory is clean
     try {
         const gitStatus = execSync('git status --porcelain', { encoding: 'utf8' });
         if (gitStatus.trim() !== '') {
-            console.error('❌ Git working directory is not clean. Please commit or stash your changes.');
+            console.error('❌ Git working directory is not clean.');
+            console.error('   Uncommitted changes detected. This is normal after version update.');
+            console.error('   The version update script should have auto-committed the changes.');
+            console.error('   If auto-commit failed, please run:');
+            console.error('   git add packages/*/package.json && git commit -m "chore: bump version"');
             allGood = false;
         } else {
             console.log('✅ Git working directory is clean');

@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const packages = [
     'packages/formdown-core',
@@ -69,6 +70,16 @@ function updateVersion(type) {
     });
 
     console.log(`✅ All packages updated to version ${newVersion}`);
+
+    // Auto-commit the version changes
+    try {
+        execSync('git add packages/*/package.json', { stdio: 'inherit' });
+        execSync(`git commit -m "chore: bump version to ${newVersion}"`, { stdio: 'inherit' });
+        console.log(`✅ Version changes committed to git`);
+    } catch (error) {
+        console.warn('⚠️  Could not auto-commit version changes. Please commit manually.');
+        console.warn('   Run: git add packages/*/package.json && git commit -m "chore: bump version to ' + newVersion + '"');
+    }
 }
 
 const versionType = process.argv[2];
