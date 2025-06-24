@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { readdir, readFile } from 'fs/promises'
 import { join } from 'path'
 
+// Force static for static export
 export const dynamic = 'force-static'
 
 export async function GET() {

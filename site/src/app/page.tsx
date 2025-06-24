@@ -53,9 +53,9 @@ export default function Home() {
                     '@message: [textarea rows=4 placeholder="Your message..."]\n' +
                     '\n' +
                     'How did you hear about us?\n' +
-                    '@source: [radio options="Website,Social Media,Friend,Other"]\n' +
+                    '@source: [radio] Website, Social Media, Friend, Other\n' +
                     '\n' +
-                    '@newsletter(Subscribe to newsletter): [checkbox options="Yes"]\n' +
+                    '@newsletter: [checkbox] Subscribe to newsletter\n' +
                     '\n' +
                     '@submit_btn: [submit label="Send Message"]'
                 )
@@ -172,61 +172,6 @@ export default function Home() {
                             Full TypeScript support with type definitions. Perfect for modern development workflows.
                         </p>
                     </div>                </div>
-            </section>
-
-            {/* UI Package Highlight */}
-            <section className="max-w-6xl mx-auto px-4 py-16 bg-gradient-to-r from-purple-50 to-blue-50 rounded-2xl mx-4">
-                <div className="text-center mb-12">
-                    <h3 className="text-3xl font-bold text-gray-900 mb-4">@formdown/ui - The Core Component</h3>
-                    <p className="text-gray-600 max-w-3xl mx-auto">
-                        While Formdown offers three packages (core, editor, ui), the <strong>@formdown/ui</strong> package
-                        is your main entry point. It provides ready-to-use web components that work everywhere.
-                    </p>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-8 items-center">
-                    <div>
-                        <h4 className="text-2xl font-semibold text-gray-900 mb-4">Why @formdown/ui?</h4>
-                        <ul className="space-y-3 text-gray-600">
-                            <li className="flex items-start">
-                                <svg className="w-5 h-5 text-green-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-                                </svg>
-                                <span><strong>Universal Compatibility:</strong> Works in React, Vue, Angular, or vanilla HTML</span>
-                            </li>
-                            <li className="flex items-start">
-                                <svg className="w-5 h-5 text-green-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-                                </svg>
-                                <span><strong>Complete Solution:</strong> Includes parser, generator, and UI components</span>
-                            </li>
-                            <li className="flex items-start">
-                                <svg className="w-5 h-5 text-green-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-                                </svg>
-                                <span><strong>Plug & Play:</strong> Just import and use, no complex setup required</span>
-                            </li>
-                            <li className="flex items-start">
-                                <svg className="w-5 h-5 text-green-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
-                                </svg>
-                                <span><strong>Future-Proof:</strong> Built on web standards with Lit framework</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="bg-white p-6 rounded-lg shadow-lg">
-                        <h5 className="text-lg font-semibold text-gray-900 mb-4">Quick Install</h5>
-                        <div className="bg-gray-900 text-green-400 p-4 rounded-md font-mono text-sm">
-                            <div className="mb-2"># Install the main UI package</div>
-                            <div className="text-white">npm install @formdown/ui</div>
-                        </div>                        <div className="mt-4 bg-gray-50 p-4 rounded-md">
-                            <div className="text-sm text-gray-600 mb-2">Then use in your HTML:</div>
-                            <div className="font-mono text-sm text-gray-800">
-                                &lt;formdown-ui content=&quot;@name: [text]&quot;&gt;&lt;/formdown-ui&gt;
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </section>
 
             {/* CTA */}

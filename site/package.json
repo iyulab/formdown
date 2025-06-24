@@ -25,9 +25,12 @@
     "@formdown/core": "file:../packages/formdown-core",
     "@formdown/editor": "file:../packages/formdown-editor",
     "@formdown/ui": "file:../packages/formdown-ui",
+    "@tailwindcss/typography": "^0.5.16",
+    "marked": "^15.0.12",
     "next": "15.3.4",
     "nextra": "^4.2.17",
     "nextra-theme-docs": "^4.2.17",
+    "prismjs": "^1.30.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

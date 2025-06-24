@@ -1,3 +1,6 @@
+// Export the class for SDK usage
+export { FormdownUI } from './formdown-ui.js'
+
 // Auto-register the web component when this module is imported
 import './formdown-ui'
 

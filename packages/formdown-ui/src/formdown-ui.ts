@@ -344,6 +344,18 @@ export class FormdownUI extends LitElement {
   constructor() {
     super()
   }
+
+  connectedCallback() {
+    super.connectedCallback()
+
+    // Use inner text as content if content property is empty
+    if (!this.content && this.textContent?.trim()) {
+      this.content = this.textContent.trim()
+      // Clear the text content to avoid duplication
+      this.textContent = ''
+    }
+  }
+
   render() {
     if (!this.content || !this.content.trim()) {
       return html`<div class="error">No Formdown content provided</div>`

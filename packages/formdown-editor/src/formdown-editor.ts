@@ -63,6 +63,19 @@ export class FormdownEditor extends LitElement {
 
     connectedCallback() {
         super.connectedCallback()
+
+        // Use inner text as content if content property is default and inner text exists
+        if (this.content === `@name: [text required placeholder="Enter your name"]
+@email: [email required]
+@age: [number min=18 max=100]
+@bio: [textarea rows=4 placeholder="Tell us about yourself"]
+@gender: [radio] Male, Female, Other
+@interests: [checkbox] Programming, Design, Music, Sports` && this.textContent?.trim()) {
+            this.content = this.textContent.trim()
+            // Clear the text content to avoid duplication
+            this.textContent = ''
+        }
+
         this.updateParseResult()
     }
 

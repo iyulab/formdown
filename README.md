@@ -53,7 +53,14 @@ document.body.appendChild(formElement);
 
 ## Documentation
 
+- **[Complete Documentation](https://formdown.dev/docs)** - Full syntax guide, examples, and API reference
+- **[Quick Start Guide](https://formdown.dev/docs/quick-start)** - Get up and running in minutes
+- **[Interactive Demo](https://formdown.dev/demo)** - Try Formdown in your browser
+
+### Local Documentation
+
 - [Syntax Guide](./docs/SYNTAX.md) - Complete formdown syntax reference
+- [Editor Guide](./docs/EDITOR.md) - Development environment and modes
 - [Tasks & Development](./docs/TASKS.md) - Current development status
 
 ## Contributing

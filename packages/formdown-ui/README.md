@@ -63,7 +63,7 @@ viewer.addEventListener('formSubmit', (event) => {
 
 ## Documentation
 
-For complete documentation, visit the [Formdown documentation](https://github.com/formdown/formdown).
+For complete documentation, visit the [Formdown documentation](https://github.com/iyulab/formdown).
 
 ## License
 

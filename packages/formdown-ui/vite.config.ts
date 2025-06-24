@@ -4,15 +4,16 @@ export default defineConfig({
     build: {
         lib: {
             entry: 'src/index.ts',
-            name: 'FormdownViewer',
+            name: 'FormdownUI',
             fileName: (format) => `index.${format}.js`,
             formats: ['es', 'umd']
         },
         rollupOptions: {
-            external: ['lit'],
+            external: ['lit', '@formdown/core'],
             output: {
                 globals: {
-                    lit: 'Lit'
+                    lit: 'Lit',
+                    '@formdown/core': 'FormdownCore'
                 }
             }
         }
