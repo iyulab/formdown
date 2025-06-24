@@ -1,7 +1,7 @@
 {
   "name": "@formdown/ui",
   "private": false,
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Pure HTML renderer for Formdown syntax",
   "type": "module",
   "main": "dist/index.es.js",
@@ -12,6 +12,10 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
       "require": "./dist/index.umd.js"
+    },
+    "./standalone": {
+      "import": "./dist/standalone.js",
+      "require": "./dist/standalone.umd.js"
     }
   },
   "files": [
@@ -20,7 +24,8 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && npm run build:standalone",
+    "build:standalone": "vite build --config vite.standalone.config.ts",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch"

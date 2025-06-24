@@ -1,6 +1,6 @@
 {
   "name": "@formdown/core",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Core parsing and generation engine for Formdown",
   "type": "module",
   "main": "dist/index.js",
@@ -15,13 +15,6 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "clean": "rimraf dist"
-  },
-  "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "@types/marked": "^5.0.2",
-    "jest": "^30.0.2",
-    "ts-jest": "^29.4.0",
-    "typescript": "^5.8.3"
   },
   "keywords": [
     "core",
@@ -44,5 +37,12 @@
   },
   "dependencies": {
     "marked": "^15.0.12"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/marked": "^5.0.2",
+    "jest": "^30.0.2",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.8.3"
   }
 }
