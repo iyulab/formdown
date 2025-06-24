@@ -1,0 +1,62 @@
+# Accessibility and Custom Attributes
+
+## Accessibility Best Practices
+
+FormDown supports all ARIA and accessibility attributes:
+
+### Screen Reader Support
+@full_name: [text required aria-label="Enter your full legal name" aria-describedby="name-help"]
+@email: [email required aria-label="Email address for account login" aria-describedby="email-help"]
+@password: [password required aria-label="Create a secure password" aria-describedby="pwd-requirements"]
+
+### Required Field Indicators
+@required_field: [text required aria-required="true" aria-describedby="required-note"]
+@optional_field: [text aria-required="false" aria-describedby="optional-note"]
+
+## Custom Data Attributes
+
+### JavaScript Integration
+@interactive_slider: [range min=0 max=100 data-live-update="true" data-unit="%" data-callback="updateValue"]
+@autocomplete_field: [text data-source="/api/suggestions" data-min-chars="2" data-debounce="300"]
+@file_upload: [file accept="image/*" data-max-size="5MB" data-preview="true" data-compress="true"]
+
+### Analytics and Tracking
+@tracked_input: [text data-track="user-input" data-category="registration" data-label="username"]
+@conversion_button: [submit label="Sign Up" data-analytics="conversion" data-event="signup-click"]
+
+### Validation and Formatting
+@phone_formatted: [tel data-format="us-phone" data-mask="(999) 999-9999" placeholder="(555) 123-4567"]
+@currency_input: [number step=0.01 data-currency="USD" data-symbol="$" placeholder="0.00"]
+@date_picker: [date data-min-date="today" data-max-date="+1year" data-exclude-weekends="true"]
+
+## CSS Framework Integration
+
+### Bootstrap Classes
+@bootstrap_input: [text class="form-control form-control-lg" placeholder="Bootstrap styled input"]
+@bootstrap_select: [select class="form-select" options="Option 1,Option 2,Option 3"]
+@bootstrap_button: [submit label="Submit" class="btn btn-primary btn-lg"]
+
+### Tailwind CSS Classes
+@tailwind_input: [text class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"]
+@tailwind_textarea: [textarea class="w-full h-32 px-3 py-2 text-gray-700 border rounded-lg focus:outline-none" rows=4]
+
+### Custom Styling
+@styled_range: [range min=0 max=100 class="custom-slider" style="width: 100%; height: 8px; background: linear-gradient(to right, #3498db, #2ecc71)"]
+@gradient_button: [submit label="Continue" style="background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px;"]
+
+## Advanced Input Patterns
+
+### Conditional Fields
+@user_type: [radio options="Individual,Business" data-conditional="true"]
+@business_name: [text label="Business Name" data-show-when="user_type=Business"]
+@tax_id: [text label="Tax ID" data-show-when="user_type=Business"]
+
+### Multi-step Forms
+@step1_name: [text data-step="1" data-required-for="step2"]
+@step2_details: [textarea data-step="2" data-depends="step1"]
+@step3_confirmation: [checkbox data-step="3" data-final="true"]
+
+### Real-time Validation
+@unique_username: [text data-validate="unique" data-endpoint="/check-username" data-debounce="500"]
+@password_strength: [password data-strength-meter="true" data-min-strength="3"]
+@confirm_password: [password data-match="password_strength" data-live-validate="true"]

@@ -32,22 +32,15 @@ export default function DocsPage() {
                     Complete documentation for Formdown - the human-readable form format.
                 </p>
 
-                {/* Test formdown-editor web component */}
+                {/* Quick Links */}
                 <div className="mb-8 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                    <h3 className="text-lg font-semibold mb-4">Interactive Editor Test</h3>
-                    <formdown-editor
-                        content="# Contact Form
-
-Name: _____
-Email: _____@_____
-Message: 
-_________
-_________
-_________
-
-[Submit]"
-                        show-preview="true"
-                    />
+                    <h3 className="text-lg font-semibold mb-4">Quick Start</h3>
+                    <p className="text-gray-600 mb-4">
+                        Get started with Formdown in minutes. Install the UI package and start creating interactive forms with markdown syntax.
+                    </p>
+                    <div className="bg-gray-900 text-green-400 p-4 rounded text-sm font-mono">
+                        npm install @formdown/ui
+                    </div>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">{sortedDocs.filter(doc => doc.slug !== 'index').map((doc) => (

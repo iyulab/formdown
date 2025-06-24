@@ -1,17 +1,20 @@
+import React from 'react';
+
 declare global {
     namespace JSX {
         interface IntrinsicElements {
-            'formdown-editor': {
-                ref?: React.RefObject<HTMLElement>;
+            'formdown-editor': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
                 content?: string;
-                'show-preview'?: string;
-                [key: string]: string | number | boolean | undefined;
+                'show-preview'?: string | boolean;
+                mode?: 'editor' | 'split' | 'preview';
+                header?: string | boolean;
             };
-            'formdown-viewer': {
-                ref?: React.RefObject<HTMLElement>;
+            'formdown-ui': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
                 content?: string;
                 'submit-text'?: string;
-                [key: string]: string | number | boolean | undefined;
+            };
+            'formdown-form': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+                content?: string;
             };
         }
     }
