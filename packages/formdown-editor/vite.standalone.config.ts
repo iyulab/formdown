@@ -10,10 +10,13 @@ export default defineConfig({
         },
         rollupOptions: {
             output: {
-                inlineDynamicImports: true
+                inlineDynamicImports: true,
+                format: 'es'
             }
         },
         outDir: 'dist',
-        emptyOutDir: false
+        emptyOutDir: false,
+        minify: false,
+        sourcemap: true
     }
 })

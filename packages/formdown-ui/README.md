@@ -1,11 +1,11 @@
-# @formdown/viewer
+# @formdown/ui
 
 Web component viewer for rendering Formdown forms.
 
 ## Installation
 
 ```bash
-npm install @formdown/viewer
+npm install @formdown/ui
 ```
 
 ## Usage
@@ -14,22 +14,22 @@ npm install @formdown/viewer
 
 ```html
 <script type="module">
-  import '@formdown/viewer'
+  import '@formdown/ui'
 </script>
 
-<formdown-viewer 
+<formdown-ui 
   content="@name: [text required]
 @email: [email required]"
   submit-text="Submit Form">
-</formdown-viewer>
+</formdown-ui>
 ```
 
 ### JavaScript
 
 ```typescript
-import '@formdown/viewer'
+import '@formdown/ui'
 
-const viewer = document.querySelector('formdown-viewer')
+const viewer = document.querySelector('formdown-ui')
 viewer.content = '@name: [text required]'
 viewer.submitText = 'Submit Form'
 

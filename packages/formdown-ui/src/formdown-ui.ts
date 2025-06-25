@@ -78,6 +78,9 @@ export class FormdownUI extends LitElement {
 
     select {
       cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
       background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
       background-position: right 0.5rem center;
       background-repeat: no-repeat;
@@ -386,6 +389,7 @@ export class FormdownUI extends LitElement {
   // Override updated to update content when properties change
   override updated(changedProperties: Map<string | number | symbol, unknown>) {
     super.updated(changedProperties)
+
     if (changedProperties.has('content')) {
       this.updateContent()
     }
@@ -445,7 +449,7 @@ export class FormdownUI extends LitElement {
         // Initialize field with existing data
         const existingValue = this.data[fieldName]
         if (existingValue !== undefined) {
-          this.setElementValue(htmlElement, String(existingValue))
+          this.setElementValue(htmlElement, existingValue)
         }
 
         // Setup universal event handlers
@@ -482,6 +486,30 @@ export class FormdownUI extends LitElement {
 
   private setupFieldEventHandlers(element: HTMLElement, fieldName: string) {    // Universal input/change handler
     const handleValueChange = () => {
+      // For checkbox handling
+      if (element instanceof HTMLInputElement && element.type === 'checkbox') {
+        const allCheckboxes = this.shadowRoot?.querySelectorAll(`input[type="checkbox"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
+
+        // Check if this is a single checkbox (value="true") or checkbox group (multiple with different values)
+        const isSingleCheckbox = allCheckboxes.length === 1 && allCheckboxes[0].value === 'true'
+
+        if (isSingleCheckbox) {
+          // Single checkbox (returns boolean)
+          this.updateDataReactively(fieldName, element.checked, element)
+          return
+        } else {
+          // Multiple checkboxes with same name = checkbox group (returns array)
+          const checkedValues: string[] = []
+          allCheckboxes.forEach(cb => {
+            if (cb.checked) {
+              checkedValues.push(cb.value)
+            }
+          })
+          this.updateDataReactively(fieldName, checkedValues, element)
+          return
+        }
+      }
+
       const value = this.getFieldValue(element)
       this.updateDataReactively(fieldName, value, element)
     }
@@ -548,7 +576,7 @@ export class FormdownUI extends LitElement {
   }
 
   // Reactive data management - data is the single source of truth
-  private updateDataReactively(fieldName: string, value: string, sourceElement?: HTMLElement) {
+  private updateDataReactively(fieldName: string, value: string | string[] | boolean, sourceElement?: HTMLElement) {
     if (this._isUpdatingUI) return // Prevent infinite loops
 
     // Update the reactive data property (source of truth)
@@ -568,7 +596,7 @@ export class FormdownUI extends LitElement {
       const fieldsToSync = fieldName ? [fieldName] : Object.keys(this.data)
 
       fieldsToSync.forEach(field => {
-        const value = this.data[field] || ''
+        const value = this.data[field]
         const boundElements = this.fieldRegistry.get(field)
 
         if (boundElements) {
@@ -582,18 +610,45 @@ export class FormdownUI extends LitElement {
       this._isUpdatingUI = false
     }
   }
-
   // Universal element value setter
-  private setElementValue(element: HTMLElement, value: string) {
+  private setElementValue(element: HTMLElement, value: string | string[] | boolean) {
     if (element.hasAttribute('contenteditable')) {
-      if (element.textContent !== value) {
-        element.textContent = value
+      const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
+      if (element.textContent !== stringValue) {
+        element.textContent = stringValue
       }
-    } else if (element instanceof HTMLInputElement ||
-      element instanceof HTMLTextAreaElement ||
-      element instanceof HTMLSelectElement) {
-      if (element.value !== value) {
-        element.value = value
+    } else if (element instanceof HTMLInputElement) {
+      if (element.type === 'checkbox') {
+        // Handle checkbox logic
+        if (Array.isArray(value)) {
+          // Checkbox group - check if this element's value is in the array
+          element.checked = value.includes(element.value)
+        } else if (typeof value === 'boolean') {
+          // Single checkbox - use boolean value directly
+          element.checked = value
+        } else {
+          // Fallback for string values
+          element.checked = Boolean(value) && (value === 'true' || value === element.value)
+        }
+      } else if (element.type === 'radio') {
+        // Radio button - check if this element's value matches the data value
+        element.checked = element.value === String(value)
+      } else {
+        // Other input types
+        const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
+        if (element.value !== stringValue) {
+          element.value = stringValue
+        }
+      }
+    } else if (element instanceof HTMLSelectElement) {
+      const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
+      if (element.value !== stringValue) {
+        element.value = stringValue
+      }
+    } else if (element instanceof HTMLTextAreaElement) {
+      const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
+      if (element.value !== stringValue) {
+        element.value = stringValue
       }
     }
   }
@@ -630,7 +685,7 @@ export class FormdownUI extends LitElement {
   }
 
   // Emit standardized events
-  private emitFieldEvents(fieldName: string, value: string) {
+  private emitFieldEvents(fieldName: string, value: string | string[] | boolean) {
     const currentFormData = this.getFormData()
 
     this.dispatchEvent(new CustomEvent('formdown-change', {

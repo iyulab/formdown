@@ -62,6 +62,36 @@ export class FormdownEditor extends LitElement {
     @property({ type: Boolean })
     header = false
 
+    @property({ type: Boolean })
+    toolbar = true
+
+    @state()
+    private _data: Record<string, any> = {}
+
+    // Getter and setter for data to handle nested structures
+    get data(): Record<string, any> {
+        return this._data
+    }
+
+    set data(value: Record<string, any>) {
+        let cleanedValue: Record<string, any> = {}
+
+        if (value && typeof value === 'object') {
+            // Clean up nested formData structures
+            if ('formData' in value && typeof value.formData === 'object') {
+                cleanedValue = { ...value.formData }
+            } else {
+                cleanedValue = { ...value }
+            }
+
+            // Process checkbox fields to ensure they are arrays
+            cleanedValue = this.processCheckboxFields(cleanedValue)
+        }
+
+        this._data = cleanedValue
+        this.requestUpdate('data')
+    }
+
     @state()
     private parseResult: ParseResult = { fields: [], errors: [] }
 
@@ -97,6 +127,7 @@ export class FormdownEditor extends LitElement {
             <div class="${containerClass}">
                 ${this.mode !== 'view' ? renderEditorPanel(
             this.header,
+            this.toolbar,
             this.content,
             this.placeholder,
             this.insertSnippet.bind(this),
@@ -109,9 +140,46 @@ export class FormdownEditor extends LitElement {
     } updated(changedProperties: Map<string | number | symbol, unknown>) {
         super.updated(changedProperties)
 
-        // Update formdown-ui component when content changes
-        if (this.mode !== 'edit' && (changedProperties.has('content') || changedProperties.has('parseResult'))) {
+        // If mode changed, preserve data and force update of formdown-ui
+        if (changedProperties.has('mode')) {
+            // Store current data to preserve it across mode changes
+            const currentData = this._data
+
+            // If switching to a mode that uses formdown-ui, ensure it gets updated
+            if (this.mode !== 'edit') {
+                this.updateFormdownUI()
+
+                // Restore data after UI update
+                if (currentData && Object.keys(currentData).length > 0) {
+                    setTimeout(() => {
+                        const container = this.shadowRoot?.querySelector('#formdown-ui-container')
+                        const formdownUI = container?.querySelector('formdown-ui') as any
+                        if (formdownUI) {
+                            formdownUI.data = currentData
+                        }
+                    }, 0)
+                }
+            }
+            return
+        }
+
+        // Update formdown-ui component when content or parseResult changes
+        // Don't update on data changes to prevent infinite loops (data is updated directly)
+        if (this.mode !== 'edit' && (
+            changedProperties.has('content') ||
+            changedProperties.has('parseResult')
+        )) {
             this.updateFormdownUI()
+        }
+
+        // Handle data changes separately to avoid infinite loops
+        if (changedProperties.has('data') && this.mode !== 'edit') {
+            const container = this.shadowRoot?.querySelector('#formdown-ui-container')
+            const formdownUI = container?.querySelector('formdown-ui') as any
+            if (formdownUI && this.data && typeof this.data === 'object') {
+                // Only update formdown-ui data if it exists and avoid triggering events
+                formdownUI.data = this.data
+            }
         }
     } firstUpdated(changedProperties: Map<string | number | symbol, unknown>) {
         super.firstUpdated(changedProperties)
@@ -121,54 +189,70 @@ export class FormdownEditor extends LitElement {
             this.updateFormdownUI()
         }
     } private updateFormdownUI() {
-        console.log('updateFormdownUI called, mode:', this.mode, 'content:', this.content.substring(0, 50))
         const container = this.shadowRoot?.querySelector('#formdown-ui-container')
-        console.log('Container found:', !!container)
         if (!container) return
-
-        // Remove existing formdown-ui if present
-        const existingUI = container.querySelector('formdown-ui')
-        if (existingUI) {
-            existingUI.remove()
-        }
 
         // Check if formdown-ui is registered
         const isRegistered = customElements.get('formdown-ui')
-        console.log('formdown-ui registered:', !!isRegistered)
         if (!isRegistered) {
-            console.warn('formdown-ui custom element not registered')
             container.innerHTML = '<div style="padding: 1rem; color: #666;">Loading form preview...</div>'
             return
         }
 
-        // Create new formdown-ui component
-        const formdownUI = document.createElement('formdown-ui')
+        // Get or create formdown-ui element
+        let formdownUI = container.querySelector('formdown-ui') as any
+
+        if (!formdownUI) {
+            // Create new formdown-ui component only if it doesn't exist
+            formdownUI = document.createElement('formdown-ui')
+            formdownUI.style.width = '100%'
+            formdownUI.style.height = '100%'
+
+
+            // Set up event listeners only once
+            formdownUI.addEventListener('formdown-data-update', (e: Event) => {
+                const customEvent = e as CustomEvent
+
+                // Extract the actual form data, handle nested formData structure
+                let newData = customEvent.detail
+                if (newData && typeof newData === 'object' && 'formData' in newData) {
+                    // If it's wrapped in formData, extract the actual data
+                    newData = newData.formData
+                }
+
+                // Process checkbox fields to ensure they are arrays
+                newData = this.processCheckboxFields(newData)
+
+                // Update our data property (this will trigger reactive update)
+                this.data = { ...newData }
+
+                // Also dispatch the event for external listeners
+                this.dispatchEvent(new CustomEvent('formdown-data-update', {
+                    detail: newData,  // Pass the clean data
+                    bubbles: true,
+                    composed: true
+                }))
+            })
+
+            formdownUI.addEventListener('formdown-change', (e: Event) => {
+                const customEvent = e as CustomEvent
+                this.dispatchEvent(new CustomEvent('formdown-change', {
+                    detail: customEvent.detail,
+                    bubbles: true,
+                    composed: true
+                }))
+            })
+
+            container.appendChild(formdownUI)
+        }
+
+        // Update properties on existing element
         formdownUI.setAttribute('content', this.content)
-        formdownUI.style.width = '100%'
-        formdownUI.style.height = '100%'
 
-        console.log('Created formdown-ui element:', formdownUI)
-        // Listen for form data changes and dispatch them
-        formdownUI.addEventListener('formdown-data-update', (e: Event) => {
-            const customEvent = e as CustomEvent
-            this.dispatchEvent(new CustomEvent('formdown-data-update', {
-                detail: customEvent.detail,
-                bubbles: true,
-                composed: true
-            }))
-        })
-
-        formdownUI.addEventListener('formdown-change', (e: Event) => {
-            const customEvent = e as CustomEvent
-            this.dispatchEvent(new CustomEvent('formdown-change', {
-                detail: customEvent.detail,
-                bubbles: true,
-                composed: true
-            }))
-        })
-
-        container.appendChild(formdownUI)
-        console.log('Appended formdown-ui to container')
+        // Preserve and set current data if it exists
+        if (this._data && Object.keys(this._data).length > 0) {
+            formdownUI.data = this._data
+        }
     }
 
     private handleInput(e: Event) {
@@ -235,6 +319,73 @@ export class FormdownEditor extends LitElement {
             bubbles: true,
             composed: true
         }))
+    }
+
+    private processCheckboxFields(data: Record<string, any>): Record<string, any> {
+        if (!data || typeof data !== 'object') {
+            return data
+        }
+
+        const processedData = { ...data }
+
+        // Parse content to find checkbox fields and their types
+        const checkboxFieldInfo = this.getCheckboxFieldsFromContent()
+
+        // Process each checkbox field based on its type
+        checkboxFieldInfo.forEach(({ fieldName, isGroup }) => {
+            if (fieldName in processedData) {
+                const value = processedData[fieldName]
+
+                if (isGroup) {
+                    // Checkbox group - should be an array
+                    if (Array.isArray(value)) {
+                        // Already an array, keep it as is
+                        processedData[fieldName] = value
+                    } else if (typeof value === 'string' && value.trim() !== '') {
+                        // Convert comma-separated string to array
+                        processedData[fieldName] = value.split(',').map(v => v.trim()).filter(v => v)
+                    } else {
+                        // Ensure it's always an array for checkbox groups
+                        processedData[fieldName] = value ? [value] : []
+                    }
+                } else {
+                    // Single checkbox - should be boolean
+                    if (typeof value === 'boolean') {
+                        // Already boolean, keep it as is
+                        processedData[fieldName] = value
+                    } else if (Array.isArray(value)) {
+                        // Convert array to boolean (true if has items)
+                        processedData[fieldName] = value.length > 0
+                    } else {
+                        // Convert other types to boolean
+                        processedData[fieldName] = Boolean(value)
+                    }
+                }
+            }
+        })
+
+        return processedData
+    }
+
+    private getCheckboxFieldsFromContent(): { fieldName: string, isGroup: boolean }[] {
+        const checkboxFields: { fieldName: string, isGroup: boolean }[] = []
+        const lines = this.content.split('\n')
+
+        lines.forEach(line => {
+            // Match @fieldname: [checkbox ...]
+            const match = line.match(/@(\w+):\s*\[([^\]]*checkbox[^\]]*)\]/i)
+            if (match) {
+                const fieldName = match[1]
+                const checkboxConfig = match[2]
+
+                // Check if it has options (checkbox group) or not (single checkbox)
+                const isGroup = checkboxConfig.includes('options=')
+
+                checkboxFields.push({ fieldName, isGroup })
+            }
+        })
+
+        return checkboxFields
     }
 }
 

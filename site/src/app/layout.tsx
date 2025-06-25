@@ -13,8 +13,66 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Formdown",
-  description: "A powerful form generation tool",
+  title: {
+    default: "Formdown - Markdown-based Form Builder",
+    template: "%s | Formdown"
+  },
+  description: "Create beautiful, interactive HTML forms using a simple markdown-like syntax. Build forms quickly with real-time preview, validation, and seamless integration.",
+  keywords: [
+    "form builder",
+    "markdown forms",
+    "html forms",
+    "form generator",
+    "web forms",
+    "interactive forms",
+    "form validation",
+    "formdown",
+    "javascript forms",
+    "typescript forms"
+  ],
+  authors: [{ name: "iyulab" }],
+  creator: "iyulab",
+  publisher: "iyulab",
+  metadataBase: new URL('https://formdown.dev'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://formdown.dev',
+    title: 'Formdown - Markdown-based Form Builder',
+    description: 'Create beautiful, interactive HTML forms using a simple markdown-like syntax. Build forms quickly with real-time preview, validation, and seamless integration.',
+    siteName: 'Formdown',
+    images: [
+      {
+        url: '/logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Formdown - Markdown-based Form Builder',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Formdown - Markdown-based Form Builder',
+    description: 'Create beautiful, interactive HTML forms using a simple markdown-like syntax.',
+    images: ['/logo.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: 'your-google-verification-code', // Replace with actual verification code
+  },
 };
 
 export default function RootLayout({
@@ -22,8 +80,54 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'Formdown',
+    description: 'Create beautiful, interactive HTML forms using a simple markdown-like syntax',
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Web Browser',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    creator: {
+      '@type': 'Organization',
+      name: 'iyulab',
+      url: 'https://github.com/iyulab'
+    },
+    url: 'https://formdown.dev',
+    downloadUrl: 'https://github.com/iyulab/formdown',
+    sameAs: [
+      'https://github.com/iyulab/formdown',
+      'https://www.npmjs.com/package/@formdown/core'
+    ]
+  };
+
   return (
     <html lang="en">
+      <head>
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XP031KBMJE"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-XP031KBMJE');
+            `,
+          }}
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

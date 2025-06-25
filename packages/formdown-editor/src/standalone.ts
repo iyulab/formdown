@@ -3,31 +3,18 @@
 
 import { FormdownEditor } from './formdown-editor.js'
 
+// Direct import of formdown-ui to ensure it's bundled
+import { FormdownUI } from '../../formdown-ui/src/formdown-ui.js'
+
 // Ensure the web component is registered immediately when this script loads
 if (!customElements.get('formdown-editor')) {
     customElements.define('formdown-editor', FormdownEditor)
 }
 
-// Also register formdown-ui if available
-async function registerFormdownUI() {
-    try {
-        // Using any to bypass type checking for optional dependency
-        const formdownUIModule = await import('@formdown/ui' as any)
-        const FormdownUI = formdownUIModule?.FormdownUI
-        if (FormdownUI && !customElements.get('formdown-ui')) {
-            customElements.define('formdown-ui', FormdownUI)
-        }
-    } catch (error) {
-        console.warn('formdown-ui not available for auto-registration:', error)
-    }
+// Register formdown-ui
+if (FormdownUI && !customElements.get('formdown-ui')) {
+    customElements.define('formdown-ui', FormdownUI)
 }
-
-registerFormdownUI()
 
 // Export for programmatic usage
 export { FormdownEditor, createFormdownEditor } from './index.js'
-
-// Make it available globally for script tag usage
-if (typeof window !== 'undefined') {
-    (window as any).FormdownEditor = FormdownEditor
-}

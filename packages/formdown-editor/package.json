@@ -24,8 +24,11 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && npm run build:standalone",
+    "build": "tsc && vite build && npm run build:standalone && npm run build:bundle",
     "build:standalone": "vite build --config vite.standalone.config.ts",
+    "build:bundle": "vite build --config vite.bundle.config.ts",
+    "build:all": "npm run build && npm run build:package",
+    "build:package": "node scripts/build-package.js",
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch"

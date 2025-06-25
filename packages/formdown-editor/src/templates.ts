@@ -13,6 +13,7 @@ export interface ParseResult {
 
 export function renderEditorPanel(
     header: boolean,
+    toolbar: boolean,
     content: string,
     placeholder: string,
     insertSnippet: (snippet: string) => void,
@@ -24,26 +25,25 @@ export function renderEditorPanel(
             ${header ? html`
                 <div class="panel-header">Formdown Editor</div>
             ` : ''}
-            <div class="toolbar">
-                <button class="toolbar-button" @click=${() => insertSnippet('@name: [text required]')}>
-                    Text Field
-                </button>
-                <button class="toolbar-button" @click=${() => insertSnippet('@bio: [textarea rows=4]')}>
-                    Textarea
-                </button>
-                <button class="toolbar-button" @click=${() => insertSnippet(`@gender: [radio required options="Option 1,Option 2"]`)}>
-                    Radio
-                </button>
-                <button class="toolbar-button" @click=${() => insertSnippet(`@interests: [checkbox options="Item 1,Item 2"]`)}>
-                    Checkbox
-                </button>
-                <button class="toolbar-button" @click=${() => insertSnippet(`@country: [select required options="USA,Canada,UK"]`)}>
-                    Select
-                </button>
-                <button class="toolbar-button" @click=${() => insertSnippet('@full_name(Custom Label): [text required]')}>
-                    Custom Label
-                </button>
-            </div>
+            ${toolbar ? html`
+                <div class="toolbar">
+                    <button class="toolbar-button" @click=${() => insertSnippet('@name: [text required]')}>
+                        Text
+                    </button>
+                    <button class="toolbar-button" @click=${() => insertSnippet('@bio: [textarea rows=4]')}>
+                        Textarea
+                    </button>
+                    <button class="toolbar-button" @click=${() => insertSnippet(`@gender: [radio required options="Option 1,Option 2"]`)}>
+                        Radio
+                    </button>
+                    <button class="toolbar-button" @click=${() => insertSnippet(`@interests: [checkbox options="Item 1,Item 2"]`)}>
+                        Check
+                    </button>
+                    <button class="toolbar-button" @click=${() => insertSnippet(`@country: [select required options="USA,Canada,UK"]`)}>
+                        Select
+                    </button>
+                </div>
+            ` : ''}
 
             <textarea
                 class="editor-textarea"

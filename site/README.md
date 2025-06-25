@@ -1,33 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Formdown Documentation Site
+
+This is the official documentation website for Formdown, built with [Next.js](https://nextjs.org) and optimized for SEO and performance.
+
+## About Formdown
+
+Formdown is a powerful form generation tool that transforms Markdown documents into interactive web forms. Create beautiful, functional forms using a simple markdown-like syntax with real-time preview and validation.
 
 ## Getting Started
 
-First, run the development server:
+### Development
+
+First, install dependencies and run the development server:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Building for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To build the static site for production:
+
+```bash
+npm run build
+```
+
+This will generate a static export in the `publish/` directory.
+
+## Project Structure
+
+- `src/app/` - Next.js app router pages and layouts
+- `content/docs/` - Documentation content in Markdown
+- `public/` - Static assets (images, icons, etc.)
+- `src/components/` - Reusable React components
+- `src/lib/` - Utility functions and configurations
+
+## SEO Optimizations
+
+This site includes comprehensive SEO optimizations:
+
+- ✅ Structured data (JSON-LD)
+- ✅ Open Graph meta tags
+- ✅ Twitter Card meta tags
+- ✅ Semantic HTML structure
+- ✅ Sitemap generation
+- ✅ Robots.txt
+- ✅ Manifest for PWA
+- ✅ Performance headers
+- ✅ Accessibility features
+
+## Features
+
+- **Interactive Demos**: Live formdown editor with sample forms
+- **Documentation**: Comprehensive guides and API references
+- **Responsive Design**: Mobile-first responsive layout
+- **Performance**: Optimized for Core Web Vitals
+- **Accessibility**: WCAG compliant with proper ARIA labels
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [Formdown GitHub Repository](https://github.com/iyulab/formdown)
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Nextra Documentation](https://nextra.site/)
 
 ## Deploy on Vercel
 
