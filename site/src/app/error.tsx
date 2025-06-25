@@ -1,7 +1,9 @@
 'use client'
 
+import Link from 'next/link'
+
 export default function Error({
-    error,
+    error, // eslint-disable-line @typescript-eslint/no-unused-vars
     reset,
 }: {
     error: Error & { digest?: string }
@@ -28,12 +30,12 @@ export default function Error({
                             >
                                 Try Again
                             </button>
-                            <a
+                            <Link
                                 href="/"
                                 className="bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block"
                             >
                                 Go Home
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>

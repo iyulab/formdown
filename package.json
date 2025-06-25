@@ -1,6 +1,6 @@
 {
     "name": "formdown",
-    "version": "0.1.0",
+    "version": "0.1.8",
     "description": "A declarative form builder using markdown-like syntax",
     "private": true,
     "workspaces": [
