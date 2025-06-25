@@ -281,9 +281,9 @@ export default function DemoPage() {
                             <h2 className="text-lg font-semibold text-gray-800">Editor</h2>
                             <p className="text-sm text-gray-600">Edit the Formdown content</p>
                         </div>
-                        <div className="p-4 flex-1 min-h-0 overflow-hidden">
+                        <div className="flex-1 min-h-0 overflow-hidden">
                             {isComponentsLoaded ? (
-                                <div id="editor-container" className="h-full border rounded"></div>
+                                <div id="editor-container" className="h-full"></div>
                             ) : (
                                 <div className="flex items-center justify-center h-full text-gray-500">
                                     Loading editor...
@@ -298,9 +298,9 @@ export default function DemoPage() {
                             <h2 className="text-lg font-semibold text-gray-800">Preview</h2>
                             <p className="text-sm text-gray-600">Live preview of the generated form</p>
                         </div>
-                        <div className="p-4 flex-1 min-h-0 overflow-auto">
+                        <div className="flex-1 min-h-0 overflow-auto">
                             {isComponentsLoaded ? (
-                                <div id="renderer-container" className="h-full"></div>
+                                <div id="renderer-container" className="h-full p-4"></div>
                             ) : (
                                 <div className="flex items-center justify-center h-full text-gray-500">
                                     Loading renderer...

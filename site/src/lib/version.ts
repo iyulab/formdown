@@ -5,7 +5,7 @@ export const FORMDOWN_VERSIONS = {
   core: "0.1.8",
   ui: "0.1.8", 
   editor: "0.1.8",
-  site: "0.1.0"
+  site: "0.1.8"
 } as const;
 
 export const FORMDOWN_INFO = {
