@@ -1,0 +1,61 @@
+# Validation and Attributes Test
+
+This sample demonstrates various validation rules and HTML attributes.
+
+## Required Field Validation
+
+@required_text(Required Text): [text required placeholder="This field is required"]
+@required_email(Required Email): [email required]
+@required_number(Required Number): [number required min=1]
+
+## Length Validation
+
+@min_length(Minimum Length): [text minlength=5 placeholder="At least 5 characters"]
+@max_length(Maximum Length): [text maxlength=20 placeholder="Maximum 20 characters"]
+@exact_range(Character Range): [text minlength=8 maxlength=16 placeholder="8-16 characters"]
+
+## Numeric Validation
+
+@min_value(Minimum Value): [number min=10 placeholder="Minimum value: 10"]
+@max_value(Maximum Value): [number max=100 placeholder="Maximum value: 100"]
+@step_value(Step Value): [number min=0 max=100 step=5 placeholder="Increments of 5"]
+
+## Pattern Validation
+
+@phone_pattern(Phone Pattern): [text pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890"]
+@zip_code(ZIP Code): [text pattern="[0-9]{5}" placeholder="12345"]
+@username_pattern(Username): [text pattern="[a-zA-Z0-9_]{3,16}" placeholder="Letters, numbers, underscore only"]
+
+## Accessibility Attributes
+
+@accessible_name(Accessible Name): [text aria-label="User's full name" placeholder="Full name"]
+@described_field(Described Field): [text aria-describedby="help-text" placeholder="Enter data"]
+@labeled_field(Labeled Field): [text aria-labelledby="custom-label"]
+
+## Custom Data Attributes
+
+@tracked_field(Tracked Field): [text data-track="user-input" data-category="personal"]
+@analytics_field(Analytics Field): [text data-analytics="form-field" data-event="input-change"]
+
+## CSS Classes and Styling
+
+@styled_input(Styled Input): [text class="custom-input highlighted" placeholder="Custom styled field"]
+@large_input(Large Input): [text class="input-lg" placeholder="Large input field"]
+
+## Autocomplete Attributes
+
+@autocomplete_name(Name with Autocomplete): [text autocomplete="name" placeholder="Browser will suggest names"]
+@autocomplete_email(Email with Autocomplete): [email autocomplete="email" placeholder="Browser will suggest emails"]
+@autocomplete_phone(Phone with Autocomplete): [tel autocomplete="tel" placeholder="Browser will suggest phone numbers"]
+
+## Disabled and Readonly States
+
+@disabled_field(Disabled Field): [text disabled value="This field is disabled"]
+@readonly_field(Readonly Field): [text readonly value="This field is readonly"]
+
+## Spellcheck Control
+
+@spellcheck_on(Spellcheck On): [text spellcheck="true" placeholder="Spellcheck enabled"]
+@spellcheck_off(Spellcheck Off): [text spellcheck="false" placeholder="Spellcheck disabled"]
+
+@submit_validation: [submit label="Test Validation"]

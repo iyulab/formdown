@@ -1,0 +1,93 @@
+1:"$Sreact.fragment"
+2:I[7555,[],""]
+3:I[1295,[],""]
+4:I[9243,["499","static/chunks/app/docs/layout-1b0e5181de9dd377.js"],""]
+6:I[9665,[],"OutletBoundary"]
+9:I[4911,[],"AsyncMetadataOutlet"]
+b:I[9665,[],"ViewportBoundary"]
+d:I[9665,[],"MetadataBoundary"]
+f:I[6614,[],""]
+:HL["/_next/static/css/19143536be99cd8e.css","style"]
+0:{"P":null,"b":"w9KtHaLcz-nGlT8oOz5Mz","p":"","c":["","docs","overview",""],"i":false,"f":[[["",{"children":["docs",{"children":[["slug","overview","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/19143536be99cd8e.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}],{"children":["docs",["$","$1","c",{"children":[null,["$","div",null,{"className":"docs-layout","children":[["$","$L4",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L4",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]]}],{"children":[["slug","overview","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L5",null,["$","$L6",null,{"children":["$L7","$L8",["$","$L9",null,{"promise":"$@a"}]]}]]}],{},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","iHaRulvs6uVpNzUMBpiqcv",{"children":[["$","$Lb",null,{"children":"$Lc"}],null]}],["$","$Ld",null,{"children":"$Le"}]]}],false]],"m":"$undefined","G":["$f","$undefined"],"s":false,"S":true}
+10:"$Sreact.suspense"
+11:I[4911,[],"AsyncMetadata"]
+13:I[6874,["874","static/chunks/874-1d5071fab5c23a5a.js","508","static/chunks/app/docs/%5Bslug%5D/page-9c538a59c4b3c60e.js"],""]
+e:["$","div",null,{"hidden":true,"children":["$","$10",null,{"fallback":null,"children":["$","$L11",null,{"promise":"$@12"}]}]}]
+14:T449,prose prose-lg max-w-none   prose-headings:text-gray-900 prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 prose-p:leading-relaxed   prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 prose-strong:font-semibold   prose-code:text-pink-600 prose-code:bg-pink-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 prose-blockquote:bg-blue-50 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700   prose-table:border-collapse prose-table:border prose-table:border-gray-300   prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 prose-td:px-3 prose-td:py-215:T13d7,<p>Formdown is a simple, human-readable format for creating web forms. It combines the simplicity of Markdown with powerful form capabilities, allowing you to create complex forms with minimal syntax.</p>
+<h2>Core Philosophy</h2>
+<ul>
+<li><strong>Human-readable</strong>: Forms should be readable and writable by humans</li>
+<li><strong>Simple syntax</strong>: Minimal learning curve with intuitive field definitions</li>
+<li><strong>Web standards</strong>: Generates clean, semantic HTML forms</li>
+<li><strong>Framework agnostic</strong>: Works with any web framework or vanilla JavaScript</li>
+</ul>
+<h2>Architecture</h2>
+<p>Formdown consists of three main packages:</p>
+<h3>@formdown/core</h3>
+<p>The parsing engine that converts Formdown syntax into structured data.</p>
+<h3>@formdown/ui</h3>
+<p>Web components and utilities for rendering forms in the browser. This is the main package most users will need.</p>
+<h3>@formdown/editor</h3>
+<p>Development tools including a live editor with syntax highlighting and real-time preview.</p>
+<h2>Key Features</h2>
+<ul>
+<li><strong>Inline fields</strong>: Embed form fields directly in markdown text</li>
+<li><strong>Rich field types</strong>: Support for all HTML5 input types plus custom components</li>
+<li><strong>Flexible attributes</strong>: Control validation, styling, and behavior</li>
+<li><strong>Markdown integration</strong>: Mix forms with rich text content</li>
+<li><strong>Zero dependencies</strong>: Lightweight and fast</li>
+</ul>
+<h2>Example</h2>
+<h3><code>@formdown/editor</code></h3>
+<formdown-editor mode="split" style="height: 300px;">
+### Registration Form
+Please fill out the form below to register.
+@name: [text required placeholder="Enter your name"]
+@email: [email required]
+@age: [number min=18 max=100]
+@bio: [textarea rows=4 placeholder="Tell us about yourself"]
+@gender: [radio options="Male, Female, Other"]
+@interests: [checkbox options="Programming, Design, Music, Sports"]
+@newsletter(Subscribe to our newsletter): [bool]
+</formdown-editor>
+
+<pre class="language-markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>formdown-editor</span> <span class="token attr-name">mode</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>split<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+### Registration Form
+Please fill out the form below to register.
+@name: [text required placeholder="Enter your name"]
+@email: [email required]
+@age: [number min=18 max=100]
+@bio: [textarea rows=4 placeholder="Tell us about yourself"]
+@gender: [radio options="Male, Female, Other"]
+@interests: [checkbox options="Programming, Design, Music, Sports"]
+@newsletter(Subscribe to our newsletter): [bool]
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>formdown-editor</span><span class="token punctuation">></span></span></code></pre><h3><code>@formdown/ui</code></h3>
+<formdown-ui mode="split" style="height: 300px;">
+### Registration Form
+Please fill out the form below to register.
+@name: [text required placeholder="Enter your name"]
+@email: [email required]
+@age: [number min=18 max=100]
+@bio: [textarea rows=4 placeholder="Tell us about yourself"]
+@gender: [radio options="Male, Female, Other"]
+@interests: [checkbox options="Programming, Design, Music, Sports"]
+@newsletter(Subscribe to our newsletter): [bool]
+</formdown-ui>
+
+<pre class="language-markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>formdown-ui</span> <span class="token attr-name">mode</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>split<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">height</span><span class="token punctuation">:</span> 300px<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">></span></span>
+### Registration Form
+Please fill out the form below to register.
+@name: [text required placeholder="Enter your name"]
+@email: [email required]
+@age: [number min=18 max=100]
+@bio: [textarea rows=4 placeholder="Tell us about yourself"]
+@gender: [radio options="Male, Female, Other"]
+@interests: [checkbox options="Programming, Design, Music, Sports"]
+@newsletter(Subscribe to our newsletter): [bool]
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>formdown-ui</span><span class="token punctuation">></span></span></code></pre><p>This generates a complete registration form with validation, proper labels, and semantic HTML structure.</p>
+5:["$","div",null,{"className":"min-h-screen bg-white","children":[["$","header",null,{"className":"border-b border-gray-200 bg-white sticky top-0 z-50","children":["$","div",null,{"className":"max-w-7xl mx-auto px-6 py-4","children":["$","nav",null,{"className":"flex items-center justify-between","children":[["$","div",null,{"className":"flex items-center space-x-6","children":[["$","$L13",null,{"href":"/","className":"flex items-center space-x-2","children":[["$","img",null,{"src":"/logo.svg","alt":"Formdown","className":"w-8 h-8"}],["$","span",null,{"className":"text-xl font-semibold text-gray-900","children":"Formdown"}]]}],["$","$L13",null,{"href":"/docs","className":"text-sm font-medium text-gray-700 hover:text-blue-600","children":"Docs"}]]}],["$","div",null,{"className":"flex items-center space-x-4","children":[["$","$L13",null,{"href":"/demo","className":"text-sm font-medium text-gray-700 hover:text-blue-600","children":"Demo"}],["$","$L13",null,{"href":"/","className":"text-sm font-medium text-gray-700 hover:text-blue-600","children":"Home"}]]}]]}]}]}],["$","div",null,{"className":"max-w-7xl mx-auto","children":["$","div",null,{"className":"flex","children":[["$","aside",null,{"className":"w-64 flex-shrink-0 border-r border-gray-200 bg-gray-50 min-h-screen sticky top-16","children":["$","div",null,{"className":"p-6","children":["$","nav",null,{"className":"space-y-1","children":[["$","$L13","index",{"href":"/docs/index","className":"block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 hover:text-blue-600 hover:bg-gray-100","children":"Documentation"}],["$","$L13","overview",{"href":"/docs/overview","className":"block px-3 py-2 text-sm font-medium rounded-md transition-colors bg-blue-100 text-blue-700","children":"Overview"}],["$","$L13","quick-start",{"href":"/docs/quick-start","className":"block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 hover:text-blue-600 hover:bg-gray-100","children":"Quick Start"}],["$","$L13","syntax",{"href":"/docs/syntax","className":"block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 hover:text-blue-600 hover:bg-gray-100","children":"Syntax Guide"}],["$","$L13","editor",{"href":"/docs/editor","className":"block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 hover:text-blue-600 hover:bg-gray-100","children":"Editor Guide"}],["$","$L13","api",{"href":"/docs/api","className":"block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 hover:text-blue-600 hover:bg-gray-100","children":"API Reference"}],["$","$L13","examples",{"href":"/docs/examples","className":"block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 hover:text-blue-600 hover:bg-gray-100","children":"Examples"}]]}]}]}],["$","main",null,{"className":"flex-1 min-w-0","children":["$","div",null,{"className":"max-w-4xl mx-auto px-6 py-8","children":[["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 mb-6","children":"Overview"}],["$","article",null,{"className":"$14","dangerouslySetInnerHTML":{"__html":"$15"}}]]}],["$","div",null,{"className":"mt-12 pt-8 border-t border-gray-200 flex justify-between","children":[["$","div",null,{"children":["$","$L13",null,{"href":"/docs/index","className":"inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 hover:text-blue-600","children":[["$","svg",null,{"className":"w-4 h-4 mr-2","fill":"none","stroke":"currentColor","viewBox":"0 0 24 24","children":["$","path",null,{"strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":2,"d":"M15 19l-7-7 7-7"}]}],"Documentation"]}]}],["$","div",null,{"children":["$","$L13",null,{"href":"/docs/quick-start","className":"inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 hover:text-blue-600","children":["Quick Start",["$","svg",null,{"className":"w-4 h-4 ml-2","fill":"none","stroke":"currentColor","viewBox":"0 0 24 24","children":["$","path",null,{"strokeLinecap":"round","strokeLinejoin":"round","strokeWidth":2,"d":"M9 5l7 7-7 7"}]}]]}]}]]}]]}]}]]}]}]]}]
+8:null
+c:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+7:null
+a:{"metadata":[["$","title","0",{"children":"Formdown"}],["$","meta","1",{"name":"description","content":"A powerful form generation tool"}],["$","link","2",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"16x16"}]],"error":null,"digest":"$undefined"}
+12:{"metadata":"$a:metadata","error":null,"digest":"$undefined"}

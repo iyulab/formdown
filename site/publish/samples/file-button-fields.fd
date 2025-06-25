@@ -1,0 +1,47 @@
+# File Upload and Button Fields Test
+
+This sample demonstrates file upload inputs and various button types.
+
+## File Upload Fields
+
+### Single File Upload
+@avatar(Profile Picture): [file accept="image/*" required]
+@resume(Resume): [file accept=".pdf,.doc,.docx"]
+@document(Document): [file accept=".pdf,.txt,.docx,.xlsx"]
+
+### Multiple File Upload
+@gallery(Photo Gallery): [file accept="image/*" multiple]
+@attachments(Email Attachments): [file multiple]
+
+### Specific File Types
+@video(Video File): [file accept="video/*"]
+@audio(Audio File): [file accept="audio/*"]
+@spreadsheet(Spreadsheet): [file accept=".xlsx,.csv,.ods"]
+
+## Button Fields
+
+### Submit Buttons
+@submit_primary: [submit label="Submit Form"]
+@submit_alt: [submit label="Save Draft" class="secondary"]
+
+### Reset Button
+@reset_form: [reset label="Clear Form"]
+
+### Generic Buttons
+@preview: [button label="Preview"]
+@calculate: [button label="Calculate Total"]
+@validate: [button label="Validate Input"]
+
+## Advanced File Upload with Constraints
+
+@logo(Company Logo): [file accept="image/png,image/jpeg,image/svg+xml" required]
+
+**File requirements:**
+- **Profile Picture**: JPG, PNG, or GIF format
+- **Resume**: PDF, DOC, or DOCX format only
+- **Gallery**: Multiple images allowed
+- **Logo**: PNG, JPEG, or SVG format
+
+> **Note**: File upload functionality requires server-side handling to process uploaded files.
+
+@submit_files: [submit label="Upload Files"]

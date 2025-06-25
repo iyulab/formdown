@@ -2,9 +2,9 @@
 // This file contains the current versions of all Formdown packages
 
 export const FORMDOWN_VERSIONS = {
-  core: "0.1.6",
-  ui: "0.1.6", 
-  editor: "0.1.6",
+  core: "0.1.7",
+  ui: "0.1.7", 
+  editor: "0.1.7",
   site: "0.1.0"
 } as const;
 
