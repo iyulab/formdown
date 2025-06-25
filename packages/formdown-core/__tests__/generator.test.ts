@@ -167,11 +167,81 @@ describe('FormdownGenerator', () => {
             expect(html).toContain('value="Female"')
             expect(html).toContain('value="Other"')
             expect(html).toContain('name="gender"')
+            expect(html).toContain('radio-group')
+        })
+
+        test('should fallback to text input for radio without options', () => {
+            const fields: Field[] = [{
+                name: 'invalid_radio',
+                type: 'radio',
+                label: 'Invalid Radio',
+                required: true,
+                attributes: {}
+            }]
+
+            const html = generator.generateFormHTML(fields)
+
+            expect(html).toContain('<input type="text"')
+            expect(html).toContain('name="invalid_radio"')
+            expect(html).not.toContain('<fieldset>')
+            expect(html).not.toContain('type="radio"')
+        })
+
+        test('should parse and generate radio group correctly', () => {
+            const content = '@gender: [radio options="Male,Female,Other"]'
+            const parsed = parser.parseFormdown(content)
+            const html = generator.generateHTML(parsed)
+
+            expect(parsed.forms).toHaveLength(1)
+            expect(parsed.forms[0].type).toBe('radio')
+            expect(parsed.forms[0].options).toEqual(['Male', 'Female', 'Other'])
+
+            expect(html).toContain('<fieldset>')
+            expect(html).toContain('<legend>Gender</legend>')
+            expect(html).toContain('type="radio"')
+            expect(html).toContain('value="Male"')
+            expect(html).toContain('value="Female"')
+            expect(html).toContain('value="Other"')
+            expect(html).toContain('radio-group')
+        })
+
+        test('should parse radio without options and fallback to text', () => {
+            const content = '@invalid: [radio required]'
+            const parsed = parser.parseFormdown(content)
+            const html = generator.generateHTML(parsed)
+
+            expect(parsed.forms).toHaveLength(1)
+            expect(parsed.forms[0].type).toBe('radio')
+            expect(parsed.forms[0].options).toBeUndefined()
+
+            expect(html).toContain('<input type="text"')
+            expect(html).not.toContain('type="radio"')
+            expect(html).not.toContain('<fieldset>')
         })
     })
 
     describe('Checkbox Generation', () => {
-        test('should generate checkboxes with options', () => {
+        test('should generate single checkbox without options', () => {
+            const fields: Field[] = [{
+                name: 'agree_terms',
+                type: 'checkbox',
+                label: 'I agree to the terms',
+                required: true,
+                attributes: {}
+            }]
+
+            const html = generator.generateFormHTML(fields)
+
+            expect(html).toContain('<input type="checkbox"')
+            expect(html).toContain('name="agree_terms"')
+            expect(html).toContain('value="true"')
+            expect(html).toContain('required')
+            expect(html).toContain('I agree to the terms *')
+            expect(html).not.toContain('<fieldset>')
+            expect(html).not.toContain('<legend>')
+        })
+
+        test('should generate checkboxes with options (checkbox group)', () => {
             const fields: Field[] = [{
                 name: 'interests',
                 type: 'checkbox',
@@ -189,6 +259,38 @@ describe('FormdownGenerator', () => {
             expect(html).toContain('value="Design"')
             expect(html).toContain('value="Music"')
             expect(html).toContain('name="interests"')
+            expect(html).toContain('checkbox-group')
+        })
+
+        test('should parse and generate single checkbox correctly', () => {
+            const content = '@agree: [checkbox required]'
+            const parsed = parser.parseFormdown(content)
+            const html = generator.generateHTML(parsed)
+
+            expect(parsed.forms).toHaveLength(1)
+            expect(parsed.forms[0].type).toBe('checkbox')
+            expect(parsed.forms[0].required).toBe(true)
+            expect(parsed.forms[0].options).toBeUndefined()
+
+            expect(html).toContain('<input type="checkbox"')
+            expect(html).toContain('value="true"')
+            expect(html).not.toContain('<fieldset>')
+        })
+
+        test('should parse and generate checkbox group correctly', () => {
+            const content = '@interests: [checkbox options="Programming,Design,Music"]'
+            const parsed = parser.parseFormdown(content)
+            const html = generator.generateHTML(parsed)
+
+            expect(parsed.forms).toHaveLength(1)
+            expect(parsed.forms[0].type).toBe('checkbox')
+            expect(parsed.forms[0].options).toEqual(['Programming', 'Design', 'Music'])
+
+            expect(html).toContain('<fieldset>')
+            expect(html).toContain('<legend>Interests</legend>')
+            expect(html).toContain('value="Programming"')
+            expect(html).toContain('value="Design"')
+            expect(html).toContain('value="Music"')
         })
     })
 
@@ -229,7 +331,7 @@ describe('FormdownGenerator', () => {
     })
 
     describe('Edge Cases', () => {
-        test('should handle field without label', () => {
+        test('should generate smart label when no label provided', () => {
             const fields: Field[] = [{
                 name: 'test',
                 type: 'text',
@@ -238,7 +340,7 @@ describe('FormdownGenerator', () => {
             }]
 
             const html = generator.generateFormHTML(fields)
-            expect(html).toContain('<label for="test"></label>')
+            expect(html).toContain('<label for="test">Test</label>')
         })
 
         test('should handle boolean attributes correctly', () => {

@@ -31,14 +31,17 @@ export function renderEditorPanel(
                 <button class="toolbar-button" @click=${() => insertSnippet('@bio: [textarea rows=4]')}>
                     Textarea
                 </button>
-                <button class="toolbar-button" @click=${() => insertSnippet('@gender: [radio] Option1, Option2')}>
+                <button class="toolbar-button" @click=${() => insertSnippet(`@gender: [radio required options="Option 1,Option 2"]`)}>
                     Radio
                 </button>
-                <button class="toolbar-button" @click=${() => insertSnippet('@interests: [checkbox] Item1, Item2')}>
+                <button class="toolbar-button" @click=${() => insertSnippet(`@interests: [checkbox options="Item 1,Item 2"]`)}>
                     Checkbox
                 </button>
-                <button class="toolbar-button" @click=${() => insertSnippet('@country: [select] USA, Canada, UK')}>
+                <button class="toolbar-button" @click=${() => insertSnippet(`@country: [select required options="USA,Canada,UK"]`)}>
                     Select
+                </button>
+                <button class="toolbar-button" @click=${() => insertSnippet('@full_name(Custom Label): [text required]')}>
+                    Custom Label
                 </button>
             </div>
 

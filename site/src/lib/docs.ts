@@ -53,11 +53,15 @@ export function getDocBySlug(slug: string): DocMeta | null {
     }
 
     const content = fs.readFileSync(filePath, 'utf8');
-    const html = marked(content) as string;
 
     // Extract title from first h1
     const titleMatch = content.match(/^# (.+)$/m);
     const title = titleMatch ? titleMatch[1] : slug.charAt(0).toUpperCase() + slug.slice(1);
+
+    // Remove the first h1 to avoid duplication with the title displayed in the layout
+    const contentWithoutFirstH1 = content.replace(/^# .+$/m, '').trim();
+
+    const html = marked(contentWithoutFirstH1) as string;
 
     return {
         title,

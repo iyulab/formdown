@@ -30,8 +30,7 @@ const docItems: DocNavItem[] = [
     { slug: 'syntax', title: 'Syntax Guide' },
     { slug: 'editor', title: 'Editor Guide' },
     { slug: 'api', title: 'API Reference' },
-    { slug: 'examples', title: 'Examples' },
-    { slug: 'tasks', title: 'Development' }
+    { slug: 'examples', title: 'Examples' }
 ];
 
 export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
@@ -47,9 +46,7 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
                     <nav className="flex items-center justify-between">
                         <div className="flex items-center space-x-6">
                             <Link href="/" className="flex items-center space-x-2">
-                                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                                    <span className="text-white font-bold text-sm">F</span>
-                                </div>
+                                <img src="/logo.svg" alt="Formdown" className="w-8 h-8" />
                                 <span className="text-xl font-semibold text-gray-900">Formdown</span>
                             </Link>
                             <Link href="/docs" className="text-sm font-medium text-gray-700 hover:text-blue-600">
@@ -79,8 +76,8 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
                                         key={item.slug}
                                         href={`/docs/${item.slug}`}
                                         className={`block px-3 py-2 text-sm font-medium rounded-md transition-colors ${currentSlug === item.slug
-                                                ? 'bg-blue-100 text-blue-700'
-                                                : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
+                                            ? 'bg-blue-100 text-blue-700'
+                                            : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
                                             }`}
                                     >
                                         {item.title}

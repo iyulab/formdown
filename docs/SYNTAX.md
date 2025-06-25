@@ -6,6 +6,37 @@ FormDown extends Markdown with form field syntax while maintaining **100% compat
 
 FormDown fields use the pattern `@field_name: [type attributes]` for clarity and Markdown compatibility.
 
+## Smart Label Generation
+
+FormDown automatically generates human-readable labels from field names when no custom label is provided. This feature helps create clean, readable forms without requiring explicit labels for every field.
+
+### Field Naming Rules
+
+- Field names must start with a letter (a-z, A-Z)
+- Field names cannot start with a number
+- Field names can contain letters, numbers, and underscores
+
+### Automatic Label Formatting
+
+FormDown intelligently converts field names to proper labels:
+
+```formdown
+// Snake case → Title Case
+@first_name: []           → "First Name"
+@email_address: []        → "Email Address"
+@phone_number: []         → "Phone Number"
+
+// Camel case → Title Case
+@firstName: []            → "First Name"
+@emailAddress: []         → "Email Address"
+@userPhoneNumber: []      → "User Phone Number"
+
+// Single words → Capitalized
+@name: []                 → "Name"
+@email: []                → "Email"
+@age: []                  → "Age"
+```
+
 **Two ways to define field labels:**
 
 ```formdown
@@ -15,12 +46,14 @@ FormDown fields use the pattern `@field_name: [type attributes]` for clarity and
 // Method 2: Using label attribute 
 @field_name: [type label="Custom Label" attributes]
 
-// Examples
-@user_name(Full Name): [text required]
-@user_name: [text required label="Full Name"]
-```
+// Method 3: Let FormDown generate smart labels automatically
+@field_name: [type attributes]
 
-Both methods are equivalent and produce the same result.
+// Examples
+@user_name(Full Name): [text required]           // Custom label via parentheses
+@user_name: [text required label="Full Name"]    // Custom label via attribute
+@user_name: [text required]                      // Smart label: "User Name"
+```
 
 ## Label Definition Methods
 
@@ -134,7 +167,11 @@ Your age is ___@age[text].
 // Radio buttons - single selection (inline by default)
 @gender: [radio options="Male,Female,Other"]
 
-// Checkboxes - multiple selection (inline by default)
+// Single checkbox - for yes/no or agreement
+@newsletter(Subscribe to newsletter): [checkbox]
+@terms(I agree to terms and conditions): [checkbox required]
+
+// Checkbox group - multiple selection (inline by default)
 @interests: [checkbox options="Web,Mobile,AI,Design"]
 
 // Vertical layout for longer option lists
@@ -143,6 +180,10 @@ Your age is ___@age[text].
 // Select dropdown
 @country: [select options="USA,Canada,UK,Other"]
 ```
+
+**Checkbox Types:**
+- **Single checkbox**: `[checkbox]` - Creates a single checkbox for yes/no, agreement, or subscription
+- **Checkbox group**: `[checkbox options="..."]` - Creates multiple checkboxes for multi-select
 
 **Layout Options:**
 - **Default (inline)**: Options are displayed horizontally, wrapping to new lines as needed
@@ -242,7 +283,7 @@ Please enter ___@age and ___@email.
 @message: [textarea required rows=5 placeholder="Your message..."]
 
 @priority: [radio options="Low,Medium,High"]
-@newsletter(Subscribe to newsletter): [checkbox options="Yes"]
+@newsletter(Subscribe to newsletter): [checkbox]
 
 @submit_form: [submit label="Send Message"]
 ```
@@ -256,7 +297,7 @@ Please enter ___@age and ___@email.
 @password: [password required minlength=8]
 @age: [number min=13 max=120]
 
-@terms(I agree to terms and conditions): [checkbox required options="Accept"]
+@terms(I agree to terms and conditions): [checkbox required]
 
 @register: [submit label="Create Account"]
 ```

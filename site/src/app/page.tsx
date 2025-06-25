@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from 'react';
+import { FORMDOWN_INFO } from '@/lib/version';
 
 interface CustomElement extends HTMLElement {
     setAttribute(name: string, value: string): void
@@ -9,6 +10,7 @@ interface CustomElement extends HTMLElement {
 
 export default function Home() {
     const [isComponentsLoaded, setIsComponentsLoaded] = useState(false)
+
     useEffect(() => {
         const loadComponents = async () => {
             if (typeof window !== "undefined") {
@@ -44,20 +46,19 @@ export default function Home() {
                 editor.setAttribute("mode", "split")
                 editor.setAttribute("header", "true")
                 editor.setAttribute("content",
-                    '### Contact Form\n' +
-                    '\n' +
-                    'Please fill out the form below to get in touch with us.\n' +
-                    '\n' +
-                    '@name(Your Name): [text required placeholder="Enter your full name"]\n' +
-                    '@email(Email Address): [email required]\n' +
-                    '@message: [textarea rows=4 placeholder="Your message..."]\n' +
-                    '\n' +
-                    'How did you hear about us?\n' +
-                    '@source: [radio] Website, Social Media, Friend, Other\n' +
-                    '\n' +
-                    '@newsletter: [checkbox] Subscribe to newsletter\n' +
-                    '\n' +
-                    '@submit_btn: [submit label="Send Message"]'
+                    `# Contact Form
+
+Please fill out the form below to get in touch with us.
+
+@name(Your Name): [text required placeholder="Enter your full name"]
+@email(Email Address): [email required]
+@message(Message): [textarea rows=4 placeholder="Your message..."]
+
+@source(How did you hear about us?): [radio required options="Website,Social Media,Friend,Other"]
+
+@newsletter(Subscribe to newsletter): [checkbox]
+
+@submit_btn: [submit label="Send Message"]`
                 )
                 editor.style.height = "500px"
                 editor.style.width = "100%"
@@ -76,8 +77,9 @@ export default function Home() {
                 <div className="max-w-6xl mx-auto px-4 py-6">
                     <nav className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
+                            <img src="/logo.svg" alt="Formdown" className="w-8 h-8" />
                             <h1 className="text-2xl font-bold text-gray-900">Formdown</h1>
-                            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">v0.1.0</span>
+                            <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">v{FORMDOWN_INFO.version}</span>
                         </div>                        <div className="flex items-center space-x-6">
                             <Link href="/demo" className="text-gray-600 hover:text-gray-900">Demo</Link>
                             <Link href="/docs" className="text-gray-600 hover:text-gray-900">Docs</Link>

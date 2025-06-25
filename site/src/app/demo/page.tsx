@@ -15,10 +15,30 @@ interface Sample {
     description: string
 }
 
+// Static samples list - this would be generated at build time
+const SAMPLES: Sample[] = [
+    { name: 'Minimal', filename: 'minimal.fd', description: 'Basic form with essential fields' },
+    { name: 'Contact', filename: 'contact.fd', description: 'Contact form with validation' },
+    { name: 'Registration', filename: 'registration.fd', description: 'User registration form' },
+    { name: 'Survey', filename: 'survey.fd', description: 'Survey form with various field types' },
+    { name: 'Advanced', filename: 'advanced.fd', description: 'Advanced form with complex validation' },
+    { name: 'E-commerce', filename: 'ecommerce.fd', description: 'E-commerce checkout form' },
+    { name: 'Event', filename: 'event.fd', description: 'Event registration form' },
+    { name: 'Text Fields', filename: 'text-fields.fd', description: 'Various text input types' },
+    { name: 'Selection Fields', filename: 'selection-fields.fd', description: 'Radio buttons, checkboxes, and select fields' },
+    { name: 'Number Date Fields', filename: 'number-date-fields.fd', description: 'Numeric and date input fields' },
+    { name: 'File Button Fields', filename: 'file-button-fields.fd', description: 'File uploads and buttons' },
+    { name: 'Inline Fields', filename: 'inline-fields.fd', description: 'Inline field syntax examples' },
+    { name: 'Validation Attributes', filename: 'validation-attributes.fd', description: 'Form validation examples' },
+    { name: 'Complete Fields', filename: 'complete-fields.fd', description: 'Comprehensive field showcase' },
+    { name: 'Accessibility', filename: 'accessibility.fd', description: 'Accessibility features and ARIA attributes' },
+    { name: 'Markdown Demo', filename: 'markdown-demo.fd', description: 'Markdown integration examples' }
+];
+
 export default function DemoPage() {
     const [isComponentsLoaded, setIsComponentsLoaded] = useState(false)
     const [formData, setFormData] = useState<Record<string, unknown>>({})
-    const [samples, setSamples] = useState<Sample[]>([])
+    const [samples] = useState<Sample[]>(SAMPLES) // Use static samples
     const [selectedSample, setSelectedSample] = useState<Sample | null>(null)
     const [content, setContent] = useState('')
     const [isLoading, setIsLoading] = useState(false)
@@ -61,24 +81,11 @@ export default function DemoPage() {
         }
         loadComponents()
 
-        // Load samples from API
-        loadSamples()
-    }, [])
-
-    const loadSamples = async () => {
-        try {
-            const response = await fetch('/api/samples')
-            if (response.ok) {
-                const samplesData = await response.json()
-                setSamples(samplesData)
-                if (samplesData.length > 0) {
-                    setSelectedSample(samplesData[0])
-                }
-            }
-        } catch (error) {
-            console.error('Error loading samples:', error)
+        // Set initial sample
+        if (SAMPLES.length > 0) {
+            setSelectedSample(SAMPLES[0])
         }
-    }
+    }, [])
 
     useEffect(() => {
         if (selectedSample) {
@@ -219,49 +226,47 @@ export default function DemoPage() {
         <header className="bg-white shadow-sm border-b flex-shrink-0">
             <div className="px-4 sm:px-6 lg:px-8 py-3">
                 <div className="flex items-center justify-between">
-                    <div>
+                    <Link href="/" className="flex items-center space-x-2">
+                        <img src="/logo.svg" alt="Formdown" className="w-8 h-8" />
                         <h1 className="text-xl font-bold text-gray-900">Formdown Demo</h1>
-                        <p className="text-sm text-gray-600">Interactive editor and renderer</p>
-                    </div>
-                    <Link
-                        href="/"
-                        className="text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                        ← Back to Home
                     </Link>
+                    <div className="flex items-center space-x-4">
+                        {/* Sample Selector moved to top bar */}
+                        <div className="flex items-center space-x-2">
+                            <label htmlFor="sample-select" className="text-sm font-medium text-gray-700">
+                                Choose a sample:
+                            </label>
+                            <select
+                                id="sample-select"
+                                value={selectedSample?.filename || ''}
+                                onChange={(e) => {
+                                    const sample = samples.find(s => s.filename === e.target.value)
+                                    if (sample) setSelectedSample(sample)
+                                }}
+                                className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                {samples.map((sample) => (
+                                    <option key={sample.filename} value={sample.filename}>
+                                        {sample.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <Link href="/" className="text-sm font-medium text-gray-700 hover:text-blue-600">
+                            Home
+                        </Link>
+                        <Link href="/docs" className="text-sm font-medium text-gray-700 hover:text-blue-600">
+                            Docs
+                        </Link>
+                    </div>
                 </div>
+                {selectedSample?.description && (
+                    <p className="mt-1 text-sm text-gray-500">{selectedSample.description}</p>
+                )}
             </div>
         </header>
 
-        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-4 flex flex-col overflow-hidden">
-            {/* Sample Selector */}
-            <div className="mb-6">
-                <label htmlFor="sample-select" className="block text-sm font-medium text-gray-700 mb-2">
-                    Choose a sample:
-                </label>
-                <select
-                    id="sample-select" value={selectedSample?.filename || ''}
-                    onChange={(e) => {
-                        const sample = samples.find(s => s.filename === e.target.value)
-                        if (sample) setSelectedSample(sample)
-                    }}
-                    className="block w-full max-w-md px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    disabled={samples.length === 0}
-                >
-                    {samples.length === 0 ? (
-                        <option>Loading samples...</option>
-                    ) : (
-                        samples.map((sample) => (
-                            <option key={sample.filename} value={sample.filename}>
-                                {sample.name}
-                            </option>
-                        ))
-                    )}
-                </select>
-                <p className="mt-1 text-sm text-gray-500">
-                    {selectedSample?.description || 'Select a sample to see its description'}
-                </p>
-            </div>
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-4 flex flex-col overflow-hidden">{/* Remove old sample selector since it's now in header */}
 
             {isLoading && (
                 <div className="text-center py-8">

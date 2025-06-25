@@ -12,6 +12,7 @@ export class FormdownUI extends LitElement {
       color: #1f2937;
       max-width: 100%;
       box-sizing: border-box;
+      overflow-y: auto;
     }
 
     * {

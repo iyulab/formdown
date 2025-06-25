@@ -91,6 +91,11 @@ export class FormdownParser {
     }
 
     private createField(name: string, customLabel: string | undefined, typeAndAttributes: string): Field | null {
+        // Validate field name (must not start with a number)
+        if (/^\d/.test(name)) {
+            throw new Error(`Invalid field name '${name}': Field names cannot start with a number`)
+        }
+
         // Handle empty brackets - default to text input
         if (!typeAndAttributes.trim()) {
             return {
@@ -121,6 +126,9 @@ export class FormdownParser {
 
             if (key === 'required') {
                 field.required = true
+            } else if (key === 'label' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+                // Override the label with custom label from attribute
+                field.label = quotedValue1 || quotedValue2 || unquotedValue
             } else if (key === 'options' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
                 // Handle options attribute for radio, checkbox, select
                 const optionsValue = quotedValue1 || quotedValue2 || unquotedValue
@@ -143,11 +151,41 @@ export class FormdownParser {
         return field
     }
 
-    private formatLabel(name: string): string {
-        return name
-            .replace(/([A-Z])/g, ' $1')
-            .replace(/^./, str => str.toUpperCase())
-            .trim()
+    /**
+     * Generate a human-readable label from a field name
+     * @param fieldName - The field name to convert
+     * @returns A formatted label string
+     */
+    private formatLabel(fieldName: string): string {
+        // Handle snake_case: convert underscores to spaces and capitalize
+        if (fieldName.includes('_')) {
+            return fieldName
+                .split('_')
+                .map(word => this.capitalizeWord(word))
+                .join(' ')
+        }
+
+        // Handle camelCase: insert spaces before uppercase letters and capitalize
+        if (/[a-z][A-Z]/.test(fieldName)) {
+            return fieldName
+                .replace(/([a-z])([A-Z])/g, '$1 $2')
+                .split(' ')
+                .map(word => this.capitalizeWord(word))
+                .join(' ')
+        }
+
+        // Handle single word: just capitalize first letter
+        return this.capitalizeWord(fieldName)
+    }
+
+    /**
+     * Capitalize the first letter of a word
+     * @param word - The word to capitalize
+     * @returns The capitalized word
+     */
+    private capitalizeWord(word: string): string {
+        if (!word) return word
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     }
 
     private parseAttributeValue(value: string): any {

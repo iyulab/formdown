@@ -2,6 +2,48 @@ import { marked } from 'marked'
 import { Field, FormdownContent } from './types'
 
 export class FormdownGenerator {
+    /**
+     * Generate a human-readable label from a field name
+     * @param fieldName - The field name to convert
+     * @returns A formatted label string
+     */
+    private generateSmartLabel(fieldName: string): string {
+        // Validate field name (must not start with a number)
+        if (/^\d/.test(fieldName)) {
+            throw new Error(`Invalid field name '${fieldName}': Field names cannot start with a number`)
+        }
+
+        // Handle snake_case: convert underscores to spaces and capitalize
+        if (fieldName.includes('_')) {
+            return fieldName
+                .split('_')
+                .map(word => this.capitalizeWord(word))
+                .join(' ')
+        }
+
+        // Handle camelCase: insert spaces before uppercase letters and capitalize
+        if (/[a-z][A-Z]/.test(fieldName)) {
+            return fieldName
+                .replace(/([a-z])([A-Z])/g, '$1 $2')
+                .split(' ')
+                .map(word => this.capitalizeWord(word))
+                .join(' ')
+        }
+
+        // Handle single word: just capitalize first letter
+        return this.capitalizeWord(fieldName)
+    }
+
+    /**
+     * Capitalize the first letter of a word
+     * @param word - The word to capitalize
+     * @returns The capitalized word
+     */
+    private capitalizeWord(word: string): string {
+        if (!word) return word
+        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    }
+
     generateHTML(content: FormdownContent): string {
         const markdownHTML = content.markdown ? marked(content.markdown) : ''
 
@@ -58,6 +100,9 @@ ${fieldsHTML}
     generateFieldHTML(field: Field): string {
         const { name, type, label, required, placeholder, attributes, options } = field
 
+        // Use smart label generation if no label is provided
+        const displayLabel = label || this.generateSmartLabel(name)
+
         const commonAttrs = {
             id: name,
             name,
@@ -80,7 +125,7 @@ ${fieldsHTML}
             case 'textarea':
                 return `
 <div class="formdown-field">
-    <label for="${name}">${label}${required ? ' *' : ''}</label>
+    <label for="${name}">${displayLabel}${required ? ' *' : ''}</label>
     <textarea ${attrString}></textarea>
 </div>`
 
@@ -88,41 +133,83 @@ ${fieldsHTML}
                 const optionsHTML = options?.map(opt => `<option value="${opt}">${opt}</option>`).join('\n') || ''
                 return `
 <div class="formdown-field">
-    <label for="${name}">${label}${required ? ' *' : ''}</label>
+    <label for="${name}">${displayLabel}${required ? ' *' : ''}</label>
     <select ${attrString}>
         ${optionsHTML}
     </select>
 </div>`
 
             case 'radio':
-            case 'checkbox':
-                const inputsHTML = options?.map((opt, index) => {
+                if (!options || options.length === 0) {
+                    // Radio needs options - fallback to text input
+                    return `
+<div class="formdown-field">
+    <label for="${name}">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="text" ${attrString}>
+</div>`
+                }
+
+                const radioInputsHTML = options.map((opt, index) => {
                     const inputId = `${name}_${index}`
                     return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="${type}" id="${inputId}" name="${name}" value="${opt}" ${required && index === 0 ? 'required' : ''}>
+            <input type="radio" id="${inputId}" name="${name}" value="${opt}" ${required && index === 0 ? 'required' : ''}>
             <span>${opt}</span>
         </label>`
-                }).join('\n') || ''
+                }).join('\n')
 
-                // Check if vertical layout is requested
                 const isVertical = attributes?.layout === 'vertical'
-                const groupClass = isVertical ? `${type}-group vertical` : `${type}-group inline`
+                const groupClass = isVertical ? 'radio-group vertical' : 'radio-group inline'
 
                 return `
 <div class="formdown-field">
     <fieldset>
-        <legend>${label}${required ? ' *' : ''}</legend>
+        <legend>${displayLabel}${required ? ' *' : ''}</legend>
         <div class="${groupClass}">
-${inputsHTML}
+${radioInputsHTML}
         </div>
     </fieldset>
 </div>`
 
+            case 'checkbox':
+                if (!options || options.length === 0) {
+                    // Single checkbox
+                    return `
+<div class="formdown-field">
+    <label for="${name}" class="formdown-checkbox-label">
+        <input type="checkbox" id="${name}" name="${name}" value="true" ${required ? 'required' : ''} ${attrString}>
+        <span>${displayLabel}${required ? ' *' : ''}</span>
+    </label>
+</div>`
+                } else {
+                    // Checkbox group
+                    const checkboxInputsHTML = options.map((opt, index) => {
+                        const inputId = `${name}_${index}`
+                        return `
+        <label for="${inputId}" class="formdown-option-label">
+            <input type="checkbox" id="${inputId}" name="${name}" value="${opt}" ${required && index === 0 ? 'required' : ''}>
+            <span>${opt}</span>
+        </label>`
+                    }).join('\n')
+
+                    const isVertical = attributes?.layout === 'vertical'
+                    const groupClass = isVertical ? 'checkbox-group vertical' : 'checkbox-group inline'
+
+                    return `
+<div class="formdown-field">
+    <fieldset>
+        <legend>${displayLabel}${required ? ' *' : ''}</legend>
+        <div class="${groupClass}">
+${checkboxInputsHTML}
+        </div>
+    </fieldset>
+</div>`
+                }
+
             default:
                 return `
 <div class="formdown-field">
-    <label for="${name}">${label}${required ? ' *' : ''}</label>
+    <label for="${name}">${displayLabel}${required ? ' *' : ''}</label>
     <input type="${type}" ${attrString}>
 </div>`
         }

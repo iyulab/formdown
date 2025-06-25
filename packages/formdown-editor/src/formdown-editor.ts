@@ -35,23 +35,29 @@ class SimpleFormdownParser {
     }
 }
 
+var defaultContent = `# Contact Form
+
+Fill out the form below to get in touch:
+
+@full_name: [text required placeholder="Enter your full name"]
+@email_address: [email required]
+@phone_number: [tel]
+@message: [textarea rows=4 placeholder="Your message here..."]
+@contact_method: [radio options="Email, Phone, Either"]
+@newsletter_signup: [checkbox]`;
+
 @customElement('formdown-editor')
 export class FormdownEditor extends LitElement {
     static styles = css`${unsafeCSS(styles)}`
 
     @property()
-    content = `@name: [text required placeholder="Enter your name"]
-@email: [email required]
-@age: [number min=18 max=100]
-@bio: [textarea rows=4 placeholder="Tell us about yourself"]
-@gender: [radio] Male, Female, Other
-@interests: [checkbox] Programming, Design, Music, Sports`
+    content = defaultContent
 
     @property({ type: String })
     mode: 'edit' | 'split' | 'view' = 'split'
 
     @property({ type: String })
-    placeholder = 'Enter your Formdown syntax here...'
+    placeholder = 'Try FormDown with smart labels! Field names like "full_name" become "Full Name" automatically...'
 
     @property({ type: Boolean })
     header = false
@@ -65,12 +71,7 @@ export class FormdownEditor extends LitElement {
         super.connectedCallback()
 
         // Use inner text as content if content property is default and inner text exists
-        if (this.content === `@name: [text required placeholder="Enter your name"]
-@email: [email required]
-@age: [number min=18 max=100]
-@bio: [textarea rows=4 placeholder="Tell us about yourself"]
-@gender: [radio] Male, Female, Other
-@interests: [checkbox] Programming, Design, Music, Sports` && this.textContent?.trim()) {
+        if (this.content === defaultContent && this.textContent?.trim()) {
             this.content = this.textContent.trim()
             // Clear the text content to avoid duplication
             this.textContent = ''

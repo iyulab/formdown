@@ -32,24 +32,58 @@ Development tools including a live editor with syntax highlighting and real-time
 
 ## Example
 
-<formdown-editor mode="split">
-# User Registration
+### `@formdown/editor`
+<formdown-editor mode="split" style="height: 300px;">
+### Registration Form
+Please fill out the form below to register.
+@name: [text required placeholder="Enter your name"]
+@email: [email required]
+@age: [number min=18 max=100]
+@bio: [textarea rows=4 placeholder="Tell us about yourself"]
+@gender: [radio options="Male, Female, Other"]
+@interests: [checkbox options="Programming, Design, Music, Sports"]
+@newsletter(Subscribe to our newsletter): [bool]
 </formdown-editor>
 
 ```formdown
-# User Registration
+<formdown-editor mode="split">
+### Registration Form
+Please fill out the form below to register.
+@name: [text required placeholder="Enter your name"]
+@email: [email required]
+@age: [number min=18 max=100]
+@bio: [textarea rows=4 placeholder="Tell us about yourself"]
+@gender: [radio options="Male, Female, Other"]
+@interests: [checkbox options="Programming, Design, Music, Sports"]
+@newsletter(Subscribe to our newsletter): [bool]
+</formdown-editor>
+```
 
-Please fill out all required fields:
+### `@formdown/ui`
+<formdown-ui mode="split" style="height: 300px;">
+### Registration Form
+Please fill out the form below to register.
+@name: [text required placeholder="Enter your name"]
+@email: [email required]
+@age: [number min=18 max=100]
+@bio: [textarea rows=4 placeholder="Tell us about yourself"]
+@gender: [radio options="Male, Female, Other"]
+@interests: [checkbox options="Programming, Design, Music, Sports"]
+@newsletter(Subscribe to our newsletter): [bool]
+</formdown-ui>
 
-First name[text]:First Name* and last name[text]:Last Name*
-
-email[email]:Email Address*{placeholder="Enter your email"}
-password[password]:Password*{minlength=8}
-confirm[password]:Confirm Password*
-
-Subscribe to newsletter[checkbox]:Yes, send me updates
-
-[submit]:Create Account
+```formdown
+<formdown-ui mode="split" style="height: 300px;">
+### Registration Form
+Please fill out the form below to register.
+@name: [text required placeholder="Enter your name"]
+@email: [email required]
+@age: [number min=18 max=100]
+@bio: [textarea rows=4 placeholder="Tell us about yourself"]
+@gender: [radio options="Male, Female, Other"]
+@interests: [checkbox options="Programming, Design, Music, Sports"]
+@newsletter(Subscribe to our newsletter): [bool]
+</formdown-ui>
 ```
 
 This generates a complete registration form with validation, proper labels, and semantic HTML structure.
