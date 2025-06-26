@@ -171,3 +171,124 @@ You're registering for the **Advanced Web Development Workshop** on March 15, 20
 
 @submit_btn: [submit label="Submit Application"]
 ```
+
+## Form Validation Examples
+
+### Basic Validation with JavaScript
+
+```html
+<formdown-ui id="contact-form">
+@name(Full Name): [text required minlength=2 maxlength=50]
+@email(Email Address): [email required]
+@phone(Phone Number): [tel pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" title="Format: 123-456-7890"]
+@age(Age): [number required min=18 max=120]
+@website(Website): [url placeholder="https://example.com"]
+@message(Message): [textarea required minlength=10 maxlength=500]
+@subscribe: [checkbox] Subscribe to newsletter
+</formdown-ui>
+
+<button onclick="validateForm()">Validate Form</button>
+<button onclick="getFormData()">Get Form Data</button>
+<button onclick="resetForm()">Reset Form</button>
+
+<script>
+function validateForm() {
+    const form = document.getElementById('contact-form');
+    const result = form.validate();
+    
+    if (result.isValid) {
+        alert('Form is valid! ✅');
+        console.log('Form data:', form.getFormData());
+    } else {
+        alert('Form has errors! ❌');
+        console.log('Validation errors:', result.errors);
+        // Fields with errors are automatically highlighted in red
+    }
+}
+
+function getFormData() {
+    const form = document.getElementById('contact-form');
+    const data = form.getFormData();
+    console.log('Current form data:', data);
+    alert('Check console for form data');
+}
+
+function resetForm() {
+    const form = document.getElementById('contact-form');
+    form.resetForm();
+    alert('Form reset! All validation states cleared.');
+}
+</script>
+```
+
+### Editor Validation
+
+```html
+<formdown-editor mode="split" id="form-editor">
+@username(Username): [text required minlength=3 maxlength=20 pattern="[a-zA-Z0-9_]+" title="Only letters, numbers, and underscores"]
+@password(Password): [password required minlength=8]
+@email(Email): [email required]
+@birthdate(Birth Date): [date required max="2006-01-01"]
+@terms: [checkbox required] I accept the terms and conditions
+</formdown-editor>
+
+<button onclick="validateEditor()">Validate Preview</button>
+<button onclick="getEditorData()">Get Preview Data</button>
+
+<script>
+function validateEditor() {
+    const editor = document.getElementById('form-editor');
+    const result = editor.validate();
+    
+    console.log('Editor validation:', result);
+    if (result.isValid) {
+        alert('Preview form is valid! ✅');
+    } else {
+        alert(`Preview form has ${result.errors.length} error(s)! ❌`);
+    }
+}
+
+function getEditorData() {
+    const editor = document.getElementById('form-editor');
+    const data = editor.getFormData();
+    console.log('Editor form data:', data);
+}
+</script>
+```
+
+### Real-time Validation
+
+```html
+<formdown-ui id="realtime-form">
+@email(Email): [email required]
+@password(Password): [password required minlength=8]
+@confirmPassword(Confirm Password): [password required]
+</formdown-ui>
+
+<script>
+const form = document.getElementById('realtime-form');
+
+// Validate on every change
+form.addEventListener('formdown-change', (event) => {
+    const result = form.validate();
+    
+    // Custom validation for password confirmation
+    const formData = form.getFormData();
+    if (formData.password && formData.confirmPassword) {
+        if (formData.password !== formData.confirmPassword) {
+            // Add custom error styling
+            const confirmInput = form.shadowRoot.querySelector('input[name="confirmPassword"]');
+            if (confirmInput) {
+                confirmInput.classList.add('field-error');
+            }
+        }
+    }
+    
+    // Update submit button state
+    const submitBtn = document.getElementById('submit-btn');
+    if (submitBtn) {
+        submitBtn.disabled = !result.isValid;
+    }
+});
+</script>
+```

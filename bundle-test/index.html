@@ -118,6 +118,11 @@
             return 'split'; // Default mode
         }
 
+        function shouldShowModeSelector() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return !urlParams.has('mode');
+        }
+
         function setActiveButton(activeMode) {
             const modeButtons = document.querySelectorAll('.mode-btn');
             modeButtons.forEach(btn => {
@@ -138,6 +143,15 @@
             customElements.whenDefined('formdown-editor').then(() => {
                 const editor = document.getElementById('editor');
                 const initialMode = getInitialMode();
+                const showModeSelector = shouldShowModeSelector();
+
+                // Show or hide mode selector based on URL parameter
+                const modeSelectorContainer = document.querySelector('.header');
+                if (!showModeSelector) {
+                    modeSelectorContainer.style.display = 'none';
+                    // Adjust editor container height when header is hidden
+                    document.querySelector('.editor-container').style.height = '100vh';
+                }
 
                 editor.content = `# Subscription Form
 
@@ -161,19 +175,22 @@
 
                 // Set initial mode from URL parameter
                 editor.mode = initialMode;
-                setActiveButton(initialMode);
 
-                // Setup mode selector
-                const modeButtons = document.querySelectorAll('.mode-btn');
-                modeButtons.forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const mode = btn.getAttribute('data-mode');
-                        editor.mode = mode;
+                if (showModeSelector) {
+                    setActiveButton(initialMode);
 
-                        setActiveButton(mode);
-                        updateURL(mode);
+                    // Setup mode selector
+                    const modeButtons = document.querySelectorAll('.mode-btn');
+                    modeButtons.forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const mode = btn.getAttribute('data-mode');
+                            editor.mode = mode;
+
+                            setActiveButton(mode);
+                            updateURL(mode);
+                        });
                     });
-                });
+                }
             });
         }
 

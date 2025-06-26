@@ -387,6 +387,34 @@ export class FormdownEditor extends LitElement {
 
         return checkboxFields
     }
+
+    // Validation methods - delegate to FormdownUI component
+    validate() {
+        const previewContainer = this.shadowRoot?.querySelector('.preview-content')
+        const formdownUI = previewContainer?.querySelector('formdown-ui') as any
+
+        if (formdownUI && typeof formdownUI.validate === 'function') {
+            return formdownUI.validate()
+        }
+
+        // Fallback validation result if FormdownUI is not available
+        return {
+            isValid: false,
+            errors: [{ field: 'general', message: 'FormdownUI component not found for validation' }]
+        }
+    }
+
+    // Get form data - delegate to FormdownUI component
+    getFormData() {
+        const previewContainer = this.shadowRoot?.querySelector('.preview-content')
+        const formdownUI = previewContainer?.querySelector('formdown-ui') as any
+
+        if (formdownUI && typeof formdownUI.getFormData === 'function') {
+            return formdownUI.getFormData()
+        }
+
+        return {}
+    }
 }
 
 declare global {

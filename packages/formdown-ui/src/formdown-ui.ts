@@ -2,6 +2,17 @@ import { LitElement, html, css } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import { FormdownParser, FormdownGenerator } from '@formdown/core'
 
+// Validation types
+export interface FieldError {
+  field: string
+  message: string
+}
+
+export interface ValidationResult {
+  isValid: boolean
+  errors: FieldError[]
+}
+
 @customElement('formdown-ui')
 export class FormdownUI extends LitElement {
   static styles = css`
@@ -24,6 +35,7 @@ export class FormdownUI extends LitElement {
       width: 100%;
       margin: 0;
       padding: 0;
+      display: none; /* Hidden form for form attribute reference */
     }
 
     .formdown-field {
@@ -217,6 +229,31 @@ export class FormdownUI extends LitElement {
       display: block;
     }
 
+    /* Field validation styles */
+    .field-error {
+      border-color: #dc2626 !important;
+      box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.1) !important;
+    }
+
+    .field-error:focus {
+      border-color: #dc2626 !important;
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+    }
+
+    .validation-error-message {
+      color: #dc2626;
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+      display: block;
+      font-weight: 500;
+    }
+
+    /* Success state */
+    .field-valid {
+      border-color: #10b981 !important;
+      box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.1) !important;
+    }
+
     .submit-button {
       background-color: #3b82f6;
       color: white;
@@ -317,6 +354,40 @@ export class FormdownUI extends LitElement {
 
   @property({ attribute: 'submit-text' })
   submitText = 'Submit'
+
+  // Generate unique form ID
+  private _uniqueFormId: string
+
+  // Get the form ID (user-provided or auto-generated)
+  private getFormId(): string {
+    return this.formId || this._uniqueFormId
+  }
+
+  // Process HTML to replace form wrapper with hidden form and add form attributes
+  private processFormHTML(html: string, formId: string): string {
+    // Create a hidden form element
+    const hiddenForm = `<form id="${formId}" class="formdown-form" style="display: none;"></form>`
+
+    // Remove the existing form wrapper and add form attributes to all form fields
+    let processedHTML = html.replace(/<form[^>]*class="formdown-form"[^>]*>/g, '')
+      .replace(/<\/form>/g, '')
+
+    // Add form attribute to all input, textarea, and select elements
+    processedHTML = processedHTML.replace(
+      /<(input|textarea|select)([^>]*?)>/g,
+      (match, tagName, attributes) => {
+        // Check if form attribute already exists
+        if (attributes.includes('form=')) {
+          return match
+        }
+        return `<${tagName}${attributes} form="${formId}">`
+      }
+    )
+
+    // Add the hidden form at the beginning
+    return hiddenForm + processedHTML
+  }
+
   // Reactive data source - this is the single source of truth
   private _data: Record<string, any> = {}
 
@@ -347,6 +418,8 @@ export class FormdownUI extends LitElement {
 
   constructor() {
     super()
+    // Generate unique form ID if not provided
+    this._uniqueFormId = this.formId || `formdown-${Math.random().toString(36).substring(2, 15)}`
   }
 
   connectedCallback() {
@@ -411,12 +484,18 @@ export class FormdownUI extends LitElement {
       }
 
       const parseResult = this.parser.parseFormdown(this.content)
-      const generatedHTML = this.generator.generateHTML(parseResult)
+      let generatedHTML = this.generator.generateHTML(parseResult)
 
       if (!generatedHTML || generatedHTML.trim() === '') {
         container.innerHTML = `<div class="error">Generator returned empty HTML</div>`
         return
       }
+
+      // Get the form ID
+      const formId = this.getFormId()
+
+      // Replace form wrapper with hidden form and add form attributes to fields
+      generatedHTML = this.processFormHTML(generatedHTML, formId)
 
       container.innerHTML = generatedHTML
 
@@ -697,17 +776,245 @@ export class FormdownUI extends LitElement {
       detail: { formData: currentFormData },
       bubbles: true
     }))
+  }
+
+  // Universal field synchronization method - expected by tests
+  syncFieldValue(fieldName: string, value: string | string[] | boolean) {
+    // Update internal data
+    this.data = { ...this.data, [fieldName]: value }
+
+    // Emit events
+    this.emitFieldEvents(fieldName, value)
+  }
+
+  // Update form data method - expected by tests
+  updateFormData(fieldName: string, value: string | string[] | boolean) {
+    // Update internal data
+    this.data = { ...this.data, [fieldName]: value }
+
+    // Emit events
+    this.emitFieldEvents(fieldName, value)
   }  // Get form data programmatically - use reactive data as source of truth
   getFormData() {
     return { ...this.data }
   }
 
+  // Validation methods
+  validate(): ValidationResult {
+    const errors: FieldError[] = []
+    const container = this.shadowRoot?.querySelector('#content-container')
+
+    if (!container) {
+      return { isValid: false, errors: [{ field: 'general', message: 'Form container not found' }] }
+    }
+
+    // Clear previous validation states
+    this.clearValidationStates()
+
+    // Get all form fields
+    const allFields = container.querySelectorAll('input, textarea, select, [contenteditable="true"]')
+
+    allFields.forEach(element => {
+      const htmlElement = element as HTMLElement
+      const fieldName = this.getFieldName(htmlElement)
+
+      if (fieldName) {
+        const fieldErrors = this.validateField(htmlElement, fieldName)
+        errors.push(...fieldErrors)
+      }
+    })
+
+    // Apply visual feedback
+    this.applyValidationFeedback(errors)
+
+    return {
+      isValid: errors.length === 0,
+      errors
+    }
+  }
+
+  private validateField(element: HTMLElement, fieldName: string): FieldError[] {
+    const errors: FieldError[] = []
+
+    // Check required fields
+    if (this.isFieldRequired(element)) {
+      const value = this.getFieldValue(element)
+
+      // Handle different input types
+      if (element instanceof HTMLInputElement) {
+        if (element.type === 'checkbox') {
+          // For checkboxes, check if any are selected
+          const allCheckboxes = this.shadowRoot?.querySelectorAll(`input[type="checkbox"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
+          const isAnyChecked = Array.from(allCheckboxes).some(cb => cb.checked)
+
+          if (!isAnyChecked) {
+            errors.push({ field: fieldName, message: 'This field is required' })
+          }
+        } else if (element.type === 'radio') {
+          // For radio buttons, check if any in the group are selected
+          const allRadios = this.shadowRoot?.querySelectorAll(`input[type="radio"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
+          const isAnySelected = Array.from(allRadios).some(radio => radio.checked)
+
+          if (!isAnySelected) {
+            errors.push({ field: fieldName, message: 'Please select an option' })
+          }
+        } else if (!value || value.trim() === '') {
+          errors.push({ field: fieldName, message: 'This field is required' })
+        }
+      } else if (!value || value.trim() === '') {
+        errors.push({ field: fieldName, message: 'This field is required' })
+      }
+    }
+
+    // Validate field type-specific rules
+    if (element instanceof HTMLInputElement) {
+      const value = element.value.trim()
+
+      if (value && element.type === 'email') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(value)) {
+          errors.push({ field: fieldName, message: 'Please enter a valid email address' })
+        }
+      }
+
+      if (value && element.type === 'url') {
+        try {
+          new URL(value)
+        } catch {
+          errors.push({ field: fieldName, message: 'Please enter a valid URL' })
+        }
+      }
+
+      if (value && element.type === 'tel') {
+        const phoneRegex = /^[\d\s\-\+\(\)]+$/
+        if (!phoneRegex.test(value)) {
+          errors.push({ field: fieldName, message: 'Please enter a valid phone number' })
+        }
+      }
+
+      // Check min/max length
+      if (element.minLength && element.minLength > 0 && value.length < element.minLength) {
+        errors.push({ field: fieldName, message: `Minimum length is ${element.minLength} characters` })
+      }
+
+      if (element.maxLength && element.maxLength > 0 && value.length > element.maxLength) {
+        errors.push({ field: fieldName, message: `Maximum length is ${element.maxLength} characters` })
+      }
+
+      // Check pattern attribute
+      if (element.pattern && value) {
+        const pattern = new RegExp(element.pattern)
+        if (!pattern.test(value)) {
+          errors.push({ field: fieldName, message: element.title || 'Please match the required format' })
+        }
+      }
+    }
+
+    return errors
+  }
+
+  private isFieldRequired(element: HTMLElement): boolean {
+    if (element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement ||
+      element instanceof HTMLSelectElement) {
+      return element.required
+    }
+
+    // For contenteditable elements, check data-required attribute
+    return element.dataset.required === 'true'
+  }
+
+  private clearValidationStates() {
+    const container = this.shadowRoot?.querySelector('#content-container')
+    if (!container) return
+
+    // Remove error classes and error messages
+    container.querySelectorAll('.field-error, .field-valid').forEach(el => {
+      el.classList.remove('field-error', 'field-valid')
+    })
+
+    container.querySelectorAll('.validation-error-message').forEach(el => {
+      el.remove()
+    })
+  }
+
+  private applyValidationFeedback(errors: FieldError[]) {
+    const container = this.shadowRoot?.querySelector('#content-container')
+    if (!container) return
+
+    // Group errors by field
+    const errorsByField = new Map<string, FieldError[]>()
+    errors.forEach(error => {
+      if (!errorsByField.has(error.field)) {
+        errorsByField.set(error.field, [])
+      }
+      errorsByField.get(error.field)!.push(error)
+    })
+
+    // Apply visual feedback
+    const allFields = container.querySelectorAll('input, textarea, select, [contenteditable="true"]')
+
+    allFields.forEach(element => {
+      const htmlElement = element as HTMLElement
+      const fieldName = this.getFieldName(htmlElement)
+
+      if (fieldName) {
+        const fieldErrors = errorsByField.get(fieldName)
+
+        if (fieldErrors && fieldErrors.length > 0) {
+          // Add error styling
+          htmlElement.classList.add('field-error')
+          htmlElement.classList.remove('field-valid')
+
+          // Add error message
+          this.addErrorMessage(htmlElement, fieldErrors[0].message)
+        } else {
+          // Remove error styling if no errors (but don't add valid styling)
+          htmlElement.classList.remove('field-error', 'field-valid')
+        }
+      }
+    })
+  }
+
+  private addErrorMessage(element: HTMLElement, message: string) {
+    // Find the parent container
+    let parent = element.parentElement
+
+    // For radio/checkbox groups, find the fieldset or container
+    if (element instanceof HTMLInputElement && (element.type === 'radio' || element.type === 'checkbox')) {
+      while (parent && !parent.classList.contains('radio-group') && !parent.classList.contains('checkbox-group') && parent.tagName !== 'FIELDSET') {
+        parent = parent.parentElement
+      }
+    }
+
+    if (parent) {
+      // Remove existing error message
+      const existingError = parent.querySelector('.validation-error-message')
+      if (existingError) {
+        existingError.remove()
+      }
+
+      // Add new error message
+      const errorEl = document.createElement('span')
+      errorEl.className = 'validation-error-message'
+      errorEl.textContent = message
+      parent.appendChild(errorEl)
+    }
+  }
+
   // Reset form method
   resetForm() {
-    const form = this.shadowRoot?.querySelector('form')
+    const formId = this.getFormId()
+    const form = this.shadowRoot?.querySelector(`#${formId}`) as HTMLFormElement
     if (form) {
       form.reset()
     }
+
+    // Clear data
+    this.data = {}
+
+    // Clear validation states
+    this.clearValidationStates()
   }
 }
 
