@@ -49,12 +49,63 @@ export class FormdownGenerator {
 
         // Handle both sync and async marked results
         if (typeof markdownHTML === 'string') {
-            return this.processFieldPlaceholders(markdownHTML, content.forms)
+            return this.processContent(markdownHTML, content.forms)
         } else {
             // If marked returns a Promise, we need to handle it differently
             // For now, fallback to the old method
             return this.generateLegacyHTML(content)
         }
+    }
+
+    private processContent(html: string, fields: Field[]): string {
+        if (fields.length === 0) {
+            return html
+        }
+
+        // Separate inline and block fields
+        const inlineFields: Field[] = []
+        const blockFields: Field[] = []
+
+        fields.forEach(field => {
+            if (field.inline) {
+                inlineFields.push(field)
+            } else {
+                blockFields.push(field)
+            }
+        })
+
+        let result = html
+
+        // Process inline fields first
+        inlineFields.forEach((field, index) => {
+            const placeholder = `<!--FORMDOWN_FIELD_${fields.indexOf(field)}-->`
+            const fieldHTML = this.generateInlineFieldHTML(field)
+            result = result.replace(new RegExp(placeholder, 'g'), fieldHTML)
+        })
+
+        // Process block fields - group them into a single form
+        if (blockFields.length > 0) {
+            const formHTML = this.generateSingleFormHTML(blockFields)
+            
+            // Replace first block field placeholder with complete form
+            const firstBlockFieldIndex = fields.findIndex(f => !f.inline)
+            if (firstBlockFieldIndex !== -1) {
+                const firstPlaceholder = `<!--FORMDOWN_FIELD_${firstBlockFieldIndex}-->`
+                result = result.replace(new RegExp(firstPlaceholder, 'g'), formHTML)
+                
+                // Remove remaining block field placeholders
+                blockFields.slice(1).forEach(field => {
+                    const fieldIndex = fields.indexOf(field)
+                    const placeholder = `<!--FORMDOWN_FIELD_${fieldIndex}-->`
+                    result = result.replace(new RegExp(placeholder, 'g'), '')
+                })
+            } else {
+                // No placeholders found, append form at the end
+                result += '\n' + formHTML
+            }
+        }
+
+        return result
     }
 
     private processFieldPlaceholders(html: string, fields: Field[]): string {
@@ -80,10 +131,53 @@ export class FormdownGenerator {
     }
 
     generateStandaloneFieldHTML(field: Field): string {
+        if (field.inline) {
+            return this.generateInlineFieldHTML(field)
+        }
         return `
 <form class="formdown-form">
 ${this.generateFieldHTML(field)}
 </form>`
+    }
+
+    generateSingleFormHTML(fields: Field[]): string {
+        if (fields.length === 0) return ''
+
+        const fieldsHTML = fields.map(field => this.generateFieldHTML(field)).join('\n')
+
+        return `
+<form class="formdown-form" role="form">
+${fieldsHTML}
+</form>`
+    }
+
+    generateInlineFieldHTML(field: Field): string {
+        const { name, type, required, placeholder, attributes } = field
+        const displayLabel = field.label || this.generateSmartLabel(name)
+
+        // For inline fields, use contenteditable spans
+        const commonAttrs = {
+            'data-field-name': name,
+            'data-field-type': type,
+            'data-placeholder': placeholder || displayLabel,
+            'class': 'formdown-inline-field',
+            'contenteditable': 'true',
+            'role': 'textbox',
+            ...(required && { 'data-required': 'true' }),
+            ...(attributes && attributes)
+        }
+
+        const attrString = Object.entries(commonAttrs)
+            .map(([key, value]) => {
+                if (typeof value === 'boolean') {
+                    return value ? key : ''
+                }
+                return `${key}="${value}"`
+            })
+            .filter(Boolean)
+            .join(' ')
+
+        return `<span ${attrString}>${displayLabel}</span>`
     }
 
     generateFormHTML(fields: Field[]): string {
@@ -98,16 +192,25 @@ ${fieldsHTML}
     }
 
     generateFieldHTML(field: Field): string {
-        const { name, type, label, required, placeholder, attributes, options } = field
+        const { name, type, label, required, placeholder, attributes, options, description, errorMessage, pattern, format } = field
 
         // Use smart label generation if no label is provided
         const displayLabel = label || this.generateSmartLabel(name)
 
+        // Generate unique IDs for accessibility
+        const fieldId = name
+        const descriptionId = description ? `${name}-description` : undefined
+        const errorId = errorMessage ? `${name}-error` : undefined
+
         const commonAttrs = {
-            id: name,
+            id: fieldId,
             name,
             ...(required && { required: true }),
             ...(placeholder && { placeholder }),
+            ...(pattern && { pattern }),
+            ...(format && { format }),
+            ...(description && { 'aria-describedby': descriptionId }),
+            ...(errorMessage && { 'aria-describedby': `${descriptionId ? descriptionId + ' ' : ''}${errorId}` }),
             ...attributes
         }
 
@@ -121,22 +224,34 @@ ${fieldsHTML}
             .filter(Boolean)
             .join(' ')
 
+        // Helper function to generate description and error HTML
+        const generateHelpText = () => {
+            let helpHTML = ''
+            if (description) {
+                helpHTML += `\n    <div id="${descriptionId}" class="formdown-field-description">${description}</div>`
+            }
+            if (errorMessage) {
+                helpHTML += `\n    <div id="${errorId}" class="formdown-field-error" role="alert">${errorMessage}</div>`
+            }
+            return helpHTML
+        }
+
         switch (type) {
             case 'textarea':
                 return `
 <div class="formdown-field">
-    <label for="${name}">${displayLabel}${required ? ' *' : ''}</label>
-    <textarea ${attrString}></textarea>
+    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
+    <textarea ${attrString}></textarea>${generateHelpText()}
 </div>`
 
             case 'select':
                 const optionsHTML = options?.map(opt => `<option value="${opt}">${opt}</option>`).join('\n') || ''
                 return `
 <div class="formdown-field">
-    <label for="${name}">${displayLabel}${required ? ' *' : ''}</label>
+    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
     <select ${attrString}>
         ${optionsHTML}
-    </select>
+    </select>${generateHelpText()}
 </div>`
 
             case 'radio':
@@ -144,16 +259,17 @@ ${fieldsHTML}
                     // Radio needs options - fallback to text input
                     return `
 <div class="formdown-field">
-    <label for="${name}">${displayLabel}${required ? ' *' : ''}</label>
-    <input type="text" ${attrString}>
+    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="text" ${attrString}>${generateHelpText()}
 </div>`
                 }
 
                 const radioInputsHTML = options.map((opt, index) => {
                     const inputId = `${name}_${index}`
+                    const isRequired = required && index === 0
                     return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="radio" id="${inputId}" name="${name}" value="${opt}" ${required && index === 0 ? 'required' : ''}>
+            <input type="radio" id="${inputId}" name="${name}" value="${opt}" ${isRequired ? 'required' : ''} ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
             <span>${opt}</span>
         </label>`
                 }).join('\n')
@@ -163,12 +279,12 @@ ${fieldsHTML}
 
                 return `
 <div class="formdown-field">
-    <fieldset>
+    <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
         <legend>${displayLabel}${required ? ' *' : ''}</legend>
-        <div class="${groupClass}">
+        <div class="${groupClass}" role="radiogroup">
 ${radioInputsHTML}
         </div>
-    </fieldset>
+    </fieldset>${generateHelpText()}
 </div>`
 
             case 'checkbox':
@@ -176,18 +292,19 @@ ${radioInputsHTML}
                     // Single checkbox
                     return `
 <div class="formdown-field">
-    <label for="${name}" class="formdown-checkbox-label">
-        <input type="checkbox" id="${name}" name="${name}" value="true" ${required ? 'required' : ''} ${attrString}>
+    <label for="${fieldId}" class="formdown-checkbox-label">
+        <input type="checkbox" id="${fieldId}" name="${name}" value="true" ${required ? 'required' : ''} ${attrString}>
         <span>${displayLabel}${required ? ' *' : ''}</span>
-    </label>
+    </label>${generateHelpText()}
 </div>`
                 } else {
                     // Checkbox group
                     const checkboxInputsHTML = options.map((opt, index) => {
                         const inputId = `${name}_${index}`
+                        const isRequired = required && index === 0
                         return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="checkbox" id="${inputId}" name="${name}" value="${opt}" ${required && index === 0 ? 'required' : ''}>
+            <input type="checkbox" id="${inputId}" name="${name}" value="${opt}" ${isRequired ? 'required' : ''} ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
             <span>${opt}</span>
         </label>`
                     }).join('\n')
@@ -197,20 +314,61 @@ ${radioInputsHTML}
 
                     return `
 <div class="formdown-field">
-    <fieldset>
+    <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
         <legend>${displayLabel}${required ? ' *' : ''}</legend>
-        <div class="${groupClass}">
+        <div class="${groupClass}" role="group">
 ${checkboxInputsHTML}
         </div>
-    </fieldset>
+    </fieldset>${generateHelpText()}
 </div>`
                 }
+
+            // Extended HTML5 input types
+            case 'range':
+                const min = attributes?.min || 0
+                const max = attributes?.max || 100
+                const step = attributes?.step || 1
+                const value = attributes?.value || Math.floor((min + max) / 2)
+                return `
+<div class="formdown-field">
+    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="range" ${attrString} value="${value}">
+    <output for="${fieldId}" class="formdown-range-output">${value}</output>${generateHelpText()}
+</div>`
+
+            case 'file':
+                return `
+<div class="formdown-field">
+    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="file" ${attrString}>${generateHelpText()}
+</div>`
+
+            case 'color':
+                return `
+<div class="formdown-field">
+    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="color" ${attrString}>${generateHelpText()}
+</div>`
+
+            case 'week':
+                return `
+<div class="formdown-field">
+    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="week" ${attrString}>${generateHelpText()}
+</div>`
+
+            case 'month':
+                return `
+<div class="formdown-field">
+    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="month" ${attrString}>${generateHelpText()}
+</div>`
 
             default:
                 return `
 <div class="formdown-field">
-    <label for="${name}">${displayLabel}${required ? ' *' : ''}</label>
-    <input type="${type}" ${attrString}>
+    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="${type}" ${attrString}>${generateHelpText()}
 </div>`
         }
     }

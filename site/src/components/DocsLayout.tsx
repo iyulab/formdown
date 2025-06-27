@@ -1,4 +1,8 @@
+'use client';
+
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import SearchModal from './SearchModal';
 
 // Simple SVG icon components
 const ChevronLeftIcon = ({ className }: { className?: string }) => (
@@ -13,6 +17,12 @@ const ChevronRightIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
+const SearchIcon = ({ className }: { className?: string }) => (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+    </svg>
+);
+
 interface DocNavItem {
     slug: string;
     title: string;
@@ -24,20 +34,35 @@ interface DocsLayoutProps {
 }
 
 const docItems: DocNavItem[] = [
-    { slug: 'index', title: 'Documentation' },
-    { slug: 'overview', title: 'Overview' },
-    { slug: 'quick-start', title: 'Quick Start' },
-    { slug: 'syntax', title: 'Syntax Guide' },
-    { slug: 'editor', title: 'Editor Guide' },
-    { slug: 'api', title: 'API Reference' },
-    { slug: 'examples', title: 'Examples' },
-    { slug: 'validation', title: 'Validation' }
+    { slug: 'index', title: 'Getting Started' },
+    { slug: 'installation', title: 'Installation' },
+    { slug: 'basics', title: 'Basic Syntax' },
+    { slug: 'shorthand', title: 'Shorthand Syntax' },
+    { slug: 'reference', title: 'Field Reference' },
+    { slug: 'validation', title: 'Validation' },
+    { slug: 'api', title: 'JavaScript API' },
+    { slug: 'editor', title: 'Editor Tools' },
+    { slug: 'examples', title: 'Examples' }
 ];
 
 export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const currentIndex = docItems.findIndex(item => item.slug === currentSlug);
     const prevDoc = currentIndex > 0 ? docItems[currentIndex - 1] : null;
     const nextDoc = currentIndex < docItems.length - 1 ? docItems[currentIndex + 1] : null;
+
+    // Keyboard shortcut for search
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                setIsSearchOpen(true);
+            }
+        };
+        
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, []);
 
     return (
         <div className="min-h-screen bg-white">
@@ -55,6 +80,16 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
                             </Link>
                         </div>
                         <div className="flex items-center space-x-4">
+                            <button
+                                onClick={() => setIsSearchOpen(true)}
+                                className="flex items-center space-x-2 px-3 py-1.5 text-sm text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                            >
+                                <SearchIcon className="w-4 h-4" />
+                                <span className="hidden sm:inline">Search</span>
+                                <span className="hidden sm:inline text-xs">
+                                    <kbd className="px-1 py-0.5 bg-white border border-gray-300 rounded text-xs">⌘K</kbd>
+                                </span>
+                            </button>
                             <Link href="/demo" className="text-sm font-medium text-gray-700 hover:text-blue-600">
                                 Demo
                             </Link>
@@ -71,11 +106,23 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
                     {/* Sidebar Navigation - Hidden on mobile */}
                     <aside className="hidden lg:block w-64 flex-shrink-0 border-r border-gray-200 bg-gray-50 fixed top-16 left-0 h-screen overflow-y-auto z-40">
                         <div className="p-6">
+                            {/* Search button in sidebar */}
+                            <button
+                                onClick={() => setIsSearchOpen(true)}
+                                className="w-full flex items-center space-x-3 px-3 py-2 mb-4 text-sm text-gray-500 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                            >
+                                <SearchIcon className="w-4 h-4" />
+                                <span>Search docs</span>
+                                <span className="ml-auto text-xs">
+                                    <kbd className="px-1 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs">⌘K</kbd>
+                                </span>
+                            </button>
+                            
                             <nav className="space-y-1">
                                 {docItems.map((item) => (
                                     <Link
                                         key={item.slug}
-                                        href={`/docs/${item.slug}`}
+                                        href={item.slug === 'index' ? '/docs' : `/docs/${item.slug}`}
                                         className={`block px-3 py-2 text-sm font-medium rounded-md transition-colors ${currentSlug === item.slug
                                             ? 'bg-blue-100 text-blue-700'
                                             : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
@@ -144,6 +191,9 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
                     </main>
                 </div>
             </div>
+            
+            {/* Search Modal */}
+            <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
         </div>
     );
 }

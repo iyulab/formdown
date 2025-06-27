@@ -47,17 +47,17 @@ export default function Home() {
                 editor.setAttribute("mode", "split")
                 editor.setAttribute("header", "true")
                 editor.setAttribute("content",
-                    `# Contact Form
+                    `# Contact Form (Shorthand Demo)
 
 Please fill out the form below to get in touch with us.
 
-@name(Your Name): [text required placeholder="Enter your full name"]
-@email(Email Address): [email required]
-@message(Message): [textarea rows=4 placeholder="Your message..."]
+@name(Your Name)*: [placeholder="Enter your full name"]
+@email(Email Address)*: @[]
+@message(Message): T4[placeholder="Your message..."]
 
-@source(How did you hear about us?): [radio required options="Website,Social Media,Friend,Other"]
+@source(How did you hear about us?)*{Website,Social Media,Friend,Other}: r[]
 
-@newsletter(Subscribe to newsletter): [checkbox]
+@newsletter(Subscribe to newsletter): c[]
 
 @submit_btn: [submit label="Send Message"]`
                 )
@@ -114,6 +114,7 @@ Please fill out the form below to get in touch with us.
                         Formdown transforms Markdown documents into interactive web forms.
                         Write content in familiar Markdown, add @field syntax for form elements,
                         and get beautiful, functional forms with real-time data binding.
+                        <strong>Plus shorthand syntax</strong> for faster development!
                     </p>
                     <div className="flex justify-center space-x-4">                        <Link
                         href="/demo"
@@ -134,7 +135,8 @@ Please fill out the form below to get in touch with us.
                 <div className="text-center mb-8">
                     <h3 id="demo-heading" className="text-3xl font-bold text-gray-900 mb-4">Try It Now</h3>
                     <p className="text-gray-600">
-                        See how Markdown with @field syntax becomes interactive forms. Edit the left panel and watch the form update in real-time.
+                        See how Markdown with shorthand syntax becomes interactive forms. Edit the left panel and watch the form update in real-time.
+                        Notice how <code>@name*: []</code> creates a required text field and <code>@email: @[]</code> makes an email input!
                     </p>
                 </div>
                 <div className="bg-white rounded-lg shadow-lg overflow-hidden">

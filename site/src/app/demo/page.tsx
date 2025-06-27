@@ -19,7 +19,11 @@ interface Sample {
 const SAMPLES: Sample[] = [
     { name: 'Minimal', filename: 'minimal.fd', description: 'Basic form with essential fields' },
     { name: 'Contact', filename: 'contact.fd', description: 'Contact form with validation' },
+    { name: 'Contact (Shorthand)', filename: 'contact-shorthand.fd', description: 'Contact form using shorthand syntax' },
     { name: 'Registration', filename: 'registration.fd', description: 'User registration form' },
+    { name: 'Registration (Shorthand)', filename: 'registration-shorthand.fd', description: 'User registration with shorthand syntax' },
+    { name: 'Booking (Shorthand)', filename: 'booking-shorthand.fd', description: 'Appointment booking with shorthand syntax' },
+    { name: 'E-commerce (Shorthand)', filename: 'ecommerce-shorthand.fd', description: 'Product ordering with shorthand syntax' },
     { name: 'Survey', filename: 'survey.fd', description: 'Survey form with various field types' },
     { name: 'Advanced', filename: 'advanced.fd', description: 'Advanced form with complex validation' },
     { name: 'E-commerce', filename: 'ecommerce.fd', description: 'E-commerce checkout form' },

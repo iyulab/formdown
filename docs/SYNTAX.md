@@ -37,7 +37,7 @@ FormDown intelligently converts field names to proper labels:
 @age: []                  → "Age"
 ```
 
-**Two ways to define field labels:**
+**Three ways to define field labels:**
 
 ```formdown
 // Method 1: Using parentheses (recommended for readability)
@@ -150,6 +150,11 @@ Your age is ___@age[text].
 @age: [number min=18 max=100]
 @birth_date: [date]
 @appointment_time: [time]
+@birth_month: [month]
+@work_week: [week]
+@theme_color: [color]
+@avatar: [file accept="image/*"]
+@volume: [range min=0 max=100]
 
 // Minimal syntax - defaults to text input
 @name: []
@@ -273,7 +278,7 @@ Please enter ___@age and ___@email.
 
 ## Examples
 
-### Contact Form
+### Contact Form (Standard Syntax)
 ```formdown
 # Contact Us
 
@@ -286,6 +291,21 @@ Please enter ___@age and ___@email.
 @newsletter(Subscribe to newsletter): [checkbox]
 
 @submit_form: [submit label="Send Message"]
+```
+
+### Contact Form (Shorthand Syntax)
+```formdown
+# Contact Us
+
+@name*: []
+@email*: @[]
+@subject*: [maxlength=100]
+@message*: T5[]
+
+@priority{Low,Medium,High}: r[]
+@newsletter(Subscribe to newsletter): c[]
+
+@submit: [submit label="Send Message"]
 ```
 
 ### Registration Form  

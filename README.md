@@ -1,77 +1,188 @@
 # Formdown
 
-**Formdown** is a Markdown-based syntax for creating HTML forms with simple, intuitive text formatting.
+**Formdown** transforms markdown-like syntax into interactive HTML forms. Write forms as naturally as writing text.
 
-## Key Features
+```formdown
+# Contact Form
+@name*: []
+@email*: @[]
+@message: T4[]
+@submit: [submit label="Send Message"]
+```
 
-- **Markdown-based**: Extends familiar Markdown syntax for form elements
-- **Text-first**: Version control friendly, editor agnostic
-- **Modular**: Use only what you need - core parser, UI renderer, or development tools
+**Becomes a fully functional contact form with validation!**
 
-## Quick Start
+## ✨ Key Features
 
-The easiest way to get started is with the `@formdown/ui` web component:
+| Feature | Description |
+|---------|-------------|
+| **Human Readable** | Forms written like natural text |
+| **Type Safe** | Built-in validation and type checking |
+| **Zero Dependencies** | Works anywhere HTML works |
+| **Framework Agnostic** | React, Vue, Angular, vanilla JS |
+| **Shorthand Syntax** | Write forms 50% faster |
+| **Smart Labels** | Automatic label generation |
+| **Inline Fields** | Embed forms in text content |
 
+## 🚀 Quick Start
+
+### CDN (Fastest)
+```html
+<script src="https://unpkg.com/@formdown/ui@latest/dist/standalone.js"></script>
+<formdown-ui>
+    @name*: []
+    @email*: @[]
+    @submit: [submit]
+</formdown-ui>
+```
+
+### NPM
 ```bash
 npm install @formdown/ui
 ```
 
-### HTML Usage
-
-```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@formdown/ui/dist/index.es.js"></script>
-
-<formdown-ui>
-    # Contact Form
-    
-    **Name**: ___@name
-    **Email**: ___@email[type=email]
-    **Message**: 
-    ```
-    @message
-    ```
-    
-    [Submit](@submit)
-</formdown-ui>
-```
-
-### JavaScript Usage
-
 ```javascript
 import '@formdown/ui';
 
-const formElement = document.createElement('formdown-ui');
-formElement.textContent = '**Name**: ___@name';
-document.body.appendChild(formElement);
+// Use in your HTML/JSX
+<formdown-ui>
+    @name*: []
+    @email*: @[]
+    @submit: [submit]
+</formdown-ui>
 ```
 
-## Packages
+### Examples
 
-- **[@formdown/ui](https://www.npmjs.com/package/@formdown/ui)** - Web component renderer (recommended)
-- **[@formdown/core](https://www.npmjs.com/package/@formdown/core)** - Parser and generator engine
-- **[@formdown/editor](https://www.npmjs.com/package/@formdown/editor)** - Development editor with live preview
+| Type | Standard Syntax | Shorthand Syntax |
+|------|-----------------|------------------|
+| **Contact Form** | `@name: [text required]`<br>`@email: [email required]` | `@name*: []`<br>`@email*: @[]` |
+| **Phone Number** | `@phone: [tel pattern="\d{3}-\d{3}-\d{4}"]` | `@phone{###-###-####}: %[]` |
+| **Inline Fields** | `Name: ___@name[text required]` | `Name: ___@name*` |
+| **Selection** | `@size: [radio options="S,M,L,XL"]` | `@size{S,M,L,XL}: r[]` |
 
-## Documentation
+## 📦 Packages
 
-- **[Complete Documentation](https://formdown.dev/docs)** - Full syntax guide, examples, and API reference
-- **[Quick Start Guide](https://formdown.dev/docs/quick-start)** - Get up and running in minutes
-- **[Interactive Demo](https://formdown.dev/demo)** - Try Formdown in your browser
+| Package | Size | Description | Install |
+|---------|------|-------------|----------|
+| **@formdown/ui** | ~45KB | Web components + parser | `npm install @formdown/ui` |
+| **@formdown/core** | ~15KB | Parser engine only | `npm install @formdown/core` |
+| **@formdown/editor** | ~65KB | Editor + UI + parser | `npm install @formdown/editor` |
+
+## 📚 Documentation
+
+| Resource | Description |
+|----------|-------------|
+| **[📖 Complete Documentation](https://formdown.dev/docs)** | Full syntax guide, examples, and API reference |
+| **[🚀 Interactive Demo](https://formdown.dev/demo)** | Try Formdown in your browser |
+| **[💡 Examples](https://formdown.dev/docs/examples)** | Real-world form examples |
+| **[🔧 JavaScript API](https://formdown.dev/docs/api)** | Programmatic control and validation |
+
+### Quick Links
+- [Basic Syntax](https://formdown.dev/docs/basics) - Learn core concepts
+- [Shorthand Syntax](https://formdown.dev/docs/shorthand) - Write forms faster
+- [Field Reference](https://formdown.dev/docs/reference) - Complete field types
+- [Installation](https://formdown.dev/docs/installation) - Framework integration
 
 ### Local Documentation
 
 - [Syntax Guide](./docs/SYNTAX.md) - Complete formdown syntax reference
-- [Editor Guide](./docs/EDITOR.md) - Development environment and modes
-- [Tasks & Development](./docs/TASKS.md) - Current development status
+- [Shorthand Syntax](./docs/SHORTHAND_SYNTAX.md) - Faster form creation
+- [Architecture](./docs/ARCHITECTURE.md) - Technical architecture
 
-## Contributing
+## 🛠️ Framework Integration
+
+### React
+```jsx
+import '@formdown/ui';
+
+function ContactForm() {
+    return (
+        <formdown-ui>
+            @name*: []
+            @email*: @[]
+            @submit: [submit]
+        </formdown-ui>
+    );
+}
+```
+
+### Vue
+```vue
+<template>
+    <formdown-ui>
+        @name*: []
+        @email*: @[]
+        @submit: [submit]
+    </formdown-ui>
+</template>
+
+<script>
+import '@formdown/ui';
+export default { name: 'ContactForm' }
+</script>
+```
+
+### Angular
+```typescript
+// main.ts
+import '@formdown/ui';
+```
+```html
+<!-- component.html -->
+<formdown-ui>
+    @name*: []
+    @email*: @[]
+    @submit: [submit]
+</formdown-ui>
+```
+
+## 🚀 Features Showcase
+
+### Smart Labels
+```formdown
+@first_name: []        # Label: "First Name"
+@email_address: []     # Label: "Email Address" 
+@phone_number: []      # Label: "Phone Number"
+```
+
+### Pattern Validation
+```formdown
+@phone{(###)###-####}: %[]           # Phone format
+@ssn{###-##-####}: []                # SSN format
+@email{*@company.com}: @[]           # Company email
+```
+
+### Inline Forms
+```formdown
+Hello ___@name*! Your order #___@order_id is ready.
+Delivery date: ___@delivery_date: d[]
+```
+
+### JavaScript API
+```javascript
+const form = document.querySelector('formdown-ui');
+const result = form.validate();
+if (result.isValid) {
+    const data = form.getFormData();
+    console.log(data); // { name: "John", email: "john@example.com" }
+}
+```
+
+## 🤝 Contributing
 
 ```bash
-git clone <repository>
+git clone https://github.com/iyulab/formdown.git
+cd formdown
 npm install
 npm run build
 npm test
 ```
 
-## License
+## 📝 License
 
 MIT License - see [LICENSE](./LICENSE) file for details.
+
+---
+
+**[📖 Full Documentation](https://formdown.dev/docs)** • **[🚀 Try Demo](https://formdown.dev/demo)** • **[💬 Discussions](https://github.com/iyulab/formdown/discussions)**

@@ -140,6 +140,212 @@ Your age is ___@age[text].
 - 🛡️ **Validation rules** (required, min/max, pattern)
 - 🎨 **Custom attributes** (classes, data attributes)
 
+## Shorthand Syntax
+
+FormDown provides powerful shorthand syntax for even more concise form creation. This is **sugar syntax** that converts to standard FormDown syntax while maintaining full compatibility.
+
+### Core Principles
+1. **Complete compatibility**: All shorthand converts to `[attributes]` syntax
+2. **Type-based interpretation**: `{content}` is interpreted based on field type
+3. **Progressive complexity**: Start simple, add complexity as needed
+
+### Required Fields with `*`
+```formdown
+// Shorthand
+@name*: []
+@email*: []
+
+// Converts to
+@name: [text required]
+@email: [text required]
+```
+
+### Type Markers
+Common input types can be specified with single-character markers before `[]`:
+
+```formdown
+// Shorthand
+@email: @[]           // email type
+@age: #[]             // number type  
+@phone: %[]           // tel type
+@website: &[]         // url type
+@password: ?[]        // password type
+@birth_date: d[]      // date type
+@meeting_time: t[]    // time type
+@appointment: dt[]    // datetime-local type
+@description: T[]     // textarea
+@notes: T4[]          // textarea with 4 rows
+
+// Converts to
+@email: [email]
+@age: [number]
+@phone: [tel] 
+@website: [url]
+@password: [password]
+@birth_date: [date]
+@meeting_time: [time]
+@appointment: [datetime-local]
+@description: [textarea]
+@notes: [textarea rows=4]
+```
+
+### Combining Required + Type
+```formdown
+// Shorthand
+@email*: @[]
+@age*: #[]
+@description*: T6[]
+
+// Converts to
+@email: [email required]
+@age: [number required]
+@description: [textarea required rows=6]
+```
+
+### Content Patterns with `{content}`
+The `{content}` syntax is interpreted differently based on the field type:
+
+**Text types** → `pattern` attribute (validation):
+```formdown
+// Shorthand - Pattern validation
+@username{^[a-zA-Z0-9_]{3,20}$}: []
+@phone{(###)###-####}: []
+@email{*@company.com}: []
+
+// Converts to
+@username: [text pattern="^[a-zA-Z0-9_]{3,20}$"]
+@phone: [text pattern="^\(\d{3}\)\d{3}-\d{4}$"]
+@email: [text pattern="^.*@company\.com$"]
+```
+
+**Date/time types** → `format` attribute:
+```formdown
+// Shorthand - Format specification
+@birth_date{yyyy-MM-dd}: d[]
+@meeting_time{HH:mm}: t[]
+
+// Converts to  
+@birth_date: [date format="yyyy-MM-dd"]
+@meeting_time: [time format="HH:mm"]
+```
+
+**Selection types** → `options` attribute:
+```formdown
+// Shorthand - Options list
+@size{S,M,L,XL}: r[]           // radio
+@country{USA,Canada,UK}: s[]   // select
+@skills{JS,Python,Java}: c[]   // checkbox group
+
+// Converts to
+@size: [radio options="S,M,L,XL"]
+@country: [select options="USA,Canada,UK"]
+@skills: [checkbox options="JS,Python,Java"]
+```
+
+### Pattern Shortcuts
+FormDown automatically converts user-friendly patterns to regex:
+
+```formdown
+// Mask patterns (# = digit, * = any)
+@phone{(###)###-####}: []
+@ssn{###-##-####}: []
+
+// Glob patterns (* = wildcard)
+@work_email{*@company.com}: []
+@filename{*.pdf}: []
+
+// Converts to proper regex patterns automatically
+```
+
+### Custom Labels with `()`
+```formdown
+// Shorthand
+@first_name(Full Name)*: []
+@user_email(Email Address)*: @[]
+@birth_date(Date of Birth){yyyy-MM-dd}: d[]
+
+// Converts to
+@first_name: [text required label="Full Name"]
+@user_email: [email required label="Email Address"] 
+@birth_date: [date format="yyyy-MM-dd" label="Date of Birth"]
+```
+
+### Inline Shorthand
+```formdown
+// Shorthand inline
+Hello @___@name*!
+Your email: @___@email*
+Age: #___@age* years old
+Birth date: d___@birth_date{yyyy-MM-dd}
+
+// Converts to
+Hello ___@name[text required]!
+Your email: ___@email[email required]
+Age: ___@age[number required] years old
+Birth date: ___@birth_date[date format="yyyy-MM-dd"]
+```
+
+### Complex Examples
+
+**Registration form with shorthand:**
+```formdown
+# User Registration
+
+@username(Username)*{^[a-zA-Z0-9_]{3,20}$}: [placeholder="3-20 characters"]
+@email(Email Address)*: @[]
+@password(Password)*{^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$}: ?[]
+@birth_date(Birth Date){yyyy-MM-dd}: d[min="1900-01-01" max="2010-12-31"]
+
+@gender(Gender){male,female,other}: r[]
+@interests(Interests){Web,Mobile,AI,Gaming,*}: c[]
+@newsletter(Subscribe to newsletter): c[]
+
+@terms(I agree to terms and conditions)*: c[]
+@register: [submit label="Create Account"]
+```
+
+**Appointment booking with inline shorthand:**
+```formdown
+# Appointment Booking
+
+Dear @___@customer_name*,
+
+Please schedule your appointment:
+- Service: s___@service{Consultation,Checkup,Treatment}
+- Date: d___@appointment_date{yyyy-MM-dd}[min="2024-01-01"]  
+- Time: t___@appointment_time{HH:mm}[min="09:00" max="17:00"]
+- Phone: %___@phone{(###)###-####}
+
+@special_requests(Special Requests): T3[placeholder="Any special requirements?"]
+@book_appointment: [submit label="Book Appointment"]
+```
+
+### When to Use Shorthand vs Standard
+
+**Use shorthand for:**
+- ✅ **Simple forms** with common patterns
+- ✅ **Rapid prototyping** and quick development
+- ✅ **Common field types** (email, phone, dates)
+- ✅ **Standard validation** patterns
+
+**Use standard syntax for:**
+- 🔧 **Complex validation** rules
+- 🎨 **Custom attributes** and styling
+- 🔌 **Framework integration** with dynamic values
+- 📋 **Complex form logic** and conditional fields
+
+**Mixed usage is recommended:**
+```formdown
+// Simple fields - use shorthand
+@name*: []
+@email*: @[]
+@phone{(###)###-####}: []
+
+// Complex fields - use standard syntax  
+@bio: [textarea rows=4 maxlength=500 class="bio-field" data-counter="true"]
+@advanced_options: [checkbox options="opt1,opt2,opt3" class="advanced" data-toggle="collapse"]
+```
+
 ## Field Types
 
 ### Text Inputs

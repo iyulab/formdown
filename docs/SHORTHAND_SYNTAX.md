@@ -22,6 +22,11 @@ FormDown의 단축표기법은 자주 사용하는 패턴을 간결하게 표현
 - `d` = date
 - `t` = time
 - `dt` = datetime-local
+- `M` = month
+- `W` = week
+- `R` = range
+- `F` = file
+- `C` = color
 - `?` = password
 - `T` = textarea (+숫자로 행 수 지정)
 - `r` = radio

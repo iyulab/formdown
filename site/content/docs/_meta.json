@@ -1,9 +1,11 @@
 {
-    "getting-started": "Getting Started",
-    "syntax": "Syntax Guide",
-    "validation": "Form Validation",
-    "examples": "Examples",
-    "api": "API Reference",
-    "editor": "Editor Features",
-    "integration": "Integration Guide"
+    "index": "Getting Started",
+    "installation": "Installation",
+    "basics": "Basic Syntax",
+    "shorthand": "Shorthand Syntax",
+    "reference": "Field Reference",
+    "validation": "Validation",
+    "api": "JavaScript API",
+    "editor": "Editor Tools",
+    "examples": "Examples"
 }

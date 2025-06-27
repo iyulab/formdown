@@ -9,6 +9,22 @@ export interface Field {
     format?: string
     pattern?: string
     attributes?: Record<string, any>
+    description?: string
+    errorMessage?: string
+    inline?: boolean
+}
+
+export interface ValidationRule {
+    type: 'required' | 'pattern' | 'min' | 'max' | 'minlength' | 'maxlength' | 'custom'
+    value?: any
+    message?: string
+}
+
+export interface AccessibilityOptions {
+    description?: string
+    ariaLabel?: string
+    ariaDescribedBy?: string
+    role?: string
 }
 
 export interface ParseError {
