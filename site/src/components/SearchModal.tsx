@@ -285,7 +285,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         ) : query.trim() ? (
                             <div className="px-4 py-8 text-center text-gray-500">
                                 <SearchIcon className="w-8 h-8 mx-auto mb-3 text-gray-300" />
-                                <p>No results found for "{query}"</p>
+                                <p>No results found for &quot;{query}&quot;</p>
                                 <p className="text-sm mt-1">Try different keywords or check spelling</p>
                             </div>
                         ) : (

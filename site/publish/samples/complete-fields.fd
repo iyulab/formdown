@@ -1,0 +1,42 @@
+# Complete Field Types Example
+
+This sample demonstrates the most commonly used form field types in Formdown.
+
+## Personal Information
+
+@name(Full Name): [text required placeholder="Enter your full name"]
+@email(Email Address): [email required placeholder="user@example.com"]
+@phone(Phone Number): [tel placeholder="+1 (555) 123-4567"]
+@age(Age): [number min=18 max=120 required]
+@birth_date(Date of Birth): [date required]
+
+## Selection Fields
+
+@gender(Gender): [radio required options="Male,Female,Non-binary,Prefer not to say"]
+@skills(Technical Skills): [checkbox options="JavaScript,Python,React,Node.js,Database Design"]
+@country(Country): [select required options="United States,Canada,United Kingdom,Germany,France,Japan,Australia,Other"]
+@experience(Experience Level): [select options="Beginner,Intermediate,Advanced,Expert"]
+
+### Vertical Layout Example
+@preferences(Communication Preferences): [checkbox layout="vertical" options="Email Notifications,SMS Alerts,Phone Calls,Push Notifications,Weekly Digest"]
+
+## Additional Information
+
+@bio(About You): [textarea rows=4 placeholder="Tell us about yourself"]
+@website(Website): [url placeholder="https://yourwebsite.com"]
+@salary_range(Salary Expectation): [range min=30000 max=150000 step=5000 value=75000]
+@favorite_color(Favorite Color): [color value="#3b82f6"]
+
+## File Upload
+
+@resume(Resume): [file accept=".pdf,.doc,.docx" required]
+@portfolio(Portfolio): [file accept="image/*,.pdf" multiple]
+
+## Form Actions
+
+@submit_form: [submit label="Submit Application"]
+@reset_form: [reset label="Clear Form"]
+
+---
+
+This example covers all major field types: text inputs, selections, file uploads, and form controls.

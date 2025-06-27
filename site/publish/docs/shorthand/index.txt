@@ -1,0 +1,632 @@
+1:"$Sreact.fragment"
+2:I[7555,[],""]
+3:I[1901,["874","static/chunks/874-1d5071fab5c23a5a.js","39","static/chunks/app/error-7fbbcffb8614ab2c.js"],"default"]
+4:I[1295,[],""]
+5:I[6874,["874","static/chunks/874-1d5071fab5c23a5a.js","345","static/chunks/app/not-found-b14baa73986bd718.js"],""]
+6:I[9243,["499","static/chunks/app/docs/layout-1b0e5181de9dd377.js"],""]
+8:I[9665,[],"OutletBoundary"]
+b:I[4911,[],"AsyncMetadataOutlet"]
+d:I[9665,[],"ViewportBoundary"]
+f:I[9665,[],"MetadataBoundary"]
+11:I[6614,[],""]
+:HL["/_next/static/css/b85e512e4328191c.css","style"]
+0:{"P":null,"b":"zxRfpwRALiqGyBLvv-gCu","p":"","c":["","docs","shorthand",""],"i":false,"f":[[["",{"children":["docs",{"children":[["slug","shorthand","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/b85e512e4328191c.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":[["$","head",null,{"children":[["$","script",null,{"async":true,"src":"https://www.googletagmanager.com/gtag/js?id=G-XP031KBMJE"}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              window.dataLayer = window.dataLayer || [];\n              function gtag(){dataLayer.push(arguments);}\n              gtag('js', new Date());\n              gtag('config', 'G-XP031KBMJE');\n            "}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Formdown\",\"description\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Web Browser\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"creator\":{\"@type\":\"Organization\",\"name\":\"iyulab\",\"url\":\"https://github.com/iyulab\"},\"url\":\"https://formdown.dev\",\"downloadUrl\":\"https://github.com/iyulab/formdown\",\"sameAs\":[\"https://github.com/iyulab/formdown\",\"https://www.npmjs.com/package/@formdown/core\"]}"}}],["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}]]}],["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":["$","$L2",null,{"parallelRouterKey":"children","error":"$3","errorStyles":[],"errorScripts":[],"template":["$","$L4",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","div",null,{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center max-w-md mx-auto px-4","children":[["$","h1",null,{"className":"text-6xl font-bold text-blue-600 mb-4","children":"404"}],["$","h2",null,{"className":"text-2xl font-bold text-gray-900 mb-4","children":"Page Not Found"}],["$","p",null,{"className":"text-gray-600 mb-8","children":"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."}],["$","div",null,{"className":"space-x-4","children":[["$","$L5",null,{"href":"/","className":"bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block","children":"Go Home"}],["$","$L5",null,{"href":"/docs","className":"bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block","children":"View Docs"}]]}]]}]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]]}]]}],{"children":["docs",["$","$1","c",{"children":[null,["$","div",null,{"className":"docs-layout","children":[["$","$L6",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L6",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L4",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]]}],{"children":[["slug","shorthand","d"],["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L4",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L7",null,["$","$L8",null,{"children":["$L9","$La",["$","$Lb",null,{"promise":"$@c"}]]}]]}],{},null,false]},null,false]},null,false]},[["$","div","l",{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center","children":[["$","div",null,{"className":"inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"}],["$","p",null,{"className":"text-gray-600","children":"Loading Formdown..."}]]}]}],[],[]],false],["$","$1","h",{"children":[null,["$","$1","_9Tj4pkvTtVefWFSnr1pwv",{"children":[["$","$Ld",null,{"children":"$Le"}],null]}],["$","$Lf",null,{"children":"$L10"}]]}],false]],"m":"$undefined","G":["$11","$undefined"],"s":false,"S":true}
+12:"$Sreact.suspense"
+13:I[4911,[],"AsyncMetadata"]
+15:I[984,["874","static/chunks/874-1d5071fab5c23a5a.js","375","static/chunks/375-255e0c46e3d64855.js","508","static/chunks/app/docs/%5Bslug%5D/page-1286a5c53c96b553.js"],"default"]
+10:["$","div",null,{"hidden":true,"children":["$","$12",null,{"fallback":null,"children":["$","$L13",null,{"promise":"$@14"}]}]}]
+16:T449,prose prose-lg max-w-none   prose-headings:text-gray-900 prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 prose-p:leading-relaxed   prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 prose-strong:font-semibold   prose-code:text-pink-600 prose-code:bg-pink-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 prose-blockquote:bg-blue-50 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700   prose-table:border-collapse prose-table:border prose-table:border-gray-300   prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 prose-td:px-3 prose-td:py-217:T4011,<p>Write forms faster with Formdown&#39;s powerful shorthand syntax. Every shorthand expression converts to standard <code>[attributes]</code> syntax.</p>
+<h2>Why Shorthand?</h2>
+<p>Compare these equivalent forms:</p>
+<h3>Standard Syntax</h3>
+<pre class="language-markup"><code class="language-markup">@name: [text required]
+@email: [email required]
+@age: [number min=18 max=100]
+@phone: [tel pattern="\\(\\d{3}\\)\\d{3}-\\d{4}"]
+@interests: [checkbox options="Web,Mobile,AI"]</code></pre><h3>Shorthand Syntax</h3>
+<pre class="language-markup"><code class="language-markup">@name*: []
+@email*: @[]
+@age: #[min=18 max=100]
+@phone{(###)###-####}: %[]
+@interests{Web,Mobile,AI}: c[]</code></pre><p><strong>50% less typing, same functionality!</strong></p>
+<h2>Core Shorthand Patterns</h2>
+<h3>Required Fields with <code>*</code></h3>
+<table>
+<thead>
+<tr>
+<th>Shorthand</th>
+<th>Standard</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@name*: []</code></td>
+<td><code>@name: [text required]</code></td>
+<td>Required text field</td>
+</tr>
+<tr>
+<td><code>@email*: @[]</code></td>
+<td><code>@email: [email required]</code></td>
+<td>Required email field</td>
+</tr>
+<tr>
+<td><code>@age*: #[]</code></td>
+<td><code>@age: [number required]</code></td>
+<td>Required number field</td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup"># Registration form
+@username*: []
+@email*: @[]
+@password*: ?[]
+@age*: #[min=18]</code></pre><h3>Type Markers</h3>
+<p>Quick type specification with single characters:</p>
+<table>
+<thead>
+<tr>
+<th>Marker</th>
+<th>Type</th>
+<th>Full Syntax</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@[]</code></td>
+<td>Email</td>
+<td><code>[email]</code></td>
+<td>Email validation</td>
+</tr>
+<tr>
+<td><code>#[]</code></td>
+<td>Number</td>
+<td><code>[number]</code></td>
+<td>Numeric input</td>
+</tr>
+<tr>
+<td><code>%[]</code></td>
+<td>Tel</td>
+<td><code>[tel]</code></td>
+<td>Phone number</td>
+</tr>
+<tr>
+<td><code>&amp;[]</code></td>
+<td>URL</td>
+<td><code>[url]</code></td>
+<td>URL validation</td>
+</tr>
+<tr>
+<td><code>?[]</code></td>
+<td>Password</td>
+<td><code>[password]</code></td>
+<td>Hidden input</td>
+</tr>
+<tr>
+<td><code>d[]</code></td>
+<td>Date</td>
+<td><code>[date]</code></td>
+<td>Date picker</td>
+</tr>
+<tr>
+<td><code>t[]</code></td>
+<td>Time</td>
+<td><code>[time]</code></td>
+<td>Time selector</td>
+</tr>
+<tr>
+<td><code>dt[]</code></td>
+<td>DateTime</td>
+<td><code>[datetime-local]</code></td>
+<td>Date and time</td>
+</tr>
+<tr>
+<td><code>M[]</code></td>
+<td>Month</td>
+<td><code>[month]</code></td>
+<td>Month picker</td>
+</tr>
+<tr>
+<td><code>W[]</code></td>
+<td>Week</td>
+<td><code>[week]</code></td>
+<td>Week picker</td>
+</tr>
+<tr>
+<td><code>T[]</code></td>
+<td>Textarea</td>
+<td><code>[textarea]</code></td>
+<td>Multi-line text</td>
+</tr>
+<tr>
+<td><code>T4[]</code></td>
+<td>Textarea</td>
+<td><code>[textarea rows=4]</code></td>
+<td>4-row textarea</td>
+</tr>
+<tr>
+<td><code>r[]</code></td>
+<td>Radio</td>
+<td><code>[radio]</code></td>
+<td>Radio buttons</td>
+</tr>
+<tr>
+<td><code>c[]</code></td>
+<td>Checkbox</td>
+<td><code>[checkbox]</code></td>
+<td>Checkbox</td>
+</tr>
+<tr>
+<td><code>s[]</code></td>
+<td>Select</td>
+<td><code>[select]</code></td>
+<td>Dropdown</td>
+</tr>
+<tr>
+<td><code>R[]</code></td>
+<td>Range</td>
+<td><code>[range]</code></td>
+<td>Slider input</td>
+</tr>
+<tr>
+<td><code>F[]</code></td>
+<td>File</td>
+<td><code>[file]</code></td>
+<td>File upload</td>
+</tr>
+<tr>
+<td><code>C[]</code></td>
+<td>Color</td>
+<td><code>[color]</code></td>
+<td>Color picker</td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@email: @[]                    # Email field
+@age: #[]                      # Number field
+@phone: %[]                    # Phone field
+@website: &amp;[]                  # URL field
+@password: ?[]                 # Password field
+@birth_date: d[]               # Date field
+@meeting_time: t[]             # Time field
+@appointment: dt[]             # DateTime field
+@birth_month: M[]              # Month picker
+@work_week: W[]                # Week picker
+@description: T[]              # Textarea
+@bio: T4[]                     # 4-row textarea
+@volume: R[]                   # Range slider
+@avatar: F[]                   # File upload
+@theme_color: C[]              # Color picker</code></pre><h3>Content Patterns with <code>{}</code></h3>
+<p>The <code>{}</code> syntax changes meaning based on field type:</p>
+<h4>Selection Fields → Options</h4>
+<table>
+<thead>
+<tr>
+<th>Shorthand</th>
+<th>Standard</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>{A,B,C}: r[]</code></td>
+<td><code>[radio options=&quot;A,B,C&quot;]</code></td>
+<td>Radio options</td>
+</tr>
+<tr>
+<td><code>{A,B,C}: c[]</code></td>
+<td><code>[checkbox options=&quot;A,B,C&quot;]</code></td>
+<td>Checkbox options</td>
+</tr>
+<tr>
+<td><code>{A,B,C}: s[]</code></td>
+<td><code>[select options=&quot;A,B,C&quot;]</code></td>
+<td>Select options</td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@size{S,M,L,XL}: r[]           # Radio buttons
+@skills{JS,Python,Java}: c[]   # Checkbox group
+@country{USA,Canada,UK}: s[]   # Select dropdown</code></pre><h4>Text Fields → Validation Pattern</h4>
+<table>
+<thead>
+<tr>
+<th>Shorthand</th>
+<th>Standard</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>{###-##-####}: []</code></td>
+<td><code>[text pattern=&quot;\\d{3}-\\d{2}-\\d{4}&quot;]</code></td>
+<td>SSN pattern</td>
+</tr>
+<tr>
+<td><code>{(###)###-####}: []</code></td>
+<td><code>[text pattern=&quot;\\(\\d{3}\\)\\d{3}-\\d{4}&quot;]</code></td>
+<td>Phone pattern</td>
+</tr>
+<tr>
+<td><code>{*@company.com}: []</code></td>
+<td><code>[text pattern=&quot;.*@company\\.com$&quot;]</code></td>
+<td>Email pattern</td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@ssn{###-##-####}: []
+@phone{(###)###-####}: []
+@work_email{*@company.com}: []</code></pre><h4>Date/Time Fields → Format</h4>
+<table>
+<thead>
+<tr>
+<th>Shorthand</th>
+<th>Standard</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>{yyyy-MM-dd}: d[]</code></td>
+<td><code>[date format=&quot;yyyy-MM-dd&quot;]</code></td>
+<td>Date format</td>
+</tr>
+<tr>
+<td><code>{HH:mm}: t[]</code></td>
+<td><code>[time format=&quot;HH:mm&quot;]</code></td>
+<td>Time format</td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@birth_date{yyyy-MM-dd}: d[]
+@meeting_time{HH:mm}: t[]</code></pre><h2>Combining Shorthand</h2>
+<h3>Required + Type</h3>
+<pre class="language-markup"><code class="language-markup">@email*: @[]              # Required email
+@age*: #[]                # Required number
+@password*: ?[]           # Required password
+@description*: T4[]       # Required 4-row textarea</code></pre><h3>Required + Type + Pattern</h3>
+<pre class="language-markup"><code class="language-markup">@email*{*@company.com}: @[]           # Required company email
+@phone*{(###)###-####}: %[]           # Required formatted phone
+@username*{^[a-zA-Z0-9_]{3,20}$}: []  # Required username pattern</code></pre><h3>Custom Labels + Shorthand</h3>
+<pre class="language-markup"><code class="language-markup">@first_name(Full Name)*: []
+@user_email(Email Address)*: @[]
+@birth_date(Date of Birth){yyyy-MM-dd}: d[]
+@work_phone(Work Phone){(###)###-####}: %[]</code></pre><h2>Pattern Shortcuts</h2>
+<p>Formdown converts user-friendly patterns to proper regex:</p>
+<h3>Mask Patterns</h3>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Meaning</th>
+<th>Regex Equivalent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>#</code></td>
+<td>Single digit</td>
+<td><code>\\d</code></td>
+</tr>
+<tr>
+<td><code>*</code></td>
+<td>Any character(s)</td>
+<td><code>.*</code></td>
+</tr>
+<tr>
+<td><code>###</code></td>
+<td>Three digits</td>
+<td><code>\\d{3}</code></td>
+</tr>
+<tr>
+<td><code>***</code></td>
+<td>Any three chars</td>
+<td><code>.{3}</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@phone{(###)###-####}: []      # Phone format
+@ssn{###-##-####}: []          # SSN format  
+@zip{#####}: []                # 5-digit ZIP
+@license{***-###}: []          # License plate</code></pre><h3>Glob Patterns</h3>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Meaning</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>*@domain.com</code></td>
+<td>Ends with domain</td>
+<td>Company emails</td>
+</tr>
+<tr>
+<td><code>user_*</code></td>
+<td>Starts with prefix</td>
+<td>Username patterns</td>
+</tr>
+<tr>
+<td><code>*.pdf</code></td>
+<td>File extension</td>
+<td>File uploads</td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@work_email{*@company.com}: @[]
+@username{user_*}: []
+@resume{*.pdf}: [file]</code></pre><h2>Inline Shorthand</h2>
+<p>Use shorthand in inline fields too:</p>
+<pre class="language-markup"><code class="language-markup">Hello ___@name*!
+Your email: ___@email*: @[]
+Age: ___@age*: #[] years old
+Phone: ___@phone{(###)###-####}: %[]</code></pre><h2>Complete Examples</h2>
+<h3>Quick Contact Form</h3>
+<pre class="language-markup"><code class="language-markup"># Contact Us
+@name*: []
+@email*: @[]
+@phone{(###)###-####}: %[]
+@message*: T4[]
+@submit: [submit label="Send"]</code></pre><h3>User Registration</h3>
+<pre class="language-markup"><code class="language-markup"># Create Account
+@username*{^[a-zA-Z0-9_]{3,20}$}: [placeholder="3-20 characters"]
+@email*: @[]
+@password*{^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$}: ?[]
+@birth_date{yyyy-MM-dd}: d[max="2010-12-31"]
+@country{USA,Canada,UK,Other}: s[]
+@interests{Web,Mobile,AI,Gaming}: c[]
+@newsletter(Subscribe): c[]
+@terms*: c[label="I agree to terms"]
+@register: [submit label="Create Account"]</code></pre><h3>Event Booking</h3>
+<pre class="language-markup"><code class="language-markup"># Book Appointment
+Dear ___@customer_name*,
+
+Your appointment details:
+- Service: ___@service{Consultation,Checkup,Treatment}: s[]
+- Date: ___@date{yyyy-MM-dd}: d[min="2024-01-01"]
+- Time: ___@time{HH:mm}: t[min="09:00" max="17:00"]
+- Phone: ___@phone{(###)###-####}: %[]
+
+@special_requests: T3[placeholder="Any special requirements?"]
+@book: [submit label="Book Appointment"]</code></pre><h2>Shorthand Reference Tables</h2>
+<h3>Type Markers Quick Reference</h3>
+<table>
+<thead>
+<tr>
+<th>Input Type</th>
+<th>Marker</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Text</td>
+<td><code>[]</code></td>
+<td><code>@name: []</code></td>
+</tr>
+<tr>
+<td>Email</td>
+<td><code>@[]</code></td>
+<td><code>@email: @[]</code></td>
+</tr>
+<tr>
+<td>Password</td>
+<td><code>?[]</code></td>
+<td><code>@password: ?[]</code></td>
+</tr>
+<tr>
+<td>Number</td>
+<td><code>#[]</code></td>
+<td><code>@age: #[]</code></td>
+</tr>
+<tr>
+<td>Tel</td>
+<td><code>%[]</code></td>
+<td><code>@phone: %[]</code></td>
+</tr>
+<tr>
+<td>URL</td>
+<td><code>&amp;[]</code></td>
+<td><code>@website: &amp;[]</code></td>
+</tr>
+<tr>
+<td>Date</td>
+<td><code>d[]</code></td>
+<td><code>@date: d[]</code></td>
+</tr>
+<tr>
+<td>Time</td>
+<td><code>t[]</code></td>
+<td><code>@time: t[]</code></td>
+</tr>
+<tr>
+<td>DateTime</td>
+<td><code>dt[]</code></td>
+<td><code>@datetime: dt[]</code></td>
+</tr>
+<tr>
+<td>Month</td>
+<td><code>M[]</code></td>
+<td><code>@month: M[]</code></td>
+</tr>
+<tr>
+<td>Week</td>
+<td><code>W[]</code></td>
+<td><code>@week: W[]</code></td>
+</tr>
+<tr>
+<td>Textarea</td>
+<td><code>T[]</code></td>
+<td><code>@bio: T[]</code></td>
+</tr>
+<tr>
+<td>Textarea (rows)</td>
+<td><code>T4[]</code></td>
+<td><code>@bio: T4[]</code></td>
+</tr>
+<tr>
+<td>Radio</td>
+<td><code>r[]</code></td>
+<td><code>@size: r[]</code></td>
+</tr>
+<tr>
+<td>Checkbox</td>
+<td><code>c[]</code></td>
+<td><code>@agree: c[]</code></td>
+</tr>
+<tr>
+<td>Select</td>
+<td><code>s[]</code></td>
+<td><code>@country: s[]</code></td>
+</tr>
+<tr>
+<td>Range</td>
+<td><code>R[]</code></td>
+<td><code>@volume: R[]</code></td>
+</tr>
+<tr>
+<td>File</td>
+<td><code>F[]</code></td>
+<td><code>@upload: F[]</code></td>
+</tr>
+<tr>
+<td>Color</td>
+<td><code>C[]</code></td>
+<td><code>@color: C[]</code></td>
+</tr>
+</tbody></table>
+<h3>Pattern Examples</h3>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Shorthand</th>
+<th>Generated Pattern</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Phone</td>
+<td><code>{(###)###-####}</code></td>
+<td><code>^\\(\\d{3}\\)\\d{3}-\\d{4}$</code></td>
+</tr>
+<tr>
+<td>SSN</td>
+<td><code>{###-##-####}</code></td>
+<td><code>^\\d{3}-\\d{2}-\\d{4}$</code></td>
+</tr>
+<tr>
+<td>ZIP Code</td>
+<td><code>{#####}</code></td>
+<td><code>^\\d{5}$</code></td>
+</tr>
+<tr>
+<td>ZIP+4</td>
+<td><code>{#####-####}</code></td>
+<td><code>^\\d{5}-\\d{4}$</code></td>
+</tr>
+<tr>
+<td>Credit Card</td>
+<td><code>{####-####-####-####}</code></td>
+<td><code>^\\d{4}-\\d{4}-\\d{4}-\\d{4}$</code></td>
+</tr>
+<tr>
+<td>Company Email</td>
+<td><code>{*@company.com}</code></td>
+<td><code>^.*@company\\.com$</code></td>
+</tr>
+<tr>
+<td>Username</td>
+<td><code>{user_*}</code></td>
+<td><code>^user_.*$</code></td>
+</tr>
+</tbody></table>
+<h2>When to Use Shorthand</h2>
+<h3>✅ Perfect for Shorthand</h3>
+<ul>
+<li><strong>Common field types</strong>: email, phone, numbers</li>
+<li><strong>Simple validation</strong>: required fields, basic patterns</li>
+<li><strong>Rapid prototyping</strong>: quick form mockups</li>
+<li><strong>Standard forms</strong>: contact, registration, surveys</li>
+</ul>
+<h3>🔧 Use Standard Syntax</h3>
+<ul>
+<li><strong>Complex validation</strong>: multi-step regex patterns</li>
+<li><strong>Custom attributes</strong>: CSS classes, data attributes</li>
+<li><strong>Framework integration</strong>: dynamic values</li>
+<li><strong>Advanced features</strong>: conditional logic</li>
+</ul>
+<h3>💡 Mixed Approach (Recommended)</h3>
+<pre class="language-markup"><code class="language-markup"># Use shorthand for simple fields
+@name*: []
+@email*: @[]
+@phone{(###)###-####}: %[]
+
+# Use standard for complex fields
+@bio: [textarea rows=4 maxlength=500 class="bio-field" 
+      placeholder="Tell us about yourself..." 
+      data-counter="true"]
+      
+@preferences: [checkbox options="Email,SMS,Phone" 
+               class="notification-prefs" 
+               data-toggle="advanced-options"]</code></pre><h2>Conversion Chart</h2>
+<p>Every shorthand expression has a standard equivalent:</p>
+<table>
+<thead>
+<tr>
+<th>Shorthand Expression</th>
+<th>Standard Equivalent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@name*: []</code></td>
+<td><code>@name: [text required]</code></td>
+</tr>
+<tr>
+<td><code>@email*: @[]</code></td>
+<td><code>@email: [email required]</code></td>
+</tr>
+<tr>
+<td><code>@age: #[min=18]</code></td>
+<td><code>@age: [number min=18]</code></td>
+</tr>
+<tr>
+<td><code>@phone{(###)###-####}: %[]</code></td>
+<td><code>@phone: [tel pattern=&quot;^\\(\\d{3}\\)\\d{3}-\\d{4}$&quot;]</code></td>
+</tr>
+<tr>
+<td><code>@size{S,M,L}: r[]</code></td>
+<td><code>@size: [radio options=&quot;S,M,L&quot;]</code></td>
+</tr>
+<tr>
+<td><code>@bio: T4[]</code></td>
+<td><code>@bio: [textarea rows=4]</code></td>
+</tr>
+<tr>
+<td><code>@name(Full Name)*: []</code></td>
+<td><code>@name: [text required label=&quot;Full Name&quot;]</code></td>
+</tr>
+</tbody></table>
+<h2>Tips for Effective Shorthand</h2>
+<h3>Start Simple</h3>
+<pre class="language-markup"><code class="language-markup"># Begin with basic shorthand
+@name*: []
+@email*: @[]</code></pre><h3>Add Complexity Gradually</h3>
+<pre class="language-markup"><code class="language-markup"># Add patterns and options
+@phone{(###)###-####}: %[]
+@interests{Web,Mobile,AI}: c[]</code></pre><h3>Mix with Standard When Needed</h3>
+<pre class="language-markup"><code class="language-markup"># Shorthand for simple fields
+@name*: []
+@email*: @[]
+
+# Standard for complex requirements
+@advanced_options: [checkbox options="opt1,opt2,opt3" 
+                   class="advanced-section" 
+                   data-toggle="collapse-panel"]</code></pre><h3>Use Descriptive Field Names</h3>
+<pre class="language-markup"><code class="language-markup"># Good - descriptive names
+@work_email*: @[]
+@home_phone{(###)###-####}: %[]
+
+# Avoid - unclear names  
+@email1*: @[]
+@phone2{(###)###-####}: %[]</code></pre><p>Shorthand syntax makes Formdown incredibly fast to write while maintaining full functionality and readability.</p>
+7:["$","$L15",null,{"currentSlug":"shorthand","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 mb-6","children":"Shorthand Syntax"}],["$","article",null,{"className":"$16","dangerouslySetInnerHTML":{"__html":"$17"}}]]}]}]
+a:null
+e:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+9:null
+c:{"metadata":[["$","title","0",{"children":"Formdown - Markdown-based Form Builder"}],["$","meta","1",{"name":"description","content":"Create beautiful, interactive HTML forms using a simple markdown-like syntax. Build forms quickly with real-time preview, validation, and seamless integration."}],["$","meta","2",{"name":"author","content":"iyulab"}],["$","link","3",{"rel":"manifest","href":"/manifest.webmanifest","crossOrigin":"$undefined"}],["$","meta","4",{"name":"keywords","content":"form builder,markdown forms,html forms,form generator,web forms,interactive forms,form validation,formdown,javascript forms,typescript forms"}],["$","meta","5",{"name":"creator","content":"iyulab"}],["$","meta","6",{"name":"publisher","content":"iyulab"}],["$","meta","7",{"name":"robots","content":"index, follow"}],["$","meta","8",{"name":"googlebot","content":"index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"}],["$","link","9",{"rel":"canonical","href":"https://formdown.dev/"}],["$","meta","10",{"name":"google-site-verification","content":"your-google-verification-code"}],["$","meta","11",{"property":"og:title","content":"Formdown - Markdown-based Form Builder"}],["$","meta","12",{"property":"og:description","content":"Create beautiful, interactive HTML forms using a simple markdown-like syntax. Build forms quickly with real-time preview, validation, and seamless integration."}],["$","meta","13",{"property":"og:url","content":"https://formdown.dev/"}],["$","meta","14",{"property":"og:site_name","content":"Formdown"}],["$","meta","15",{"property":"og:locale","content":"en_US"}],["$","meta","16",{"property":"og:image","content":"https://formdown.dev/logo.png"}],["$","meta","17",{"property":"og:image:width","content":"1200"}],["$","meta","18",{"property":"og:image:height","content":"630"}],["$","meta","19",{"property":"og:image:alt","content":"Formdown - Markdown-based Form Builder"}],["$","meta","20",{"property":"og:type","content":"website"}],["$","meta","21",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","22",{"name":"twitter:title","content":"Formdown - Markdown-based Form Builder"}],["$","meta","23",{"name":"twitter:description","content":"Create beautiful, interactive HTML forms using a simple markdown-like syntax."}],["$","meta","24",{"name":"twitter:image","content":"https://formdown.dev/logo.png"}],["$","link","25",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"256x256"}]],"error":null,"digest":"$undefined"}
+14:{"metadata":"$c:metadata","error":null,"digest":"$undefined"}

@@ -1,0 +1,56 @@
+# Product Order (Shorthand Demo)
+
+Complete your order with our streamlined shorthand syntax.
+
+## Customer Information
+
+@customer_name(Customer Name)*: []
+@email*: @[]
+@phone{(###)###-####}: []
+
+## Product Selection
+
+@product(Product)*{Laptop,Desktop,Tablet,Phone,Accessories}: s[]
+@model{Basic,Standard,Premium,Pro}: r[]
+@color{Black,White,Silver,Space Gray,Rose Gold}: r[]
+@quantity(Quantity)*: #[min=1 max=10]
+
+## Delivery Information
+
+Delivery address for ___@customer_name:
+
+@address_line1(Address)*: []
+@address_line2: [placeholder="Apartment, suite, etc."]
+@city*: []
+@state{AL,AK,AZ,AR,CA,CO,CT,DE,FL,GA,*}: s[]
+@zip_code{#####}: []
+
+@delivery_date(Delivery Date)*{yyyy-MM-dd}: d[min="2024-01-01"]
+@delivery_time{Morning,Afternoon,Evening,Anytime}: r[]
+@delivery_instructions: T2[placeholder="Special delivery instructions..."]
+
+## Payment Information
+
+@payment_method(Payment Method)*{Credit Card,PayPal,Bank Transfer,Apple Pay,Google Pay}: r[]
+@billing_same(Billing address same as delivery): c[]
+
+## Order Options
+
+@expedited_shipping(Expedited Shipping): c[]
+@gift_wrap(Gift Wrap): c[]
+@insurance(Shipping Insurance): c[]
+
+## Additional Services
+
+@setup_service{Basic Setup,Premium Setup,No Setup}: r[]
+@warranty{1 Year,2 Years,3 Years,Extended}: r[]
+@newsletter(Product Updates): c[]
+
+## Special Requests
+
+@gift_message: T3[placeholder="Gift message (optional)"]
+@special_requests: T2[placeholder="Any special requests?"]
+
+Order total: $___@total_amount[readonly]
+
+@place_order: [submit label="Place Order"]
