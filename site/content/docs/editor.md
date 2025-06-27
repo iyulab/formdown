@@ -288,9 +288,9 @@ export default {
 
 ## Related Documentation
 
-- [Formdown Syntax](./SYNTAX.md) - Complete syntax reference
-- [Publishing Guide](./PUBLISHING.md) - How to deploy Formdown projects
-- [Task Status](./TASKS.md) - Current development progress
+- [Formdown Syntax](./syntax) - Complete syntax reference
+- [API Documentation](./api) - JavaScript API reference
+- [Validation Guide](./validation) - Form validation features
 
 ## Support
 

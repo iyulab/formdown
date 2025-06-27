@@ -5,6 +5,9 @@ export interface Field {
     required?: boolean
     placeholder?: string
     options?: string[]
+    allowOther?: boolean
+    format?: string
+    pattern?: string
     attributes?: Record<string, any>
 }
 

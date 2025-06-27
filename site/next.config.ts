@@ -10,6 +10,59 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true
   },
+
+  // Redirects for .md URLs
+  async redirects() {
+    return [
+      {
+        source: '/docs/:slug.md',
+        destination: '/docs/:slug',
+        permanent: true,
+      },
+      {
+        source: '/docs/index',
+        destination: '/docs',
+        permanent: true,
+      },
+      // Root level docs redirects
+      {
+        source: '/overview',
+        destination: '/docs/overview',
+        permanent: true,
+      },
+      {
+        source: '/quick-start',
+        destination: '/docs/quick-start',
+        permanent: true,
+      },
+      {
+        source: '/syntax',
+        destination: '/docs/syntax',
+        permanent: true,
+      },
+      {
+        source: '/editor',
+        destination: '/docs/editor',
+        permanent: true,
+      },
+      {
+        source: '/api',
+        destination: '/docs/api',
+        permanent: true,
+      },
+      {
+        source: '/examples',
+        destination: '/docs/examples',
+        permanent: true,
+      },
+      {
+        source: '/validation',
+        destination: '/docs/validation',
+        permanent: true,
+      },
+    ]
+  },
+
   // SEO and Performance optimizations
   compress: true,
   poweredByHeader: false,

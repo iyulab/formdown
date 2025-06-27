@@ -378,18 +378,3 @@ Renders to:
   "user_name": "John Doe"
 }
 ```
-
-## Migration from Complex Syntax
-
-If you're using complex syntax patterns, migrate to the simplified approach:
-
-```formdown
-// Old complex syntax
-@country: [select]
-- USA  
-- Canada
-- UK
-
-// New simplified syntax
-@country: [select options="USA,Canada,UK"]
-```

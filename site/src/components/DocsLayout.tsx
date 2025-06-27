@@ -30,7 +30,8 @@ const docItems: DocNavItem[] = [
     { slug: 'syntax', title: 'Syntax Guide' },
     { slug: 'editor', title: 'Editor Guide' },
     { slug: 'api', title: 'API Reference' },
-    { slug: 'examples', title: 'Examples' }
+    { slug: 'examples', title: 'Examples' },
+    { slug: 'validation', title: 'Validation' }
 ];
 
 export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
@@ -66,9 +67,9 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
             </header>
 
             <div className="max-w-7xl mx-auto">
-                <div className="flex">
-                    {/* Sidebar Navigation */}
-                    <aside className="w-64 flex-shrink-0 border-r border-gray-200 bg-gray-50 min-h-screen sticky top-16">
+                <div className="lg:flex">
+                    {/* Sidebar Navigation - Hidden on mobile */}
+                    <aside className="hidden lg:block w-64 flex-shrink-0 border-r border-gray-200 bg-gray-50 fixed top-16 left-0 h-screen overflow-y-auto z-40">
                         <div className="p-6">
                             <nav className="space-y-1">
                                 {docItems.map((item) => (
@@ -87,8 +88,28 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
                         </div>
                     </aside>
 
+                    {/* Mobile Navigation */}
+                    <div className="lg:hidden mb-6 border-b border-gray-200">
+                        <div className="p-4">
+                            <div className="grid grid-cols-2 gap-2">
+                                {docItems.map((item) => (
+                                    <Link
+                                        key={item.slug}
+                                        href={item.slug === 'index' ? '/docs' : `/docs/${item.slug}`}
+                                        className={`px-3 py-2 text-sm font-medium rounded-md text-center transition-colors ${currentSlug === item.slug
+                                            ? 'bg-blue-100 text-blue-700'
+                                            : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100 border border-gray-200'
+                                            }`}
+                                    >
+                                        {item.title}
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
                     {/* Main Content */}
-                    <main className="flex-1 min-w-0">
+                    <main className="flex-1 min-w-0 lg:ml-64">
                         <div className="max-w-4xl mx-auto px-6 py-8">
                             {children}
 

@@ -1,107 +1,48 @@
-import Link from 'next/link';
-import { getAllDocs } from '@/lib/docs';
+import { getDocBySlug } from '@/lib/docs';
 import DocsLayout from '@/components/DocsLayout';
 
 export default function DocsPage() {
-    const docs = getAllDocs();
+    // Get the index document content
+    const indexDoc = getDocBySlug('index');
 
-    // Sort docs by a specific order
-    const docOrder = [
-        'index',
-        'overview',
-        'quick-start',
-        'syntax',
-        'editor',
-        'api',
-        'examples',
-        'tasks'
-    ];
+    if (!indexDoc) {
+        return (
+            <DocsLayout currentSlug="index">
+                <div>
+                    <h1 className="text-3xl font-bold text-gray-900 mb-2">Documentation</h1>
+                    <p className="text-lg text-gray-600 mb-8">
+                        Complete documentation for Formdown - the human-readable form format.
+                    </p>
+                </div>
+            </DocsLayout>
+        );
+    }
 
-    const sortedDocs = docs.sort((a, b) => {
-        const aIndex = docOrder.indexOf(a.slug);
-        const bIndex = docOrder.indexOf(b.slug);
-        if (aIndex === -1 && bIndex === -1) return 0;
-        if (aIndex === -1) return 1;
-        if (bIndex === -1) return -1;
-        return aIndex - bIndex;
-    }); return (
+    return (
         <DocsLayout currentSlug="index">
             <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Documentation</h1>
-                <p className="text-lg text-gray-600 mb-8">
-                    Complete documentation for Formdown - the human-readable form format.
-                </p>
+                <h1 className="text-3xl font-bold text-gray-900 mb-6">{indexDoc.title}</h1>
 
-                {/* Quick Links */}
-                <div className="mb-8 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                    <h3 className="text-lg font-semibold mb-4">Quick Start</h3>
-                    <p className="text-gray-600 mb-4">
-                        Get started with Formdown in minutes. Install the UI package and start creating interactive forms with markdown syntax.
-                    </p>
-                    <div className="bg-gray-900 text-green-400 p-4 rounded text-sm font-mono">
-                        npm install @formdown/ui
-                    </div>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-2">{sortedDocs.filter(doc => doc.slug !== 'index').map((doc) => (
-                    <Link
-                        key={doc.slug}
-                        href={`/docs/${doc.slug}`}
-                        className="block p-4 border border-gray-200 rounded-lg hover:border-blue-300 hover:shadow-md transition-all bg-white"
-                    >
-                        <h3 className="text-lg font-semibold mb-2 text-gray-900 hover:text-blue-600">
-                            {doc.title}
-                        </h3>
-                        <p className="text-gray-600 text-sm">
-                            {getDocDescription(doc.slug)}
-                        </p>
-                    </Link>
-                ))}
-                </div>
-
-                <div className="mt-8 pt-6 border-t border-gray-200">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h2>
-                    <div className="flex flex-wrap gap-3">
-                        <Link
-                            href="/demo"
-                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium"
-                        >
-                            Try Demo
-                        </Link>
-                        <a
-                            href="https://github.com/iyulab/formdown"
-                            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm font-medium"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            GitHub
-                        </a>
-                        <a
-                            href="https://www.npmjs.com/package/@formdown/ui"
-                            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 text-sm font-medium"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            npm Package
-                        </a>
-                    </div>
-                </div>
+                <article
+                    className="prose prose-lg max-w-none
+                        prose-headings:text-gray-900 prose-headings:font-semibold
+                        prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 prose-h1:pb-3 prose-h1:mb-6
+                        prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4
+                        prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3
+                        prose-p:text-gray-700 prose-p:leading-relaxed
+                        prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
+                        prose-strong:text-gray-900 prose-strong:font-semibold
+                        prose-code:text-pink-600 prose-code:bg-pink-50 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
+                        prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:rounded-lg prose-pre:p-4
+                        prose-blockquote:border-l-4 prose-blockquote:border-blue-200 prose-blockquote:bg-blue-50 prose-blockquote:pl-4 prose-blockquote:py-2
+                        prose-ul:my-4 prose-ol:my-4
+                        prose-li:text-gray-700
+                        prose-table:border-collapse prose-table:border prose-table:border-gray-300
+                        prose-th:bg-gray-50 prose-th:border prose-th:border-gray-300 prose-th:px-3 prose-th:py-2 prose-th:text-left
+                        prose-td:border prose-td:border-gray-300 prose-td:px-3 prose-td:py-2"
+                    dangerouslySetInnerHTML={{ __html: indexDoc.content }}
+                />
             </div>
         </DocsLayout>
     );
-}
-
-function getDocDescription(slug: string): string {
-    const descriptions: Record<string, string> = {
-        'index': 'Documentation overview and navigation',
-        'overview': 'Core concepts and philosophy',
-        'quick-start': 'Get up and running in minutes',
-        'syntax': 'Complete syntax reference and field types',
-        'editor': 'Development tools and editor usage',
-        'api': 'JavaScript API documentation',
-        'examples': 'Real-world form examples',
-        'tasks': 'Development status and roadmap'
-    };
-
-    return descriptions[slug] || 'Documentation';
 }

@@ -3,17 +3,17 @@
 Welcome to the Formdown documentation. Choose a section to get started:
 
 ## Getting Started
-- [Overview](./overview.md) - Core concepts and philosophy
-- [Quick Start](./quick-start.md) - Get up and running in minutes
+- [Overview](./overview) - Core concepts and philosophy
+- [Quick Start](./quick-start) - Get up and running in minutes
 
 ## Documentation
-- [Syntax Guide](./syntax.md) - Complete syntax reference
-- [Editor Guide](./editor.md) - Development tools and editor usage
-- [API Reference](./api.md) - JavaScript API documentation
+- [Syntax Guide](./syntax) - Complete syntax reference
+- [Editor Guide](./editor) - Development tools and editor usage
+- [API Reference](./api) - JavaScript API documentation
 
 ## Examples & Resources
-- [Examples](./examples.md) - Real-world form examples
-- [Tasks](./tasks.md) - Development status and roadmap
+- [Examples](./examples) - Real-world form examples
+- [Validation](./validation) - Form validation guide
 
 ## Live Tools
 - [Interactive Demo](../demo) - Try Formdown in your browser

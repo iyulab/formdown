@@ -131,3 +131,5 @@ dist
 # my project
 docs/TASKS.md
 copilot-instructions.md
+CLAUDE.md
+.claude/

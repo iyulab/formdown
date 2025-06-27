@@ -58,8 +58,8 @@ document.body.appendChild(formElement);
 
 ## Next Steps
 
-- Check out the [Syntax Guide](./syntax.md) for complete field types and attributes
-- Explore the [Editor Documentation](./editor.md) for development tools
+- Check out the [Syntax Guide](./syntax) for complete field types and attributes
+- Explore the [Editor Documentation](./editor) for development tools
 - Browse [sample forms](https://github.com/iyulab/formdown/tree/main/site/public/samples) for more examples
 
 ## Live Demo
