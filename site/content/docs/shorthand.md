@@ -108,6 +108,21 @@ The `{}` syntax changes meaning based on field type:
 @country{USA,Canada,UK}: s[]   # Select dropdown
 ```
 
+**"Other" Option Support:**
+Add `*` to allow custom user input for any predefined option that might not cover all cases:
+
+```formdown
+@size{S,M,L,XL,*}: r[]         # Radio with "Other" option
+@skills{JS,Python,Java,*}: c[] # Checkbox with "Other" option  
+@country{USA,Canada,UK,*}: s[] # Select with "Other" option
+```
+
+When `*` is included:
+- ✅ Adds "Other (please specify)" option automatically
+- ✅ Shows text input when "Other" is selected
+- ✅ Creates `fieldname` and `fieldname_other` form fields
+- ✅ Enables `allowOther: true` in field schema
+
 #### Text Fields → Validation Pattern
 
 | Shorthand | Standard | Description |
@@ -227,8 +242,8 @@ Phone: ___@phone{(###)###-####}: %[]
 @email*: @[]
 @password*{^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$}: ?[]
 @birth_date{yyyy-MM-dd}: d[max="2010-12-31"]
-@country{USA,Canada,UK,Other}: s[]
-@interests{Web,Mobile,AI,Gaming}: c[]
+@country{USA,Canada,UK,*}: s[]
+@interests{Web,Mobile,AI,Gaming,*}: c[]
 @newsletter(Subscribe): c[]
 @terms*: c[label="I agree to terms"]
 @register: [submit label="Create Account"]

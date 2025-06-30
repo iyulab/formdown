@@ -48,3 +48,53 @@ export interface FormdownOptions {
     inlineFieldDelimiter?: string
 }
 
+// Schema-related types for getSchema() functionality
+export interface FieldSchema {
+    type: FieldType
+    label?: string
+    required?: boolean
+    defaultValue?: any
+    
+    // Validation rules
+    validation?: ValidationRules
+    
+    // Selection fields
+    options?: string[]
+    allowOther?: boolean
+    
+    // Layout and presentation
+    layout?: 'inline' | 'vertical'
+    placeholder?: string
+    
+    // HTML attributes
+    htmlAttributes?: Record<string, any>
+    
+    // Metadata
+    position?: number
+    isInline?: boolean
+    format?: string
+    pattern?: string
+    description?: string
+    errorMessage?: string
+}
+
+export type FieldType = 
+    | 'text' | 'email' | 'password' | 'tel' | 'url' | 'number'
+    | 'date' | 'time' | 'datetime-local' | 'month' | 'week'
+    | 'textarea' | 'select' | 'radio' | 'checkbox' | 'file'
+    | 'color' | 'range' | 'submit' | 'reset'
+
+export interface ValidationRules {
+    min?: number | string
+    max?: number | string
+    minlength?: number
+    maxlength?: number
+    step?: number
+    pattern?: string
+    accept?: string
+}
+
+export interface FormDownSchema {
+    [fieldName: string]: FieldSchema
+}
+

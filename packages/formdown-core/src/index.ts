@@ -1,9 +1,11 @@
-export * from './types'
-export * from './parser'
-export * from './generator'
+export * from './types.js'
+export * from './parser.js'
+export * from './generator.js'
+export * from './schema.js'
 
-import { FormdownParser } from './parser'
-import { FormdownGenerator } from './generator'
+import { FormdownParser } from './parser.js'
+import { FormdownGenerator } from './generator.js'
+import { getSchema as getSchemaFunction } from './schema.js'
 
 export function parseFormdown(input: string) {
     const parser = new FormdownParser()
@@ -19,4 +21,9 @@ export function generateFormHTML(content: any) {
 export function parseFormFields(input: string) {
     const parser = new FormdownParser()
     return parser.parse(input)
+}
+
+// Schema extraction
+export function getSchema(content: string) {
+    return getSchemaFunction(content)
 }

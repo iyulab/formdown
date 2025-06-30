@@ -194,6 +194,147 @@ document.getElementById('get-data-btn').addEventListener('click', () => {
 
 ## @formdown/core
 
+### `getSchema(content)`
+
+Extracts a structured schema from Formdown content for use in form validation, UI components, and development tools.
+
+**Parameters:**
+- `content` (string): The Formdown source code
+
+**Returns:** `FormDownSchema`
+
+```typescript
+interface FormDownSchema {
+  [fieldName: string]: FieldSchema;
+}
+
+interface FieldSchema {
+  type: FieldType;
+  label?: string;
+  required?: boolean;
+  defaultValue?: any;
+  
+  // Validation rules
+  validation?: ValidationRules;
+  
+  // Selection fields
+  options?: string[];
+  allowOther?: boolean;
+  
+  // Layout and presentation
+  layout?: 'inline' | 'vertical';
+  placeholder?: string;
+  
+  // HTML attributes
+  htmlAttributes?: Record<string, any>;
+  
+  // Metadata
+  position?: number;
+  isInline?: boolean;
+  format?: string;
+  pattern?: string;
+  description?: string;
+  errorMessage?: string;
+}
+
+type FieldType = 
+  | 'text' | 'email' | 'password' | 'tel' | 'url' | 'number'
+  | 'date' | 'time' | 'datetime-local' | 'month' | 'week'
+  | 'textarea' | 'select' | 'radio' | 'checkbox' | 'file'
+  | 'color' | 'range' | 'submit' | 'reset';
+
+interface ValidationRules {
+  min?: number | string;
+  max?: number | string;
+  minlength?: number;
+  maxlength?: number;
+  step?: number;
+  pattern?: string;
+  accept?: string;
+}
+```
+
+**Example:**
+```javascript
+import { getSchema } from '@formdown/core';
+
+const formContent = `
+# User Registration
+
+@username*{^[a-zA-Z0-9_]{3,20}$}: [placeholder="Enter username"]
+@email*: @[]
+@age: #[min=13 max=120]
+@bio: T4[maxlength=500]
+@gender{Male,Female,Other}: r[]
+@interests{Web,Mobile,AI,*}: c[]
+@submit: [submit label="Create Account"]
+`;
+
+const schema = getSchema(formContent);
+
+console.log('Fields:', Object.keys(schema));
+// → ['username', 'email', 'age', 'bio', 'gender', 'interests', 'submit']
+
+console.log('Username validation:', schema.username.validation);
+// → { pattern: '^[a-zA-Z0-9_]{3,20}$' }
+
+console.log('Gender options:', schema.gender.options);
+// → ['Male', 'Female', 'Other']
+
+console.log('Interests allow other:', schema.interests.allowOther);
+// → true
+```
+
+**Use Cases:**
+
+1. **Form Validation**: Use schema to validate user input on frontend or backend
+2. **Dynamic UI Generation**: Build form interfaces programmatically from schema
+3. **Development Tools**: Create form builders, editors, and debugging tools
+4. **API Documentation**: Generate API specs from form schemas
+5. **Testing**: Automate form testing with schema-driven data generation
+
+**Advanced Example:**
+```javascript
+// Backend validation with schema
+import { getSchema } from '@formdown/core';
+
+function validateFormData(formContent, userData) {
+  const schema = getSchema(formContent);
+  const errors = [];
+
+  for (const [fieldName, fieldSchema] of Object.entries(schema)) {
+    const value = userData[fieldName];
+    
+    // Required field validation
+    if (fieldSchema.required && (!value || value.trim() === '')) {
+      errors.push({ field: fieldName, message: `${fieldSchema.label} is required` });
+      continue;
+    }
+    
+    // Type-specific validation
+    if (value && fieldSchema.validation) {
+      const rules = fieldSchema.validation;
+      
+      if (rules.pattern && !new RegExp(rules.pattern).test(value)) {
+        errors.push({ field: fieldName, message: `${fieldSchema.label} format is invalid` });
+      }
+      
+      if (rules.min !== undefined && value < rules.min) {
+        errors.push({ field: fieldName, message: `${fieldSchema.label} must be at least ${rules.min}` });
+      }
+      
+      if (rules.maxlength !== undefined && value.length > rules.maxlength) {
+        errors.push({ field: fieldName, message: `${fieldSchema.label} must be no more than ${rules.maxlength} characters` });
+      }
+    }
+  }
+  
+  return { isValid: errors.length === 0, errors };
+}
+```
+
+---
+
 ### parseForm(source)
 
 Parses Formdown source into an abstract syntax tree.

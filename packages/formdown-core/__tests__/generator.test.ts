@@ -40,7 +40,7 @@ describe('FormdownGenerator', () => {
 
             expect(html).toContain('<h1>Contact Us</h1>')
             expect(html).toContain('<p>Please fill out the form below:</p>')
-            expect(html).toContain('<form class="formdown-form">')
+            expect(html).toContain('<form class="formdown-form"')
             expect(html).toContain('<input type="text"')
         })
     })
@@ -62,7 +62,7 @@ describe('FormdownGenerator', () => {
 
             const html = generator.generateFormHTML(fields)
 
-            expect(html).toContain('<form class="formdown-form">')
+            expect(html).toContain('<form class="formdown-form"')
             expect(html).toContain('<div class="formdown-field">')
             expect(html).toContain('<label for="username">Username *</label>')
             expect(html).toContain('<input type="text" id="username" name="username" required>')
@@ -160,7 +160,7 @@ describe('FormdownGenerator', () => {
 
             const html = generator.generateFormHTML(fields)
 
-            expect(html).toContain('<fieldset>')
+            expect(html).toContain('<fieldset')
             expect(html).toContain('<legend>Gender *</legend>')
             expect(html).toContain('type="radio"')
             expect(html).toContain('value="Male"')
@@ -196,7 +196,7 @@ describe('FormdownGenerator', () => {
             expect(parsed.forms[0].type).toBe('radio')
             expect(parsed.forms[0].options).toEqual(['Male', 'Female', 'Other'])
 
-            expect(html).toContain('<fieldset>')
+            expect(html).toContain('<fieldset')
             expect(html).toContain('<legend>Gender</legend>')
             expect(html).toContain('type="radio"')
             expect(html).toContain('value="Male"')
@@ -252,7 +252,7 @@ describe('FormdownGenerator', () => {
 
             const html = generator.generateFormHTML(fields)
 
-            expect(html).toContain('<fieldset>')
+            expect(html).toContain('<fieldset')
             expect(html).toContain('<legend>Interests</legend>')
             expect(html).toContain('type="checkbox"')
             expect(html).toContain('value="Programming"')
@@ -286,7 +286,7 @@ describe('FormdownGenerator', () => {
             expect(parsed.forms[0].type).toBe('checkbox')
             expect(parsed.forms[0].options).toEqual(['Programming', 'Design', 'Music'])
 
-            expect(html).toContain('<fieldset>')
+            expect(html).toContain('<fieldset')
             expect(html).toContain('<legend>Interests</legend>')
             expect(html).toContain('value="Programming"')
             expect(html).toContain('value="Design"')
@@ -377,8 +377,6 @@ Simple fields with minimal syntax (defaults to text input):
             const parsed = parser.parseFormdown(content)
             const html = generator.generateHTML(parsed)
 
-            console.log('Parsed content:', JSON.stringify(parsed, null, 2))
-            console.log('Generated HTML:', html)
 
             // Should contain markdown headers
             expect(html).toContain('<h1>')
@@ -387,7 +385,7 @@ Simple fields with minimal syntax (defaults to text input):
             expect(html).toContain('Minimal Syntax')
 
             // Should contain form fields
-            expect(html).toContain('<form class="formdown-form">')
+            expect(html).toContain('<form class="formdown-form"')
             expect(html).toContain('name="name"')
             expect(html).toContain('name="email"')
             expect(html).toContain('name="phone"')
@@ -406,8 +404,6 @@ Thank you for registering!`
             const parsed = parser.parseFormdown(content)
             const html = generator.generateHTML(parsed)
 
-            console.log('Complex content parsed:', JSON.stringify(parsed, null, 2))
-            console.log('Complex content HTML:', html)
 
             // Should preserve all markdown content
             expect(html).toContain('<h1>')
@@ -417,7 +413,7 @@ Thank you for registering!`
             expect(html).toContain('Thank you for registering')
 
             // Should also have form fields
-            expect(html).toContain('<form class="formdown-form">')
+            expect(html).toContain('<form class="formdown-form"')
             expect(html).toContain('username')
             expect(html).toContain('password')
         })
@@ -435,8 +431,6 @@ Thank you for registering!`
             const parsed = parser.parseFormdown(content)
             const html = generator.generateHTML(parsed)
 
-            console.log('Mixed content parsed:', JSON.stringify(parsed, null, 2))
-            console.log('Mixed content HTML:', html)
 
             // Should preserve markdown structure
             expect(html).toContain('<h2>Contact Form</h2>')

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Other Option Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background-color: #f5f5f5;
+        }
+        
+        .formdown-field { 
+            margin-bottom: 25px; 
+            padding: 20px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        fieldset { 
+            border: 1px solid #ddd; 
+            padding: 15px; 
+            border-radius: 6px; 
+            background: #fafafa;
+        }
+        
+        legend { 
+            font-weight: bold; 
+            padding: 0 10px;
+            color: #333;
+        }
+        
+        .formdown-option-label { 
+            display: flex; 
+            align-items: center;
+            margin: 10px 0; 
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .formdown-option-label:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .formdown-option-label input[type="radio"],
+        .formdown-option-label input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        select { 
+            padding: 10px; 
+            min-width: 250px; 
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        h1 { 
+            color: #333; 
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .success { 
+            color: #28a745; 
+            font-weight: bold; 
+            padding: 10px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        
+        .instructions {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+            margin-bottom: 20px;
+        }
+        
+        .form-data {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #dee2e6;
+            margin-top: 15px;
+            font-family: monospace;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .highlight {
+            background: yellow;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎯 FormDown "Other" Option - Final Test</h1>
+    
+    <div class="instructions">
+        <h3>📋 테스트 방법</h3>
+        <ol>
+            <li><strong>Select 필드</strong>: 드롭다운에서 "Other (please specify)" 선택</li>
+            <li><strong>Radio 필드</strong>: "Other:" 라디오 버튼 클릭</li>
+            <li><strong>Checkbox 필드</strong>: "Other:" 체크박스 선택</li>
+            <li>각각에서 <span class="highlight">텍스트 입력 상자가 나타나는지</span> 확인</li>
+            <li>"Get Form Data" 버튼으로 실제 폼 데이터 확인</li>
+        </ol>
+    </div>
+    
+    <div class="test-container">
+        <h2>🧪 Interactive Test Form</h2>
+        <div id="form-container"></div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="getFormData()">📊 Get Form Data</button>
+            <button onclick="resetForm()">🔄 Reset Form</button>
+            <button onclick="showDebugInfo()">🐛 Show Debug Info</button>
+        </div>
+        
+        <div id="form-data-display"></div>
+        <div id="debug-display"></div>
+    </div>
+    
+    <script type="module">
+        try {
+            // Import FormDown modules
+            const { parseFormdown, generateFormHTML } = await import('./dist/index.js');
+            
+            // Comprehensive test form
+            const formContent = `
+# Test Form with Other Options
+
+@country{USA,Canada,UK,Germany,France,Japan,*}: s[required]
+@contact_preference{Email,Phone,SMS,Mail,In-Person,*}: r[required]
+@skills{JavaScript,Python,Java,C++,Go,Rust,*}: c[]
+@experience_level{Beginner,Intermediate,Advanced,Expert,*}: r[]
+            `;
+            
+            // Parse and generate
+            const parsed = parseFormdown(formContent);
+            const html = generateFormHTML(parsed);
+            
+            console.log('✅ Form generation successful');
+            console.log('Fields with allowOther:', parsed.forms.filter(f => f.allowOther).map(f => f.name));
+            
+            // Inject into page
+            document.getElementById('form-container').innerHTML = html;
+            
+            // Global functions for buttons
+            window.getFormData = function() {
+                const form = document.querySelector('.formdown-form');
+                if (!form) {
+                    alert('❌ Form not found');
+                    return;
+                }
+                
+                const formData = new FormData(form);
+                const data = {};
+                
+                for (let [key, value] of formData.entries()) {
+                    if (data[key]) {
+                        // Handle multiple values (checkboxes)
+                        if (Array.isArray(data[key])) {
+                            data[key].push(value);
+                        } else {
+                            data[key] = [data[key], value];
+                        }
+                    } else {
+                        data[key] = value;
+                    }
+                }
+                
+                console.log('📊 Form Data:', data);
+                
+                document.getElementById('form-data-display').innerHTML = 
+                    '<div class="form-data"><h3>📊 Current Form Data:</h3><pre>' + 
+                    JSON.stringify(data, null, 2) + '</pre></div>';
+            };
+            
+            window.resetForm = function() {
+                const form = document.querySelector('.formdown-form');
+                if (form) {
+                    form.reset();
+                    // Hide all other inputs
+                    document.querySelectorAll('.formdown-other-input').forEach(input => {
+                        input.style.display = 'none';
+                    });
+                    document.getElementById('form-data-display').innerHTML = '';
+                    document.getElementById('debug-display').innerHTML = '';
+                    console.log('🔄 Form reset completed');
+                }
+            };
+            
+            window.showDebugInfo = function() {
+                const otherInputs = document.querySelectorAll('.formdown-other-input');
+                let debugInfo = '<div class="form-data"><h3>🐛 Debug Information:</h3>';
+                
+                debugInfo += '<p><strong>Other input fields found:</strong> ' + otherInputs.length + '</p>';
+                
+                otherInputs.forEach((input, index) => {
+                    const computedStyle = window.getComputedStyle(input);
+                    debugInfo += `<p><strong>Field ${index + 1} (${input.id}):</strong></p>`;
+                    debugInfo += `<p>- Display: ${computedStyle.display}</p>`;
+                    debugInfo += `<p>- Visibility: ${computedStyle.visibility}</p>`;
+                    debugInfo += `<p>- Current value: "${input.value}"</p>`;
+                });
+                
+                debugInfo += '</div>';
+                document.getElementById('debug-display').innerHTML = debugInfo;
+            };
+            
+            // Monitor changes for real-time feedback
+            document.addEventListener('change', function(e) {
+                if (e.target.type === 'radio' || e.target.type === 'checkbox' || e.target.tagName === 'SELECT') {
+                    console.log('🎯 Field changed:', e.target.name, '=', e.target.value);
+                    
+                    // Check if other input is now visible
+                    setTimeout(() => {
+                        const otherInputs = document.querySelectorAll('.formdown-other-input');
+                        const visibleOthers = Array.from(otherInputs).filter(input => {
+                            const style = window.getComputedStyle(input);
+                            return style.display !== 'none';
+                        });
+                        
+                        if (visibleOthers.length > 0) {
+                            console.log('✅ Other input(s) now visible:', visibleOthers.map(i => i.id));
+                        }
+                    }, 50);
+                }
+            });
+            
+        } catch (error) {
+            console.error('❌ ERROR:', error);
+            document.getElementById('form-container').innerHTML = 
+                '<div class="error">❌ Error loading form: ' + error.message + '</div>';
+        }
+    </script>
+</body>
+</html>

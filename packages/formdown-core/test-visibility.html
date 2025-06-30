@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Other Option Visibility</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .formdown-field { margin-bottom: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 6px; }
+        .formdown-other-input { 
+            display: none; /* Initially hidden */
+            margin-left: 8px; 
+            padding: 6px 10px; 
+            border: 2px solid #007bff; 
+            border-radius: 4px; 
+            background-color: #f8f9fa;
+            min-width: 200px;
+        }
+        fieldset { border: 1px solid #ddd; padding: 10px; border-radius: 6px; }
+        legend { font-weight: bold; }
+        .formdown-option-label { 
+            display: flex; 
+            align-items: center; 
+            margin: 5px 0; 
+            cursor: pointer;
+        }
+        .formdown-option-label input[type="radio"] {
+            margin-right: 8px;
+        }
+        .debug { background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Other Option Visibility Test</h1>
+    
+    <div class="debug">
+        <h3>Debug Controls</h3>
+        <button onclick="showOtherInput()">Force Show Other Input</button>
+        <button onclick="hideOtherInput()">Force Hide Other Input</button>
+        <button onclick="checkVisibility()">Check Visibility</button>
+    </div>
+    
+    <div id="form-container"></div>
+    
+    <div id="debug-info" class="debug"></div>
+    
+    <script type="module">
+        // Import FormDown modules
+        const { parseFormdown, generateFormHTML } = await import('./dist/index.js');
+        
+        // Test form with radio buttons
+        const formContent = '@source{Website,Friend,Advertisement,*}: r[required]';
+        
+        // Parse and generate
+        const parsed = parseFormdown(formContent);
+        const html = generateFormHTML(parsed);
+        
+        console.log('Generated HTML:', html);
+        
+        // Inject into page
+        document.getElementById('form-container').innerHTML = html;
+        
+        // Debug functions
+        window.showOtherInput = function() {
+            const otherInput = document.getElementById('source_other_input');
+            if (otherInput) {
+                otherInput.style.display = 'inline-block';
+                console.log('✅ Forced show other input');
+                updateDebugInfo();
+            } else {
+                console.log('❌ Other input not found');
+            }
+        };
+        
+        window.hideOtherInput = function() {
+            const otherInput = document.getElementById('source_other_input');
+            if (otherInput) {
+                otherInput.style.display = 'none';
+                console.log('✅ Forced hide other input');
+                updateDebugInfo();
+            }
+        };
+        
+        window.checkVisibility = function() {
+            updateDebugInfo();
+        };
+        
+        function updateDebugInfo() {
+            const otherInput = document.getElementById('source_other_input');
+            const otherRadio = document.getElementById('source_other_radio');
+            
+            let info = '<h3>Debug Information</h3>';
+            
+            if (otherInput) {
+                const computedStyle = window.getComputedStyle(otherInput);
+                info += `<p><strong>Other Input:</strong></p>`;
+                info += `<p>- Found: ✅</p>`;
+                info += `<p>- Display: ${computedStyle.display}</p>`;
+                info += `<p>- Visibility: ${computedStyle.visibility}</p>`;
+                info += `<p>- Inline Style: ${otherInput.style.display || 'none set'}</p>`;
+            } else {
+                info += `<p><strong>Other Input:</strong> ❌ Not found</p>`;
+            }
+            
+            if (otherRadio) {
+                info += `<p><strong>Other Radio:</strong> ✅ Found, Checked: ${otherRadio.checked}</p>`;
+            } else {
+                info += `<p><strong>Other Radio:</strong> ❌ Not found</p>`;
+            }
+            
+            document.getElementById('debug-info').innerHTML = info;
+        }
+        
+        // Initial debug check
+        setTimeout(updateDebugInfo, 100);
+        
+        // Add event listener to monitor radio changes
+        document.addEventListener('change', function(e) {
+            if (e.target.name === 'source') {
+                console.log('Radio changed:', e.target.value);
+                setTimeout(updateDebugInfo, 10);
+            }
+        });
+    </script>
+</body>
+</html>

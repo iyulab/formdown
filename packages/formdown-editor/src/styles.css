@@ -47,12 +47,16 @@
     line-height: 1.5;
     resize: none;
     background-color: white;
+    height: 0;
+    /* Force flexbox to calculate height properly */
 }
 
 .preview-content {
     flex: 1;
     padding: 1rem;
     overflow-y: auto;
+    height: 0;
+    /* Force flexbox to calculate height properly */
 }
 
 .toolbar {
@@ -108,6 +112,16 @@
 
 .mode-edit .editor-panel {
     border-right: none;
+}
+
+.mode-view {
+    overflow-y: auto;
+}
+
+.mode-view .preview-panel {
+    border-right: none;
+    height: auto;
+    min-height: 100%;
 }
 
 /* Responsive */

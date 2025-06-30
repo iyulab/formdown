@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FormDown Other Option Test</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        
+        .formdown-field { 
+            margin-bottom: 20px; 
+            border: 1px solid #eee;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .formdown-other-input { 
+            margin-left: 8px; 
+            padding: 6px 10px; 
+            border: 2px solid #007bff; 
+            border-radius: 4px; 
+            background-color: #f8f9fa;
+        }
+        
+        fieldset { 
+            border: 1px solid #ddd; 
+            padding: 15px; 
+            border-radius: 6px; 
+        }
+        
+        legend { 
+            font-weight: bold; 
+            padding: 0 10px;
+        }
+        
+        .formdown-option-label { 
+            display: flex; 
+            align-items: center;
+            margin: 8px 0; 
+            cursor: pointer;
+        }
+        
+        .formdown-option-label input[type="radio"],
+        .formdown-option-label input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .radio-group, .checkbox-group { 
+            margin-top: 10px; 
+        }
+        
+        select, input[type="text"] { 
+            padding: 8px; 
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        select {
+            min-width: 200px;
+        }
+        
+        label {
+            font-weight: 500;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .debug-info {
+            background: #f1f3f4;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 30px;
+            font-family: monospace;
+        }
+        
+        pre {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .form-data {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #28a745;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 FormDown "Other" Option Test</h1>
+    
+    <div class="test-section">
+        <h2>Interactive Test Form</h2>
+        <p>Try selecting "Other" options to see the text inputs appear:</p>
+        <div id="form-container"></div>
+        
+        <button onclick="getFormData()">Get Form Data</button>
+        <button onclick="resetForm()">Reset Form</button>
+        
+        <div id="form-data-display"></div>
+    </div>
+    
+    <script type="module">
+        import { parseFormdown, generateFormHTML } from './dist/index.js';
+        
+        const formContent = `
+# Test Form with Other Options
+
+@country{USA,Canada,UK,Germany,France,*}: s[required]
+@interests{Programming,Design,Music,Sports,Gaming,*}: c[]
+@contact_method{Email,Phone,SMS,Mail,*}: r[required]
+@experience{Beginner,Intermediate,Advanced,*}: r[]
+        `;
+        
+        const parsed = parseFormdown(formContent);
+        const html = generateFormHTML(parsed);
+        
+        console.log('✅ Parsed content:', parsed);
+        console.log('✅ Generated HTML length:', html.length, 'characters');
+        
+        document.getElementById('form-container').innerHTML = html;
+        
+        // Make functions global for button onclick
+        window.getFormData = function() {
+            const form = document.querySelector('.formdown-form');
+            if (!form) return;
+            
+            const formData = new FormData(form);
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                if (data[key]) {
+                    // Handle multiple values (checkboxes)
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            console.log('📊 Form Data:', data);
+            
+            document.getElementById('form-data-display').innerHTML = 
+                '<div class="form-data"><h3>📊 Current Form Data:</h3><pre>' + 
+                JSON.stringify(data, null, 2) + '</pre></div>';
+        };
+        
+        window.resetForm = function() {
+            const form = document.querySelector('.formdown-form');
+            if (form) {
+                form.reset();
+                // Hide all other inputs
+                document.querySelectorAll('.formdown-other-input').forEach(input => {
+                    input.style.display = 'none';
+                });
+                document.getElementById('form-data-display').innerHTML = '';
+            }
+        };
+        
+        // Add debug information
+        const debugInfo = document.createElement('div');
+        debugInfo.className = 'debug-info';
+        debugInfo.innerHTML = `
+            <h2>🐛 Debug Information</h2>
+            <h3>Parsed Fields:</h3>
+            <pre>${JSON.stringify(parsed.forms, null, 2)}</pre>
+            <h3>Fields with allowOther:</h3>
+            <pre>${JSON.stringify(
+                parsed.forms.filter(f => f.allowOther).map(f => ({
+                    name: f.name, 
+                    type: f.type, 
+                    allowOther: f.allowOther,
+                    options: f.options
+                })), null, 2
+            )}</pre>
+        `;
+        document.body.appendChild(debugInfo);
+    </script>
+</body>
+</html>

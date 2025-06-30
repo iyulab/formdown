@@ -225,9 +225,9 @@ export class FormdownParser {
     private interpretContent(content: string, typeMarker: string): Record<string, any> {
         // Selection types: options attribute
         if (['r', 's', 'c'].includes(typeMarker)) {
-            const hasOther = content.includes(',*')
-            const options = content.replace(',*', '')
-            const result: Record<string, any> = { options }
+            const hasOther = content.includes('*')
+            const cleanedOptions = content.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0 && opt !== '*').join(',')
+            const result: Record<string, any> = { options: cleanedOptions || '' }
             if (hasOther) {
                 result['allow-other'] = true
             }
@@ -338,7 +338,16 @@ export class FormdownParser {
             } else if (key === 'options' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
                 const optionsValue = quotedValue1 || quotedValue2 || unquotedValue
                 if (['radio', 'checkbox', 'select'].includes(type)) {
-                    field.options = optionsValue.split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
+                    if (optionsValue) {
+                        const hasOther = optionsValue.includes('*')
+                        const cleanedOptions = optionsValue.split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0 && opt !== '*')
+                        field.options = cleanedOptions
+                        if (hasOther) {
+                            field.allowOther = true
+                        }
+                    } else {
+                        field.options = []
+                    }
                 }
             } else if (key === 'allow-other') {
                 field.allowOther = true

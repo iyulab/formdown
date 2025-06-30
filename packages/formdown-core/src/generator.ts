@@ -192,7 +192,7 @@ ${fieldsHTML}
     }
 
     generateFieldHTML(field: Field): string {
-        const { name, type, label, required, placeholder, attributes, options, description, errorMessage, pattern, format } = field
+        const { name, type, label, required, placeholder, attributes, options, description, errorMessage, pattern, format, allowOther } = field
 
         // Use smart label generation if no label is provided
         const displayLabel = label || this.generateSmartLabel(name)
@@ -246,12 +246,15 @@ ${fieldsHTML}
 
             case 'select':
                 const optionsHTML = options?.map(opt => `<option value="${opt}">${opt}</option>`).join('\n') || ''
+                const otherOptionHTML = allowOther ? '\n        <option value="_other">Other (please specify)</option>' : ''
+                const otherInputHTML = allowOther ? `\n    <input type="text" id="${fieldId}_other" name="${name}_other" placeholder="Please specify..." style="display: none; margin-top: 8px; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #fff; width: 100%; max-width: 300px;" class="formdown-other-input">` : ''
+                
                 return `
 <div class="formdown-field">
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <select ${attrString}>
-        ${optionsHTML}
-    </select>${generateHelpText()}
+    <select ${attrString} ${allowOther ? `onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${fieldId}_other') : null; if(otherInput) otherInput.style.display = this.value === '_other' ? 'block' : 'none'"` : ''}>
+        ${optionsHTML}${otherOptionHTML}
+    </select>${otherInputHTML}${generateHelpText()}
 </div>`
 
             case 'radio':
@@ -267,12 +270,20 @@ ${fieldsHTML}
                 const radioInputsHTML = options.map((opt, index) => {
                     const inputId = `${name}_${index}`
                     const isRequired = required && index === 0
+                    const hideOtherOnChange = allowOther ? ` onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; if(otherInput) otherInput.style.display = 'none'"` : ''
                     return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="radio" id="${inputId}" name="${name}" value="${opt}" ${isRequired ? 'required' : ''} ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
+            <input type="radio" id="${inputId}" name="${name}" value="${opt}" ${isRequired ? 'required' : ''} ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}${hideOtherOnChange}>
             <span>${opt}</span>
         </label>`
                 }).join('\n')
+                
+                const otherRadioHTML = allowOther ? `
+        <label for="${name}_other_radio" class="formdown-option-label">
+            <input type="radio" id="${name}_other_radio" name="${name}" value="_other" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; if(otherInput) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value || '_other'; }">
+            <span>Other:</span>
+            <input type="text" id="${name}_other_input" name="${name}_other" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherRadio && otherRadio.checked) { otherRadio.value = this.value; }">
+        </label>` : ''
 
                 const isVertical = attributes?.layout === 'vertical'
                 const groupClass = isVertical ? 'radio-group vertical' : 'radio-group inline'
@@ -282,7 +293,7 @@ ${fieldsHTML}
     <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
         <legend>${displayLabel}${required ? ' *' : ''}</legend>
         <div class="${groupClass}" role="radiogroup">
-${radioInputsHTML}
+${radioInputsHTML}${otherRadioHTML}
         </div>
     </fieldset>${generateHelpText()}
 </div>`
@@ -308,6 +319,13 @@ ${radioInputsHTML}
             <span>${opt}</span>
         </label>`
                     }).join('\n')
+                    
+                    const otherCheckboxHTML = allowOther ? `
+        <label for="${name}_other_checkbox" class="formdown-option-label">
+            <input type="checkbox" id="${name}_other_checkbox" name="${name}" value="_other" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; if(otherInput) { otherInput.style.display = this.checked ? 'inline-block' : 'none'; if(this.checked) otherInput.focus(); }">
+            <span>Other:</span>
+            <input type="text" id="${name}_other_input" name="${name}_other" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${name}_other_checkbox') : null; if(otherCheckbox) otherCheckbox.checked = true">
+        </label>` : ''
 
                     const isVertical = attributes?.layout === 'vertical'
                     const groupClass = isVertical ? 'checkbox-group vertical' : 'checkbox-group inline'
@@ -317,7 +335,7 @@ ${radioInputsHTML}
     <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
         <legend>${displayLabel}${required ? ' *' : ''}</legend>
         <div class="${groupClass}" role="group">
-${checkboxInputsHTML}
+${checkboxInputsHTML}${otherCheckboxHTML}
         </div>
     </fieldset>${generateHelpText()}
 </div>`

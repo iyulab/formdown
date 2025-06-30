@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Shadow DOM Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        shadow-form { 
+            display: block; 
+            border: 2px solid #007bff; 
+            padding: 20px; 
+            border-radius: 8px; 
+            margin: 20px 0;
+        }
+        .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; }
+        .info { background: #e7f3ff; color: #014a84; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 Simple Shadow DOM "Other" Test</h1>
+        
+        <div class="info status">
+            <strong>Instructions:</strong> Try selecting "Other" in any of the fields below. 
+            The text input should appear within the Shadow DOM component.
+        </div>
+        
+        <shadow-form></shadow-form>
+        
+        <div id="status"></div>
+    </div>
+    
+    <script type="module">
+        const { parseFormdown, generateFormHTML } = await import('./dist/index.js');
+        
+        class ShadowForm extends HTMLElement {
+            constructor() {
+                super();
+                this.attachShadow({ mode: 'open' });
+                
+                this.shadowRoot.innerHTML = `
+                    <style>
+                        :host { display: block; }
+                        .formdown-field { 
+                            margin: 15px 0; 
+                            padding: 15px; 
+                            border: 1px solid #ddd; 
+                            border-radius: 6px; 
+                            background: #fafafa;
+                        }
+                        fieldset { border: 1px solid #ccc; padding: 10px; border-radius: 4px; }
+                        legend { font-weight: bold; }
+                        .formdown-option-label { 
+                            display: flex; 
+                            align-items: center; 
+                            margin: 8px 0; 
+                            cursor: pointer; 
+                        }
+                        .formdown-option-label input { margin-right: 8px; }
+                        select { padding: 8px; min-width: 200px; }
+                        label { font-weight: bold; margin-bottom: 5px; display: block; }
+                    </style>
+                    <h3>Shadow DOM Form</h3>
+                    <div id="form-content"></div>
+                `;
+                
+                this.render();
+            }
+            
+            render() {
+                const formContent = `
+@method{Email,Phone,SMS,*}: r[required]
+@country{USA,Canada,UK,*}: s[]
+@skills{JS,Python,*}: c[]
+                `;
+                
+                const parsed = parseFormdown(formContent);
+                const html = generateFormHTML(parsed);
+                
+                this.shadowRoot.getElementById('form-content').innerHTML = html;
+                
+                // Monitor changes
+                this.shadowRoot.addEventListener('change', (e) => {
+                    console.log('Shadow DOM change:', e.target.name, '=', e.target.value);
+                    
+                    // Check other inputs visibility
+                    setTimeout(() => {
+                        const otherInputs = this.shadowRoot.querySelectorAll('.formdown-other-input');
+                        const visible = Array.from(otherInputs).filter(input => {
+                            return getComputedStyle(input).display !== 'none';
+                        });
+                        
+                        if (visible.length > 0) {
+                            document.getElementById('status').innerHTML = 
+                                '<div class="success status">✅ Other input visible in Shadow DOM!</div>';
+                        }
+                    }, 10);
+                });
+            }
+        }
+        
+        customElements.define('shadow-form', ShadowForm);
+        
+        console.log('✅ Shadow DOM test loaded');
+        document.getElementById('status').innerHTML = 
+            '<div class="info status">💡 Ready! Try selecting "Other" options above.</div>';
+    </script>
+</body>
+</html>

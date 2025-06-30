@@ -61,7 +61,7 @@ Welcome ___@visitor_name[text]! Please tell us about yourself.
         expect(html).toContain('<code>Inline code</code>')
 
         // Verify HTML contains form elements  
-        expect(html).toContain('<form class="formdown-form">')
+        expect(html).toContain('<form class="formdown-form"')
         expect(html).toContain('<input type="text"')
         expect(html).toContain('<input type="email"')
         expect(html).toContain('<textarea')

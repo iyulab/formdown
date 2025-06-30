@@ -242,6 +242,25 @@ The `{content}` syntax is interpreted differently based on the field type:
 @skills: [checkbox options="JS,Python,Java"]
 ```
 
+**"Other" option support** - Use `*` to allow custom user input:
+```formdown
+// Selection fields with "other" option
+@country{USA,Canada,UK,*}: s[]
+@skills{JavaScript,Python,Java,*}: c[]
+@contact_method{Email,Phone,*}: r[]
+
+// Also works with standard syntax
+@country: [select options="USA,Canada,UK,*"]
+@skills: [checkbox options="JavaScript,Python,Java,*"]
+@contact_method: [radio options="Email,Phone,*"]
+```
+
+When `*` is included in options, FormDown automatically:
+- ✅ Adds an "Other (please specify)" option
+- ✅ Shows a text input field when "Other" is selected
+- ✅ Sets `allowOther: true` in the field schema
+- ✅ Creates separate form fields: `country` and `country_other`
+
 ### Pattern Shortcuts
 FormDown automatically converts user-friendly patterns to regex:
 
