@@ -1,7 +1,7 @@
-var FormdownEditor = function (exports) {
-  "use strict"; var __defProp = Object.defineProperty;
-  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-  var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+var FormdownEditor = function(exports) {
+  "use strict";var __defProp = Object.defineProperty;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
   /**
    * @license
@@ -51,37 +51,35 @@ var FormdownEditor = function (exports) {
    * Copyright 2017 Google LLC
    * SPDX-License-Identifier: BSD-3-Clause
    */
-  const { is: i$6, defineProperty: e$a, getOwnPropertyDescriptor: h$3, getOwnPropertyNames: r$c, getOwnPropertySymbols: o$c, getPrototypeOf: n$a } = Object, a$3 = globalThis, c$4 = a$3.trustedTypes, l$3 = c$4 ? c$4.emptyScript : "", p$3 = a$3.reactiveElementPolyfillSupport, d$3 = (t2, s2) => t2, u$3 = {
-    toAttribute(t2, s2) {
-      switch (s2) {
-        case Boolean:
-          t2 = t2 ? l$3 : null;
-          break;
-        case Object:
-        case Array:
-          t2 = null == t2 ? t2 : JSON.stringify(t2);
-      }
-      return t2;
-    }, fromAttribute(t2, s2) {
-      let i2 = t2;
-      switch (s2) {
-        case Boolean:
-          i2 = null !== t2;
-          break;
-        case Number:
-          i2 = null === t2 ? null : Number(t2);
-          break;
-        case Object:
-        case Array:
-          try {
-            i2 = JSON.parse(t2);
-          } catch (t3) {
-            i2 = null;
-          }
-      }
-      return i2;
+  const { is: i$6, defineProperty: e$a, getOwnPropertyDescriptor: h$3, getOwnPropertyNames: r$c, getOwnPropertySymbols: o$c, getPrototypeOf: n$a } = Object, a$3 = globalThis, c$4 = a$3.trustedTypes, l$3 = c$4 ? c$4.emptyScript : "", p$3 = a$3.reactiveElementPolyfillSupport, d$3 = (t2, s2) => t2, u$3 = { toAttribute(t2, s2) {
+    switch (s2) {
+      case Boolean:
+        t2 = t2 ? l$3 : null;
+        break;
+      case Object:
+      case Array:
+        t2 = null == t2 ? t2 : JSON.stringify(t2);
     }
-  }, f$3 = (t2, s2) => !i$6(t2, s2), b$3 = { attribute: true, type: String, converter: u$3, reflect: false, useDefault: false, hasChanged: f$3 };
+    return t2;
+  }, fromAttribute(t2, s2) {
+    let i2 = t2;
+    switch (s2) {
+      case Boolean:
+        i2 = null !== t2;
+        break;
+      case Number:
+        i2 = null === t2 ? null : Number(t2);
+        break;
+      case Object:
+      case Array:
+        try {
+          i2 = JSON.parse(t2);
+        } catch (t3) {
+          i2 = null;
+        }
+    }
+    return i2;
+  } }, f$3 = (t2, s2) => !i$6(t2, s2), b$3 = { attribute: true, type: String, converter: u$3, reflect: false, useDefault: false, hasChanged: f$3 };
   Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), a$3.litPropertyMetadata ?? (a$3.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
   let y$3 = class y extends HTMLElement {
     static addInitializer(t2) {
@@ -97,19 +95,15 @@ var FormdownEditor = function (exports) {
       }
     }
     static getPropertyDescriptor(t2, s2, i2) {
-      const { get: e2, set: r2 } = h$3(this.prototype, t2) ?? {
-        get() {
-          return this[s2];
-        }, set(t3) {
-          this[s2] = t3;
-        }
-      };
-      return {
-        get: e2, set(s3) {
-          const h2 = e2 == null ? void 0 : e2.call(this);
-          r2 == null ? void 0 : r2.call(this, s3), this.requestUpdate(t2, h2, i2);
-        }, configurable: true, enumerable: true
-      };
+      const { get: e2, set: r2 } = h$3(this.prototype, t2) ?? { get() {
+        return this[s2];
+      }, set(t3) {
+        this[s2] = t3;
+      } };
+      return { get: e2, set(s3) {
+        const h2 = e2 == null ? void 0 : e2.call(this);
+        r2 == null ? void 0 : r2.call(this, s3), this.requestUpdate(t2, h2, i2);
+      }, configurable: true, enumerable: true };
     }
     static getPropertyOptions(t2) {
       return this.elementProperties.get(t2) ?? b$3;
@@ -306,7 +300,7 @@ var FormdownEditor = function (exports) {
     for (let i3 = 0; i3 < s2; i3++) {
       const s3 = t2[i3];
       let a2, u2, d2 = -1, y2 = 0;
-      for (; y2 < s3.length && (c2.lastIndex = y2, u2 = c2.exec(s3), null !== u2);) y2 = c2.lastIndex, c2 === f$2 ? "!--" === u2[1] ? c2 = v$1 : void 0 !== u2[1] ? c2 = _$1 : void 0 !== u2[2] ? ($$1.test(u2[2]) && (r2 = RegExp("</" + u2[2], "g")), c2 = m$1) : void 0 !== u2[3] && (c2 = m$1) : c2 === m$1 ? ">" === u2[0] ? (c2 = r2 ?? f$2, d2 = -1) : void 0 === u2[1] ? d2 = -2 : (d2 = c2.lastIndex - u2[2].length, a2 = u2[1], c2 = void 0 === u2[3] ? m$1 : '"' === u2[3] ? g$1 : p$2) : c2 === g$1 || c2 === p$2 ? c2 = m$1 : c2 === v$1 || c2 === _$1 ? c2 = f$2 : (c2 = m$1, r2 = void 0);
+      for (; y2 < s3.length && (c2.lastIndex = y2, u2 = c2.exec(s3), null !== u2); ) y2 = c2.lastIndex, c2 === f$2 ? "!--" === u2[1] ? c2 = v$1 : void 0 !== u2[1] ? c2 = _$1 : void 0 !== u2[2] ? ($$1.test(u2[2]) && (r2 = RegExp("</" + u2[2], "g")), c2 = m$1) : void 0 !== u2[3] && (c2 = m$1) : c2 === m$1 ? ">" === u2[0] ? (c2 = r2 ?? f$2, d2 = -1) : void 0 === u2[1] ? d2 = -2 : (d2 = c2.lastIndex - u2[2].length, a2 = u2[1], c2 = void 0 === u2[3] ? m$1 : '"' === u2[3] ? g$1 : p$2) : c2 === g$1 || c2 === p$2 ? c2 = m$1 : c2 === v$1 || c2 === _$1 ? c2 = f$2 : (c2 = m$1, r2 = void 0);
       const x2 = c2 === m$1 && t2[i3 + 1].startsWith("/>") ? " " : "";
       l2 += c2 === f$2 ? s3 + n$9 : d2 >= 0 ? (o2.push(a2), s3.slice(0, d2) + e$9 + s3.slice(d2) + h$2 + x2) : s3 + h$2 + (-2 === d2 ? i3 : x2);
     }
@@ -322,7 +316,7 @@ var FormdownEditor = function (exports) {
         const t3 = this.el.content.firstChild;
         t3.replaceWith(...t3.childNodes);
       }
-      for (; null !== (r2 = C$1.nextNode()) && d2.length < u2;) {
+      for (; null !== (r2 = C$1.nextNode()) && d2.length < u2; ) {
         if (1 === r2.nodeType) {
           if (r2.hasAttributes()) for (const t3 of r2.getAttributeNames()) if (t3.endsWith(e$9)) {
             const i2 = v2[a2++], s3 = r2.getAttribute(t3).split(h$2), e2 = /([.?@])?(.*)/.exec(i2);
@@ -339,7 +333,7 @@ var FormdownEditor = function (exports) {
         } else if (8 === r2.nodeType) if (r2.data === o$b) d2.push({ type: 2, index: c2 });
         else {
           let t3 = -1;
-          for (; -1 !== (t3 = r2.data.indexOf(h$2, t3 + 1));) d2.push({ type: 7, index: c2 }), t3 += h$2.length - 1;
+          for (; -1 !== (t3 = r2.data.indexOf(h$2, t3 + 1)); ) d2.push({ type: 7, index: c2 }), t3 += h$2.length - 1;
         }
         c2++;
       }
@@ -370,7 +364,7 @@ var FormdownEditor = function (exports) {
       const { el: { content: i2 }, parts: s2 } = this._$AD, e2 = ((t2 == null ? void 0 : t2.creationScope) ?? r$b).importNode(i2, true);
       C$1.currentNode = e2;
       let h2 = C$1.nextNode(), o2 = 0, n2 = 0, l2 = s2[0];
-      for (; void 0 !== l2;) {
+      for (; void 0 !== l2; ) {
         if (o2 === l2.index) {
           let i3;
           2 === l2.type ? i3 = new R$1(h2, h2.nextSibling, this, t2) : 1 === l2.type ? i3 = new l2.ctor(h2, l2.name, l2.strings, this, t2) : 6 === l2.type && (i3 = new z$1(h2, this, t2)), this._$AV.push(i3), l2 = s2[++n2];
@@ -437,7 +431,7 @@ var FormdownEditor = function (exports) {
     }
     _$AR(t2 = this._$AA.nextSibling, i2) {
       var _a2;
-      for ((_a2 = this._$AP) == null ? void 0 : _a2.call(this, false, true, i2); t2 && t2 !== this._$AB;) {
+      for ((_a2 = this._$AP) == null ? void 0 : _a2.call(this, false, true, i2); t2 && t2 !== this._$AB; ) {
         const i3 = t2.nextSibling;
         t2.remove(), t2 = i3;
       }
@@ -558,11 +552,9 @@ var FormdownEditor = function (exports) {
   i$4._$litElement$ = true, i$4["finalized"] = true, (_a = s$3.litElementHydrateSupport) == null ? void 0 : _a.call(s$3, { LitElement: i$4 });
   const o$a = s$3.litElementPolyfillSupport;
   o$a == null ? void 0 : o$a({ LitElement: i$4 });
-  const n$8 = {
-    _$AK: (t2, e2, r2) => {
-      t2._$AK(e2, r2);
-    }, _$AL: (t2) => t2._$AL
-  };
+  const n$8 = { _$AK: (t2, e2, r2) => {
+    t2._$AK(e2, r2);
+  }, _$AL: (t2) => t2._$AL };
   (s$3.litElementVersions ?? (s$3.litElementVersions = [])).push("4.2.0");
   /**
    * @license
@@ -590,18 +582,16 @@ var FormdownEditor = function (exports) {
     let s2 = globalThis.litPropertyMetadata.get(i2);
     if (void 0 === s2 && globalThis.litPropertyMetadata.set(i2, s2 = /* @__PURE__ */ new Map()), "setter" === n2 && ((t2 = Object.create(t2)).wrapped = true), s2.set(r2.name, t2), "accessor" === n2) {
       const { name: o2 } = r2;
-      return {
-        set(r3) {
-          const n3 = e2.get.call(this);
-          e2.set.call(this, r3), this.requestUpdate(o2, n3, t2);
-        }, init(e3) {
-          return void 0 !== e3 && this.C(o2, void 0, t2, e3), e3;
-        }
-      };
+      return { set(r3) {
+        const n3 = e2.get.call(this);
+        e2.set.call(this, r3), this.requestUpdate(o2, n3, t2);
+      }, init(e3) {
+        return void 0 !== e3 && this.C(o2, void 0, t2, e3), e3;
+      } };
     }
     if ("setter" === n2) {
       const { name: o2 } = r2;
-      return function (r3) {
+      return function(r3) {
         const n3 = this[o2];
         e2.call(this, r3), this.requestUpdate(o2, n3, t2);
       };
@@ -653,26 +643,20 @@ var FormdownEditor = function (exports) {
       if (r2) {
         const { get: e3, set: r3 } = "object" == typeof s2 ? n2 : i2 ?? (() => {
           const t2 = Symbol();
-          return {
-            get() {
-              return this[t2];
-            }, set(e4) {
-              this[t2] = e4;
-            }
-          };
+          return { get() {
+            return this[t2];
+          }, set(e4) {
+            this[t2] = e4;
+          } };
         })();
-        return e$8(n2, s2, {
-          get() {
-            let t2 = e3.call(this);
-            return void 0 === t2 && (t2 = o2(this), (null !== t2 || this.hasUpdated) && r3.call(this, t2)), t2;
-          }
-        });
+        return e$8(n2, s2, { get() {
+          let t2 = e3.call(this);
+          return void 0 === t2 && (t2 = o2(this), (null !== t2 || this.hasUpdated) && r3.call(this, t2)), t2;
+        } });
       }
-      return e$8(n2, s2, {
-        get() {
-          return o2(this);
-        }
-      });
+      return e$8(n2, s2, { get() {
+        return o2(this);
+      } });
     };
   }
   /**
@@ -682,11 +666,9 @@ var FormdownEditor = function (exports) {
    */
   let e$6;
   function r$8(r2) {
-    return (n2, o2) => e$8(n2, o2, {
-      get() {
-        return (this.renderRoot ?? (e$6 ?? (e$6 = document.createDocumentFragment()))).querySelectorAll(r2);
-      }
-    });
+    return (n2, o2) => e$8(n2, o2, { get() {
+      return (this.renderRoot ?? (e$6 ?? (e$6 = document.createDocumentFragment()))).querySelectorAll(r2);
+    } });
   }
   /**
    * @license
@@ -694,12 +676,10 @@ var FormdownEditor = function (exports) {
    * SPDX-License-Identifier: BSD-3-Clause
    */
   function r$7(r2) {
-    return (n2, e2) => e$8(n2, e2, {
-      async get() {
-        var _a2;
-        return await this.updateComplete, ((_a2 = this.renderRoot) == null ? void 0 : _a2.querySelector(r2)) ?? null;
-      }
-    });
+    return (n2, e2) => e$8(n2, e2, { async get() {
+      var _a2;
+      return await this.updateComplete, ((_a2 = this.renderRoot) == null ? void 0 : _a2.querySelector(r2)) ?? null;
+    } });
   }
   /**
    * @license
@@ -709,13 +689,11 @@ var FormdownEditor = function (exports) {
   function o$7(o2) {
     return (e2, n2) => {
       const { slot: r2, selector: s2 } = o2 ?? {}, c2 = "slot" + (r2 ? `[name=${r2}]` : ":not([name])");
-      return e$8(e2, n2, {
-        get() {
-          var _a2;
-          const t2 = (_a2 = this.renderRoot) == null ? void 0 : _a2.querySelector(c2), e3 = (t2 == null ? void 0 : t2.assignedElements(o2)) ?? [];
-          return void 0 === s2 ? e3 : e3.filter((t3) => t3.matches(s2));
-        }
-      });
+      return e$8(e2, n2, { get() {
+        var _a2;
+        const t2 = (_a2 = this.renderRoot) == null ? void 0 : _a2.querySelector(c2), e3 = (t2 == null ? void 0 : t2.assignedElements(o2)) ?? [];
+        return void 0 === s2 ? e3 : e3.filter((t3) => t3.matches(s2));
+      } });
     };
   }
   /**
@@ -726,16 +704,14 @@ var FormdownEditor = function (exports) {
   function n$6(n2) {
     return (o2, r2) => {
       const { slot: e2 } = n2 ?? {}, s2 = "slot" + (e2 ? `[name=${e2}]` : ":not([name])");
-      return e$8(o2, r2, {
-        get() {
-          var _a2;
-          const t2 = (_a2 = this.renderRoot) == null ? void 0 : _a2.querySelector(s2);
-          return (t2 == null ? void 0 : t2.assignedNodes(n2)) ?? [];
-        }
-      });
+      return e$8(o2, r2, { get() {
+        var _a2;
+        const t2 = (_a2 = this.renderRoot) == null ? void 0 : _a2.querySelector(s2);
+        return (t2 == null ? void 0 : t2.assignedNodes(n2)) ?? [];
+      } });
     };
   }
-  const styles = "/* formdown-editor styles */\r\n:host {\r\n    display: block;\r\n    font-family: system-ui, -apple-system, sans-serif;\r\n    height: 600px;\r\n    min-height: 200px;\r\n    border: 1px solid #d1d5db;\r\n    border-radius: 0.375rem;\r\n    overflow: hidden;\r\n}\r\n\r\n.editor-container {\r\n    display: flex;\r\n    height: 100%;\r\n}\r\n\r\n.editor-panel {\r\n    flex: 1;\r\n    display: flex;\r\n    flex-direction: column;\r\n    border-right: 1px solid #d1d5db;\r\n    min-height: 200px;\r\n}\r\n\r\n.preview-panel {\r\n    flex: 1;\r\n    display: flex;\r\n    flex-direction: column;\r\n    background-color: #f9fafb;\r\n    min-height: 200px;\r\n}\r\n\r\n.panel-header {\r\n    padding: 0.75rem 1rem;\r\n    background-color: #f3f4f6;\r\n    border-bottom: 1px solid #d1d5db;\r\n    font-weight: 500;\r\n    font-size: 0.875rem;\r\n    color: #374151;\r\n}\r\n\r\n.editor-textarea {\r\n    flex: 1;\r\n    width: 100%;\r\n    border: none;\r\n    outline: none;\r\n    padding: 1rem;\r\n    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;\r\n    font-size: 0.875rem;\r\n    line-height: 1.5;\r\n    resize: none;\r\n    background-color: white;\r\n    overflow-y: auto;\r\n}\r\n\r\n.preview-content {\r\n    flex: 1;\r\n    padding: 1rem;\r\n    overflow-y: auto;\r\n}\r\n\r\n.toolbar {\r\n    display: flex;\r\n    padding: 0.5rem;\r\n    background-color: #f9fafb;\r\n    border-bottom: 1px solid #d1d5db;\r\n    gap: 0.5rem;\r\n}\r\n\r\n.toolbar-button {\r\n    padding: 0.25rem 0.5rem;\r\n    background-color: white;\r\n    border: 1px solid #d1d5db;\r\n    border-radius: 0.25rem;\r\n    font-size: 0.75rem;\r\n    cursor: pointer;\r\n    transition: background-color 0.15s ease-in-out;\r\n}\r\n\r\n.toolbar-button:hover {\r\n    background-color: #f3f4f6;\r\n}\r\n\r\n.stats {\r\n    padding: 0.5rem 1rem;\r\n    background-color: #f9fafb;\r\n    border-top: 1px solid #d1d5db;\r\n    font-size: 0.75rem;\r\n    color: #6b7280;\r\n    display: flex;\r\n    justify-content: space-between;\r\n}\r\n\r\n.error-list {\r\n    background-color: #fef2f2;\r\n    border-left: 4px solid #dc2626;\r\n    padding: 1rem;\r\n    margin-bottom: 1rem;\r\n}\r\n\r\n.error-item {\r\n    color: #dc2626;\r\n    font-size: 0.875rem;\r\n    margin-bottom: 0.25rem;\r\n}\r\n\r\n/* Mode-specific styles */\r\n.mode-edit .preview-panel,\r\n.mode-view .editor-panel {\r\n    display: none;\r\n}\r\n\r\n.mode-edit .editor-panel {\r\n    border-right: none;\r\n}\r\n\r\n/* Responsive */\r\n@media (max-width: 768px) {\r\n    .editor-container {\r\n        flex-direction: column;\r\n    }\r\n\r\n    .editor-panel {\r\n        border-right: none;\r\n        border-bottom: 1px solid #d1d5db;\r\n        flex: 1;\r\n        min-height: 200px;\r\n        overflow-y: auto;\r\n    }\r\n\r\n    .preview-panel {\r\n        flex: 1;\r\n        min-height: 200px;\r\n        overflow-y: auto;\r\n    }\r\n\r\n    .editor-textarea {\r\n        overflow-y: auto;\r\n        min-height: 150px;\r\n    }\r\n\r\n    .preview-content {\r\n        overflow-y: auto;\r\n        min-height: 150px;\r\n    }\r\n}";
+  const styles = "/* formdown-editor styles */\r\n:host {\r\n    display: block;\r\n    font-family: system-ui, -apple-system, sans-serif;\r\n    height: 600px;\r\n    border: 1px solid #d1d5db;\r\n    border-radius: 0.375rem;\r\n    overflow: hidden;\r\n}\r\n\r\n.editor-container {\r\n    display: flex;\r\n    height: 100%;\r\n}\r\n\r\n.editor-panel {\r\n    flex: 1;\r\n    display: flex;\r\n    flex-direction: column;\r\n    border-right: 1px solid #d1d5db;\r\n}\r\n\r\n.preview-panel {\r\n    flex: 1;\r\n    display: flex;\r\n    flex-direction: column;\r\n    background-color: #f9fafb;\r\n}\r\n\r\n.panel-header {\r\n    padding: 0.75rem 1rem;\r\n    background-color: #f3f4f6;\r\n    border-bottom: 1px solid #d1d5db;\r\n    font-weight: 500;\r\n    font-size: 0.875rem;\r\n    color: #374151;\r\n}\r\n\r\n.editor-textarea {\r\n    flex: 1;\r\n    width: 100%;\r\n    border: none;\r\n    outline: none;\r\n    padding: 1rem;\r\n    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;\r\n    font-size: 0.875rem;\r\n    line-height: 1.5;\r\n    resize: none;\r\n    background-color: white;\r\n}\r\n\r\n.preview-content {\r\n    flex: 1;\r\n    padding: 1rem;\r\n    overflow-y: auto;\r\n}\r\n\r\n.toolbar {\r\n    display: flex;\r\n    padding: 0.5rem;\r\n    background-color: #f9fafb;\r\n    border-bottom: 1px solid #d1d5db;\r\n    gap: 0.5rem;\r\n}\r\n\r\n.toolbar-button {\r\n    padding: 0.25rem 0.5rem;\r\n    background-color: white;\r\n    border: 1px solid #d1d5db;\r\n    border-radius: 0.25rem;\r\n    font-size: 0.75rem;\r\n    cursor: pointer;\r\n    transition: background-color 0.15s ease-in-out;\r\n}\r\n\r\n.toolbar-button:hover {\r\n    background-color: #f3f4f6;\r\n}\r\n\r\n.stats {\r\n    padding: 0.5rem 1rem;\r\n    background-color: #f9fafb;\r\n    border-top: 1px solid #d1d5db;\r\n    font-size: 0.75rem;\r\n    color: #6b7280;\r\n    display: flex;\r\n    justify-content: space-between;\r\n}\r\n\r\n.error-list {\r\n    background-color: #fef2f2;\r\n    border-left: 4px solid #dc2626;\r\n    padding: 1rem;\r\n    margin-bottom: 1rem;\r\n}\r\n\r\n.error-item {\r\n    color: #dc2626;\r\n    font-size: 0.875rem;\r\n    margin-bottom: 0.25rem;\r\n}\r\n\r\n/* Mode-specific styles */\r\n.mode-edit .preview-panel,\r\n.mode-view .editor-panel {\r\n    display: none;\r\n}\r\n\r\n.mode-edit .editor-panel {\r\n    border-right: none;\r\n}\r\n\r\n/* Responsive */\r\n@media (max-width: 768px) {\r\n    .editor-container {\r\n        flex-direction: column;\r\n    }\r\n\r\n    .editor-panel {\r\n        border-right: none;\r\n        border-bottom: 1px solid #d1d5db;\r\n    }\r\n}";
   function renderEditorPanel(header, toolbar, content, placeholder, insertSnippet, handleInput, handleKeydown) {
     return x$1`
         <div class="editor-panel">
@@ -863,7 +839,7 @@ Fill out the form below to get in touch:
     }
     set data(value) {
       let cleanedValue = {};
-      if (value && typeof value === "object") {
+      if (value !== null && value !== void 0 && typeof value === "object") {
         if ("formData" in value && typeof value.formData === "object") {
           cleanedValue = { ...value.formData };
         } else {
@@ -936,8 +912,8 @@ Fill out the form below to get in touch:
       if (changedProperties.has("data") && this.mode !== "edit") {
         const container = (_a2 = this.shadowRoot) == null ? void 0 : _a2.querySelector("#formdown-ui-container");
         const formdownUI = container == null ? void 0 : container.querySelector("formdown-ui");
-        if (formdownUI && this.data && typeof this.data === "object") {
-          formdownUI.data = this.data;
+        if (formdownUI) {
+          formdownUI.data = this.data || {};
         }
       }
     }
@@ -1191,37 +1167,35 @@ Fill out the form below to get in touch:
    * Copyright 2017 Google LLC
    * SPDX-License-Identifier: BSD-3-Clause
    */
-  const { is: i$2, defineProperty: e$4, getOwnPropertyDescriptor: h$1, getOwnPropertyNames: r$5, getOwnPropertySymbols: o$5, getPrototypeOf: n$4 } = Object, a$1 = globalThis, c$1 = a$1.trustedTypes, l$1 = c$1 ? c$1.emptyScript : "", p$1 = a$1.reactiveElementPolyfillSupport, d$1 = (t2, s2) => t2, u$1 = {
-    toAttribute(t2, s2) {
-      switch (s2) {
-        case Boolean:
-          t2 = t2 ? l$1 : null;
-          break;
-        case Object:
-        case Array:
-          t2 = null == t2 ? t2 : JSON.stringify(t2);
-      }
-      return t2;
-    }, fromAttribute(t2, s2) {
-      let i2 = t2;
-      switch (s2) {
-        case Boolean:
-          i2 = null !== t2;
-          break;
-        case Number:
-          i2 = null === t2 ? null : Number(t2);
-          break;
-        case Object:
-        case Array:
-          try {
-            i2 = JSON.parse(t2);
-          } catch (t3) {
-            i2 = null;
-          }
-      }
-      return i2;
+  const { is: i$2, defineProperty: e$4, getOwnPropertyDescriptor: h$1, getOwnPropertyNames: r$5, getOwnPropertySymbols: o$5, getPrototypeOf: n$4 } = Object, a$1 = globalThis, c$1 = a$1.trustedTypes, l$1 = c$1 ? c$1.emptyScript : "", p$1 = a$1.reactiveElementPolyfillSupport, d$1 = (t2, s2) => t2, u$1 = { toAttribute(t2, s2) {
+    switch (s2) {
+      case Boolean:
+        t2 = t2 ? l$1 : null;
+        break;
+      case Object:
+      case Array:
+        t2 = null == t2 ? t2 : JSON.stringify(t2);
     }
-  }, f$1 = (t2, s2) => !i$2(t2, s2), b$1 = { attribute: true, type: String, converter: u$1, reflect: false, useDefault: false, hasChanged: f$1 };
+    return t2;
+  }, fromAttribute(t2, s2) {
+    let i2 = t2;
+    switch (s2) {
+      case Boolean:
+        i2 = null !== t2;
+        break;
+      case Number:
+        i2 = null === t2 ? null : Number(t2);
+        break;
+      case Object:
+      case Array:
+        try {
+          i2 = JSON.parse(t2);
+        } catch (t3) {
+          i2 = null;
+        }
+    }
+    return i2;
+  } }, f$1 = (t2, s2) => !i$2(t2, s2), b$1 = { attribute: true, type: String, converter: u$1, reflect: false, useDefault: false, hasChanged: f$1 };
   Symbol.metadata ?? (Symbol.metadata = Symbol("metadata")), a$1.litPropertyMetadata ?? (a$1.litPropertyMetadata = /* @__PURE__ */ new WeakMap());
   let y$1 = class y extends HTMLElement {
     static addInitializer(t2) {
@@ -1237,19 +1211,15 @@ Fill out the form below to get in touch:
       }
     }
     static getPropertyDescriptor(t2, s2, i2) {
-      const { get: e2, set: r2 } = h$1(this.prototype, t2) ?? {
-        get() {
-          return this[s2];
-        }, set(t3) {
-          this[s2] = t3;
-        }
-      };
-      return {
-        get: e2, set(s3) {
-          const h2 = e2 == null ? void 0 : e2.call(this);
-          r2 == null ? void 0 : r2.call(this, s3), this.requestUpdate(t2, h2, i2);
-        }, configurable: true, enumerable: true
-      };
+      const { get: e2, set: r2 } = h$1(this.prototype, t2) ?? { get() {
+        return this[s2];
+      }, set(t3) {
+        this[s2] = t3;
+      } };
+      return { get: e2, set(s3) {
+        const h2 = e2 == null ? void 0 : e2.call(this);
+        r2 == null ? void 0 : r2.call(this, s3), this.requestUpdate(t2, h2, i2);
+      }, configurable: true, enumerable: true };
     }
     static getPropertyOptions(t2) {
       return this.elementProperties.get(t2) ?? b$1;
@@ -1446,7 +1416,7 @@ Fill out the form below to get in touch:
     for (let i3 = 0; i3 < s2; i3++) {
       const s3 = t2[i3];
       let a2, u2, d2 = -1, y2 = 0;
-      for (; y2 < s3.length && (c2.lastIndex = y2, u2 = c2.exec(s3), null !== u2);) y2 = c2.lastIndex, c2 === f ? "!--" === u2[1] ? c2 = v : void 0 !== u2[1] ? c2 = _ : void 0 !== u2[2] ? ($.test(u2[2]) && (r2 = RegExp("</" + u2[2], "g")), c2 = m) : void 0 !== u2[3] && (c2 = m) : c2 === m ? ">" === u2[0] ? (c2 = r2 ?? f, d2 = -1) : void 0 === u2[1] ? d2 = -2 : (d2 = c2.lastIndex - u2[2].length, a2 = u2[1], c2 = void 0 === u2[3] ? m : '"' === u2[3] ? g : p) : c2 === g || c2 === p ? c2 = m : c2 === v || c2 === _ ? c2 = f : (c2 = m, r2 = void 0);
+      for (; y2 < s3.length && (c2.lastIndex = y2, u2 = c2.exec(s3), null !== u2); ) y2 = c2.lastIndex, c2 === f ? "!--" === u2[1] ? c2 = v : void 0 !== u2[1] ? c2 = _ : void 0 !== u2[2] ? ($.test(u2[2]) && (r2 = RegExp("</" + u2[2], "g")), c2 = m) : void 0 !== u2[3] && (c2 = m) : c2 === m ? ">" === u2[0] ? (c2 = r2 ?? f, d2 = -1) : void 0 === u2[1] ? d2 = -2 : (d2 = c2.lastIndex - u2[2].length, a2 = u2[1], c2 = void 0 === u2[3] ? m : '"' === u2[3] ? g : p) : c2 === g || c2 === p ? c2 = m : c2 === v || c2 === _ ? c2 = f : (c2 = m, r2 = void 0);
       const x2 = c2 === m && t2[i3 + 1].startsWith("/>") ? " " : "";
       l2 += c2 === f ? s3 + n$3 : d2 >= 0 ? (o2.push(a2), s3.slice(0, d2) + e$3 + s3.slice(d2) + h + x2) : s3 + h + (-2 === d2 ? i3 : x2);
     }
@@ -1462,7 +1432,7 @@ Fill out the form below to get in touch:
         const t3 = this.el.content.firstChild;
         t3.replaceWith(...t3.childNodes);
       }
-      for (; null !== (r2 = C.nextNode()) && d2.length < u2;) {
+      for (; null !== (r2 = C.nextNode()) && d2.length < u2; ) {
         if (1 === r2.nodeType) {
           if (r2.hasAttributes()) for (const t3 of r2.getAttributeNames()) if (t3.endsWith(e$3)) {
             const i2 = v2[a2++], s3 = r2.getAttribute(t3).split(h), e2 = /([.?@])?(.*)/.exec(i2);
@@ -1479,7 +1449,7 @@ Fill out the form below to get in touch:
         } else if (8 === r2.nodeType) if (r2.data === o$4) d2.push({ type: 2, index: c2 });
         else {
           let t3 = -1;
-          for (; -1 !== (t3 = r2.data.indexOf(h, t3 + 1));) d2.push({ type: 7, index: c2 }), t3 += h.length - 1;
+          for (; -1 !== (t3 = r2.data.indexOf(h, t3 + 1)); ) d2.push({ type: 7, index: c2 }), t3 += h.length - 1;
         }
         c2++;
       }
@@ -1510,7 +1480,7 @@ Fill out the form below to get in touch:
       const { el: { content: i2 }, parts: s2 } = this._$AD, e2 = ((t2 == null ? void 0 : t2.creationScope) ?? r$4).importNode(i2, true);
       C.currentNode = e2;
       let h2 = C.nextNode(), o2 = 0, n2 = 0, l2 = s2[0];
-      for (; void 0 !== l2;) {
+      for (; void 0 !== l2; ) {
         if (o2 === l2.index) {
           let i3;
           2 === l2.type ? i3 = new R(h2, h2.nextSibling, this, t2) : 1 === l2.type ? i3 = new l2.ctor(h2, l2.name, l2.strings, this, t2) : 6 === l2.type && (i3 = new z(h2, this, t2)), this._$AV.push(i3), l2 = s2[++n2];
@@ -1577,7 +1547,7 @@ Fill out the form below to get in touch:
     }
     _$AR(t2 = this._$AA.nextSibling, i2) {
       var _a2;
-      for ((_a2 = this._$AP) == null ? void 0 : _a2.call(this, false, true, i2); t2 && t2 !== this._$AB;) {
+      for ((_a2 = this._$AP) == null ? void 0 : _a2.call(this, false, true, i2); t2 && t2 !== this._$AB; ) {
         const i3 = t2.nextSibling;
         t2.remove(), t2 = i3;
       }
@@ -1698,11 +1668,9 @@ Fill out the form below to get in touch:
   i._$litElement$ = true, i["finalized"] = true, (_b = s.litElementHydrateSupport) == null ? void 0 : _b.call(s, { LitElement: i });
   const o$3 = s.litElementPolyfillSupport;
   o$3 == null ? void 0 : o$3({ LitElement: i });
-  const n$2 = {
-    _$AK: (t2, e2, r2) => {
-      t2._$AK(e2, r2);
-    }, _$AL: (t2) => t2._$AL
-  };
+  const n$2 = { _$AK: (t2, e2, r2) => {
+    t2._$AK(e2, r2);
+  }, _$AL: (t2) => t2._$AL };
   (s.litElementVersions ?? (s.litElementVersions = [])).push("4.2.0");
   /**
    * @license
@@ -1730,18 +1698,16 @@ Fill out the form below to get in touch:
     let s2 = globalThis.litPropertyMetadata.get(i2);
     if (void 0 === s2 && globalThis.litPropertyMetadata.set(i2, s2 = /* @__PURE__ */ new Map()), "setter" === n2 && ((t2 = Object.create(t2)).wrapped = true), s2.set(r2.name, t2), "accessor" === n2) {
       const { name: o2 } = r2;
-      return {
-        set(r3) {
-          const n3 = e2.get.call(this);
-          e2.set.call(this, r3), this.requestUpdate(o2, n3, t2);
-        }, init(e3) {
-          return void 0 !== e3 && this.C(o2, void 0, t2, e3), e3;
-        }
-      };
+      return { set(r3) {
+        const n3 = e2.get.call(this);
+        e2.set.call(this, r3), this.requestUpdate(o2, n3, t2);
+      }, init(e3) {
+        return void 0 !== e3 && this.C(o2, void 0, t2, e3), e3;
+      } };
     }
     if ("setter" === n2) {
       const { name: o2 } = r2;
-      return function (r3) {
+      return function(r3) {
         const n3 = this[o2];
         e2.call(this, r3), this.requestUpdate(o2, n3, t2);
       };
@@ -1793,26 +1759,20 @@ Fill out the form below to get in touch:
       if (r2) {
         const { get: e3, set: r3 } = "object" == typeof s2 ? n2 : i2 ?? (() => {
           const t2 = Symbol();
-          return {
-            get() {
-              return this[t2];
-            }, set(e4) {
-              this[t2] = e4;
-            }
-          };
+          return { get() {
+            return this[t2];
+          }, set(e4) {
+            this[t2] = e4;
+          } };
         })();
-        return e$2(n2, s2, {
-          get() {
-            let t2 = e3.call(this);
-            return void 0 === t2 && (t2 = o2(this), (null !== t2 || this.hasUpdated) && r3.call(this, t2)), t2;
-          }
-        });
+        return e$2(n2, s2, { get() {
+          let t2 = e3.call(this);
+          return void 0 === t2 && (t2 = o2(this), (null !== t2 || this.hasUpdated) && r3.call(this, t2)), t2;
+        } });
       }
-      return e$2(n2, s2, {
-        get() {
-          return o2(this);
-        }
-      });
+      return e$2(n2, s2, { get() {
+        return o2(this);
+      } });
     };
   }
   /**
@@ -1822,11 +1782,9 @@ Fill out the form below to get in touch:
    */
   let e;
   function r$1(r2) {
-    return (n2, o2) => e$2(n2, o2, {
-      get() {
-        return (this.renderRoot ?? (e ?? (e = document.createDocumentFragment()))).querySelectorAll(r2);
-      }
-    });
+    return (n2, o2) => e$2(n2, o2, { get() {
+      return (this.renderRoot ?? (e ?? (e = document.createDocumentFragment()))).querySelectorAll(r2);
+    } });
   }
   /**
    * @license
@@ -1834,12 +1792,10 @@ Fill out the form below to get in touch:
    * SPDX-License-Identifier: BSD-3-Clause
    */
   function r(r2) {
-    return (n2, e2) => e$2(n2, e2, {
-      async get() {
-        var _a2;
-        return await this.updateComplete, ((_a2 = this.renderRoot) == null ? void 0 : _a2.querySelector(r2)) ?? null;
-      }
-    });
+    return (n2, e2) => e$2(n2, e2, { async get() {
+      var _a2;
+      return await this.updateComplete, ((_a2 = this.renderRoot) == null ? void 0 : _a2.querySelector(r2)) ?? null;
+    } });
   }
   /**
    * @license
@@ -1849,13 +1805,11 @@ Fill out the form below to get in touch:
   function o(o2) {
     return (e2, n2) => {
       const { slot: r2, selector: s2 } = o2 ?? {}, c2 = "slot" + (r2 ? `[name=${r2}]` : ":not([name])");
-      return e$2(e2, n2, {
-        get() {
-          var _a2;
-          const t2 = (_a2 = this.renderRoot) == null ? void 0 : _a2.querySelector(c2), e3 = (t2 == null ? void 0 : t2.assignedElements(o2)) ?? [];
-          return void 0 === s2 ? e3 : e3.filter((t3) => t3.matches(s2));
-        }
-      });
+      return e$2(e2, n2, { get() {
+        var _a2;
+        const t2 = (_a2 = this.renderRoot) == null ? void 0 : _a2.querySelector(c2), e3 = (t2 == null ? void 0 : t2.assignedElements(o2)) ?? [];
+        return void 0 === s2 ? e3 : e3.filter((t3) => t3.matches(s2));
+      } });
     };
   }
   /**
@@ -1866,13 +1820,11 @@ Fill out the form below to get in touch:
   function n(n2) {
     return (o2, r2) => {
       const { slot: e2 } = n2 ?? {}, s2 = "slot" + (e2 ? `[name=${e2}]` : ":not([name])");
-      return e$2(o2, r2, {
-        get() {
-          var _a2;
-          const t2 = (_a2 = this.renderRoot) == null ? void 0 : _a2.querySelector(s2);
-          return (t2 == null ? void 0 : t2.assignedNodes(n2)) ?? [];
-        }
-      });
+      return e$2(o2, r2, { get() {
+        var _a2;
+        const t2 = (_a2 = this.renderRoot) == null ? void 0 : _a2.querySelector(s2);
+        return (t2 == null ? void 0 : t2.assignedNodes(n2)) ?? [];
+      } });
     };
   }
   class FormdownParser {
@@ -1918,6 +1870,17 @@ Fill out the form below to get in touch:
     }
     parseBlockField(line) {
       const trimmedLine = line.trim();
+      const hasShorthandMarker = /^@\w+\*/.test(trimmedLine) || // Required marker
+      /^@\w+\{.*?\}/.test(trimmedLine) || // Content
+      /^@\w+\s*:\s*(dt|d|[#@%&t?TrscRFCMW])\d*\[/.test(trimmedLine) || // Type marker 
+      /^@\w+\([^)]+\)\*/.test(trimmedLine) || // Label + required
+      /^@\w+\([^)]+\)\{.*?\}/.test(trimmedLine) || // Label + content
+      /^@\w+\([^)]+\)\s*:\s*(dt|d|[#@%&t?TrscRFCMW])\d*\[/.test(trimmedLine);
+      if (hasShorthandMarker) {
+        const shorthandField = this.parseShorthandBlockField(trimmedLine);
+        if (shorthandField)
+          return shorthandField;
+      }
       const match = trimmedLine.match(/^@(\w+)(?:\(([^)]+)\))?\s*:\s*\[([^\]]*)\].*$/);
       if (!match)
         return null;
@@ -1925,24 +1888,145 @@ Fill out the form below to get in touch:
       const field = this.createField(name, customLabel, typeAndAttributes);
       return field;
     }
+    parseShorthandBlockField(line) {
+      let shorthandMatch = line.match(/^@(\w+)(\*)?(?:\{(.*?)\})?(?:\(([^)]+)\))?\s*:\s*(dt|d|[#@%&t?TrscRFCMW])?(\d*)\[([^\]]*)\].*$/);
+      if (!shorthandMatch) {
+        shorthandMatch = line.match(/^@(\w+)(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*:\s*(dt|d|[#@%&t?TrscRFCMW])?(\d*)\[([^\]]*)\].*$/);
+        if (shorthandMatch) {
+          const [, name2, customLabel2, requiredMarker2, content2, typeMarker2, rowsOrModifier2, attributes2] = shorthandMatch;
+          shorthandMatch = [shorthandMatch[0], name2, requiredMarker2, content2, customLabel2, typeMarker2, rowsOrModifier2, attributes2];
+        }
+      }
+      if (!shorthandMatch) {
+        return null;
+      }
+      const [, name, requiredMarker, content, customLabel, typeMarker, rowsOrModifier, attributes] = shorthandMatch;
+      if (!requiredMarker && !content && !customLabel && !typeMarker && !rowsOrModifier) {
+        return null;
+      }
+      const field = this.convertShorthandToField(name, requiredMarker, content, customLabel, typeMarker || "", rowsOrModifier, attributes);
+      return field;
+    }
     parseInlineFields(line) {
       const inlineFields = [];
       const delimiter = this.options.inlineFieldDelimiter;
-      const pattern = new RegExp(`${delimiter}@(\\w+)(?:\\(([^)]+)\\))?(?:\\[([^\\]]*)\\])?`, "g");
-      const cleanedLine = line.replace(pattern, (match, name, customLabel, typeAndAttributes) => {
+      const shorthandPattern = new RegExp(`(dt|d|[#@%&t?TrscRFCMW]?)${delimiter}@(\\w+)(\\*)?(?:\\{(.*?)\\})?(?:\\(([^)]+)\\))?(?:\\[([^\\]]*)\\])?`, "g");
+      let cleanedLine = line.replace(shorthandPattern, (match, typeMarker, name, requiredMarker, content, customLabel, attributes) => {
+        if (!typeMarker && !requiredMarker && !content) {
+          return match;
+        }
+        const field = this.convertShorthandToField(name, requiredMarker, content, customLabel, typeMarker, "", attributes || "");
+        if (field) {
+          field.inline = true;
+          inlineFields.push(field);
+          const requiredAttr = field.required ? ' data-required="true"' : "";
+          return `<span contenteditable="true" data-field-name="${name}" data-field-type="${field.type}" data-placeholder="${field.label || name}" class="formdown-inline-field" role="textbox"${requiredAttr}>${field.label || name}</span>`;
+        }
+        return match;
+      });
+      const standardPattern = new RegExp(`${delimiter}@(\\w+)(?:\\(([^)]+)\\))?(?:\\[([^\\]]*)\\])?`, "g");
+      cleanedLine = cleanedLine.replace(standardPattern, (match, name, customLabel, typeAndAttributes) => {
+        if (inlineFields.some((field2) => field2.name === name))
+          return match;
         const finalTypeAndAttributes = typeAndAttributes !== void 0 ? typeAndAttributes : "text";
         const field = this.createField(name, customLabel, finalTypeAndAttributes);
         if (field) {
+          field.inline = true;
           inlineFields.push(field);
-          return `<span contenteditable="true" data-field-name="${name}" data-field-type="${field.type}" data-placeholder="${field.label || name}" class="formdown-inline-field">${field.label || name}</span>`;
+          const requiredAttr = field.required ? ' data-required="true"' : "";
+          return `<span contenteditable="true" data-field-name="${name}" data-field-type="${field.type}" data-placeholder="${field.label || name}" class="formdown-inline-field" role="textbox"${requiredAttr}>${field.label || name}</span>`;
         }
         return match;
       });
       return { cleanedLine, inlineFields };
     }
+    convertShorthandToField(name, requiredMarker, content, customLabel, typeMarker, rowsOrModifier, attributes) {
+      const typeMap = {
+        "@": "email",
+        "#": "number",
+        "%": "tel",
+        "&": "url",
+        "d": "date",
+        "t": "time",
+        "dt": "datetime-local",
+        "?": "password",
+        "T": "textarea",
+        "r": "radio",
+        "s": "select",
+        "c": "checkbox",
+        "R": "range",
+        "F": "file",
+        "C": "color",
+        "M": "month",
+        "W": "week"
+      };
+      const type = typeMap[typeMarker] || "text";
+      let fieldAttributes = attributes ? this.parseAttributes(attributes) : {};
+      if (requiredMarker === "*") {
+        fieldAttributes.required = true;
+      }
+      if (type === "textarea" && rowsOrModifier) {
+        fieldAttributes.rows = parseInt(rowsOrModifier, 10);
+      }
+      if (content) {
+        const contentInterpreted = this.interpretContent(content, typeMarker);
+        fieldAttributes = { ...fieldAttributes, ...contentInterpreted };
+      }
+      const typeAndAttributes = this.buildTypeAndAttributesString(type, fieldAttributes);
+      return this.createField(name, customLabel, typeAndAttributes);
+    }
+    interpretContent(content, typeMarker) {
+      if (["r", "s", "c"].includes(typeMarker)) {
+        const hasOther = content.includes(",*");
+        const options2 = content.replace(",*", "");
+        const result = { options: options2 };
+        if (hasOther) {
+          result["allow-other"] = true;
+        }
+        return result;
+      }
+      if (["d", "t", "dt"].includes(typeMarker)) {
+        return { format: content };
+      }
+      let pattern = content;
+      if (content.includes("#") || content.includes("*") && !content.match(/^\^.*\$$/)) {
+        pattern = "^" + content.replace(/[().\/]/g, "\\$&").replace(/-/g, "\\-").replace(/#{1,}/g, (match) => `\\d{${match.length}}`).replace(/\*/g, ".*").replace(/\?/g, ".") + "$";
+      }
+      return { pattern };
+    }
+    parseAttributes(attributeString) {
+      const attributes = {};
+      const attributePattern = /([\w-]+)(?:=(?:"([^"]*)"|'([^']*)'|([^\s]+)))?/g;
+      const matches = Array.from(attributeString.matchAll(attributePattern));
+      for (const match of matches) {
+        const [, key, quotedValue1, quotedValue2, unquotedValue] = match;
+        if (key === "required") {
+          attributes.required = true;
+        } else if (quotedValue1 !== void 0 || quotedValue2 !== void 0 || unquotedValue !== void 0) {
+          const value = quotedValue1 || quotedValue2 || unquotedValue;
+          attributes[key] = this.parseAttributeValue(value);
+        } else {
+          attributes[key] = true;
+        }
+      }
+      return attributes;
+    }
+    buildTypeAndAttributesString(type, attributes) {
+      const parts = [type];
+      for (const [key, value] of Object.entries(attributes)) {
+        if (value === true) {
+          parts.push(key);
+        } else if (typeof value === "string") {
+          parts.push(`${key}="${value}"`);
+        } else {
+          parts.push(`${key}=${value}`);
+        }
+      }
+      return parts.join(" ");
+    }
     createField(name, customLabel, typeAndAttributes) {
-      if (/^\d/.test(name)) {
-        throw new Error(`Invalid field name '${name}': Field names cannot start with a number`);
+      if (/^\d/.test(name) || !name.trim()) {
+        return null;
       }
       if (!typeAndAttributes.trim()) {
         return {
@@ -1971,18 +2055,22 @@ Fill out the form below to get in touch:
           field.required = true;
         } else if (key === "label" && (quotedValue1 !== void 0 || quotedValue2 !== void 0 || unquotedValue !== void 0)) {
           field.label = quotedValue1 || quotedValue2 || unquotedValue;
+        } else if (key === "placeholder" && (quotedValue1 !== void 0 || quotedValue2 !== void 0 || unquotedValue !== void 0)) {
+          field.placeholder = quotedValue1 || quotedValue2 || unquotedValue;
         } else if (key === "options" && (quotedValue1 !== void 0 || quotedValue2 !== void 0 || unquotedValue !== void 0)) {
           const optionsValue = quotedValue1 || quotedValue2 || unquotedValue;
           if (["radio", "checkbox", "select"].includes(type)) {
             field.options = optionsValue.split(",").map((opt) => opt.trim()).filter((opt) => opt.length > 0);
           }
+        } else if (key === "allow-other") {
+          field.allowOther = true;
+        } else if (key === "format" && (quotedValue1 !== void 0 || quotedValue2 !== void 0 || unquotedValue !== void 0)) {
+          field.format = quotedValue1 || quotedValue2 || unquotedValue;
+        } else if (key === "pattern" && (quotedValue1 !== void 0 || quotedValue2 !== void 0 || unquotedValue !== void 0)) {
+          field.pattern = quotedValue1 || quotedValue2 || unquotedValue;
         } else if (quotedValue1 !== void 0 || quotedValue2 !== void 0 || unquotedValue !== void 0) {
           const value = quotedValue1 || quotedValue2 || unquotedValue;
-          if (key === "placeholder") {
-            field.placeholder = value;
-          } else {
-            field.attributes[key] = this.parseAttributeValue(value);
-          }
+          field.attributes[key] = this.parseAttributeValue(value);
         } else {
           field.attributes[key] = true;
         }
@@ -3923,7 +4011,7 @@ ${text}</tr>
             if ("renderer" in ext) {
               const prevRenderer = extensions.renderers[ext.name];
               if (prevRenderer) {
-                extensions.renderers[ext.name] = function (...args2) {
+                extensions.renderers[ext.name] = function(...args2) {
                   let ret = ext.renderer.apply(this, args2);
                   if (ret === false) {
                     ret = prevRenderer.apply(this, args2);
@@ -4047,7 +4135,7 @@ ${text}</tr>
         if (pack.walkTokens) {
           const walkTokens2 = this.defaults.walkTokens;
           const packWalktokens = pack.walkTokens;
-          opts.walkTokens = function (token) {
+          opts.walkTokens = function(token) {
             let values = [];
             values.push(packWalktokens.call(this, token));
             if (walkTokens2) {
@@ -4136,7 +4224,7 @@ ${text}</tr>
   function marked(src, opt) {
     return markedInstance.parse(src, opt);
   }
-  marked.options = marked.setOptions = function (options2) {
+  marked.options = marked.setOptions = function(options2) {
     markedInstance.setOptions(options2);
     marked.defaults = markedInstance.defaults;
     changeDefaults(marked.defaults);
@@ -4144,13 +4232,13 @@ ${text}</tr>
   };
   marked.getDefaults = _getDefaults;
   marked.defaults = _defaults;
-  marked.use = function (...args) {
+  marked.use = function(...args) {
     markedInstance.use(...args);
     marked.defaults = markedInstance.defaults;
     changeDefaults(marked.defaults);
     return marked;
   };
-  marked.walkTokens = function (tokens, callback) {
+  marked.walkTokens = function(tokens, callback) {
     return markedInstance.walkTokens(tokens, callback);
   };
   marked.parseInline = markedInstance.parseInline;
@@ -4202,10 +4290,46 @@ ${text}</tr>
     generateHTML(content) {
       const markdownHTML = content.markdown ? marked(content.markdown) : "";
       if (typeof markdownHTML === "string") {
-        return this.processFieldPlaceholders(markdownHTML, content.forms);
+        return this.processContent(markdownHTML, content.forms);
       } else {
         return this.generateLegacyHTML(content);
       }
+    }
+    processContent(html2, fields) {
+      if (fields.length === 0) {
+        return html2;
+      }
+      const inlineFields = [];
+      const blockFields = [];
+      fields.forEach((field) => {
+        if (field.inline) {
+          inlineFields.push(field);
+        } else {
+          blockFields.push(field);
+        }
+      });
+      let result = html2;
+      inlineFields.forEach((field, index) => {
+        const placeholder = `<!--FORMDOWN_FIELD_${fields.indexOf(field)}-->`;
+        const fieldHTML = this.generateInlineFieldHTML(field);
+        result = result.replace(new RegExp(placeholder, "g"), fieldHTML);
+      });
+      if (blockFields.length > 0) {
+        const formHTML = this.generateSingleFormHTML(blockFields);
+        const firstBlockFieldIndex = fields.findIndex((f2) => !f2.inline);
+        if (firstBlockFieldIndex !== -1) {
+          const firstPlaceholder = `<!--FORMDOWN_FIELD_${firstBlockFieldIndex}-->`;
+          result = result.replace(new RegExp(firstPlaceholder, "g"), formHTML);
+          blockFields.slice(1).forEach((field) => {
+            const fieldIndex = fields.indexOf(field);
+            const placeholder = `<!--FORMDOWN_FIELD_${fieldIndex}-->`;
+            result = result.replace(new RegExp(placeholder, "g"), "");
+          });
+        } else {
+          result += "\n" + formHTML;
+        }
+      }
+      return result;
     }
     processFieldPlaceholders(html2, fields) {
       let result = html2;
@@ -4222,10 +4346,43 @@ ${text}</tr>
       return markdownHTML + formHTML;
     }
     generateStandaloneFieldHTML(field) {
+      if (field.inline) {
+        return this.generateInlineFieldHTML(field);
+      }
       return `
 <form class="formdown-form">
 ${this.generateFieldHTML(field)}
 </form>`;
+    }
+    generateSingleFormHTML(fields) {
+      if (fields.length === 0)
+        return "";
+      const fieldsHTML = fields.map((field) => this.generateFieldHTML(field)).join("\n");
+      return `
+<form class="formdown-form" role="form">
+${fieldsHTML}
+</form>`;
+    }
+    generateInlineFieldHTML(field) {
+      const { name, type, required, placeholder, attributes } = field;
+      const displayLabel = field.label || this.generateSmartLabel(name);
+      const commonAttrs = {
+        "data-field-name": name,
+        "data-field-type": type,
+        "data-placeholder": placeholder || displayLabel,
+        "class": "formdown-inline-field",
+        "contenteditable": "true",
+        "role": "textbox",
+        ...required && { "data-required": "true" },
+        ...attributes && attributes
+      };
+      const attrString = Object.entries(commonAttrs).map(([key, value]) => {
+        if (typeof value === "boolean") {
+          return value ? key : "";
+        }
+        return `${key}="${value}"`;
+      }).filter(Boolean).join(" ");
+      return `<span ${attrString}>${displayLabel}</span>`;
     }
     generateFormHTML(fields) {
       if (fields.length === 0)
@@ -4237,13 +4394,20 @@ ${fieldsHTML}
 </form>`;
     }
     generateFieldHTML(field) {
-      const { name, type, label, required, placeholder, attributes, options: options2 } = field;
+      const { name, type, label, required, placeholder, attributes, options: options2, description, errorMessage, pattern, format } = field;
       const displayLabel = label || this.generateSmartLabel(name);
+      const fieldId = name;
+      const descriptionId = description ? `${name}-description` : void 0;
+      const errorId = errorMessage ? `${name}-error` : void 0;
       const commonAttrs = {
-        id: name,
+        id: fieldId,
         name,
         ...required && { required: true },
         ...placeholder && { placeholder },
+        ...pattern && { pattern },
+        ...format && { format },
+        ...description && { "aria-describedby": descriptionId },
+        ...errorMessage && { "aria-describedby": `${descriptionId ? descriptionId + " " : ""}${errorId}` },
         ...attributes
       };
       const attrString = Object.entries(commonAttrs).map(([key, value]) => {
@@ -4252,35 +4416,48 @@ ${fieldsHTML}
         }
         return `${key}="${value}"`;
       }).filter(Boolean).join(" ");
+      const generateHelpText = () => {
+        let helpHTML = "";
+        if (description) {
+          helpHTML += `
+    <div id="${descriptionId}" class="formdown-field-description">${description}</div>`;
+        }
+        if (errorMessage) {
+          helpHTML += `
+    <div id="${errorId}" class="formdown-field-error" role="alert">${errorMessage}</div>`;
+        }
+        return helpHTML;
+      };
       switch (type) {
         case "textarea":
           return `
 <div class="formdown-field">
-    <label for="${name}">${displayLabel}${required ? " *" : ""}</label>
-    <textarea ${attrString}></textarea>
+    <label for="${fieldId}">${displayLabel}${required ? " *" : ""}</label>
+    <textarea ${attrString}></textarea>${generateHelpText()}
 </div>`;
         case "select":
           const optionsHTML = (options2 == null ? void 0 : options2.map((opt) => `<option value="${opt}">${opt}</option>`).join("\n")) || "";
           return `
 <div class="formdown-field">
-    <label for="${name}">${displayLabel}${required ? " *" : ""}</label>
+    <label for="${fieldId}">${displayLabel}${required ? " *" : ""}</label>
     <select ${attrString}>
         ${optionsHTML}
-    </select>
+    </select>${generateHelpText()}
 </div>`;
         case "radio":
           if (!options2 || options2.length === 0) {
             return `
 <div class="formdown-field">
-    <label for="${name}">${displayLabel}${required ? " *" : ""}</label>
-    <input type="text" ${attrString}>
+    <label for="${fieldId}">${displayLabel}${required ? " *" : ""}</label>
+    <input type="text" ${attrString}>${generateHelpText()}
 </div>`;
           }
           const radioInputsHTML = options2.map((opt, index) => {
             const inputId = `${name}_${index}`;
+            const isRequired = required && index === 0;
             return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="radio" id="${inputId}" name="${name}" value="${opt}" ${required && index === 0 ? "required" : ""}>
+            <input type="radio" id="${inputId}" name="${name}" value="${opt}" ${isRequired ? "required" : ""} ${descriptionId ? `aria-describedby="${descriptionId}"` : ""}>
             <span>${opt}</span>
         </label>`;
           }).join("\n");
@@ -4288,28 +4465,29 @@ ${fieldsHTML}
           const groupClass = isVertical ? "radio-group vertical" : "radio-group inline";
           return `
 <div class="formdown-field">
-    <fieldset>
+    <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ""}>
         <legend>${displayLabel}${required ? " *" : ""}</legend>
-        <div class="${groupClass}">
+        <div class="${groupClass}" role="radiogroup">
 ${radioInputsHTML}
         </div>
-    </fieldset>
+    </fieldset>${generateHelpText()}
 </div>`;
         case "checkbox":
           if (!options2 || options2.length === 0) {
             return `
 <div class="formdown-field">
-    <label for="${name}" class="formdown-checkbox-label">
-        <input type="checkbox" id="${name}" name="${name}" value="true" ${required ? "required" : ""} ${attrString}>
+    <label for="${fieldId}" class="formdown-checkbox-label">
+        <input type="checkbox" id="${fieldId}" name="${name}" value="true" ${required ? "required" : ""} ${attrString}>
         <span>${displayLabel}${required ? " *" : ""}</span>
-    </label>
+    </label>${generateHelpText()}
 </div>`;
           } else {
             const checkboxInputsHTML = options2.map((opt, index) => {
               const inputId = `${name}_${index}`;
+              const isRequired = required && index === 0;
               return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="checkbox" id="${inputId}" name="${name}" value="${opt}" ${required && index === 0 ? "required" : ""}>
+            <input type="checkbox" id="${inputId}" name="${name}" value="${opt}" ${isRequired ? "required" : ""} ${descriptionId ? `aria-describedby="${descriptionId}"` : ""}>
             <span>${opt}</span>
         </label>`;
             }).join("\n");
@@ -4317,19 +4495,55 @@ ${radioInputsHTML}
             const groupClass2 = isVertical2 ? "checkbox-group vertical" : "checkbox-group inline";
             return `
 <div class="formdown-field">
-    <fieldset>
+    <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ""}>
         <legend>${displayLabel}${required ? " *" : ""}</legend>
-        <div class="${groupClass2}">
+        <div class="${groupClass2}" role="group">
 ${checkboxInputsHTML}
         </div>
-    </fieldset>
+    </fieldset>${generateHelpText()}
 </div>`;
           }
+        // Extended HTML5 input types
+        case "range":
+          const min = (attributes == null ? void 0 : attributes.min) || 0;
+          const max = (attributes == null ? void 0 : attributes.max) || 100;
+          const step = (attributes == null ? void 0 : attributes.step) || 1;
+          const value = (attributes == null ? void 0 : attributes.value) || Math.floor((min + max) / 2);
+          return `
+<div class="formdown-field">
+    <label for="${fieldId}">${displayLabel}${required ? " *" : ""}</label>
+    <input type="range" ${attrString} value="${value}">
+    <output for="${fieldId}" class="formdown-range-output">${value}</output>${generateHelpText()}
+</div>`;
+        case "file":
+          return `
+<div class="formdown-field">
+    <label for="${fieldId}">${displayLabel}${required ? " *" : ""}</label>
+    <input type="file" ${attrString}>${generateHelpText()}
+</div>`;
+        case "color":
+          return `
+<div class="formdown-field">
+    <label for="${fieldId}">${displayLabel}${required ? " *" : ""}</label>
+    <input type="color" ${attrString}>${generateHelpText()}
+</div>`;
+        case "week":
+          return `
+<div class="formdown-field">
+    <label for="${fieldId}">${displayLabel}${required ? " *" : ""}</label>
+    <input type="week" ${attrString}>${generateHelpText()}
+</div>`;
+        case "month":
+          return `
+<div class="formdown-field">
+    <label for="${fieldId}">${displayLabel}${required ? " *" : ""}</label>
+    <input type="month" ${attrString}>${generateHelpText()}
+</div>`;
         default:
           return `
 <div class="formdown-field">
-    <label for="${name}">${displayLabel}${required ? " *" : ""}</label>
-    <input type="${type}" ${attrString}>
+    <label for="${fieldId}">${displayLabel}${required ? " *" : ""}</label>
+    <input type="${type}" ${attrString}>${generateHelpText()}
 </div>`;
       }
     }
@@ -4396,7 +4610,7 @@ ${checkboxInputsHTML}
     }
     set data(newData) {
       const oldData = this._data;
-      this._data = { ...newData };
+      this._data = newData !== null && newData !== void 0 && typeof newData === "object" ? { ...newData } : {};
       this.requestUpdate("data", oldData);
     }
     // Public method to update data programmatically
@@ -4596,9 +4810,16 @@ ${checkboxInputsHTML}
     syncUIFromData(fieldName, sourceElement) {
       this._isUpdatingUI = true;
       try {
-        const fieldsToSync = fieldName ? [fieldName] : Object.keys(this.data);
+        let fieldsToSync;
+        if (fieldName) {
+          fieldsToSync = [fieldName];
+        } else {
+          const registeredFields = Array.from(this.fieldRegistry.keys());
+          const dataFields = Object.keys(this.data);
+          fieldsToSync = [.../* @__PURE__ */ new Set([...registeredFields, ...dataFields])];
+        }
         fieldsToSync.forEach((field) => {
-          const value = this.data[field];
+          const value = this.data[field] ?? "";
           const boundElements = this.fieldRegistry.get(field);
           if (boundElements) {
             boundElements.forEach((element) => {
@@ -4863,7 +5084,6 @@ ${checkboxInputsHTML}
       line-height: 1.5;
       color: #1f2937;
       max-width: 100%;
-      min-height: 200px;
       box-sizing: border-box;
       overflow-y: auto;
     }
@@ -4928,7 +5148,6 @@ ${checkboxInputsHTML}
     textarea {
       min-height: 6rem;
       resize: vertical;
-      overflow-y: auto;
     }
 
     select {
@@ -5053,18 +5272,11 @@ ${checkboxInputsHTML}
     @media (max-width: 768px) {
       :host {
         font-size: 0.875rem;
-        min-height: 200px;
-        overflow-y: auto;
       }
       
       input, textarea, select {
         padding: 0.625rem;
         font-size: 0.875rem;
-      }
-
-      textarea {
-        min-height: 5rem;
-        overflow-y: auto;
       }
       
       h1 { font-size: 1.875rem; }

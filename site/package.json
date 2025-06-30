@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "npm run update:version && next dev",
+    "dev:fresh": "npm run build:packages && npm run dev",
     "build": "npm run clean:publish && npm run update:version && next build",
     "build:static": "npm run clean:publish && npm run update:version && next build",
     "update:version": "node scripts/update-version.js",
@@ -17,7 +18,6 @@
     "build:editor": "cd ../packages/formdown-editor && npm run build",
     "rebuild:all": "npm run build:packages && npm run build",
     "rebuild:static": "npm run build:packages && npm run build:static",
-    "dev:fresh": "npm run build:packages && npm run dev",
     "test:packages": "npm run test:core && npm run test:ui && npm run test:editor",
     "test:core": "cd ../packages/formdown-core && npm test",
     "test:ui": "cd ../packages/formdown-ui && npm test",

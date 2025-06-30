@@ -398,7 +398,10 @@ export class FormdownUI extends LitElement {
 
   set data(newData: Record<string, any>) {
     const oldData = this._data
-    this._data = { ...newData }
+    // Handle null, undefined, or empty object cases properly
+    this._data = (newData !== null && newData !== undefined && typeof newData === 'object')
+      ? { ...newData }
+      : {}
     this.requestUpdate('data', oldData)
   }
 
@@ -672,10 +675,22 @@ export class FormdownUI extends LitElement {
     this._isUpdatingUI = true
 
     try {
-      const fieldsToSync = fieldName ? [fieldName] : Object.keys(this.data)
+      let fieldsToSync: string[]
+
+      if (fieldName) {
+        // Sync specific field
+        fieldsToSync = [fieldName]
+      } else {
+        // When syncing all fields, we need to consider both:
+        // 1. Fields in current data (to set values)
+        // 2. All registered fields (to clear values not in data)
+        const registeredFields = Array.from(this.fieldRegistry.keys())
+        const dataFields = Object.keys(this.data)
+        fieldsToSync = [...new Set([...registeredFields, ...dataFields])]
+      }
 
       fieldsToSync.forEach(field => {
-        const value = this.data[field]
+        const value = this.data[field] ?? '' // Use empty string as default for clearing
         const boundElements = this.fieldRegistry.get(field)
 
         if (boundElements) {

@@ -76,7 +76,7 @@ export class FormdownEditor extends LitElement {
     set data(value: Record<string, any>) {
         let cleanedValue: Record<string, any> = {}
 
-        if (value && typeof value === 'object') {
+        if (value !== null && value !== undefined && typeof value === 'object') {
             // Clean up nested formData structures
             if ('formData' in value && typeof value.formData === 'object') {
                 cleanedValue = { ...value.formData }
@@ -176,9 +176,9 @@ export class FormdownEditor extends LitElement {
         if (changedProperties.has('data') && this.mode !== 'edit') {
             const container = this.shadowRoot?.querySelector('#formdown-ui-container')
             const formdownUI = container?.querySelector('formdown-ui') as any
-            if (formdownUI && this.data && typeof this.data === 'object') {
-                // Only update formdown-ui data if it exists and avoid triggering events
-                formdownUI.data = this.data
+            if (formdownUI) {
+                // Always update formdown-ui data, even if it's empty or null (for clearing)
+                formdownUI.data = this.data || {}
             }
         }
     } firstUpdated(changedProperties: Map<string | number | symbol, unknown>) {
