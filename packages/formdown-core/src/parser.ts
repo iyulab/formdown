@@ -225,11 +225,30 @@ export class FormdownParser {
     private interpretContent(content: string, typeMarker: string): Record<string, any> {
         // Selection types: options attribute
         if (['r', 's', 'c'].includes(typeMarker)) {
-            const hasOther = content.includes('*')
-            const cleanedOptions = content.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0 && opt !== '*').join(',')
-            const result: Record<string, any> = { options: cleanedOptions || '' }
+            const options = content.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0)
+            let hasOther = false
+            let otherLabel = 'Other'
+            
+            const cleanedOptions = options.filter(opt => {
+                if (opt === '*') {
+                    hasOther = true
+                    return false
+                } else if (opt.startsWith('*(') && opt.endsWith(')')) {
+                    if (!hasOther) { // Only set label for the first *(label) encountered
+                        hasOther = true
+                        otherLabel = opt.slice(2, -1)
+                    }
+                    return false
+                }
+                return true
+            })
+            
+            const result: Record<string, any> = { options: cleanedOptions.join(',') || '' }
             if (hasOther) {
                 result['allow-other'] = true
+                if (otherLabel !== 'Other') {
+                    result['other-label'] = otherLabel
+                }
             }
             return result
         }
@@ -339,11 +358,30 @@ export class FormdownParser {
                 const optionsValue = quotedValue1 || quotedValue2 || unquotedValue
                 if (['radio', 'checkbox', 'select'].includes(type)) {
                     if (optionsValue) {
-                        const hasOther = optionsValue.includes('*')
-                        const cleanedOptions = optionsValue.split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0 && opt !== '*')
+                        const options = optionsValue.split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
+                        let hasOther = false
+                        let otherLabel = 'Other'
+                        
+                        const cleanedOptions = options.filter(opt => {
+                            if (opt === '*') {
+                                hasOther = true
+                                return false
+                            } else if (opt.startsWith('*(') && opt.endsWith(')')) {
+                                if (!hasOther) { // Only set label for the first *(label) encountered
+                                    hasOther = true
+                                    otherLabel = opt.slice(2, -1)
+                                }
+                                return false
+                            }
+                            return true
+                        })
+                        
                         field.options = cleanedOptions
                         if (hasOther) {
                             field.allowOther = true
+                            if (otherLabel !== 'Other') {
+                                field.otherLabel = otherLabel
+                            }
                         }
                     } else {
                         field.options = []
@@ -351,6 +389,8 @@ export class FormdownParser {
                 }
             } else if (key === 'allow-other') {
                 field.allowOther = true
+            } else if (key === 'other-label' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+                field.otherLabel = quotedValue1 || quotedValue2 || unquotedValue
             } else if (key === 'format' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
                 field.format = quotedValue1 || quotedValue2 || unquotedValue
             } else if (key === 'pattern' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {

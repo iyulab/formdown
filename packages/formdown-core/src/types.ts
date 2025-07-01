@@ -6,6 +6,7 @@ export interface Field {
     placeholder?: string
     options?: string[]
     allowOther?: boolean
+    otherLabel?: string
     format?: string
     pattern?: string
     attributes?: Record<string, any>
