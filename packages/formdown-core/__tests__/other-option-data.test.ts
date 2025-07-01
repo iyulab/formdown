@@ -2,23 +2,22 @@ import { parseFormdown, generateFormHTML } from '../src/index'
 
 describe('Other Option Data Handling', () => {
   describe('Form submission data transformation', () => {
-    it('should generate form with proper other option data handling', () => {
+    it('should generate form with simplified other option data handling', () => {
       const content = '@priority{Low,Medium,High,*}: r[required]'
       const parsed = parseFormdown(content)
       const html = generateFormHTML(parsed)
       
-      // Verify the form has submit handler
-      expect(html).toContain('onsubmit="handleFormdownSubmit(event, this)"')
+      // Verify no complex submit handlers needed
+      expect(html).not.toContain('onsubmit="handleFormdownSubmit(event, this)"')
+      expect(html).not.toContain('handleFormdownSubmit')
       
-      // Verify the JavaScript function is included
-      expect(html).toContain('handleFormdownSubmit')
-      expect(html).toContain('input[name$="_other"]')
+      // Verify simplified structure
+      expect(html).not.toContain('name="priority_other"')  // Text input doesn't have name
+      expect(html).toContain('value=""')  // Other radio has empty value
       
-      // Verify the other input has correct name
-      expect(html).toContain('name="priority_other"')
-      
-      // Verify radio button for other has correct value
-      expect(html).toContain('value="_other"')
+      // Verify dynamic value updating
+      expect(html).toContain('this.value = otherInput.value')
+      expect(html).toContain('otherRadio.value = this.value')
     })
 
     it('should handle multiple field forms with other options', () => {
@@ -31,20 +30,20 @@ describe('Other Option Data Handling', () => {
       const parsed = parseFormdown(content)
       const html = generateFormHTML(parsed)
       
-      // Should have form submit handlers (one per field due to field ordering fix)
-      expect(html).toContain('onsubmit="handleFormdownSubmit(event, this)"')
+      // Should have simple forms without complex handlers
+      expect(html).not.toContain('onsubmit="handleFormdownSubmit(event, this)"')
+      expect(html).not.toContain('handleFormdownSubmit')
       
-      // Should have all other inputs
-      expect(html).toContain('name="priority_other"')
-      expect(html).toContain('name="category_other"')
-      expect(html).toContain('name="skills_other"')
+      // Should not have "_other" named inputs
+      expect(html).not.toContain('name="priority_other"')
+      expect(html).not.toContain('name="category_other"')
+      expect(html).not.toContain('name="skills_other"')
       
-      // Should have the JavaScript function for handling other options
-      expect(html).toContain('handleFormdownSubmit')
-      expect(html).toContain('input[name$="_other"]')
+      // Should have simplified value handling
+      expect(html).toContain('value=""')  // Empty values for other options
       
-      // Should handle radio other options
-      expect(html).toContain('otherRadio && otherRadio.checked')
+      // Should have dynamic value handling
+      expect(html).toContain('otherRadio.value = this.value')
     })
 
     it('should include JavaScript function only once per form', () => {
@@ -56,11 +55,11 @@ describe('Other Option Data Handling', () => {
       const parsed = parseFormdown(content)
       const html = generateFormHTML(parsed)
       
-      // Should have the JavaScript function
-      expect(html).toContain('handleFormdownSubmit')
+      // Should not have complex JavaScript handling
+      expect(html).not.toContain('handleFormdownSubmit')
       
-      // Should check for existing function before defining
-      expect(html).toContain('if (typeof handleFormdownSubmit === \'undefined\')')
+      // Should have simplified dynamic value updating
+      expect(html).toContain('this.value = otherInput.value')
     })
 
     it('should handle single field forms with other options', () => {
@@ -70,11 +69,11 @@ describe('Other Option Data Handling', () => {
       
       // Should generate individual form for single field
       expect(html).toContain('<form class="formdown-form"')
-      expect(html).toContain('onsubmit="handleFormdownSubmit(event, this)"')
-      expect(html).toContain('name="country_other"')
+      expect(html).not.toContain('onsubmit="handleFormdownSubmit(event, this)"')
+      expect(html).not.toContain('name="country_other"')  // Text input doesn't have name
       
-      // Should include JavaScript for handling other option
-      expect(html).toContain('handleFormdownSubmit')
+      // Should include simplified JavaScript for handling other option
+      expect(html).toContain('select.value = this.value')
     })
   })
 
@@ -88,10 +87,10 @@ describe('Other Option Data Handling', () => {
       expect(html).toContain('name="preference"')
       expect(html).toContain('value="Email"')
       expect(html).toContain('value="SMS"')
-      expect(html).toContain('value="_other"')
+      expect(html).toContain('value=""')  // Other radio has empty value initially
       
-      // Should have other text input
-      expect(html).toContain('name="preference_other"')
+      // Should have other text input without name attribute
+      expect(html).not.toContain('name="preference_other"')
       expect(html).toContain('placeholder="Please specify..."')
       
       // Should have proper JavaScript event handlers
@@ -108,10 +107,10 @@ describe('Other Option Data Handling', () => {
       expect(html).toContain('name="country"')
       expect(html).toContain('<option value="USA">USA</option>')
       expect(html).toContain('<option value="Canada">Canada</option>')
-      expect(html).toContain('<option value="_other">Other (please specify)</option>')
+      expect(html).toContain('<option value="">Other (please specify)</option>')
       
-      // Should have other text input
-      expect(html).toContain('name="country_other"')
+      // Should have other text input without name attribute
+      expect(html).not.toContain('name="country_other"')
     })
 
     it('should generate correct HTML structure for checkbox with other', () => {
@@ -124,10 +123,10 @@ describe('Other Option Data Handling', () => {
       expect(html).toContain('name="skills"')
       expect(html).toContain('value="JavaScript"')
       expect(html).toContain('value="Python"')
-      expect(html).toContain('value="_other"')
+      expect(html).toContain('value=""')  // Other checkbox has empty value initially
       
-      // Should have other text input
-      expect(html).toContain('name="skills_other"')
+      // Should have other text input without name attribute
+      expect(html).not.toContain('name="skills_other"')
     })
   })
 
@@ -154,9 +153,12 @@ Second field:
       expect(field1Index).toBeLessThan(textIndex)
       expect(textIndex).toBeLessThan(field2Index)
       
-      // Both fields should have other option support
-      expect(html).toContain('name="field1_other"')
-      expect(html).toContain('name="field2_other"')
+      // Both fields should have other option support (without name attributes on text inputs)
+      expect(html).not.toContain('name="field1_other"')
+      expect(html).not.toContain('name="field2_other"')
+      
+      // Should have simplified value handling
+      expect(html).toContain('value=""')  // Empty values for other options
     })
   })
 })

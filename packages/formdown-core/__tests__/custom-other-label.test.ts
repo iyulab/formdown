@@ -111,13 +111,14 @@ describe('Custom Other Label', () => {
       // Should have custom label
       expect(html).toContain('<span>Priority Level:</span>')
       
-      // Should have proper data handling JavaScript
-      expect(html).toContain('handleFormdownSubmit')
+      // Should have simplified data handling (no complex scripts needed)
+      expect(html).not.toContain('handleFormdownSubmit')
       expect(html).toContain('name="priority"')
-      expect(html).toContain('name="priority_other"')
+      expect(html).not.toContain('name="priority_other"')  // Text input doesn't have name attribute
       
-      // Text input name should change when other is selected
-      expect(html).toContain('this.name = \'priority\'')
+      // Radio value should change when other text is entered
+      expect(html).toContain('this.value = otherInput.value')
+      expect(html).toContain('otherRadio.value = this.value')
     })
   })
 })

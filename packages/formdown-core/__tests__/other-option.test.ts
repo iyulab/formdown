@@ -103,9 +103,9 @@ describe('Other Option (*) Functionality', () => {
             expect(html).toContain('<option value="USA">USA</option>')
             expect(html).toContain('<option value="Canada">Canada</option>')
             expect(html).toContain('<option value="UK">UK</option>')
-            expect(html).toContain('<option value="_other">Other (please specify)</option>')
+            expect(html).toContain('<option value="">Other (please specify)</option>')
             expect(html).toContain('type="text"')
-            expect(html).toContain('name="country_other"')
+            expect(html).not.toContain('name="country_other"')  // Text input doesn't have name attribute
             expect(html).toContain('class="formdown-other-input"')
             expect(html).toContain('style="display: none;')
         })
@@ -126,9 +126,9 @@ describe('Other Option (*) Functionality', () => {
             expect(html).toContain('type="radio"')
             expect(html).toContain('value="Male"')
             expect(html).toContain('value="Female"')
-            expect(html).toContain('value="_other"')
+            expect(html).toContain('value=""')  // Other radio has empty value initially
             expect(html).toContain('name="gender"')
-            expect(html).toContain('name="gender_other"')
+            expect(html).not.toContain('name="gender_other"')  // Text input doesn't have name attribute
             expect(html).toContain('Other:')
             expect(html).toContain('class="formdown-other-input"')
         })
@@ -150,9 +150,9 @@ describe('Other Option (*) Functionality', () => {
             expect(html).toContain('value="Programming"')
             expect(html).toContain('value="Design"')
             expect(html).toContain('value="Music"')
-            expect(html).toContain('value="_other"')
+            expect(html).toContain('value=""')  // Other checkbox has empty value initially
             expect(html).toContain('name="interests"')
-            expect(html).toContain('name="interests_other"')
+            expect(html).not.toContain('name="interests_other"')  // Text input doesn't have name attribute
             expect(html).toContain('Other:')
             expect(html).toContain('class="formdown-other-input"')
         })
@@ -201,8 +201,8 @@ describe('Other Option (*) Functionality', () => {
             expect(html).toContain('<select')
             expect(html).toContain('required')
             expect(html).toContain('<option value="USA">USA</option>')
-            expect(html).toContain('<option value="_other">Other (please specify)</option>')
-            expect(html).toContain('name="country_other"')
+            expect(html).toContain('<option value="">Other (please specify)</option>')
+            expect(html).not.toContain('name="country_other"')  // Text input doesn't have name
         })
 
         test('should parse and generate radio field with other option', () => {
@@ -215,8 +215,8 @@ describe('Other Option (*) Functionality', () => {
             expect(html).toContain('value="Email"')
             expect(html).toContain('value="SMS"')
             expect(html).toContain('value="Phone"')
-            expect(html).toContain('value="_other"')
-            expect(html).toContain('name="preferences_other"')
+            expect(html).toContain('value=""')  // Other radio has empty value
+            expect(html).not.toContain('name="preferences_other"')  // Text input doesn't have name
         })
 
         test('should parse and generate checkbox field with other option', () => {
@@ -229,8 +229,8 @@ describe('Other Option (*) Functionality', () => {
             expect(html).toContain('value="JavaScript"')
             expect(html).toContain('value="Python"')
             expect(html).toContain('value="Java"')
-            expect(html).toContain('value="_other"')
-            expect(html).toContain('name="skills_other"')
+            expect(html).toContain('value=""')  // Other checkbox has empty value
+            expect(html).not.toContain('name="skills_other"')  // Text input doesn't have name
         })
 
         test('should handle complex form with multiple other options', () => {
@@ -248,10 +248,10 @@ Thank you for your response!`
             expect(html).toContain('<h1>Survey Form</h1>')
             expect(html).toContain('Thank you for your response!')
             
-            // Check all three fields have other options
-            expect(html).toContain('name="country_other"')
-            expect(html).toContain('name="interests_other"')
-            expect(html).toContain('name="contact_method_other"')
+            // Check all three fields have simplified other options (no "_other" names)
+            expect(html).not.toContain('name="country_other"')
+            expect(html).not.toContain('name="interests_other"')
+            expect(html).not.toContain('name="contact_method_other"')
             
             // Check proper field types
             expect(html.match(/<select/g)).toHaveLength(1)

@@ -147,38 +147,8 @@ ${this.generateFieldHTML(field)}
         const formId = `form_multi_${Math.random().toString(36).substr(2, 9)}`
 
         return `
-<form class="formdown-form" role="form" id="${formId}" onsubmit="handleFormdownSubmit(event, this)">
+<form class="formdown-form" role="form" id="${formId}">
 ${fieldsHTML}
-<script>
-if (typeof handleFormdownSubmit === 'undefined') {
-    window.handleFormdownSubmit = function(event, form) {
-        // Handle other option data transformation
-        const otherInputs = form.querySelectorAll('input[name$="_other"]');
-        otherInputs.forEach(function(otherInput) {
-            if (otherInput.value.trim()) {
-                const baseName = otherInput.name.replace('_other', '');
-                const otherRadio = form.querySelector('input[name="' + baseName + '"][value="_other"]');
-                const otherCheckbox = form.querySelector('input[name="' + baseName + '"][value="_other"][type="checkbox"]');
-                const otherSelect = form.querySelector('select[name="' + baseName + '"] option[value="_other"]');
-                
-                if ((otherRadio && otherRadio.checked) || (otherCheckbox && otherCheckbox.checked) || (otherSelect && otherSelect.selected)) {
-                    // Create a hidden input with the base name and other text value
-                    const hiddenInput = document.createElement('input');
-                    hiddenInput.type = 'hidden';
-                    hiddenInput.name = baseName;
-                    hiddenInput.value = otherInput.value;
-                    form.appendChild(hiddenInput);
-                    
-                    // Disable the controls to prevent double submission
-                    if (otherRadio) otherRadio.disabled = true;
-                    if (otherCheckbox) otherCheckbox.disabled = true;
-                    otherInput.disabled = true;
-                }
-            }
-        });
-    };
-}
-</script>
 </form>`
     }
 
@@ -187,34 +157,8 @@ if (typeof handleFormdownSubmit === 'undefined') {
         const formId = `form_${field.name}_${Math.random().toString(36).substr(2, 9)}`
 
         return `
-<form class="formdown-form" role="form" id="${formId}" onsubmit="handleFormdownSubmit(event, this)">
+<form class="formdown-form" role="form" id="${formId}">
 ${fieldHTML}
-<script>
-if (typeof handleFormdownSubmit === 'undefined') {
-    window.handleFormdownSubmit = function(event, form) {
-        // Handle other option data transformation
-        const otherInputs = form.querySelectorAll('input[name$="_other"]');
-        otherInputs.forEach(function(otherInput) {
-            if (otherInput.value.trim()) {
-                const baseName = otherInput.name.replace('_other', '');
-                const otherRadio = form.querySelector('input[name="' + baseName + '"][value="_other"]');
-                if (otherRadio && otherRadio.checked) {
-                    // Create a hidden input with the base name and other text value
-                    const hiddenInput = document.createElement('input');
-                    hiddenInput.type = 'hidden';
-                    hiddenInput.name = baseName;
-                    hiddenInput.value = otherInput.value;
-                    form.appendChild(hiddenInput);
-                    
-                    // Disable the radio and other input to prevent double submission
-                    otherRadio.disabled = true;
-                    otherInput.disabled = true;
-                }
-            }
-        });
-    };
-}
-</script>
 </form>`
     }
 
@@ -313,15 +257,22 @@ ${fieldsHTML}
 
             case 'select':
                 const optionsHTML = options?.map(opt => `<option value="${opt}">${opt}</option>`).join('\n') || ''
-                const otherOptionHTML = allowOther ? `\n        <option value="_other">${this.escapeHtml(field.otherLabel || 'Other')} (please specify)</option>` : ''
-                const otherInputHTML = allowOther ? `\n    <input type="text" id="${fieldId}_other" name="${name}_other" placeholder="Please specify..." style="display: none; margin-top: 8px; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #fff; width: 100%; max-width: 300px;" class="formdown-other-input">` : ''
+                const otherOptionHTML = allowOther ? `\n        <option value="">${this.escapeHtml(field.otherLabel || 'Other')} (please specify)</option>` : ''
+                const otherInputHTML = allowOther ? `\n    <input type="text" id="${fieldId}_other" placeholder="Please specify..." style="display: none; margin-top: 8px; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #fff; width: 100%; max-width: 300px;" class="formdown-other-input">` : ''
                 
                 return `
 <div class="formdown-field">
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <select ${attrString} ${allowOther ? `onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${fieldId}_other') : null; if(otherInput) otherInput.style.display = this.value === '_other' ? 'block' : 'none'"` : ''}>
+    <select ${attrString} ${allowOther ? `onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${fieldId}_other') : null; if(otherInput) { if(this.value === '') { otherInput.style.display = 'block'; otherInput.focus(); } else { otherInput.style.display = 'none'; } }"` : ''}>
         ${optionsHTML}${otherOptionHTML}
-    </select>${otherInputHTML}${generateHelpText()}
+    </select>${otherInputHTML}${allowOther ? `\n    <script>
+        document.getElementById('${fieldId}_other').addEventListener('input', function() {
+            var select = document.getElementById('${fieldId}');
+            if (select && select.value === '') {
+                select.value = this.value;
+            }
+        });
+    </script>` : ''}${generateHelpText()}
 </div>`
 
             case 'radio':
@@ -337,7 +288,7 @@ ${fieldsHTML}
                 const radioInputsHTML = options.map((opt, index) => {
                     const inputId = `${name}_${index}`
                     const isRequired = required && index === 0
-                    const hideOtherOnChange = allowOther ? ` onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherInput) { otherInput.style.display = 'none'; otherInput.name = '${name}_other'; } if(otherRadio) { otherRadio.name = '${name}'; }"` : ''
+                    const hideOtherOnChange = allowOther ? ` onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; if(otherInput) { otherInput.style.display = 'none'; }"` : ''
                     return `
         <label for="${inputId}" class="formdown-option-label">
             <input type="radio" id="${inputId}" name="${name}" value="${opt}" ${isRequired ? 'required' : ''} ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}${hideOtherOnChange}>
@@ -347,9 +298,9 @@ ${fieldsHTML}
                 
                 const otherRadioHTML = allowOther ? `
         <label for="${name}_other_radio" class="formdown-option-label">
-            <input type="radio" id="${name}_other_radio" name="${name}" value="_other" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; if(otherInput) { otherInput.style.display = 'inline-block'; otherInput.focus(); otherInput.name = '${name}'; this.name = '${name}_temp'; }">
+            <input type="radio" id="${name}_other_radio" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; if(otherInput) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value; }">
             <span>${this.escapeHtml(field.otherLabel || 'Other')}:</span>
-            <input type="text" id="${name}_other_input" name="${name}_other" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherRadio) { otherRadio.checked = true; this.name = '${name}'; otherRadio.name = '${name}_temp'; }" oninput="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherRadio) { otherRadio.checked = true; this.name = '${name}'; otherRadio.name = '${name}_temp'; }">
+            <input type="text" id="${name}_other_input" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; }">
         </label>` : ''
 
                 const isVertical = attributes?.layout === 'vertical'
@@ -380,19 +331,18 @@ ${radioInputsHTML}${otherRadioHTML}
                     const checkboxInputsHTML = options.map((opt, index) => {
                         const inputId = `${name}_${index}`
                         const isRequired = required && index === 0
-                        const resetOtherOnChange = allowOther ? ` onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; var otherCheckbox = container ? container.querySelector('#${name}_other_checkbox') : null; if(otherInput && otherCheckbox && !otherCheckbox.checked) { otherInput.name = '${name}_other'; otherInput.style.display = 'none'; }"` : ''
                         return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="checkbox" id="${inputId}" name="${name}" value="${opt}" ${isRequired ? 'required' : ''} ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}${resetOtherOnChange}>
+            <input type="checkbox" id="${inputId}" name="${name}" value="${opt}" ${isRequired ? 'required' : ''} ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
             <span>${opt}</span>
         </label>`
                     }).join('\n')
                     
                     const otherCheckboxHTML = allowOther ? `
         <label for="${name}_other_checkbox" class="formdown-option-label">
-            <input type="checkbox" id="${name}_other_checkbox" name="${name}_temp" value="_other" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; if(otherInput) { if(this.checked) { otherInput.style.display = 'inline-block'; otherInput.focus(); otherInput.name = '${name}'; this.name = '${name}_temp'; } else { otherInput.style.display = 'none'; otherInput.name = '${name}_other'; this.name = '${name}'; } }">
+            <input type="checkbox" id="${name}_other_checkbox" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; if(otherInput) { if(this.checked) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value; } else { otherInput.style.display = 'none'; this.value = ''; } }">
             <span>${this.escapeHtml(field.otherLabel || 'Other')}:</span>
-            <input type="text" id="${name}_other_input" name="${name}_other" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${name}_other_checkbox') : null; if(otherCheckbox) { otherCheckbox.checked = true; this.name = '${name}'; otherCheckbox.name = '${name}_temp'; }" oninput="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${name}_other_checkbox') : null; if(otherCheckbox && otherCheckbox.checked) { this.name = '${name}'; otherCheckbox.name = '${name}_temp'; }">
+            <input type="text" id="${name}_other_input" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${name}_other_checkbox') : null; if(otherCheckbox) { otherCheckbox.checked = true; otherCheckbox.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${name}_other_checkbox') : null; if(otherCheckbox && otherCheckbox.checked) { otherCheckbox.value = this.value; }">
         </label>` : ''
 
                     const isVertical = attributes?.layout === 'vertical'
