@@ -3,7 +3,7 @@
   "version": "0.1.11",
   "private": true,
   "scripts": {
-    "dev": "npm run update:version && next dev",
+    "dev": "npm run update:version && next dev --turbo=false",
     "dev:fresh": "npm run build:packages && npm run dev",
     "build": "npm run clean:publish && npm run update:version && next build",
     "build:static": "npm run clean:publish && npm run update:version && next build",

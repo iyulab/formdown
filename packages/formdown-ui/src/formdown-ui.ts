@@ -20,7 +20,8 @@ export class FormdownUI extends LitElement {
       display: block;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       line-height: 1.5;
-      color: #1f2937;
+      color: var(--theme-text-primary, #1f2937);
+      background: var(--theme-bg-primary, #ffffff);
       max-width: 100%;
       box-sizing: border-box;
       overflow-y: auto;
@@ -47,7 +48,7 @@ export class FormdownUI extends LitElement {
       display: block;
       margin-bottom: 0.5rem;
       font-weight: 500;
-      color: #374151;
+      color: var(--theme-text-primary, #374151);
       font-size: 0.875rem;
       line-height: 1.25;
     }
@@ -56,24 +57,25 @@ export class FormdownUI extends LitElement {
       width: 100%;
       max-width: 100%;
       padding: 0.75rem;
-      border: 1px solid #d1d5db;
+      border: 1px solid var(--theme-border, #d1d5db);
       border-radius: 0.5rem;
       font-size: 1rem;
       font-family: inherit;
       line-height: 1.5;
       transition: all 0.15s ease-in-out;
-      background-color: #ffffff;
+      background-color: var(--theme-bg-primary, #ffffff);
+      color: var(--theme-text-primary, #1f2937);
     }
 
     input:focus, textarea:focus, select:focus {
       outline: none;
-      border-color: #3b82f6;
+      border-color: var(--theme-accent, #3b82f6);
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-      background-color: #ffffff;
+      background-color: var(--theme-bg-primary, #ffffff);
     }
 
     input:hover, textarea:hover, select:hover {
-      border-color: #9ca3af;
+      border-color: var(--theme-text-secondary, #9ca3af);
     }
 
     input[type="radio"], input[type="checkbox"] {
@@ -101,16 +103,17 @@ export class FormdownUI extends LitElement {
     }
 
     fieldset {
-      border: 1px solid #d1d5db;
+      border: 1px solid var(--theme-border, #d1d5db);
       border-radius: 0.5rem;
       padding: 1.25rem;
       margin: 0 0 1.5rem 0;
       max-width: 100%;
+      background-color: var(--theme-bg-primary, #ffffff);
     }
 
     legend {
       font-weight: 600;
-      color: #374151;
+      color: var(--theme-text-primary, #374151);
       padding: 0 0.75rem;
       font-size: 0.875rem;
     }
@@ -129,7 +132,7 @@ export class FormdownUI extends LitElement {
       max-width: 200px;
       padding: 0.125rem 0.25rem;
       border: 1px solid transparent;
-      background-color: rgba(239, 246, 255, 0.6);
+      background-color: var(--theme-bg-secondary, rgba(239, 246, 255, 0.6));
       border-radius: 0.125rem;
       font-style: normal;
       color: inherit;
@@ -148,20 +151,20 @@ export class FormdownUI extends LitElement {
     }
 
     [contenteditable="true"]:not(textarea):hover {
-      background-color: rgba(219, 234, 254, 0.8);
-      border-color: rgba(147, 197, 253, 0.5);
+      background-color: var(--theme-bg-secondary, rgba(219, 234, 254, 0.8));
+      border-color: var(--theme-border, rgba(147, 197, 253, 0.5));
     }
 
     [contenteditable="true"]:not(textarea):focus {
-      background-color: rgba(255, 255, 255, 0.9);
-      border-color: #3b82f6;
+      background-color: var(--theme-bg-primary, rgba(255, 255, 255, 0.9));
+      border-color: var(--theme-accent, #3b82f6);
       box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
-      color: #1e40af;
+      color: var(--theme-accent, #1e40af);
     }
 
     [contenteditable="true"]:not(textarea):empty::before {
       content: attr(data-placeholder);
-      color: #94a3b8;
+      color: var(--theme-text-secondary, #94a3b8);
       font-style: italic;
       opacity: 0.7;
     }
@@ -170,7 +173,7 @@ export class FormdownUI extends LitElement {
     h1, h2, h3, h4, h5, h6 {
       margin-top: 0;
       margin-bottom: 1rem;
-      color: #1f2937;
+      color: var(--theme-text-primary, #1f2937);
       font-weight: 600;
       line-height: 1.25;
     }
@@ -203,7 +206,7 @@ export class FormdownUI extends LitElement {
     p {
       margin-bottom: 1rem;
       line-height: 1.7;
-      color: #4b5563;
+      color: var(--theme-text-secondary, #4b5563);
     }
 
     /* Responsive design */
@@ -223,7 +226,7 @@ export class FormdownUI extends LitElement {
     }
 
     .error {
-      color: #dc2626;
+      color: var(--theme-error, #dc2626);
       font-size: 0.875rem;
       margin-top: 0.5rem;
       display: block;
@@ -231,17 +234,17 @@ export class FormdownUI extends LitElement {
 
     /* Field validation styles */
     .field-error {
-      border-color: #dc2626 !important;
+      border-color: var(--theme-error, #dc2626) !important;
       box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.1) !important;
     }
 
     .field-error:focus {
-      border-color: #dc2626 !important;
+      border-color: var(--theme-error, #dc2626) !important;
       box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
     }
 
     .validation-error-message {
-      color: #dc2626;
+      color: var(--theme-error, #dc2626);
       font-size: 0.75rem;
       margin-top: 0.25rem;
       display: block;
@@ -539,6 +542,9 @@ export class FormdownUI extends LitElement {
 
         // Setup field-specific behaviors
         this.setupFieldSpecificBehaviors(htmlElement)
+      } else if (htmlElement.id && htmlElement.id.includes('_other_input')) {
+        // Handle "other" text inputs that don't have field names but need special handling
+        this.setupOtherInputHandlers(htmlElement)
       }
     })
   }
@@ -584,12 +590,43 @@ export class FormdownUI extends LitElement {
           const checkedValues: string[] = []
           allCheckboxes.forEach(cb => {
             if (cb.checked) {
-              checkedValues.push(cb.value)
+              // For "other" option checkboxes with empty values, use the actual text input value if available
+              if (cb.value === '' && cb.id.includes('_other_checkbox')) {
+                const otherInput = this.shadowRoot?.querySelector(`#${cb.id.replace('_checkbox', '_input')}`) as HTMLInputElement
+                if (otherInput && otherInput.value.trim()) {
+                  checkedValues.push(otherInput.value.trim())
+                }
+              } else if (cb.value !== '') {
+                checkedValues.push(cb.value)
+              }
             }
           })
           this.updateDataReactively(fieldName, checkedValues, element)
           return
         }
+      }
+
+      // For radio button handling
+      if (element instanceof HTMLInputElement && element.type === 'radio') {
+        const allRadios = this.shadowRoot?.querySelectorAll(`input[type="radio"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
+        let selectedValue = ''
+        
+        allRadios.forEach(radio => {
+          if (radio.checked) {
+            // For "other" option radios with empty values, use the actual text input value if available
+            if (radio.value === '' && radio.id.includes('_other_radio')) {
+              const otherInput = this.shadowRoot?.querySelector(`#${radio.id.replace('_radio', '_input')}`) as HTMLInputElement
+              if (otherInput && otherInput.value.trim()) {
+                selectedValue = otherInput.value.trim()
+              }
+            } else {
+              selectedValue = radio.value
+            }
+          }
+        })
+        
+        this.updateDataReactively(fieldName, selectedValue, element)
+        return
       }
 
       const value = this.getFieldValue(element)
@@ -610,6 +647,45 @@ export class FormdownUI extends LitElement {
     if (element.hasAttribute('contenteditable')) {
       this.setupContentEditableBehaviors(element)
     }
+  }
+
+  private setupOtherInputHandlers(element: HTMLElement) {
+    // Extract field name from the input id (remove _other_input suffix)
+    const fieldName = element.id.replace('_other_input', '')
+    
+    const handleOtherInputChange = () => {
+      // Find associated radio or checkbox
+      const otherRadio = this.shadowRoot?.querySelector(`#${fieldName}_other_radio`) as HTMLInputElement
+      const otherCheckbox = this.shadowRoot?.querySelector(`#${fieldName}_other_checkbox`) as HTMLInputElement
+      
+      if (otherRadio) {
+        // For radio buttons, check the "other" radio and trigger field update
+        otherRadio.checked = true
+        this.updateDataReactively(fieldName, (element as HTMLInputElement).value.trim(), element)
+      } else if (otherCheckbox) {
+        // For checkboxes, check the "other" checkbox and trigger field update
+        otherCheckbox.checked = true
+        // Trigger the checkbox group update by calling the handleValueChange for the checkbox
+        const allCheckboxes = this.shadowRoot?.querySelectorAll(`input[type="checkbox"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
+        const checkedValues: string[] = []
+        allCheckboxes.forEach(cb => {
+          if (cb.checked) {
+            if (cb.value === '' && cb.id.includes('_other_checkbox')) {
+              const inputValue = (element as HTMLInputElement).value.trim()
+              if (inputValue) {
+                checkedValues.push(inputValue)
+              }
+            } else if (cb.value !== '') {
+              checkedValues.push(cb.value)
+            }
+          }
+        })
+        this.updateDataReactively(fieldName, checkedValues, element)
+      }
+    }
+    
+    element.addEventListener('input', handleOtherInputChange)
+    element.addEventListener('change', handleOtherInputChange)
   }
 
   private setupContentEditableBehaviors(element: HTMLElement) {
@@ -716,7 +792,27 @@ export class FormdownUI extends LitElement {
         // Handle checkbox logic
         if (Array.isArray(value)) {
           // Checkbox group - check if this element's value is in the array
-          element.checked = value.includes(element.value)
+          const isMatch = value.includes(element.value)
+          element.checked = isMatch
+          
+          // Handle "other" option for checkbox groups
+          if (!isMatch && element.id.includes('_other_checkbox') && element.value === '') {
+            // Check if there are values not among regular options
+            const fieldName = element.name
+            const allCheckboxes = this.shadowRoot?.querySelectorAll(`input[type="checkbox"][name="${fieldName}"]:not([id*="_other_checkbox"])`) as NodeListOf<HTMLInputElement>
+            const regularValues = Array.from(allCheckboxes).map(cb => cb.value).filter(v => v !== '')
+            
+            const otherValues = value.filter(v => !regularValues.includes(v) && v !== '')
+            if (otherValues.length > 0) {
+              // There are "other" values, select the "other" checkbox and set text input
+              element.checked = true
+              const otherInput = this.shadowRoot?.querySelector(`#${element.id.replace('_checkbox', '_input')}`) as HTMLInputElement
+              if (otherInput) {
+                otherInput.value = otherValues.join(', ') // Join multiple "other" values
+                otherInput.style.display = 'inline-block'
+              }
+            }
+          }
         } else if (typeof value === 'boolean') {
           // Single checkbox - use boolean value directly
           element.checked = value
@@ -725,18 +821,72 @@ export class FormdownUI extends LitElement {
           element.checked = Boolean(value) && (value === 'true' || value === element.value)
         }
       } else if (element.type === 'radio') {
-        // Radio button - check if this element's value matches the data value
-        element.checked = element.value === String(value)
+        const stringValue = String(value)
+        // Check if this is the matching radio button
+        const isMatch = element.value === stringValue
+        element.checked = isMatch
+        
+        // Handle "other" option for radio buttons
+        if (!isMatch && element.id.includes('_other_radio') && element.value === '') {
+          // Check if the value is not among regular options
+          const fieldName = element.name
+          const allRadios = this.shadowRoot?.querySelectorAll(`input[type="radio"][name="${fieldName}"]:not([id*="_other_radio"])`) as NodeListOf<HTMLInputElement>
+          const regularValues = Array.from(allRadios).map(r => r.value).filter(v => v !== '')
+          
+          if (stringValue && !regularValues.includes(stringValue)) {
+            // Value is not among regular options, select "other" and set text input
+            element.checked = true
+            const otherInput = this.shadowRoot?.querySelector(`#${element.id.replace('_radio', '_input')}`) as HTMLInputElement
+            if (otherInput) {
+              otherInput.value = stringValue
+              otherInput.style.display = 'inline-block'
+            }
+          }
+        }
       } else {
         // Other input types
         const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
-        if (element.value !== stringValue) {
-          element.value = stringValue
+        
+        // Handle "other" text input fields specially
+        if (element.id.includes('_other_input')) {
+          // This is an "other" text input, only set value if corresponding control is checked
+          const fieldName = element.id.replace('_other_input', '')
+          const otherRadio = this.shadowRoot?.querySelector(`#${fieldName}_other_radio`) as HTMLInputElement
+          const otherCheckbox = this.shadowRoot?.querySelector(`#${fieldName}_other_checkbox`) as HTMLInputElement
+          
+          if ((otherRadio && otherRadio.checked) || (otherCheckbox && otherCheckbox.checked)) {
+            if (element.value !== stringValue) {
+              element.value = stringValue
+            }
+          }
+        } else {
+          if (element.value !== stringValue) {
+            element.value = stringValue
+          }
         }
       }
     } else if (element instanceof HTMLSelectElement) {
       const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
-      if (element.value !== stringValue) {
+      
+      // Check if the value exists as an option
+      const optionExists = Array.from(element.options).some(option => option.value === stringValue)
+      
+      if (optionExists) {
+        element.value = stringValue
+      } else if (stringValue) {
+        // Value doesn't exist as option, check for "other" option
+        const otherOption = Array.from(element.options).find(option => option.value === '')
+        if (otherOption) {
+          // Select the "other" option and set the text input
+          element.value = ''
+          const fieldName = element.name || element.id
+          const otherInput = this.shadowRoot?.querySelector(`#${fieldName}_other`) as HTMLInputElement
+          if (otherInput) {
+            otherInput.value = stringValue
+            otherInput.style.display = 'block'
+          }
+        }
+      } else {
         element.value = stringValue
       }
     } else if (element instanceof HTMLTextAreaElement) {

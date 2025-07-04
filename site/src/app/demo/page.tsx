@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from 'react'
 import Link from 'next/link'
+import ThemeToggle from '@/components/ThemeToggle'
 
 interface CustomElement extends HTMLElement {
     setAttribute(name: string, value: string): void
@@ -17,6 +18,7 @@ interface Sample {
 
 // Static samples list - this would be generated at build time
 const SAMPLES: Sample[] = [
+    { name: 'New Features Demo', filename: 'new-features.fd', description: '🆕 Latest features: custom "other" options, field ordering, and enhanced data handling' },
     { name: 'Minimal', filename: 'minimal.fd', description: 'Basic form with essential fields' },
     { name: 'Contact', filename: 'contact.fd', description: 'Contact form with validation' },
     { name: 'Contact (Shorthand)', filename: 'contact-shorthand.fd', description: 'Contact form using shorthand syntax' },
@@ -42,6 +44,8 @@ const SAMPLES: Sample[] = [
 export default function DemoPage() {
     const [isComponentsLoaded, setIsComponentsLoaded] = useState(false)
     const [formData, setFormData] = useState<Record<string, unknown>>({})
+    const [formSchema, setFormSchema] = useState<Record<string, unknown>>({})
+    const [activeTab, setActiveTab] = useState<'data' | 'schema'>('data')
     const [samples] = useState<Sample[]>(SAMPLES) // Use static samples
     const [selectedSample, setSelectedSample] = useState<Sample | null>(null)
     const [content, setContent] = useState('')
@@ -85,9 +89,9 @@ export default function DemoPage() {
         }
         loadComponents()
 
-        // Set initial sample
+        // Set initial sample to New Features Demo
         if (SAMPLES.length > 0) {
-            setSelectedSample(SAMPLES[0])
+            setSelectedSample(SAMPLES[0]) // This will be the New Features Demo
         }
     }, [])
 
@@ -118,6 +122,18 @@ export default function DemoPage() {
         }
     }
 
+    const generateSchema = async (content: string) => {
+        try {
+            // Import getSchema from @formdown/core
+            const { getSchema } = await import('@formdown/core')
+            const schema = getSchema(content)
+            setFormSchema(schema)
+        } catch (error) {
+            console.error('Error generating schema:', error)
+            setFormSchema({ error: 'Failed to generate schema' })
+        }
+    }
+
     useEffect(() => {
         if (isComponentsLoaded && content && (selectedSample?.filename !== lastLoadedSample)) {
             const editorContainer = document.getElementById("editor-container")
@@ -134,6 +150,13 @@ export default function DemoPage() {
             setLastLoadedSample(selectedSample?.filename || null)
         }
     }, [isComponentsLoaded, content, selectedSample?.filename, lastLoadedSample])
+
+    // Update schema whenever content changes
+    useEffect(() => {
+        if (content) {
+            generateSchema(content)
+        }
+    }, [content])
 
     useEffect(() => {
         if (isComponentsLoaded && content) {
@@ -226,18 +249,18 @@ export default function DemoPage() {
         }
     }, [isComponentsLoaded, content])
 
-    return (<div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
-        <header className="bg-white shadow-sm border-b flex-shrink-0">
+    return (<div className="h-screen bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden">
+        <header className="bg-white dark:bg-gray-800 shadow-sm border-b dark:border-gray-700 flex-shrink-0">
             <div className="px-4 sm:px-6 lg:px-8 py-3">
                 <div className="flex items-center justify-between">
                     <Link href="/" className="flex items-center space-x-2">
                         <img src="/logo.svg" alt="Formdown" className="w-8 h-8" />
-                        <h1 className="text-xl font-bold text-gray-900">Formdown Demo</h1>
+                        <h1 className="text-xl font-bold text-gray-900 dark:text-white">Formdown Demo</h1>
                     </Link>
                     <div className="flex items-center space-x-4">
                         {/* Sample Selector moved to top bar */}
                         <div className="flex items-center space-x-2">
-                            <label htmlFor="sample-select" className="text-sm font-medium text-gray-700">
+                            <label htmlFor="sample-select" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                                 Choose a sample:
                             </label>
                             <select
@@ -247,7 +270,7 @@ export default function DemoPage() {
                                     const sample = samples.find(s => s.filename === e.target.value)
                                     if (sample) setSelectedSample(sample)
                                 }}
-                                className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             >
                                 {samples.map((sample) => (
                                     <option key={sample.filename} value={sample.filename}>
@@ -256,16 +279,17 @@ export default function DemoPage() {
                                 ))}
                             </select>
                         </div>
-                        <Link href="/" className="text-sm font-medium text-gray-700 hover:text-blue-600">
+                        <ThemeToggle />
+                        <Link href="/" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
                             Home
                         </Link>
-                        <Link href="/docs" className="text-sm font-medium text-gray-700 hover:text-blue-600">
+                        <Link href="/docs" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
                             Docs
                         </Link>
                     </div>
                 </div>
                 {selectedSample?.description && (
-                    <p className="mt-1 text-sm text-gray-500">{selectedSample.description}</p>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{selectedSample.description}</p>
                 )}
             </div>
         </header>
@@ -275,21 +299,21 @@ export default function DemoPage() {
             {isLoading && (
                 <div className="text-center py-8">
                     <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                    <p className="mt-2 text-gray-600">Loading sample...</p>
+                    <p className="mt-2 text-gray-600 dark:text-gray-400">Loading sample...</p>
                 </div>
             )}            {!isLoading && (
                 <div className="flex-1 grid grid-cols-1 lg:grid-cols-2 gap-6 min-h-0 overflow-hidden">
                     {/* Editor Panel */}
-                    <div className="bg-white rounded-lg shadow-sm border flex flex-col overflow-hidden">
-                        <div className="border-b px-4 py-3 flex-shrink-0">
-                            <h2 className="text-lg font-semibold text-gray-800">Editor</h2>
-                            <p className="text-sm text-gray-600">Edit the Formdown content</p>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 flex flex-col overflow-hidden">
+                        <div className="border-b dark:border-gray-700 px-4 py-3 flex-shrink-0">
+                            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Editor</h2>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Edit the Formdown content</p>
                         </div>
                         <div className="flex-1 min-h-0 overflow-hidden">
                             {isComponentsLoaded ? (
                                 <div id="editor-container" className="h-full"></div>
                             ) : (
-                                <div className="flex items-center justify-center h-full text-gray-500">
+                                <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
                                     Loading editor...
                                 </div>
                             )}
@@ -297,16 +321,16 @@ export default function DemoPage() {
                     </div>
 
                     {/* Renderer Panel */}
-                    <div className="bg-white rounded-lg shadow-sm border flex flex-col overflow-hidden">
-                        <div className="border-b px-4 py-3 flex-shrink-0">
-                            <h2 className="text-lg font-semibold text-gray-800">Preview</h2>
-                            <p className="text-sm text-gray-600">Live preview of the generated form</p>
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 flex flex-col overflow-hidden">
+                        <div className="border-b dark:border-gray-700 px-4 py-3 flex-shrink-0">
+                            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">Preview</h2>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">Live preview of the generated form</p>
                         </div>
                         <div className="flex-1 min-h-0 overflow-auto">
                             {isComponentsLoaded ? (
                                 <div id="renderer-container" className="h-full p-4"></div>
                             ) : (
-                                <div className="flex items-center justify-center h-full text-gray-500">
+                                <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
                                     Loading renderer...
                                 </div>
                             )}
@@ -315,36 +339,65 @@ export default function DemoPage() {
                 </div>
             )}
 
-            {/* Data Panel - Fixed at bottom of main */}
-            <div className="mt-6 bg-white border border-gray-200 rounded-lg shadow-sm flex flex-col overflow-hidden" style={{ height: '200px' }}>
-                <div className="border-b px-4 py-2 bg-gray-50 rounded-t-lg flex-shrink-0">
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-sm font-semibold text-gray-800">
-                            Data {Object.keys(formData).length > 0 && `(${Object.keys(formData).length} fields)`}
-                        </h3>
+            {/* Data/Schema Panel - Fixed at bottom of main */}
+            <div className="mt-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm flex flex-col overflow-hidden" style={{ height: '200px' }}>
+                <div className="border-b dark:border-gray-700 bg-gray-50 dark:bg-gray-700 rounded-t-lg flex-shrink-0">
+                    <div className="flex">
                         <button
-                            onClick={() => setFormData({})}
-                            className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 rounded transition-colors"
+                            onClick={() => setActiveTab('data')}
+                            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'data'
+                                    ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-800'
+                                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                                }`}
                         >
-                            Clear
+                            Data {Object.keys(formData).length > 0 && `(${Object.keys(formData).length} fields)`}
                         </button>
+                        <button
+                            onClick={() => setActiveTab('schema')}
+                            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'schema'
+                                    ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-800'
+                                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+                                }`}
+                        >
+                            Schema {Object.keys(formSchema).length > 0 && `(${Object.keys(formSchema).length} fields)`}
+                        </button>
+                        <div className="flex-1 flex justify-end items-center px-4">
+                            {activeTab === 'data' && (
+                                <button
+                                    onClick={() => setFormData({})}
+                                    className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 px-2 py-1 rounded transition-colors"
+                                >
+                                    Clear Data
+                                </button>
+                            )}
+                        </div>
                     </div>
                 </div>
                 <div className="p-3 flex-1 min-h-0">
-                    <textarea
-                        value={Object.keys(formData).length > 0 ? JSON.stringify(formData, null, 2) : ''}
-                        onChange={(e) => {
-                            try {
-                                const parsed = JSON.parse(e.target.value)
-                                setFormData(parsed)
-                            } catch {
-                                // Invalid JSON, don't update
-                            }
-                        }}
-                        placeholder="Start typing in the form fields to see real-time data updates..."
-                        className="w-full h-full resize-none border border-gray-200 rounded p-2 text-xs font-mono text-gray-700 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                </div>                </div>
+                    {activeTab === 'data' ? (
+                        <textarea
+                            value={Object.keys(formData).length > 0 ? JSON.stringify(formData, null, 2) : ''}
+                            onChange={(e) => {
+                                try {
+                                    const parsed = JSON.parse(e.target.value)
+                                    setFormData(parsed)
+                                } catch {
+                                    // Invalid JSON, don't update
+                                }
+                            }}
+                            placeholder="Start typing in the form fields to see real-time data updates..."
+                            className="w-full h-full resize-none border border-gray-200 dark:border-gray-600 rounded p-2 text-xs font-mono text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                    ) : (
+                        <textarea
+                            value={Object.keys(formSchema).length > 0 ? JSON.stringify(formSchema, null, 2) : ''}
+                            readOnly
+                            placeholder="Schema will appear here when content is loaded..."
+                            className="w-full h-full resize-none border border-gray-200 dark:border-gray-600 rounded p-2 text-xs font-mono text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 focus:outline-none"
+                        />
+                    )}
+                </div>
+            </div>
         </main>
     </div>
     )

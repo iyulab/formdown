@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import SearchModal from './SearchModal';
+import ThemeToggle from './ThemeToggle';
 
 // Simple SVG icon components
 const ChevronLeftIcon = ({ className }: { className?: string }) => (
@@ -59,41 +60,42 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
                 setIsSearchOpen(true);
             }
         };
-        
+
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, []);
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-white dark:bg-gray-900">
             {/* Header */}
-            <header className="border-b border-gray-200 bg-white sticky top-0 z-50">
+            <header className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-6 py-4">
                     <nav className="flex items-center justify-between">
                         <div className="flex items-center space-x-6">
                             <Link href="/" className="flex items-center space-x-2">
                                 <img src="/logo.svg" alt="Formdown" className="w-8 h-8" />
-                                <span className="text-xl font-semibold text-gray-900">Formdown</span>
+                                <span className="text-xl font-semibold text-gray-900 dark:text-white">Formdown</span>
                             </Link>
-                            <Link href="/docs" className="text-sm font-medium text-gray-700 hover:text-blue-600">
+                            <Link href="/docs" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
                                 Docs
                             </Link>
                         </div>
                         <div className="flex items-center space-x-4">
                             <button
                                 onClick={() => setIsSearchOpen(true)}
-                                className="flex items-center space-x-2 px-3 py-1.5 text-sm text-gray-500 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                                className="flex items-center space-x-2 px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md transition-colors"
                             >
                                 <SearchIcon className="w-4 h-4" />
                                 <span className="hidden sm:inline">Search</span>
                                 <span className="hidden sm:inline text-xs">
-                                    <kbd className="px-1 py-0.5 bg-white border border-gray-300 rounded text-xs">⌘K</kbd>
+                                    <kbd className="px-1 py-0.5 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-xs">⌘K</kbd>
                                 </span>
                             </button>
-                            <Link href="/demo" className="text-sm font-medium text-gray-700 hover:text-blue-600">
+                            <ThemeToggle />
+                            <Link href="/demo" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
                                 Demo
                             </Link>
-                            <Link href="/" className="text-sm font-medium text-gray-700 hover:text-blue-600">
+                            <Link href="/" className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400">
                                 Home
                             </Link>
                         </div>
@@ -104,28 +106,28 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
             <div className="max-w-7xl mx-auto">
                 <div className="lg:flex">
                     {/* Sidebar Navigation - Hidden on mobile */}
-                    <aside className="hidden lg:block w-64 flex-shrink-0 border-r border-gray-200 bg-gray-50 fixed top-16 left-0 h-screen overflow-y-auto z-40">
+                    <aside className="hidden lg:block w-64 flex-shrink-0 border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 fixed top-16 left-0 h-screen overflow-y-auto z-40">
                         <div className="p-6">
                             {/* Search button in sidebar */}
                             <button
                                 onClick={() => setIsSearchOpen(true)}
-                                className="w-full flex items-center space-x-3 px-3 py-2 mb-4 text-sm text-gray-500 bg-white border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
+                                className="w-full flex items-center space-x-3 px-3 py-2 mb-4 text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
                             >
                                 <SearchIcon className="w-4 h-4" />
                                 <span>Search docs</span>
                                 <span className="ml-auto text-xs">
-                                    <kbd className="px-1 py-0.5 bg-gray-100 border border-gray-300 rounded text-xs">⌘K</kbd>
+                                    <kbd className="px-1 py-0.5 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-xs">⌘K</kbd>
                                 </span>
                             </button>
-                            
+
                             <nav className="space-y-1">
                                 {docItems.map((item) => (
                                     <Link
                                         key={item.slug}
                                         href={item.slug === 'index' ? '/docs' : `/docs/${item.slug}`}
                                         className={`block px-3 py-2 text-sm font-medium rounded-md transition-colors ${currentSlug === item.slug
-                                            ? 'bg-blue-100 text-blue-700'
-                                            : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
+                                            ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
+                                            : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                                             }`}
                                     >
                                         {item.title}
@@ -136,7 +138,7 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
                     </aside>
 
                     {/* Mobile Navigation */}
-                    <div className="lg:hidden mb-6 border-b border-gray-200">
+                    <div className="lg:hidden mb-6 border-b border-gray-200 dark:border-gray-700">
                         <div className="p-4">
                             <div className="grid grid-cols-2 gap-2">
                                 {docItems.map((item) => (
@@ -144,8 +146,8 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
                                         key={item.slug}
                                         href={item.slug === 'index' ? '/docs' : `/docs/${item.slug}`}
                                         className={`px-3 py-2 text-sm font-medium rounded-md text-center transition-colors ${currentSlug === item.slug
-                                            ? 'bg-blue-100 text-blue-700'
-                                            : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100 border border-gray-200'
+                                            ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300'
+                                            : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600'
                                             }`}
                                     >
                                         {item.title}
@@ -162,12 +164,12 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
 
                             {/* Navigation buttons */}
                             {(prevDoc || nextDoc) && (
-                                <div className="mt-12 pt-8 border-t border-gray-200 flex justify-between">
+                                <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex justify-between">
                                     <div>
                                         {prevDoc && (
                                             <Link
                                                 href={`/docs/${prevDoc.slug}`}
-                                                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 hover:text-blue-600"
+                                                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
                                             >
                                                 <ChevronLeftIcon className="w-4 h-4 mr-2" />
                                                 {prevDoc.title}
@@ -178,7 +180,7 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
                                         {nextDoc && (
                                             <Link
                                                 href={`/docs/${nextDoc.slug}`}
-                                                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 hover:text-blue-600"
+                                                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
                                             >
                                                 {nextDoc.title}
                                                 <ChevronRightIcon className="w-4 h-4 ml-2" />
@@ -191,7 +193,7 @@ export default function DocsLayout({ children, currentSlug }: DocsLayoutProps) {
                     </main>
                 </div>
             </div>
-            
+
             {/* Search Modal */}
             <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
         </div>

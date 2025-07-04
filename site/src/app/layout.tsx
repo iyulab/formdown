@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from '@/contexts/ThemeContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -70,9 +71,6 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    google: 'your-google-verification-code', // Replace with actual verification code
-  },
 };
 
 export default function RootLayout({
@@ -106,21 +104,28 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-XP031KBMJE"></script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-XP031KBMJE');
+              (function() {
+                try {
+                  const savedTheme = localStorage.getItem('formdown-theme');
+                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+                  
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.body.classList.add('dark');
+                  }
+                } catch (e) {
+                  // Silently fail
+                }
+              })();
             `,
           }}
         />
-
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -131,7 +136,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

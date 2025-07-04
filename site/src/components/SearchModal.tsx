@@ -209,7 +209,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
         searchTerms.forEach(term => {
             const regex = new RegExp(`(${term})`, 'gi');
-            highlightedText = highlightedText.replace(regex, '<mark class="bg-yellow-200 px-1 rounded">$1</mark>');
+            highlightedText = highlightedText.replace(regex, '<mark class="bg-yellow-200 dark:bg-yellow-600 px-1 rounded">$1</mark>');
         });
 
         return highlightedText;
@@ -219,27 +219,27 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
         <div className="fixed inset-0 z-50 overflow-y-auto">
             {/* Backdrop */}
             <div
-                className="fixed inset-0 bg-opacity-50 backdrop-blur-sm transition-opacity"
+                className="fixed inset-0 bg-black bg-opacity-50 dark:bg-opacity-70 backdrop-blur-sm transition-opacity"
                 onClick={onClose}
             />
 
             {/* Modal */}
             <div className="flex min-h-screen items-start justify-center p-4 pt-[10vh]">
-                <div className="relative w-full max-w-2xl bg-white rounded-xl shadow-2xl">
+                <div className="relative w-full max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow-2xl">
                     {/* Header */}
-                    <div className="flex items-center border-b border-gray-200 px-4">
-                        <SearchIcon className="w-5 h-5 text-gray-400 mr-3" />
+                    <div className="flex items-center border-b border-gray-200 dark:border-gray-700 px-4">
+                        <SearchIcon className="w-5 h-5 text-gray-400 dark:text-gray-500 mr-3" />
                         <input
                             ref={inputRef}
                             type="text"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             placeholder="Search documentation..."
-                            className="flex-1 py-4 text-lg outline-none placeholder-gray-400"
+                            className="flex-1 py-4 text-lg outline-none placeholder-gray-400 dark:placeholder-gray-500 bg-transparent text-gray-900 dark:text-white"
                         />
                         <button
                             onClick={onClose}
-                            className="ml-3 p-2 text-gray-400 hover:text-gray-600 rounded-md"
+                            className="ml-3 p-2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 rounded-md"
                         >
                             <XIcon className="w-5 h-5" />
                         </button>
@@ -254,26 +254,26 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                         key={result.slug}
                                         href={result.slug === 'index' ? '/docs' : `/docs/${result.slug}`}
                                         onClick={onClose}
-                                        className={`flex items-start px-4 py-3 hover:bg-gray-50 transition-colors ${index === selectedIndex ? 'bg-blue-50 border-r-2 border-blue-500' : ''
+                                        className={`flex items-start px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${index === selectedIndex ? 'bg-blue-50 dark:bg-blue-900/50 border-r-2 border-blue-500' : ''
                                             }`}
                                     >
-                                        <FileIcon className="w-5 h-5 text-gray-400 mr-3 mt-0.5 flex-shrink-0" />
+                                        <FileIcon className="w-5 h-5 text-gray-400 dark:text-gray-500 mr-3 mt-0.5 flex-shrink-0" />
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center space-x-2 mb-1">
                                                 <h3
-                                                    className="font-medium text-gray-900"
+                                                    className="font-medium text-gray-900 dark:text-white"
                                                     dangerouslySetInnerHTML={{
                                                         __html: highlightText(result.title, query)
                                                     }}
                                                 />
                                                 {result.section && (
-                                                    <span className="px-2 py-1 text-xs font-medium text-blue-600 bg-blue-100 rounded-full">
+                                                    <span className="px-2 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/50 rounded-full">
                                                         {result.section}
                                                     </span>
                                                 )}
                                             </div>
                                             <p
-                                                className="text-sm text-gray-600 line-clamp-2"
+                                                className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2"
                                                 dangerouslySetInnerHTML={{
                                                     __html: highlightText(result.content, query)
                                                 }}
@@ -283,31 +283,31 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
                                 ))}
                             </div>
                         ) : query.trim() ? (
-                            <div className="px-4 py-8 text-center text-gray-500">
-                                <SearchIcon className="w-8 h-8 mx-auto mb-3 text-gray-300" />
+                            <div className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                                <SearchIcon className="w-8 h-8 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
                                 <p>No results found for &quot;{query}&quot;</p>
                                 <p className="text-sm mt-1">Try different keywords or check spelling</p>
                             </div>
                         ) : (
-                            <div className="px-4 py-8 text-center text-gray-500">
-                                <SearchIcon className="w-8 h-8 mx-auto mb-3 text-gray-300" />
+                            <div className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+                                <SearchIcon className="w-8 h-8 mx-auto mb-3 text-gray-300 dark:text-gray-600" />
                                 <p>Start typing to search documentation</p>
                                 <div className="mt-4 text-sm space-y-1">
-                                    <p><kbd className="px-2 py-1 text-xs bg-gray-100 rounded">↑↓</kbd> Navigate</p>
-                                    <p><kbd className="px-2 py-1 text-xs bg-gray-100 rounded">Enter</kbd> Select</p>
-                                    <p><kbd className="px-2 py-1 text-xs bg-gray-100 rounded">Esc</kbd> Close</p>
+                                    <p><kbd className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded">↑↓</kbd> Navigate</p>
+                                    <p><kbd className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded">Enter</kbd> Select</p>
+                                    <p><kbd className="px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 rounded">Esc</kbd> Close</p>
                                 </div>
                             </div>
                         )}
                     </div>
 
                     {/* Footer */}
-                    <div className="border-t border-gray-100 px-4 py-3 bg-gray-50 rounded-b-xl">
-                        <div className="flex items-center justify-between text-xs text-gray-500">
+                    <div className="border-t border-gray-100 dark:border-gray-700 px-4 py-3 bg-gray-50 dark:bg-gray-700 rounded-b-xl">
+                        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
                             <div className="flex items-center space-x-4">
                                 <span className="flex items-center">
-                                    <kbd className="px-1.5 py-0.5 bg-white border border-gray-200 rounded mr-1">⌘</kbd>
-                                    <kbd className="px-1.5 py-0.5 bg-white border border-gray-200 rounded">K</kbd>
+                                    <kbd className="px-1.5 py-0.5 bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded mr-1">⌘</kbd>
+                                    <kbd className="px-1.5 py-0.5 bg-white dark:bg-gray-600 border border-gray-200 dark:border-gray-500 rounded">K</kbd>
                                     <span className="ml-1">to search</span>
                                 </span>
                             </div>

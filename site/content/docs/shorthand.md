@@ -117,11 +117,36 @@ Add `*` to allow custom user input for any predefined option that might not cove
 @country{USA,Canada,UK,*}: s[] # Select with "Other" option
 ```
 
-When `*` is included:
-- ✅ Adds "Other (please specify)" option automatically
-- ✅ Shows text input when "Other" is selected
-- ✅ Creates `fieldname` and `fieldname_other` form fields
+**Custom "Other" Labels:**
+Use `*(Custom Label)` to personalize the "other" option text:
+
+```formdown
+@source{Website,Social Media,Friend,*(Please specify)}: r[]
+@interests{Tech,Sports,Music,*(Custom Interest)}: c[]
+@country{USA,Canada,UK,*(Other Country)}: s[]
+```
+
+When `*` or `*(label)` is included:
+- ✅ Adds "Other (please specify)" or custom label option
+- ✅ Shows text input when "Other" is selected  
+- ✅ **NEW**: User input becomes the field value directly (not `_other` prefix)
+- ✅ **NEW**: Custom labels replace default "Other:" text
 - ✅ Enables `allowOther: true` in field schema
+
+**Data Output:**
+When user selects "other" and enters "Custom Value", the form data is:
+```json
+{
+  "field_name": "Custom Value"
+}
+```
+Instead of the old format:
+```json
+{
+  "field_name": "_other",
+  "field_name_other": "Custom Value"  
+}
+```
 
 #### Text Fields → Validation Pattern
 

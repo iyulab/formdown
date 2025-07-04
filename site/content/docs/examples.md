@@ -1,5 +1,61 @@
 # Examples
 
+Explore practical examples demonstrating Formdown's powerful features, including the latest smart field ordering and custom "other" options.
+
+## 🆕 New Features Showcase
+
+This example demonstrates smart field ordering and custom "other" labels:
+
+```formdown
+# Event Registration
+
+Welcome to our developer conference! Please fill out your registration details.
+
+## Personal Information
+
+@name(Full Name): [text required]
+@email(Email Address): [email required]
+
+Your information will be kept confidential.
+
+## Professional Background
+
+What's your primary role?
+
+@role{Developer,Designer,Manager,Student,*(Your Role)}: r[required]
+
+What technologies interest you most?
+
+@interests{Frontend,Backend,Mobile,AI/ML,DevOps,*(Custom Interest)}: c[]
+
+## Session Preferences
+
+Which track would you like to attend?
+
+@track{Technical Deep Dives,Career Development,Industry Trends,*(Preferred Track)}: r[required]
+
+How would you rate your experience level?
+
+@experience{Beginner,Intermediate,Advanced,*(Experience Level)}: r[]
+
+## Additional Information
+
+Any dietary restrictions or special requirements?
+
+@dietary{None,Vegetarian,Vegan,Gluten-Free,Allergies,*(Special Requirement)}: c[]
+
+Thank you for registering! We'll send confirmation details to your email.
+
+@newsletter: [checkbox] Subscribe to our newsletter for updates
+@submit: [submit label="Complete Registration"]
+```
+
+**Key features demonstrated:**
+- ✅ Fields maintain exact markdown positions
+- ✅ Custom "other" labels like `*(Your Role)` and `*(Custom Interest)`
+- ✅ Clean data output: `{"role": "Product Manager"}` instead of `{"role": "_other", "role_other": "Product Manager"}`
+- ✅ Mixed content and form fields create natural flow
+
 ## Basic Contact Form
 
 ```formdown
@@ -7,13 +63,16 @@
 
 @name(Full Name): [text required placeholder="Enter your full name"]
 @email(Email Address): [email required placeholder="your@email.com"]
-@subject(Subject): [select required]
-  - General Inquiry
-  - Support Request
-  - Feature Request
-  - Bug Report
+
+@subject{General Inquiry,Support Request,Feature Request,Bug Report,*(Other Topic)}: s[required]
+
+Please describe your inquiry:
 
 @message(Message): [textarea required rows=5 placeholder="Tell us how we can help..."]
+
+How did you hear about us?
+
+@source{Website,Search Engine,Social Media,Friend,*(Please specify)}: r[]
 
 @submit_btn: [submit label="Send Message"]
 ```

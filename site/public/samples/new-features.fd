@@ -1,0 +1,44 @@
+# Formdown New Features Demo
+
+This demo showcases the latest features in Formdown: smart field ordering, custom "other" options, and enhanced form controls.
+
+## Personal Information
+
+First, let's collect some basic information:
+
+@name(Full Name)*: [placeholder="Enter your full name"]
+@email(Email Address)*: @[placeholder="your.email@example.com"]
+
+Notice how these fields appear exactly where they are defined in the markdown!
+
+## Contact Preferences
+
+Now for the exciting part - custom "other" options:
+
+@source(How did you hear about us?)*{Website,Social Media,Friend,*(Please specify)}: r[]
+
+Try selecting the last option - it will show "Please specify:" instead of "Other:"!
+
+@interests{Tech News,Product Updates,Events,*(Custom Topic)}: c[]
+@contact_method{Email,Phone,SMS,*(Preferred Method)}: r[]
+
+Each field maintains its position and uses custom labels for the "other" option.
+
+## Advanced Features
+
+@priority{Low,Medium,High,*(Priority Level)}: r[]
+
+When you select "Priority Level" and enter text, the form data will show:
+`{"priority": "your_text"}` instead of `{"priority": "_other", "priority_other": "your_text"}`
+
+## Mixed Content Example
+
+This text appears between form fields, demonstrating perfect field ordering preservation.
+
+@feedback: T4[placeholder="Share your thoughts about these new features..."]
+
+Fields respect their markdown position completely!
+
+@newsletter(Subscribe to updates): c[]
+
+Thank you for trying out Formdown's new features!
