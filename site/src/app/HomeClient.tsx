@@ -20,7 +20,6 @@ export default function HomeClient() {
                     await new Promise((resolve) => setTimeout(resolve, 100));
                     setIsComponentsLoaded(true);
                 } catch (error) {
-                    // eslint-disable-next-line no-console
                     console.error("Failed to load components:", error);
                 }
             }

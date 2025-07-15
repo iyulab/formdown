@@ -1,0 +1,574 @@
+1:"$Sreact.fragment"
+2:I[7740,["177","static/chunks/app/layout-7b1c55d5b08727df.js"],"ThemeProvider"]
+3:I[7555,[],""]
+4:I[1901,["874","static/chunks/874-994f48b66e83c627.js","39","static/chunks/app/error-7fbbcffb8614ab2c.js"],"default"]
+5:I[1295,[],""]
+6:I[6874,["874","static/chunks/874-994f48b66e83c627.js","345","static/chunks/app/not-found-b14baa73986bd718.js"],""]
+7:I[9243,["499","static/chunks/app/docs/layout-9c00b23166a276ed.js"],""]
+9:I[9665,[],"OutletBoundary"]
+c:I[4911,[],"AsyncMetadataOutlet"]
+e:I[9665,[],"ViewportBoundary"]
+10:I[9665,[],"MetadataBoundary"]
+12:I[6614,[],""]
+:HL["/_next/static/css/fade14fe1c19a32b.css","style"]
+0:{"P":null,"b":"2Nv0mVKflrP_upiaFZ3_I","p":"","c":["","docs","extensions",""],"i":false,"f":[[["",{"children":["docs",{"children":[["slug","extensions","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/fade14fe1c19a32b.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              (function() {\n                try {\n                  const savedTheme = localStorage.getItem('formdown-theme');\n                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');\n                  \n                  if (theme === 'dark') {\n                    document.documentElement.classList.add('dark');\n                    document.body.classList.add('dark');\n                  }\n                } catch (e) {\n                  // Silently fail\n                }\n              })();\n            "}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Formdown\",\"description\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Web Browser\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"creator\":{\"@type\":\"Organization\",\"name\":\"iyulab\",\"url\":\"https://github.com/iyulab\"},\"url\":\"https://formdown.dev\",\"downloadUrl\":\"https://github.com/iyulab/formdown\",\"sameAs\":[\"https://github.com/iyulab/formdown\",\"https://www.npmjs.com/package/@formdown/core\"]}"}}],["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}]]}],["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","div",null,{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center max-w-md mx-auto px-4","children":[["$","h1",null,{"className":"text-6xl font-bold text-blue-600 mb-4","children":"404"}],["$","h2",null,{"className":"text-2xl font-bold text-gray-900 mb-4","children":"Page Not Found"}],["$","p",null,{"className":"text-gray-600 mb-8","children":"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."}],["$","div",null,{"className":"space-x-4","children":[["$","$L6",null,{"href":"/","className":"bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block","children":"Go Home"}],["$","$L6",null,{"href":"/docs","className":"bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block","children":"View Docs"}]]}]]}]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}]]}],{"children":["docs",["$","$1","c",{"children":[null,["$","div",null,{"className":"docs-layout","children":[["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]]}],{"children":[["slug","extensions","d"],["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L8",null,["$","$L9",null,{"children":["$La","$Lb",["$","$Lc",null,{"promise":"$@d"}]]}]]}],{},null,false]},null,false]},null,false]},[["$","div","l",{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center","children":[["$","div",null,{"className":"inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"}],["$","p",null,{"className":"text-gray-600","children":"Loading Formdown..."}]]}]}],[],[]],false],["$","$1","h",{"children":[null,["$","$1","xR30zc4YqjofEiIH7wzjFv",{"children":[["$","$Le",null,{"children":"$Lf"}],null]}],["$","$L10",null,{"children":"$L11"}]]}],false]],"m":"$undefined","G":["$12","$undefined"],"s":false,"S":true}
+13:"$Sreact.suspense"
+14:I[4911,[],"AsyncMetadata"]
+16:I[984,["874","static/chunks/874-994f48b66e83c627.js","375","static/chunks/375-811e0189f6b673fa.js","508","static/chunks/app/docs/%5Bslug%5D/page-1286a5c53c96b553.js"],"default"]
+11:["$","div",null,{"hidden":true,"children":["$","$13",null,{"fallback":null,"children":["$","$L14",null,{"promise":"$@15"}]}]}]
+17:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-218:T13ec6,<p>The Formdown extension system provides a powerful plugin architecture that allows developers to customize and extend form parsing, generation, and validation capabilities. Built with TypeScript for full type safety, the extension system offers hooks, plugins, and events for maximum flexibility.</p>
+<h2>Overview</h2>
+<p>The extension system consists of four main components:</p>
+<ul>
+<li><strong>HookManager</strong>: Manages execution of hooks at various points in the parsing/generation pipeline</li>
+<li><strong>PluginManager</strong>: Handles plugin registration, lifecycle, and error management</li>
+<li><strong>EventEmitter</strong>: Provides event-driven communication between plugins</li>
+<li><strong>ExtensionManager</strong>: Unified interface for managing all extension functionality</li>
+</ul>
+<h2>Quick Start</h2>
+<h3>Basic Plugin Registration</h3>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">import</span> <span class="token punctuation">{</span> ExtensionManager <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span>
+
+<span class="token keyword">const</span> extensionManager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ExtensionManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment">// Register a simple plugin</span>
+extensionManager<span class="token punctuation">.</span><span class="token function">registerPlugin</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  metadata<span class="token operator">:</span> <span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'my-theme-plugin'</span><span class="token punctuation">,</span>
+    version<span class="token operator">:</span> <span class="token string">'1.0.0'</span><span class="token punctuation">,</span>
+    description<span class="token operator">:</span> <span class="token string">'Custom styling for forms'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  hooks<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'css-class'</span><span class="token punctuation">,</span>
+    priority<span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token comment">// Add custom CSS classes</span>
+      context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>attributes <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token operator">...</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>attributes<span class="token punctuation">,</span>
+        className<span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">custom-field </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span><span class="token keyword">type</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">-field</span><span class="token template-punctuation string">`</span></span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span> context
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre><h3>Using Extension Manager with Core Functions</h3>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">import</span> <span class="token punctuation">{</span> parseForm<span class="token punctuation">,</span> generateHTML<span class="token punctuation">,</span> ExtensionManager <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span>
+
+<span class="token keyword">const</span> extensionManager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ExtensionManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment">// Register your plugins here</span>
+extensionManager<span class="token punctuation">.</span><span class="token function">registerPlugin</span><span class="token punctuation">(</span>myBootstrapPlugin<span class="token punctuation">)</span>
+extensionManager<span class="token punctuation">.</span><span class="token function">registerPlugin</span><span class="token punctuation">(</span>myValidationPlugin<span class="token punctuation">)</span>
+
+<span class="token comment">// Parse with extensions</span>
+<span class="token keyword">const</span> source <span class="token operator">=</span> <span class="token string">'@name: [text required]\n@email: [email required]'</span>
+<span class="token keyword">const</span> ast <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">parseForm</span><span class="token punctuation">(</span>source<span class="token punctuation">,</span> <span class="token punctuation">{</span> extensionManager <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// Generate with extensions</span>
+<span class="token keyword">const</span> html <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">generateHTML</span><span class="token punctuation">(</span>ast<span class="token punctuation">,</span> <span class="token punctuation">{</span> extensionManager <span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre><h2>Hook Types</h2>
+<p>The extension system provides 14 different hook types for maximum customization:</p>
+<h3>Parser Hooks</h3>
+<h4><code>pre-parse</code></h4>
+<p>Executed before parsing begins. Use to transform or preprocess the source content.</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'pre-parse'</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token operator">:</span> <span class="token punctuation">{</span> content<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Transform source before parsing</span>
+    context<span class="token punctuation">.</span>content <span class="token operator">=</span> context<span class="token punctuation">.</span>content<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">old_syntax</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">'new_syntax'</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> context
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><h4><code>post-parse</code></h4>
+<p>Executed after parsing is complete. Use to modify the parsed result.</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'post-parse'</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token operator">:</span> <span class="token punctuation">{</span> parseResult<span class="token operator">:</span> ParseResult <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Modify parsed fields</span>
+    context<span class="token punctuation">.</span>parseResult<span class="token punctuation">.</span>fields<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>field <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>field<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">'email'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        field<span class="token punctuation">.</span>attributes<span class="token punctuation">.</span>autocomplete <span class="token operator">=</span> <span class="token string">'email'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> context
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><h4><code>field-parse</code></h4>
+<p>Executed during individual field parsing. Use for custom field type parsing.</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'field-parse'</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token operator">:</span> <span class="token punctuation">{</span> field<span class="token operator">:</span> Field<span class="token punctuation">,</span> content<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Custom field processing</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">'credit-card'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>attributes<span class="token punctuation">.</span>pattern <span class="token operator">=</span> <span class="token string">'[0-9\\s]{13,19}'</span>
+      context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>attributes<span class="token punctuation">.</span>inputmode <span class="token operator">=</span> <span class="token string">'numeric'</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> context
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><h3>Generator Hooks</h3>
+<h4><code>pre-generate</code></h4>
+<p>Executed before HTML generation begins.</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'pre-generate'</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token operator">:</span> <span class="token punctuation">{</span> parseResult<span class="token operator">:</span> ParseResult <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Prepare for generation</span>
+    <span class="token keyword">return</span> context
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><h4><code>post-generate</code></h4>
+<p>Executed after HTML generation is complete.</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'post-generate'</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token operator">:</span> <span class="token punctuation">{</span> html<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">,</span> parseResult<span class="token operator">:</span> ParseResult <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Post-process generated HTML</span>
+    context<span class="token punctuation">.</span>html <span class="token operator">=</span> context<span class="token punctuation">.</span>html<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">&lt;form</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">,</span> <span class="token string">'&lt;form novalidate'</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> context
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><h4><code>template-render</code></h4>
+<p>Customize field template rendering.</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'template-render'</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token operator">:</span> <span class="token punctuation">{</span> field<span class="token operator">:</span> Field<span class="token punctuation">,</span> template<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Custom template logic</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">'text'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      context<span class="token punctuation">.</span>template <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">&lt;div class="custom-wrapper"></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>context<span class="token punctuation">.</span>template<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&lt;/div></span><span class="token template-punctuation string">`</span></span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> context
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><h3>Validation Hooks</h3>
+<h4><code>field-validate</code></h4>
+<p>Custom field validation logic.</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'field-validate'</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token operator">:</span> <span class="token punctuation">{</span> field<span class="token operator">:</span> Field<span class="token punctuation">,</span> value<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">,</span> isValid<span class="token operator">:</span> <span class="token builtin">boolean</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Custom validation</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>name <span class="token operator">===</span> <span class="token string">'username'</span> <span class="token operator">&amp;&amp;</span> context<span class="token punctuation">.</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> isAvailable <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">checkUsernameAvailability</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span>value<span class="token punctuation">)</span>
+      context<span class="token punctuation">.</span>isValid <span class="token operator">=</span> context<span class="token punctuation">.</span>isValid <span class="token operator">&amp;&amp;</span> isAvailable
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> context
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><h4><code>validation-rule</code></h4>
+<p>Add custom validation rules.</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'validation-rule'</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token operator">:</span> <span class="token punctuation">{</span> field<span class="token operator">:</span> Field<span class="token punctuation">,</span> rules<span class="token operator">:</span> ValidationRule<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Add custom rules</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">'password'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      context<span class="token punctuation">.</span>rules<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        type<span class="token operator">:</span> <span class="token string">'password-strength'</span><span class="token punctuation">,</span>
+        message<span class="token operator">:</span> <span class="token string">'Password must contain uppercase, lowercase, number and symbol'</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> context
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><h3>Styling Hooks</h3>
+<h4><code>css-class</code></h4>
+<p>Customize CSS class assignment.</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'css-class'</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token operator">:</span> <span class="token punctuation">{</span> field<span class="token operator">:</span> Field <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Add framework-specific classes</span>
+    <span class="token keyword">const</span> baseClasses <span class="token operator">=</span> <span class="token string">'form-control'</span>
+    <span class="token keyword">const</span> typeClasses <span class="token operator">=</span> <span class="token punctuation">{</span>
+      <span class="token string-property property">'text'</span><span class="token operator">:</span> <span class="token string">'form-control-text'</span><span class="token punctuation">,</span>
+      <span class="token string-property property">'email'</span><span class="token operator">:</span> <span class="token string">'form-control-email'</span><span class="token punctuation">,</span>
+      <span class="token string-property property">'select'</span><span class="token operator">:</span> <span class="token string">'form-select'</span>
+    <span class="token punctuation">}</span>
+    
+    context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>attributes<span class="token punctuation">.</span>className <span class="token operator">=</span> 
+      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>baseClasses<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>typeClasses<span class="token punctuation">[</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>type<span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token string">''</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span>
+    
+    <span class="token keyword">return</span> context
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><h4><code>attribute-inject</code></h4>
+<p>Inject custom HTML attributes.</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'attribute-inject'</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token operator">:</span> <span class="token punctuation">{</span> field<span class="token operator">:</span> Field <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Add accessibility attributes</span>
+    context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>attributes <span class="token operator">=</span> <span class="token punctuation">{</span>
+      <span class="token operator">...</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>attributes<span class="token punctuation">,</span>
+      <span class="token string-property property">'aria-label'</span><span class="token operator">:</span> context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>label<span class="token punctuation">,</span>
+      <span class="token string-property property">'aria-required'</span><span class="token operator">:</span> context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>required <span class="token operator">?</span> <span class="token string">'true'</span> <span class="token operator">:</span> <span class="token string">'false'</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">return</span> context
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><h3>Utility Hooks</h3>
+<h4><code>accessibility</code></h4>
+<p>Enhance accessibility features.</p>
+<h4><code>performance</code></h4>
+<p>Performance optimizations.</p>
+<h4><code>debug</code></h4>
+<p>Debug information injection.</p>
+<h4><code>error-format</code></h4>
+<p>Custom error message formatting.</p>
+<h2>Plugin Types</h2>
+<h3>Field Type Plugins</h3>
+<p>Create custom field types with complete parsing and rendering logic:</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">const</span> creditCardPlugin<span class="token operator">:</span> Plugin <span class="token operator">=</span> <span class="token punctuation">{</span>
+  metadata<span class="token operator">:</span> <span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'credit-card-plugin'</span><span class="token punctuation">,</span>
+    version<span class="token operator">:</span> <span class="token string">'1.0.0'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  fieldTypes<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    type<span class="token operator">:</span> <span class="token string">'credit-card'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">parser</span><span class="token operator">:</span> <span class="token punctuation">(</span>content<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> match <span class="token operator">=</span> content<span class="token punctuation">.</span><span class="token function">match</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">@(\w+):\s*\[credit-card\](.*)</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">)</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>match<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span>
+      
+      <span class="token keyword">return</span> <span class="token punctuation">{</span>
+        name<span class="token operator">:</span> match<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        type<span class="token operator">:</span> <span class="token string">'credit-card'</span><span class="token punctuation">,</span>
+        label<span class="token operator">:</span> <span class="token string">'Credit Card Number'</span><span class="token punctuation">,</span>
+        attributes<span class="token operator">:</span> <span class="token punctuation">{</span>
+          pattern<span class="token operator">:</span> <span class="token string">'[0-9\\s]{13,19}'</span><span class="token punctuation">,</span>
+          inputmode<span class="token operator">:</span> <span class="token string">'numeric'</span><span class="token punctuation">,</span>
+          autocomplete<span class="token operator">:</span> <span class="token string">'cc-number'</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">validator</span><span class="token operator">:</span> <span class="token punctuation">(</span>field<span class="token operator">:</span> Field<span class="token punctuation">,</span> value<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> <span class="token function">isValidCreditCard</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+        type<span class="token operator">:</span> <span class="token string">'invalid-credit-card'</span><span class="token punctuation">,</span>
+        message<span class="token operator">:</span> <span class="token string">'Please enter a valid credit card number'</span>
+      <span class="token punctuation">}</span><span class="token punctuation">]</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">generator</span><span class="token operator">:</span> <span class="token punctuation">(</span>field<span class="token operator">:</span> Field<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+      &lt;div class="credit-card-field">
+        &lt;label for="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>label<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&lt;/label>
+        &lt;input type="text" 
+               name="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">" 
+               id="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"
+               pattern="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>attributes<span class="token operator">?.</span>pattern<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"
+               inputmode="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>attributes<span class="token operator">?.</span>inputmode<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"
+               autocomplete="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>attributes<span class="token operator">?.</span>autocomplete<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"
+               </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>required <span class="token operator">?</span> <span class="token string">'required'</span> <span class="token operator">:</span> <span class="token string">''</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> />
+        &lt;div class="card-icons">
+          &lt;img src="/icons/visa.svg" alt="Visa" />
+          &lt;img src="/icons/mastercard.svg" alt="Mastercard" />
+        &lt;/div>
+      &lt;/div>
+    </span><span class="token template-punctuation string">`</span></span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre><h3>Validation Plugins</h3>
+<p>Add custom validation logic:</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">const</span> advancedValidationPlugin<span class="token operator">:</span> Plugin <span class="token operator">=</span> <span class="token punctuation">{</span>
+  metadata<span class="token operator">:</span> <span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'advanced-validation'</span><span class="token punctuation">,</span>
+    version<span class="token operator">:</span> <span class="token string">'1.0.0'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  validators<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'async-email-validation'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">validate</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token punctuation">(</span>value<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>value<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token boolean">true</span>
+      
+      <span class="token comment">// Check disposable email domains</span>
+      <span class="token keyword">const</span> domain <span class="token operator">=</span> value<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'@'</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+      <span class="token keyword">const</span> isDisposable <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">checkDisposableDomain</span><span class="token punctuation">(</span>domain<span class="token punctuation">)</span>
+      
+      <span class="token keyword">return</span> <span class="token operator">!</span>isDisposable
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">getMessage</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token string">'Please use a valid, non-disposable email address'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre><h3>Theme Plugins</h3>
+<p>Create comprehensive theming systems:</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">const</span> bootstrapThemePlugin<span class="token operator">:</span> Plugin <span class="token operator">=</span> <span class="token punctuation">{</span>
+  metadata<span class="token operator">:</span> <span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'bootstrap-theme'</span><span class="token punctuation">,</span>
+    version<span class="token operator">:</span> <span class="token string">'1.0.0'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  hooks<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      name<span class="token operator">:</span> <span class="token string">'css-class'</span><span class="token punctuation">,</span>
+      <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>attributes<span class="token punctuation">.</span>className <span class="token operator">=</span> <span class="token function">getBootstrapClasses</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>type<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> context
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      name<span class="token operator">:</span> <span class="token string">'template-render'</span><span class="token punctuation">,</span>
+      <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        context<span class="token punctuation">.</span>template <span class="token operator">=</span> <span class="token function">wrapWithBootstrapStructure</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span>template<span class="token punctuation">,</span> context<span class="token punctuation">.</span>field<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> context
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  renderers<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    template<span class="token operator">:</span> <span class="token string">'form-group'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">render</span><span class="token operator">:</span> <span class="token punctuation">(</span>field<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+      &lt;div class="mb-3">
+        &lt;label for="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">" class="form-label"></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>label<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&lt;/label>
+        {field-input}
+        &lt;div class="invalid-feedback">{error-message}&lt;/div>
+      &lt;/div>
+    </span><span class="token template-punctuation string">`</span></span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre><h2>Plugin Events</h2>
+<p>Plugins can listen to and emit events through the built-in event system:</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">const</span> analyticsPlugin<span class="token operator">:</span> Plugin <span class="token operator">=</span> <span class="token punctuation">{</span>
+  metadata<span class="token operator">:</span> <span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'google-analytics'</span><span class="token punctuation">,</span>
+    version<span class="token operator">:</span> <span class="token string">'1.0.0'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  hooks<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'post-generate'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token comment">// Track form render</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> gtag <span class="token operator">!==</span> <span class="token string">'undefined'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">gtag</span><span class="token punctuation">(</span><span class="token string">'event'</span><span class="token punctuation">,</span> <span class="token string">'form_render'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+          form_fields<span class="token operator">:</span> context<span class="token punctuation">.</span>parseResult<span class="token punctuation">.</span>fields<span class="token punctuation">.</span>length<span class="token punctuation">,</span>
+          field_types<span class="token operator">:</span> context<span class="token punctuation">.</span>parseResult<span class="token punctuation">.</span>fields<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>f <span class="token operator">=></span> f<span class="token punctuation">.</span>type<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+      <span class="token keyword">return</span> context
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">initialize</span><span class="token operator">:</span> <span class="token punctuation">(</span>eventEmitter<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token comment">// Listen to validation events</span>
+    eventEmitter<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'field-validation-failed'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token function">gtag</span><span class="token punctuation">(</span><span class="token string">'event'</span><span class="token punctuation">,</span> <span class="token string">'form_validation_error'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+        field_name<span class="token operator">:</span> data<span class="token punctuation">.</span>fieldName<span class="token punctuation">,</span>
+        error_type<span class="token operator">:</span> data<span class="token punctuation">.</span>errorType
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><h2>Advanced Features</h2>
+<h3>Error Handling</h3>
+<p>The extension system provides robust error handling with configurable error policies:</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">const</span> extensionManager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ExtensionManager</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  errorHandling<span class="token operator">:</span> <span class="token punctuation">{</span>
+    onPluginError<span class="token operator">:</span> <span class="token string">'warn'</span><span class="token punctuation">,</span> <span class="token comment">// 'ignore' | 'warn' | 'throw'</span>
+    onHookError<span class="token operator">:</span> <span class="token string">'warn'</span><span class="token punctuation">,</span>
+    continueOnError<span class="token operator">:</span> <span class="token boolean">true</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre><h3>Performance Management</h3>
+<p>Control execution timeouts and performance optimization:</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token comment">// Hook with custom timeout</span>
+<span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token string">'async-validation'</span><span class="token punctuation">,</span>
+  <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token punctuation">(</span>context<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">expensiveValidation</span><span class="token punctuation">(</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>value<span class="token punctuation">)</span>
+    <span class="token keyword">return</span> context
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  timeout<span class="token operator">:</span> <span class="token number">5000</span> <span class="token comment">// 5 second timeout</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Performance monitoring</span>
+extensionManager<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'hook-performance'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>data<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>data<span class="token punctuation">.</span>executionTime <span class="token operator">></span> <span class="token number">1000</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token builtin">console</span><span class="token punctuation">.</span><span class="token function">warn</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Slow hook detected: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>data<span class="token punctuation">.</span>hookName<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> took </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>data<span class="token punctuation">.</span>executionTime<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">ms</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre><h3>Plugin Dependencies</h3>
+<p>Manage plugin dependencies and load order:</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">const</span> dependentPlugin<span class="token operator">:</span> Plugin <span class="token operator">=</span> <span class="token punctuation">{</span>
+  metadata<span class="token operator">:</span> <span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'dependent-plugin'</span><span class="token punctuation">,</span>
+    version<span class="token operator">:</span> <span class="token string">'1.0.0'</span><span class="token punctuation">,</span>
+    dependencies<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'bootstrap-theme@^1.0.0'</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token comment">// Plugin implementation</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// The extension manager will ensure dependencies are loaded first</span>
+extensionManager<span class="token punctuation">.</span><span class="token function">registerPlugin</span><span class="token punctuation">(</span>dependentPlugin<span class="token punctuation">)</span></code></pre><h2>Real-World Examples</h2>
+<h3>Complete Bootstrap Integration</h3>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">import</span> <span class="token punctuation">{</span> ExtensionManager <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span>
+
+<span class="token keyword">const</span> bootstrapTheme <span class="token operator">=</span> <span class="token punctuation">{</span>
+  metadata<span class="token operator">:</span> <span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'bootstrap-theme'</span><span class="token punctuation">,</span>
+    version<span class="token operator">:</span> <span class="token string">'1.0.0'</span><span class="token punctuation">,</span>
+    description<span class="token operator">:</span> <span class="token string">'Complete Bootstrap 5 integration'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  hooks<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      name<span class="token operator">:</span> <span class="token string">'css-class'</span><span class="token punctuation">,</span>
+      priority<span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+      <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> typeClasses <span class="token operator">=</span> <span class="token punctuation">{</span>
+          <span class="token string-property property">'text'</span><span class="token operator">:</span> <span class="token string">'form-control'</span><span class="token punctuation">,</span>
+          <span class="token string-property property">'email'</span><span class="token operator">:</span> <span class="token string">'form-control'</span><span class="token punctuation">,</span>
+          <span class="token string-property property">'password'</span><span class="token operator">:</span> <span class="token string">'form-control'</span><span class="token punctuation">,</span>
+          <span class="token string-property property">'textarea'</span><span class="token operator">:</span> <span class="token string">'form-control'</span><span class="token punctuation">,</span>
+          <span class="token string-property property">'select'</span><span class="token operator">:</span> <span class="token string">'form-select'</span><span class="token punctuation">,</span>
+          <span class="token string-property property">'checkbox'</span><span class="token operator">:</span> <span class="token string">'form-check-input'</span><span class="token punctuation">,</span>
+          <span class="token string-property property">'radio'</span><span class="token operator">:</span> <span class="token string">'form-check-input'</span>
+        <span class="token punctuation">}</span>
+        
+        context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>attributes<span class="token punctuation">.</span>className <span class="token operator">=</span> typeClasses<span class="token punctuation">[</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>type<span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token string">'form-control'</span>
+        <span class="token keyword">return</span> context
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      name<span class="token operator">:</span> <span class="token string">'template-render'</span><span class="token punctuation">,</span>
+      priority<span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+      <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">'checkbox'</span> <span class="token operator">||</span> context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>type <span class="token operator">===</span> <span class="token string">'radio'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          context<span class="token punctuation">.</span>template <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+            &lt;div class="form-check">
+              </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>context<span class="token punctuation">.</span>template<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">
+              &lt;label class="form-check-label" for="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">">
+                </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>label<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">
+              &lt;/label>
+            &lt;/div>
+          </span><span class="token template-punctuation string">`</span></span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          context<span class="token punctuation">.</span>template <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+            &lt;div class="mb-3">
+              &lt;label for="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">" class="form-label"></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>label<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&lt;/label>
+              </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>context<span class="token punctuation">.</span>template<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">
+              &lt;div class="invalid-feedback">&lt;/div>
+            &lt;/div>
+          </span><span class="token template-punctuation string">`</span></span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">return</span> context
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Usage</span>
+<span class="token keyword">const</span> extensionManager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ExtensionManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+extensionManager<span class="token punctuation">.</span><span class="token function">registerPlugin</span><span class="token punctuation">(</span>bootstrapTheme<span class="token punctuation">)</span></code></pre><h3>Internationalization Plugin</h3>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">const</span> i18nPlugin <span class="token operator">=</span> <span class="token punctuation">{</span>
+  metadata<span class="token operator">:</span> <span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'i18n-plugin'</span><span class="token punctuation">,</span>
+    version<span class="token operator">:</span> <span class="token string">'1.0.0'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  hooks<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'post-parse'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> locale <span class="token operator">=</span> <span class="token function">getCurrentLocale</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+      
+      context<span class="token punctuation">.</span>parseResult<span class="token punctuation">.</span>fields<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>field <span class="token operator">=></span> <span class="token punctuation">{</span>
+        field<span class="token punctuation">.</span>label <span class="token operator">=</span> <span class="token function">translate</span><span class="token punctuation">(</span>field<span class="token punctuation">.</span>label<span class="token punctuation">,</span> locale<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>field<span class="token punctuation">.</span>placeholder<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          field<span class="token punctuation">.</span>placeholder <span class="token operator">=</span> <span class="token function">translate</span><span class="token punctuation">(</span>field<span class="token punctuation">.</span>placeholder<span class="token punctuation">,</span> locale<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      
+      <span class="token keyword">return</span> context
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre><h3>File Upload with Preview Plugin</h3>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">const</span> fileUploadPlugin <span class="token operator">=</span> <span class="token punctuation">{</span>
+  metadata<span class="token operator">:</span> <span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'file-upload-plugin'</span><span class="token punctuation">,</span>
+    version<span class="token operator">:</span> <span class="token string">'1.0.0'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  fieldTypes<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    type<span class="token operator">:</span> <span class="token string">'file-upload'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">parser</span><span class="token operator">:</span> <span class="token punctuation">(</span>content<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> match <span class="token operator">=</span> content<span class="token punctuation">.</span><span class="token function">match</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">@(\w+):\s*\[file-upload\](.*)</span><span class="token regex-delimiter">/</span></span><span class="token punctuation">)</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>match<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span>
+      
+      <span class="token keyword">return</span> <span class="token punctuation">{</span>
+        name<span class="token operator">:</span> match<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        type<span class="token operator">:</span> <span class="token string">'file-upload'</span><span class="token punctuation">,</span>
+        label<span class="token operator">:</span> <span class="token string">'Upload Files'</span><span class="token punctuation">,</span>
+        attributes<span class="token operator">:</span> <span class="token punctuation">{</span>
+          multiple<span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+          accept<span class="token operator">:</span> <span class="token string">'*/*'</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">generator</span><span class="token operator">:</span> <span class="token punctuation">(</span>field<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+      &lt;div class="file-upload-field" data-field="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">">
+        &lt;label></span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>label<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&lt;/label>
+        &lt;div class="upload-area" 
+             ondrop="handleDrop(event, '</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">')"
+             ondragover="handleDragOver(event)">
+          &lt;input type="file" 
+                 name="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">" 
+                 id="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"
+                 </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>attributes<span class="token operator">?.</span>multiple <span class="token operator">?</span> <span class="token string">'multiple'</span> <span class="token operator">:</span> <span class="token string">''</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">
+                 accept="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>attributes<span class="token operator">?.</span>accept<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"
+                 style="display: none;" />
+          &lt;div class="upload-prompt">
+            &lt;i class="upload-icon">&lt;/i>
+            &lt;p>Drag files here or &lt;button type="button" onclick="document.getElementById('</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">').click()">browse&lt;/button>&lt;/p>
+          &lt;/div>
+        &lt;/div>
+        &lt;div class="file-previews">&lt;/div>
+      &lt;/div>
+    </span><span class="token template-punctuation string">`</span></span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre><h2>Testing Extensions</h2>
+<p>The extension system includes comprehensive testing utilities:</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">import</span> <span class="token punctuation">{</span> ExtensionManager<span class="token punctuation">,</span> createTestContext <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span>
+
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'My Plugin'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> extensionManager<span class="token operator">:</span> ExtensionManager
+
+  <span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    extensionManager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ExtensionManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    extensionManager<span class="token punctuation">.</span><span class="token function">registerPlugin</span><span class="token punctuation">(</span>myPlugin<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should add custom CSS classes'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> context <span class="token operator">=</span> <span class="token function">createTestContext</span><span class="token punctuation">(</span><span class="token string">'css-class'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      field<span class="token operator">:</span> <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'test'</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">'text'</span><span class="token punctuation">,</span> label<span class="token operator">:</span> <span class="token string">'Test'</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword">await</span> extensionManager<span class="token punctuation">.</span><span class="token function">executeHooks</span><span class="token punctuation">(</span><span class="token string">'css-class'</span><span class="token punctuation">,</span> context<span class="token punctuation">)</span>
+    
+    <span class="token function">expect</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>field<span class="token punctuation">.</span>attributes<span class="token punctuation">.</span>className<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toContain</span><span class="token punctuation">(</span><span class="token string">'custom-field'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should handle validation correctly'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> context <span class="token operator">=</span> <span class="token function">createTestContext</span><span class="token punctuation">(</span><span class="token string">'field-validate'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      field<span class="token operator">:</span> <span class="token punctuation">{</span> name<span class="token operator">:</span> <span class="token string">'email'</span><span class="token punctuation">,</span> type<span class="token operator">:</span> <span class="token string">'email'</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      value<span class="token operator">:</span> <span class="token string">'invalid-email'</span><span class="token punctuation">,</span>
+      isValid<span class="token operator">:</span> <span class="token boolean">false</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+    <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword">await</span> extensionManager<span class="token punctuation">.</span><span class="token function">executeHooks</span><span class="token punctuation">(</span><span class="token string">'field-validate'</span><span class="token punctuation">,</span> context<span class="token punctuation">)</span>
+    
+    <span class="token function">expect</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>isValid<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre><h2>Best Practices</h2>
+<h3>Plugin Development</h3>
+<ol>
+<li><strong>Use TypeScript</strong>: Take advantage of full type safety</li>
+<li><strong>Handle Errors Gracefully</strong>: Always wrap potentially failing code in try-catch</li>
+<li><strong>Document Your Plugins</strong>: Provide clear metadata and documentation</li>
+<li><strong>Test Thoroughly</strong>: Use the provided testing utilities</li>
+<li><strong>Follow Naming Conventions</strong>: Use descriptive, consistent naming</li>
+</ol>
+<h3>Performance</h3>
+<ol>
+<li><strong>Minimize Hook Execution Time</strong>: Keep hooks fast and efficient</li>
+<li><strong>Use Async Sparingly</strong>: Only use async when necessary</li>
+<li><strong>Cache When Possible</strong>: Cache expensive computations</li>
+<li><strong>Set Appropriate Timeouts</strong>: Configure timeouts for long-running operations</li>
+</ol>
+<h3>Security</h3>
+<ol>
+<li><strong>Validate Input</strong>: Always validate and sanitize user input</li>
+<li><strong>Escape HTML</strong>: Properly escape generated HTML content</li>
+<li><strong>Avoid eval()</strong>: Never use eval() or similar unsafe functions</li>
+<li><strong>Sanitize Attributes</strong>: Clean HTML attributes before injection</li>
+</ol>
+<h2>Migration Guide</h2>
+<h3>From Manual Customization</h3>
+<p>If you&#39;re currently using manual form customization, here&#39;s how to migrate to the extension system:</p>
+<p><strong>Before:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Manual customization</span>
+<span class="token keyword">const</span> html <span class="token operator">=</span> <span class="token function">generateHTML</span><span class="token punctuation">(</span>ast<span class="token punctuation">)</span>
+<span class="token keyword">const</span> modifiedHTML <span class="token operator">=</span> html<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token regex"><span class="token regex-delimiter">/</span><span class="token regex-source language-regex">&lt;input type="text"</span><span class="token regex-delimiter">/</span><span class="token regex-flags">g</span></span><span class="token punctuation">,</span> <span class="token string">'&lt;input type="text" class="form-control"'</span><span class="token punctuation">)</span></code></pre><p><strong>After:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Extension-based approach</span>
+<span class="token keyword">const</span> extensionManager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ExtensionManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+extensionManager<span class="token punctuation">.</span><span class="token function">registerPlugin</span><span class="token punctuation">(</span>bootstrapTheme<span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> html <span class="token operator">=</span> <span class="token function">generateHTML</span><span class="token punctuation">(</span>ast<span class="token punctuation">,</span> <span class="token punctuation">{</span> extensionManager <span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre><h3>Plugin API Changes</h3>
+<p>The extension system is designed to be stable, but future versions may include additional hook types and enhanced functionality. All changes will be backward compatible with proper deprecation notices.</p>
+<h2>Resources</h2>
+<ul>
+<li><a href="https://github.com/iyulab/formdown-extensions">Extension Examples Repository</a></li>
+<li><a href="./plugin-development.md">Plugin Development Guide</a></li>
+<li><a href="./api.md#extensions">API Reference</a></li>
+<li><a href="https://formdown.dev/plugins">Community Plugins</a></li>
+</ul>
+<p>The extension system transforms Formdown from a simple form generator into a powerful, customizable platform for building sophisticated form experiences. Whether you need custom validation, theme integration, or specialized field types, the extension system provides the flexibility and power you need.</p>
+8:["$","$L16",null,{"currentSlug":"extensions","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Extension System"}],["$","article",null,{"className":"$17","dangerouslySetInnerHTML":{"__html":"$18"}}]]}]}]
+b:null
+f:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+a:null
+d:{"metadata":[["$","title","0",{"children":"Formdown - Markdown-based Form Builder"}],["$","meta","1",{"name":"description","content":"Create beautiful, interactive HTML forms using a simple markdown-like syntax. Build forms quickly with real-time preview, validation, and seamless integration."}],["$","meta","2",{"name":"author","content":"iyulab"}],["$","link","3",{"rel":"manifest","href":"/manifest.webmanifest","crossOrigin":"$undefined"}],["$","meta","4",{"name":"keywords","content":"form builder,markdown forms,html forms,form generator,web forms,interactive forms,form validation,formdown,javascript forms,typescript forms"}],["$","meta","5",{"name":"creator","content":"iyulab"}],["$","meta","6",{"name":"publisher","content":"iyulab"}],["$","meta","7",{"name":"robots","content":"index, follow"}],["$","meta","8",{"name":"googlebot","content":"index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"}],["$","link","9",{"rel":"canonical","href":"https://formdown.dev/"}],["$","meta","10",{"property":"og:title","content":"Formdown - Markdown-based Form Builder"}],["$","meta","11",{"property":"og:description","content":"Create beautiful, interactive HTML forms using a simple markdown-like syntax. Build forms quickly with real-time preview, validation, and seamless integration."}],["$","meta","12",{"property":"og:url","content":"https://formdown.dev/"}],["$","meta","13",{"property":"og:site_name","content":"Formdown"}],["$","meta","14",{"property":"og:locale","content":"en_US"}],["$","meta","15",{"property":"og:image","content":"https://formdown.dev/logo.png"}],["$","meta","16",{"property":"og:image:width","content":"1200"}],["$","meta","17",{"property":"og:image:height","content":"630"}],["$","meta","18",{"property":"og:image:alt","content":"Formdown - Markdown-based Form Builder"}],["$","meta","19",{"property":"og:type","content":"website"}],["$","meta","20",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","21",{"name":"twitter:title","content":"Formdown - Markdown-based Form Builder"}],["$","meta","22",{"name":"twitter:description","content":"Create beautiful, interactive HTML forms using a simple markdown-like syntax."}],["$","meta","23",{"name":"twitter:image","content":"https://formdown.dev/logo.png"}],["$","link","24",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"256x256"}]],"error":null,"digest":"$undefined"}
+15:{"metadata":"$d:metadata","error":null,"digest":"$undefined"}

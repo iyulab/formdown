@@ -1,0 +1,41 @@
+# User Registration (Shorthand Demo)
+
+Welcome! Please create your account below.
+
+## Personal Information
+
+@first_name(First Name)*: [placeholder="Enter your first name"]
+@last_name(Last Name)*: [placeholder="Enter your last name"]
+@birth_date(Date of Birth)*: d[max="2010-12-31"]
+
+@email(Email Address)*: @[autocomplete="email"]
+@password(Password)*{^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$}: ?[placeholder="Create a secure password"]
+@confirm_password(Confirm Password)*: ?[placeholder="Re-enter your password"]
+
+## Profile Details
+
+@username(Username)*{^[a-zA-Z0-9_]{3,20}$}: [placeholder="Choose a unique username"]
+@display_name: [placeholder="How others will see you"]
+
+@gender(Gender){Male,Female,Other,Prefer not to say}: r[]
+@bio(About Yourself): T4[maxlength=500 placeholder="Tell us about yourself (optional)"]
+
+## Preferences & Interests
+
+@interests(Interests){Technology,Sports,Music,Travel,Food,Art,Gaming,Reading}: c[]
+@country(Country){USA,Canada,UK,Germany,France,Japan,Australia,Other}: s[]
+@language(Preferred Language){English,Spanish,French,German,Chinese,Japanese}: s[]
+
+## Privacy Settings
+
+@profile_visibility(Profile Visibility){Public,Friends Only,Private}: r[]
+@email_notifications(Email Notifications){Product Updates,Marketing Emails,Security Alerts}: c[]
+
+## Terms and Conditions
+
+@terms(Terms of Service)*: c[]
+@age_confirm*: c[]
+
+Welcome message for ___@display_name: ___@welcome_msg[placeholder="Custom welcome message"]
+
+@create_account: [submit label="Create Account"]

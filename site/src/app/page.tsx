@@ -124,7 +124,7 @@ Thank you for reaching out to us!
                         Formdown transforms Markdown documents into interactive web forms.
                         Write content in familiar Markdown, add @field syntax for form elements,
                         and get beautiful, functional forms with real-time data binding.
-                        <strong className="text-gray-900 dark:text-white">Features custom "other" options, smart field ordering, and shorthand syntax</strong> for rapid development!
+                        <strong className="text-gray-900 dark:text-white">Features custom &quot;other&quot; options, smart field ordering, and shorthand syntax</strong> for rapid development!
                     </p>
                     <div className="flex justify-center space-x-4">                        <Link
                         href="/demo"
@@ -146,7 +146,7 @@ Thank you for reaching out to us!
                     <h3 id="demo-heading" className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Try It Now</h3>
                     <p className="text-gray-600 dark:text-gray-300">
                         See how Markdown with advanced features becomes interactive forms. Edit the left panel and watch the form update in real-time.
-                        Notice field ordering preservation, custom "other" labels like <code className="text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/30 px-1 py-0.5 rounded">*(Please specify)</code>, and shorthand syntax like <code className="text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/30 px-1 py-0.5 rounded">@email: @[]</code>!
+                        Notice field ordering preservation, custom &quot;other&quot; labels like <code className="text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/30 px-1 py-0.5 rounded">*(Please specify)</code>, and shorthand syntax like <code className="text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/30 px-1 py-0.5 rounded">@email: @[]</code>!
                     </p>
                 </div>
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
@@ -188,9 +188,9 @@ Thank you for reaching out to us!
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                             </svg>
                         </div>
-                        <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Custom "Other" Options</h4>
+                        <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Custom &quot;Other&quot; Options</h4>
                         <p className="text-gray-600 dark:text-gray-300">
-                            Add custom "other" options with <code className="text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/30 px-1 py-0.5 rounded">*(Custom Label)</code>. Users can specify their own values with personalized labels.
+                            Add custom &quot;other&quot; options with <code className="text-pink-600 dark:text-pink-400 bg-pink-50 dark:bg-pink-900/30 px-1 py-0.5 rounded">*(Custom Label)</code>. Users can specify their own values with personalized labels.
                         </p>
                     </article>
 
