@@ -2,6 +2,7 @@ export * from './types.js'
 export * from './parser.js'
 export * from './generator.js'
 export * from './schema.js'
+export * from './extensions'
 
 import { FormdownParser } from './parser.js'
 import { FormdownGenerator } from './generator.js'

@@ -2,6 +2,113 @@
 
 Formdown continues to evolve with powerful new features that make form creation even more intuitive and flexible.
 
+## 🔌 Extension System (Latest)
+
+**Major Release:** Formdown now features a complete plugin architecture that allows developers to customize and extend every aspect of form parsing, generation, and validation.
+
+### What's New
+
+The extension system provides:
+
+- **Hook-based Architecture**: 14 different hook types for maximum customization
+- **Plugin System**: Complete plugin lifecycle management with error handling
+- **Type Safety**: Full TypeScript support with compile-time validation
+- **Event System**: Plugin communication through events
+- **Field Type Plugins**: Create entirely new field types
+- **Theme Integration**: Complete styling and layout customization
+- **Validation Extensions**: Custom validation rules and logic
+
+### Quick Example
+
+```typescript
+import { ExtensionManager } from '@formdown/core'
+
+const extensionManager = new ExtensionManager()
+
+// Register a Bootstrap theme plugin
+extensionManager.registerPlugin({
+  metadata: {
+    name: 'bootstrap-theme',
+    version: '1.0.0'
+  },
+  hooks: [{
+    name: 'css-class',
+    handler: (context) => {
+      context.field.attributes.className = 'form-control'
+      return context
+    }
+  }]
+})
+
+// Use with existing functions
+const ast = await parseForm(source, { extensionManager })
+const html = await generateHTML(ast, { extensionManager })
+```
+
+### Real-World Plugin Examples
+
+**Credit Card Field Type:**
+```typescript
+const creditCardPlugin = {
+  fieldTypes: [{
+    type: 'credit-card',
+    parser: (content) => ({
+      name: 'cardNumber',
+      type: 'credit-card',
+      attributes: {
+        pattern: '[0-9\\s]{13,19}',
+        inputmode: 'numeric'
+      }
+    }),
+    validator: (field, value) => isValidCreditCard(value),
+    generator: (field) => `
+      <input type="text" 
+             pattern="${field.attributes.pattern}"
+             inputmode="numeric" />
+    `
+  }]
+}
+```
+
+**Internationalization Plugin:**
+```typescript
+const i18nPlugin = {
+  hooks: [{
+    name: 'post-parse',
+    handler: (context) => {
+      const locale = getCurrentLocale()
+      context.parseResult.fields.forEach(field => {
+        field.label = translate(field.label, locale)
+      })
+      return context
+    }
+  }]
+}
+```
+
+### Built-in Features
+
+- **Error Handling**: Robust error isolation and recovery
+- **Performance Management**: Timeout controls and profiling
+- **Testing Utilities**: Comprehensive testing framework for plugins
+- **Documentation**: Complete API reference and examples
+
+### Migration Path
+
+Existing code continues to work unchanged. Extensions are completely optional:
+
+```javascript
+// Existing code (still works)
+const html = generateHTML(ast)
+
+// With extensions (new capability)  
+const html = generateHTML(ast, { extensionManager })
+```
+
+[→ Learn more about the Extension System](./extensions.md)
+
+---
+
 ## Smart Field Ordering
 
 **Problem Solved:** Previously, all form fields were grouped together, breaking the natural flow of markdown content.
