@@ -1,6 +1,6 @@
 {
   "name": "site",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "private": true,
   "scripts": {
     "dev": "npm run update:version && next dev",
