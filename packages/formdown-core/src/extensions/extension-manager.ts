@@ -1,17 +1,5 @@
 /**
-import { HookManager } from './hooks'
-import { PluginManager } from './plugin-manager'
-import { EventEmitter } from './event-emitter'
-import { corePlugin } from './built-in-plugins'
-
-import type { 
-    ExtensionContext, 
-    ExtensionOptions, 
-    Plugin, 
-    Hook,
-    HookName,
-    HookContext
-} from './types'iew Extension Manager - Main Entry Point
+ * @fileoverview Extension Manager - Main Entry Point
  * Coordinates hooks, plugins, and events for the Formdown extension system
  */
 

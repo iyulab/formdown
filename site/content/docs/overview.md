@@ -11,27 +11,40 @@ Formdown is a simple, human-readable format for creating web forms. It combines 
 
 ## Architecture
 
-Formdown consists of three main packages:
+Formdown consists of three main packages with a powerful extension system:
 
 ### @formdown/core
-The parsing engine that converts Formdown syntax into structured data.
+The foundational parsing engine with comprehensive extension capabilities:
+- **formdown → html**: Parse syntax and generate semantic HTML forms
+- **formdown → get-schema**: Extract structured metadata for validation and tooling
+- **Extension System**: Hook-based plugin architecture for unlimited customization
+- **Type Safety**: Full TypeScript support for third-party plugin development
 
 ### @formdown/ui
-Web components and utilities for rendering forms in the browser. This is the main package most users will need.
+Web components that leverage the core extension system for enhanced functionality:
+- Uses @formdown/core extension hooks for custom behaviors
+- Plugin-based rendering and validation
+- Framework-agnostic web components
 
 ### @formdown/editor
-Development tools including a live editor with syntax highlighting and real-time preview.
+Development tools with plugin support for enhanced editing experiences:
+- Live editor with syntax highlighting and real-time preview
+- Leverages @formdown/core plugins for advanced features
+- Extensible development environment
 
 ## Key Features
 
 - **Shorthand syntax**: Write forms faster with intuitive shortcuts (`@name*: []`, `@email: @[]`)
 - **Smart label generation**: Automatic conversion of field names to readable labels
 - **Inline fields**: Embed form fields directly in markdown text
-- **Rich field types**: Support for all HTML5 input types plus custom components
+- **Rich field types**: Support for all HTML5 input types plus custom components via plugins
+- **Extension System**: Hook-based plugins for custom field types, validators, and renderers
+- **Schema Extraction**: Get structured metadata for validation, documentation, and tooling
 - **Flexible attributes**: Control validation, styling, and behavior
 - **Markdown integration**: Mix forms with rich text content
-- **Progressive complexity**: Start simple, add complexity as needed
-- **Zero dependencies**: Lightweight and fast
+- **Progressive complexity**: Start simple, add complexity as needed with extensions
+- **Type-safe extensibility**: Full TypeScript support for plugin development
+- **Lightweight**: Minimal core with optional extension loading
 
 ## Example
 

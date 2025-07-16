@@ -1,17 +1,15 @@
 import { LitElement, html, css } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
-import { FormdownParser, FormdownGenerator } from '@formdown/core'
-
-// Validation types
-export interface FieldError {
-  field: string
-  message: string
-}
-
-export interface ValidationResult {
-  isValid: boolean
-  errors: FieldError[]
-}
+import { 
+  FormdownParser, 
+  FormdownGenerator, 
+  getSchema, 
+  validateField,
+  type FormDownSchema,
+  type FieldError,
+  type ValidationResult 
+} from '@formdown/core'
+import { uiExtensionSupport } from './extension-support'
 
 @customElement('formdown-ui')
 export class FormdownUI extends LitElement {
@@ -421,6 +419,7 @@ export class FormdownUI extends LitElement {
   private generator = new FormdownGenerator()
   private fieldRegistry: Map<string, Set<HTMLElement>> = new Map()
   private _isUpdatingUI = false  // Prevent infinite loops
+  private _schema: FormDownSchema | null = null
 
   constructor() {
     super()
@@ -428,8 +427,16 @@ export class FormdownUI extends LitElement {
     this._uniqueFormId = this.formId || `formdown-${Math.random().toString(36).substring(2, 15)}`
   }
 
-  connectedCallback() {
+  async connectedCallback() {
     super.connectedCallback()
+
+    // Initialize extension system and UI support
+    try {
+      await uiExtensionSupport.initialize()
+    } catch (error) {
+      // Extension system might already be initialized
+      console.debug('Extension system initialization:', error)
+    }
 
     // Use inner text as content if content property is empty
     if (!this.content && this.textContent?.trim()) {
@@ -491,6 +498,9 @@ export class FormdownUI extends LitElement {
 
       const parseResult = this.parser.parseFormdown(this.content)
       let generatedHTML = this.generator.generateHTML(parseResult)
+      
+      // Extract and cache schema for validation
+      this._schema = getSchema(this.content)
 
       if (!generatedHTML || generatedHTML.trim() === '') {
         container.innerHTML = `<div class="error">Generator returned empty HTML</div>`
@@ -999,6 +1009,41 @@ export class FormdownUI extends LitElement {
   }
 
   private validateField(element: HTMLElement, fieldName: string): FieldError[] {
+    // Use core validation with enhanced field-specific logic
+    const value = this.getFieldValue(element)
+    const fieldSchema = this._schema?.[fieldName]
+    
+    if (!fieldSchema) {
+      return this.validateFieldBasic(element, fieldName)
+    }
+
+    // For checkbox and radio, handle special validation logic
+    if (element instanceof HTMLInputElement) {
+      if (element.type === 'checkbox') {
+        const allCheckboxes = this.shadowRoot?.querySelectorAll(`input[type="checkbox"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
+        const isAnyChecked = Array.from(allCheckboxes).some(cb => cb.checked)
+        
+        if (fieldSchema.required && !isAnyChecked) {
+          return [{ field: fieldName, message: 'This field is required' }]
+        }
+        return []
+      } else if (element.type === 'radio') {
+        const allRadios = this.shadowRoot?.querySelectorAll(`input[type="radio"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
+        const isAnySelected = Array.from(allRadios).some(radio => radio.checked)
+        
+        if (fieldSchema.required && !isAnySelected) {
+          return [{ field: fieldName, message: 'Please select an option' }]
+        }
+        return []
+      }
+    }
+
+    // Use core validation for standard fields
+    return validateField(value, { ...fieldSchema, name: fieldName })
+  }
+
+  // Fallback basic validation for when schema is not available
+  private validateFieldBasic(element: HTMLElement, fieldName: string): FieldError[] {
     const errors: FieldError[] = []
 
     // Check required fields
@@ -1028,50 +1073,6 @@ export class FormdownUI extends LitElement {
         }
       } else if (!value || value.trim() === '') {
         errors.push({ field: fieldName, message: 'This field is required' })
-      }
-    }
-
-    // Validate field type-specific rules
-    if (element instanceof HTMLInputElement) {
-      const value = element.value.trim()
-
-      if (value && element.type === 'email') {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-        if (!emailRegex.test(value)) {
-          errors.push({ field: fieldName, message: 'Please enter a valid email address' })
-        }
-      }
-
-      if (value && element.type === 'url') {
-        try {
-          new URL(value)
-        } catch {
-          errors.push({ field: fieldName, message: 'Please enter a valid URL' })
-        }
-      }
-
-      if (value && element.type === 'tel') {
-        const phoneRegex = /^[\d\s\-\+\(\)]+$/
-        if (!phoneRegex.test(value)) {
-          errors.push({ field: fieldName, message: 'Please enter a valid phone number' })
-        }
-      }
-
-      // Check min/max length
-      if (element.minLength && element.minLength > 0 && value.length < element.minLength) {
-        errors.push({ field: fieldName, message: `Minimum length is ${element.minLength} characters` })
-      }
-
-      if (element.maxLength && element.maxLength > 0 && value.length > element.maxLength) {
-        errors.push({ field: fieldName, message: `Maximum length is ${element.maxLength} characters` })
-      }
-
-      // Check pattern attribute
-      if (element.pattern && value) {
-        const pattern = new RegExp(element.pattern)
-        if (!pattern.test(value)) {
-          errors.push({ field: fieldName, message: element.title || 'Please match the required format' })
-        }
       }
     }
 

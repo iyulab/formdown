@@ -1,39 +1,10 @@
 import { LitElement, html, css, unsafeCSS } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
+import { parseFormdown, type ParseResult as CoreParseResult } from '@formdown/core'
+import { editorExtensionSupport } from './extension-support'
 import styles from './styles.css?inline'
 import { renderEditorPanel, renderPreviewPanel } from './templates'
-import type { ParseResult } from './templates'
-
-// Simple parser for demo purposes
-class SimpleFormdownParser {
-    parse(content: string): ParseResult {
-        const lines = content.split('\n').filter(line => line.trim());
-        const fields: any[] = [];
-        const errors: string[] = [];
-
-        lines.forEach((line, index) => {
-            if (line.startsWith('@')) {
-                try {
-                    const match = line.match(/@(\w+):\s*\[([^\]]+)\](.*)$/);
-                    if (match) {
-                        const [, name, type] = match;
-                        fields.push({
-                            name,
-                            type: type.split(' ')[0],
-                            label: name,
-                            required: type.includes('required'),
-                            attributes: {}
-                        });
-                    }
-                } catch (error) {
-                    errors.push(`Line ${index + 1}: Invalid syntax`);
-                }
-            }
-        });
-
-        return { fields, errors };
-    }
-}
+// ParseResult now imported from core via templates
 
 var defaultContent = `# Contact Form
 
@@ -93,12 +64,20 @@ export class FormdownEditor extends LitElement {
     }
 
     @state()
-    private parseResult: ParseResult = { fields: [], errors: [] }
+    private parseResult: CoreParseResult = { fields: [], errors: [] }
 
-    private parser = new SimpleFormdownParser()
+    // Remove SimpleFormdownParser - now using @formdown/core
 
-    connectedCallback() {
+    async connectedCallback() {
         super.connectedCallback()
+
+        // Initialize extension system and editor support
+        try {
+            await editorExtensionSupport.initialize()
+        } catch (error) {
+            // Extension system might already be initialized
+            console.debug('Extension system initialization:', error)
+        }
 
         // Use inner text as content if content property is default and inner text exists
         if (this.content === defaultContent && this.textContent?.trim()) {
@@ -107,7 +86,7 @@ export class FormdownEditor extends LitElement {
             this.textContent = ''
         }
 
-        this.updateParseResult()
+        await this.updateParseResult()
     }
 
     willUpdate(changedProperties: Map<string | number | symbol, unknown>) {
@@ -302,13 +281,29 @@ export class FormdownEditor extends LitElement {
         })
     }
 
-    private updateParseResult() {
+    private async updateParseResult() {
         try {
-            this.parseResult = this.parser.parse(this.content)
+            // Use @formdown/core parseFormdown function
+            const parsed = parseFormdown(this.content)
+            
+            // Use extension system for enhanced validation
+            const validation = await editorExtensionSupport.validateContent(this.content)
+            
+            // Convert core format to template format
+            this.parseResult = {
+                fields: parsed.forms.map(field => ({
+                    name: field.name,
+                    type: field.type,
+                    label: field.label || field.name,
+                    required: field.required || false,
+                    attributes: field.attributes || {}
+                })),
+                errors: validation.errors.map(err => ({ line: 0, message: err }))
+            }
         } catch (error) {
             this.parseResult = {
                 fields: [],
-                errors: [error instanceof Error ? error.message : 'Parse error']
+                errors: [{ line: 0, message: error instanceof Error ? error.message : 'Parse error' }]
             }
         }
     }

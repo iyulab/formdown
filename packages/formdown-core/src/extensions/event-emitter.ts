@@ -3,7 +3,7 @@
  * Provides event-driven communication between plugins and core
  */
 
-import type { EventEmitter as IEventEmitter, EventListener, ExtensionEvent } from './types'
+import type { EventEmitter as IEventEmitter, EventListener, ExtensionEvent } from './types.js'
 
 export class EventEmitter implements IEventEmitter {
     private listeners = new Map<string, Set<EventListener>>()

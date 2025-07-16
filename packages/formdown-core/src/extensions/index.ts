@@ -4,16 +4,16 @@
  */
 
 // Export types
-export type * from './types'
+export type * from './types.js'
 
 // Export implementations
-export { HookManager } from './hooks'
-export { PluginManager } from './plugin-manager'
-export { EventEmitter } from './event-emitter'
-export { ExtensionManager, defaultExtensionManager as extensionManager } from './extension-manager'
+export { HookManager } from './hooks.js'
+export { PluginManager } from './plugin-manager.js'
+export { EventEmitter } from './event-emitter.js'
+export { ExtensionManager, defaultExtensionManager as extensionManager } from './extension-manager.js'
 
 // Export plugins
-export * from './built-in-plugins'
+export * from './built-in-plugins.js'
 
 // Convenience exports
 export {
@@ -22,4 +22,4 @@ export {
     registerHook,
     executeHooks,
     getExtensionStats
-} from './extension-manager'
+} from './extension-manager.js'

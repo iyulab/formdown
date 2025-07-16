@@ -398,3 +398,76 @@ Renders to:
   "user_name": "John Doe"
 }
 ```
+
+## Validation System
+
+FormDown includes a built-in validation system that works with the core API functions.
+
+### Field Validation
+
+```typescript
+import { validateField, validateForm, getSchema } from '@formdown/core'
+
+// Validate a single field
+const fieldErrors = validateField('', { 
+  required: true, 
+  name: 'email',
+  label: 'Email Address'
+})
+// Returns: [{ field: 'email', message: 'Email Address is required' }]
+
+// Validate entire form
+const formData = { email: '', name: 'John' }
+const schema = getSchema(formdownContent)
+const result = validateForm(formData, schema)
+// Returns: { isValid: false, errors: [...] }
+```
+
+### FormdownUI Component Integration
+
+```typescript
+// FormdownUI automatically validates fields with validation attributes
+// Access validation state through component methods
+const formElement = document.querySelector('formdown-ui')
+const validationResult = formElement.validate()
+
+if (!validationResult.isValid) {
+  console.log('Validation errors:', validationResult.errors)
+}
+```
+
+## Programmatic API
+
+### Component Creation
+
+```typescript
+import { createFormdownUI, createFormdownEditor } from '@formdown/core'
+
+// Create FormdownUI component
+const container = document.getElementById('form-container')
+const formComponent = createFormdownUI(container, formdownContent, {
+  formId: 'my-form',
+  showSubmitButton: true,
+  submitText: 'Submit Form'
+})
+
+// Create FormdownEditor component
+const editorContainer = document.getElementById('editor-container')
+const editorComponent = createFormdownEditor(editorContainer, formdownContent, {
+  mode: 'split',
+  toolbar: true
+})
+```
+
+### Data Management
+
+```typescript
+// Update form data programmatically
+formComponent.updateData({ email: 'new@example.com', name: 'Jane' })
+
+// Update single field
+formComponent.updateField('email', 'updated@example.com')
+
+// Get current form data
+const currentData = formComponent.data
+```

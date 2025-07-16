@@ -168,21 +168,3 @@ if (result.isValid) {
     console.log(data); // { name: "John", email: "john@example.com" }
 }
 ```
-
-## 🤝 Contributing
-
-```bash
-git clone https://github.com/iyulab/formdown.git
-cd formdown
-npm install
-npm run build
-npm test
-```
-
-## 📝 License
-
-MIT License - see [LICENSE](./LICENSE) file for details.
-
----
-
-**[📖 Full Documentation](https://formdown.dev/docs)** • **[🚀 Try Demo](https://formdown.dev/demo)** • **[💬 Discussions](https://github.com/iyulab/formdown/discussions)**

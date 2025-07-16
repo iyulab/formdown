@@ -1,14 +1,5 @@
 /**
-import type { 
-    Hook, 
-    HookName, 
-    HookFunction, 
-    HookContext, 
-    HookManager as IHookManager,
-    ExtensionOptions,
-    EventEmitter,
-    ExtensionEvent 
-} from './types'erview Hook Management System
+ * @fileoverview Hook Management System
  * Provides registration and execution of hooks for extensibility
  */
 

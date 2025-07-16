@@ -18,13 +18,14 @@ The Formdown Extension System provides a comprehensive plugin architecture that 
 ### Basic Plugin Registration
 
 ```typescript
-import { extensionManager, registerPlugin } from '@formdown/core'
+import { ExtensionManager } from '@formdown/core'
 
-// Initialize the extension system
+// Create and initialize extension manager
+const extensionManager = new ExtensionManager()
 await extensionManager.initialize()
 
 // Register a simple plugin
-await registerPlugin({
+const plugin = {
   metadata: {
     name: 'my-plugin',
     version: '1.0.0',
@@ -41,23 +42,30 @@ await registerPlugin({
       return '<div class="rating">...</div>'
     }
   }]
-})
+}
+
+await extensionManager.registerPlugin(plugin)
 ```
 
 ### Using Hooks
 
 ```typescript
-import { registerHook } from '@formdown/core'
+import { ExtensionManager } from '@formdown/core'
+
+const extensionManager = new ExtensionManager()
+await extensionManager.initialize()
 
 // Register a custom hook
-registerHook({
-  name: 'pre-parse',
+const hook = {
+  name: 'pre-parse' as const,
   priority: 10,
-  handler: (context) => {
+  handler: (context: any) => {
     // Transform input before parsing
     return transformedInput
   }
-})
+}
+
+extensionManager.registerHook(hook)
 ```
 
 ## Core Concepts

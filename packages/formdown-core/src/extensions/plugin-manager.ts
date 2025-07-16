@@ -1,15 +1,5 @@
 /**
-import type { 
-    Plugin, 
-    PluginManager as IPluginManager,
-    HookManager,
-    ExtensionOptions,
-    EventEmitter,
-    FieldTypePlugin,
-    ValidationPlugin,
-    RendererPlugin,
-    ThemePlugin
-} from './types'rview Plugin Management System
+ * @fileoverview Plugin Management System
  * Handles registration, initialization, and lifecycle of plugins
  */
 

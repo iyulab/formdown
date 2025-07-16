@@ -1,5 +1,7 @@
 // Export the class for SDK usage
 export { FormdownEditor } from './formdown-editor.js'
+export { editorExtensionSupport, EditorExtensionSupport } from './extension-support.js'
+export type { EditorPlugin } from './extension-support.js'
 
 // Auto-register the web component when this module is imported
 import './formdown-editor.js'

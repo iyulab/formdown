@@ -8,5 +8,9 @@ declare global {
 
 export declare class FormdownEditor extends LitElement {
     content: string;
-    showPreview: boolean;
+    mode: 'edit' | 'split' | 'view';
+    placeholder: string;
+    header: boolean;
+    toolbar: boolean;
+    data: Record<string, any>;
 }

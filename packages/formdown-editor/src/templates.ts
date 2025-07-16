@@ -1,15 +1,8 @@
 import { html } from 'lit'
+import type { ParseResult } from '@formdown/core'
 
-export interface ParseResult {
-    fields: Array<{
-        name: string;
-        type: string;
-        label: string;
-        required?: boolean;
-        attributes?: Record<string, any>;
-    }>;
-    errors: string[];
-}
+// Re-export for backward compatibility
+export type { ParseResult }
 
 export function renderEditorPanel(
     header: boolean,

@@ -3,8 +3,8 @@
  * Provides standard field types, validators, and renderers
  */
 
-import type { Plugin, FieldTypePlugin, ValidationPlugin } from './types'
-import type { Field, ValidationRule } from '../types'
+import type { Plugin, FieldTypePlugin, ValidationPlugin } from './types.js'
+import type { Field, ValidationRule } from '../types.js'
 
 // ================================
 // Built-in Field Type Plugins

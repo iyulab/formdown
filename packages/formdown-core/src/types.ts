@@ -99,3 +99,24 @@ export interface FormDownSchema {
     [fieldName: string]: FieldSchema
 }
 
+// Common component configuration types (removed duplicate from component-utils)
+
+// Common event types
+export interface FormdownEvent {
+    type: 'parse' | 'render' | 'validate' | 'submit' | 'change'
+    source: 'core' | 'ui' | 'editor'
+    data: any
+    target?: HTMLElement
+}
+
+// Validation result types
+export interface FieldError {
+    field: string
+    message: string
+}
+
+export interface ValidationResult {
+    isValid: boolean
+    errors: FieldError[]
+}
+

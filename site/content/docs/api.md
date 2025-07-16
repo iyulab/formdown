@@ -1,5 +1,124 @@
 # API Reference
 
+## @formdown/core
+
+### Core Functions
+
+#### `parseFormdown(input: string): FormdownContent`
+
+Parses Formdown syntax into structured data containing both form fields and markdown content.
+
+**Parameters:**
+- `input` (string): The Formdown source code
+
+**Returns:** `FormdownContent`
+```typescript
+interface FormdownContent {
+  markdown: string;  // Processed markdown with field placeholders
+  forms: Field[];    // Parsed form fields
+}
+```
+
+**Example:**
+```javascript
+import { parseFormdown } from '@formdown/core';
+
+const result = parseFormdown('@name: [text required]\n\n# Contact Form');
+// Returns: { markdown: "<!--FORMDOWN_FIELD_0-->\n\n# Contact Form", forms: [...] }
+```
+
+#### `generateFormHTML(content: FormdownContent): string`
+
+Generates complete HTML including forms and markdown content.
+
+**Parameters:**
+- `content` (FormdownContent): Parsed formdown content
+
+**Returns:** HTML string
+
+**Example:**
+```javascript
+import { parseFormdown, generateFormHTML } from '@formdown/core';
+
+const parsed = parseFormdown('@name: [text required]');
+const html = generateFormHTML(parsed);
+// Returns: Complete HTML with form and markdown
+```
+
+#### `getSchema(content: string): FormDownSchema`
+
+Extracts structured schema metadata from Formdown content.
+
+**Parameters:**
+- `content` (string): The Formdown source code
+
+**Returns:** `FormDownSchema`
+```typescript
+interface FormDownSchema {
+  [fieldName: string]: FieldSchema;
+}
+
+interface FieldSchema {
+  type: FieldType;
+  label?: string;
+  required?: boolean;
+  position: number;
+  validation?: ValidationRules;
+  htmlAttributes?: Record<string, any>;
+  layout: 'inline' | 'vertical';
+}
+```
+
+**Example:**
+```javascript
+import { getSchema } from '@formdown/core';
+
+const schema = getSchema('@name: [text required minlength=2]');
+// Returns: { name: { type: 'text', required: true, validation: { minlength: 2 } } }
+```
+
+### Extension System
+
+#### `registerPlugin(plugin: Plugin): Promise<void>`
+
+Registers a plugin with the extension system.
+
+**Example:**
+```javascript
+import { registerPlugin } from '@formdown/core';
+
+const myPlugin = {
+  metadata: { name: 'my-plugin', version: '1.0.0' },
+  fieldTypes: [{
+    type: 'phone',
+    parser: (content, context) => ({ /* custom parsing */ }),
+    generator: (field, context) => '/* custom HTML */'
+  }]
+};
+
+await registerPlugin(myPlugin);
+```
+
+#### `registerHook(hook: Hook): void`
+
+Registers a custom hook for extending core functionality.
+
+**Example:**
+```javascript
+import { registerHook } from '@formdown/core';
+
+registerHook({
+  name: 'field-parse',
+  priority: 1,
+  handler: (context) => {
+    // Custom field processing
+    return enhancedField;
+  }
+});
+```
+
+---
+
 ## @formdown/ui
 
 ### `renderForm(source, options?)`

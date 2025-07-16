@@ -1,5 +1,7 @@
 // Export the class for SDK usage
 export { FormdownUI } from './formdown-ui.js'
+export { uiExtensionSupport, UIExtensionSupport } from './extension-support.js'
+export type { UIPlugin } from './extension-support.js'
 
 // Auto-register the web component when this module is imported
 import './formdown-ui'

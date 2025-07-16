@@ -13,20 +13,23 @@ The Formdown ecosystem consists of three main packages and a documentation site:
 ### `/packages` - Core Libraries
 
 **formdown-core**
-- The foundational parsing and generation engine
-- Handles markdown-to-form transformation logic
-- Contains TypeScript definitions and core utilities
+- The foundational parsing and generation engine with extension system
+- Primary role: formdown → html and formdown → get-schema transformations
+- Hook-based plugin architecture for external extensibility
+- Contains TypeScript definitions, core utilities, and extension APIs
 - Provides the essential building blocks for other packages
 
 **formdown-ui**
 - Web component for form rendering and interaction
 - Built with Lit for universal framework compatibility
+- Uses @formdown/core extension system for custom behaviors
 - Handles form validation, data binding, and user interactions
 - Produces clean, accessible HTML forms from parsed content
 
 **formdown-editor**
 - Interactive editor component with real-time preview
 - Supports multiple viewing modes (edit, split, preview)
+- Leverages @formdown/core plugins for enhanced editing capabilities
 - Integrates both core parsing and UI rendering
 - Provides developer tools and debugging capabilities
 
@@ -54,9 +57,13 @@ formdown-editor (top-level)
 ### Data Flow
 1. User writes markdown with @field syntax
 2. Core parser processes syntax into structured data
-3. UI component renders interactive form elements
-4. User interactions update form data reactively
-5. Changes propagate back through the component tree
+   - Hook system allows extensions to modify parsing behavior
+   - Plugin system provides custom field types and validators
+3. Schema extractor provides metadata for validation and tooling
+4. UI component renders interactive form elements
+   - Extension system enables custom rendering behaviors
+5. User interactions update form data reactively
+6. Changes propagate back through the component tree
 
 ### Build Strategy
 - **Development**: Independent package development with live reloading
