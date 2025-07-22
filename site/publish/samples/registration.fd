@@ -35,8 +35,9 @@ Welcome! Please create your account below.
 
 ## Terms and Conditions
 
-@terms(Terms of Service): [checkbox required options="I agree to the Terms of Service and Privacy Policy"]
-@age_confirm: [checkbox required options="I confirm that I am at least 13 years old"]
+@terms: [checkbox required content="I agree to the Terms of Service and Privacy Policy"]
+@age_confirm: [checkbox required content="I confirm that I am at least 13 years old"]
+@marketing: [checkbox content="I would like to receive marketing emails and product updates"]
 
 Welcome message for ___@display_name: ___@welcome_msg[text placeholder="Custom welcome message"]
 

@@ -395,6 +395,8 @@ export class FormdownParser {
                 field.format = quotedValue1 || quotedValue2 || unquotedValue
             } else if (key === 'pattern' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
                 field.pattern = quotedValue1 || quotedValue2 || unquotedValue
+            } else if (key === 'content' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+                field.content = quotedValue1 || quotedValue2 || unquotedValue
             } else if (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined) {
                 const value = quotedValue1 || quotedValue2 || unquotedValue
                 field.attributes![key] = this.parseAttributeValue(value)

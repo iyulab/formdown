@@ -18,7 +18,8 @@ Please fill out the form below to get in touch with us.
 
 @priority{Low,Medium,High}: r[]
 @contact_method{Email,Phone,Text Message}: r[]
-@newsletter(Subscribe to our newsletter): c[]
+@newsletter: c[content="Subscribe to our weekly newsletter"]
+@terms: c[required content="I agree to the terms and conditions"]
 
 ## Additional Information
 

@@ -1,0 +1,71 @@
+# Checkbox Content Attribute Demo
+
+This sample demonstrates the **content attribute** for checkboxes with priority: **content > label > name**
+
+## Content Attribute Priority Examples
+
+### Priority: Content over Label
+```
+@newsletter(Newsletter): [checkbox content="Subscribe to our weekly newsletter"]
+```
+Result: Displays "Subscribe to our weekly newsletter" (not "Newsletter")
+
+@newsletter(Newsletter): [checkbox content="Subscribe to our weekly newsletter"]
+
+### Priority: Content over Smart Label  
+```
+@privacy_policy: [checkbox content="I have read and accept the privacy policy"]
+```
+Result: Displays content instead of smart label "Privacy Policy"
+
+@privacy_policy: [checkbox content="I have read and accept the privacy policy"]
+
+### Fallback to Label when no Content
+```
+@marketing(Marketing Communications): [checkbox]
+```
+Result: Displays "Marketing Communications"
+
+@marketing(Marketing Communications): [checkbox]
+
+### Fallback to Smart Label when no Content or Label
+```
+@email_notifications: [checkbox]
+```
+Result: Displays "Email Notifications" (generated from field name)
+
+@email_notifications: [checkbox]
+
+## Real-World Agreement Examples
+
+### Terms and Conditions
+@terms: [checkbox required content="I agree to the Terms of Service and Privacy Policy"]
+@gdpr: [checkbox required content="I consent to the processing of my personal data in accordance with GDPR"]
+@age_verification: [checkbox required content="I confirm that I am at least 18 years old"]
+
+### Marketing Preferences  
+@newsletter_subscription: [checkbox content="Send me weekly newsletters with product updates and tips"]
+@promotional_emails: [checkbox content="I want to receive promotional offers and special discounts"]
+@third_party_sharing: [checkbox content="I allow sharing my information with trusted partners for relevant offers"]
+
+### User Preferences
+@remember_me: [checkbox content="Keep me signed in on this device"]
+@notifications: [checkbox content="Enable desktop notifications for important updates"]
+@beta_features: [checkbox content="I want to participate in beta testing of new features"]
+
+## Mixed Usage Example
+
+Using both content attribute and traditional approaches:
+
+### Account Setup
+@username: [text required placeholder="Choose a username"]
+@email: [email required placeholder="your@email.com"]
+@password: [password required minlength=8]
+
+### Agreement Section
+@eula: [checkbox required content="I have read and agree to the End User License Agreement (EULA)"]
+@privacy_consent(Privacy Consent): [checkbox required content="I consent to the collection and processing of my personal data as described in the Privacy Policy"]
+@analytics: [checkbox content="Help improve the service by sharing anonymous usage analytics"]
+@marketing_emails: [checkbox]  # Will show "Marketing Emails"
+
+@create_account: [submit label="Create Account"]

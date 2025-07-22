@@ -190,6 +190,22 @@ Your age is ___@age[text].
 - **Single checkbox**: `[checkbox]` - Creates a single checkbox for yes/no, agreement, or subscription
 - **Checkbox group**: `[checkbox options="..."]` - Creates multiple checkboxes for multi-select
 
+**Checkbox Content Attribute:**
+For single checkboxes, you can use the `content` attribute to specify the display text with priority: **content > label > name**
+
+```formdown
+// Using content attribute for precise checkbox text
+@terms: [checkbox required content="I agree to the terms and conditions"]
+@privacy: [checkbox content="I have read and accept the privacy policy"]
+
+// Content takes priority over label
+@newsletter(Newsletter): [checkbox content="Subscribe to our weekly newsletter"]
+// Result: Displays "Subscribe to our weekly newsletter" (not "Newsletter")
+
+// Without content, uses label or smart-generated label
+@marketing: [checkbox]  // Displays: "Marketing"
+```
+
 **Layout Options:**
 - **Default (inline)**: Options are displayed horizontally, wrapping to new lines as needed
 - **`layout="vertical"`**: Options are displayed vertically, each on its own line
@@ -232,6 +248,7 @@ Please enter ___@age and ___@email.
 
 ### Universal Attributes
 - `label="text"` - Custom field label (overrides field name)
+- `content="text"` - Display text for checkboxes (priority: content > label > name)
 - `required` - Field is mandatory
 - `placeholder="text"` - Placeholder text
 - `value="default"` - Default value
@@ -288,7 +305,8 @@ Please enter ___@age and ___@email.
 @message: [textarea required rows=5 placeholder="Your message..."]
 
 @priority: [radio options="Low,Medium,High"]
-@newsletter(Subscribe to newsletter): [checkbox]
+@newsletter: [checkbox content="Subscribe to our weekly newsletter"]
+@terms: [checkbox required content="I agree to the terms and conditions"]
 
 @submit_form: [submit label="Send Message"]
 ```

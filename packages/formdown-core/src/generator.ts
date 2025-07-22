@@ -203,10 +203,15 @@ ${fieldsHTML}
     }
 
     generateFieldHTML(field: Field): string {
-        const { name, type, label, required, placeholder, attributes, options, description, errorMessage, pattern, format, allowOther } = field
+        const { name, type, label, required, placeholder, attributes, options, description, errorMessage, pattern, format, allowOther, content } = field
 
         // Use smart label generation if no label is provided
         const displayLabel = label || this.generateSmartLabel(name)
+        
+        // For checkboxes, use content with priority: content > label > smart_label(name)
+        const checkboxDisplayText = type === 'checkbox' ? 
+            (content || label || this.generateSmartLabel(name)) : 
+            displayLabel
 
         // Generate unique IDs for accessibility
         const fieldId = name
@@ -318,12 +323,12 @@ ${radioInputsHTML}${otherRadioHTML}
 
             case 'checkbox':
                 if (!options || options.length === 0) {
-                    // Single checkbox
+                    // Single checkbox - use content with priority: content > label > smart_label(name)
                     return `
 <div class="formdown-field">
     <label for="${fieldId}" class="formdown-checkbox-label">
         <input type="checkbox" id="${fieldId}" name="${name}" value="true" ${required ? 'required' : ''} ${attrString}>
-        <span>${displayLabel}${required ? ' *' : ''}</span>
+        <span>${this.escapeHtml(checkboxDisplayText)}${required ? ' *' : ''}</span>
     </label>${generateHelpText()}
 </div>`
                 } else {

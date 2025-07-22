@@ -9,6 +9,7 @@ export interface Field {
     otherLabel?: string
     format?: string
     pattern?: string
+    content?: string  // For checkbox display text with priority: content > label > name
     attributes?: Record<string, any>
     description?: string
     errorMessage?: string

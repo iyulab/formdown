@@ -403,6 +403,7 @@ Please schedule your appointment:
 
 // 복잡한 경우 - 전체 문법
 @advanced_options: [checkbox options="option1,option2,option3" class="advanced" data-toggle="collapse"]
+@terms: [checkbox required content="I agree to the terms and conditions"]
 @complex_validation: [text pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" title="Password requirements..."]
 ```
 
