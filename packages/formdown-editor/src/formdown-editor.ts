@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
-import { parseFormdown, type ParseResult as CoreParseResult } from '@formdown/core'
+import { parseFormdown, getSchema, generateFormHTML, type ParseResult as CoreParseResult, type FormDownSchema } from '@formdown/core'
 import { editorExtensionSupport } from './extension-support'
 import styles from './styles.css?inline'
 import { renderEditorPanel, renderPreviewPanel } from './templates'
@@ -65,6 +65,9 @@ export class FormdownEditor extends LitElement {
 
     @state()
     private parseResult: CoreParseResult = { fields: [], errors: [] }
+
+    @state()
+    private schema: FormDownSchema = {}
 
     // Remove SimpleFormdownParser - now using @formdown/core
 
@@ -286,18 +289,28 @@ export class FormdownEditor extends LitElement {
             // Use @formdown/core parseFormdown function
             const parsed = parseFormdown(this.content)
             
+            // Extract schema for enhanced validation and metadata
+            this.schema = getSchema(this.content)
+            
             // Use extension system for enhanced validation
             const validation = await editorExtensionSupport.validateContent(this.content)
             
-            // Convert core format to template format
+            // Convert core format to template format with schema enhancement
             this.parseResult = {
-                fields: parsed.forms.map(field => ({
-                    name: field.name,
-                    type: field.type,
-                    label: field.label || field.name,
-                    required: field.required || false,
-                    attributes: field.attributes || {}
-                })),
+                fields: parsed.forms.map(field => {
+                    const fieldSchema = this.schema[field.name]
+                    return {
+                        name: field.name,
+                        type: field.type,
+                        label: field.label || field.name,
+                        required: field.required || false,
+                        attributes: field.attributes || {},
+                        // Add schema-derived metadata
+                        validation: fieldSchema?.validation,
+                        options: fieldSchema?.options,
+                        placeholder: fieldSchema?.placeholder
+                    }
+                }),
                 errors: validation.errors.map(err => ({ line: 0, message: err }))
             }
         } catch (error) {
@@ -305,6 +318,7 @@ export class FormdownEditor extends LitElement {
                 fields: [],
                 errors: [{ line: 0, message: error instanceof Error ? error.message : 'Parse error' }]
             }
+            this.schema = {}
         }
     }
 

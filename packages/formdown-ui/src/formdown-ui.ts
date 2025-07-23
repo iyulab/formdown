@@ -1,10 +1,13 @@
 import { LitElement, html, css } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import { 
+  parseFormdown,
+  generateFormHTML,
   FormdownParser, 
   FormdownGenerator, 
   getSchema, 
   validateField,
+  validateForm,
   type FormDownSchema,
   type FieldError,
   type ValidationResult 
@@ -496,8 +499,8 @@ export class FormdownUI extends LitElement {
         return
       }
 
-      const parseResult = this.parser.parseFormdown(this.content)
-      let generatedHTML = this.generator.generateHTML(parseResult)
+      // Use core functions for consistency
+      let generatedHTML = generateFormHTML(this.content)
       
       // Extract and cache schema for validation
       this._schema = getSchema(this.content)
@@ -507,11 +510,15 @@ export class FormdownUI extends LitElement {
         return
       }
 
-      // Get the form ID
-      const formId = this.getFormId()
-
-      // Replace form wrapper with hidden form and add form attributes to fields
-      generatedHTML = this.processFormHTML(generatedHTML, formId)
+      // For backward compatibility, still process form HTML if needed
+      // (the generateFormHTML should already handle hidden forms properly)
+      if (!generatedHTML.includes('<form hidden')) {
+        // Fallback to old method if core doesn't generate hidden forms yet
+        const parseResult = this.parser.parseFormdown(this.content)
+        generatedHTML = this.generator.generateHTML(parseResult)
+        const formId = this.getFormId()
+        generatedHTML = this.processFormHTML(generatedHTML, formId)
+      }
 
       container.innerHTML = generatedHTML
 
@@ -974,7 +981,7 @@ export class FormdownUI extends LitElement {
     return { ...this.data }
   }
 
-  // Validation methods
+  // Validation methods - now using core validation with schema
   validate(): ValidationResult {
     const errors: FieldError[] = []
     const container = this.shadowRoot?.querySelector('#content-container')
@@ -986,7 +993,17 @@ export class FormdownUI extends LitElement {
     // Clear previous validation states
     this.clearValidationStates()
 
-    // Get all form fields
+    // Use core validateForm if schema is available
+    if (this._schema && Object.keys(this._schema).length > 0) {
+      const validationResult = validateForm(this.data, this._schema)
+      
+      // Apply visual feedback
+      this.applyValidationFeedback(validationResult.errors)
+      
+      return validationResult
+    }
+
+    // Fallback to field-by-field validation
     const allFields = container.querySelectorAll('input, textarea, select, [contenteditable="true"]')
 
     allFields.forEach(element => {
