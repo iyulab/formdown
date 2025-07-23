@@ -238,11 +238,18 @@ export class PluginManager implements IPluginManager {
 
         await Promise.all(destroyPromises)
 
+        // Clear all plugin registrations
+        this.plugins.clear()
+        this.fieldTypes.clear()
+        this.validators.clear()
+        this.renderers.clear()
+        this.themes.clear()
+
         this.initialized = false
-        this.emit('plugins-destroyed', { count: this.plugins.size })
+        this.emit('plugins-destroyed', { count: 0 })
 
         if (this.options.debug) {
-            console.debug(`[Formdown] ${this.plugins.size} plugins destroyed`)
+            console.debug(`[Formdown] All plugins destroyed and cleared`)
         }
     }
 

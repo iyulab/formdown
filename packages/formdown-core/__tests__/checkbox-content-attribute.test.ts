@@ -22,7 +22,9 @@ describe('Checkbox Content Attribute', () => {
                 label: 'Terms',
                 required: true,
                 content: 'I agree to the terms and conditions',
-                attributes: {}
+                attributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
 
@@ -37,7 +39,9 @@ describe('Checkbox Content Attribute', () => {
                 label: 'Privacy Policy',
                 required: true,
                 content: 'I have read and accept the privacy policy',
-                attributes: {}
+                attributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
 
@@ -51,7 +55,9 @@ describe('Checkbox Content Attribute', () => {
                 type: 'checkbox',
                 label: 'Newsletter Subscription',
                 content: 'Subscribe to our weekly newsletter',
-                attributes: {}
+                attributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
 
@@ -65,7 +71,9 @@ describe('Checkbox Content Attribute', () => {
                 type: 'checkbox',
                 label: 'Terms',
                 required: true,
-                attributes: {}
+                attributes: {
+                    form: 'formdown-form-default'
+                }
             })
             expect(result.forms[0].content).toBeUndefined()
         })
@@ -87,7 +95,9 @@ describe('Checkbox Content Attribute', () => {
                 label: 'Terms',
                 required: true,
                 content: 'I agree to the terms and conditions',
-                attributes: {}
+                attributes: {
+                    form: 'formdown-form-default'
+                }
             }
             
             const html = generator.generateFieldHTML(field)
@@ -106,7 +116,9 @@ describe('Checkbox Content Attribute', () => {
                 label: 'Privacy Policy',
                 content: 'I have read and accept the privacy policy',
                 required: true,
-                attributes: {}
+                attributes: {
+                    form: 'formdown-form-default'
+                }
             }
             
             const html = generator.generateFieldHTML(field)
@@ -121,7 +133,9 @@ describe('Checkbox Content Attribute', () => {
                 name: 'newsletter',
                 type: 'checkbox',
                 label: 'Newsletter Subscription',
-                attributes: {}
+                attributes: {
+                    form: 'formdown-form-default'
+                }
             }
             
             const html = generator.generateFieldHTML(field)
@@ -135,7 +149,9 @@ describe('Checkbox Content Attribute', () => {
                 name: 'email_notifications',
                 type: 'checkbox',
                 label: 'Email Notifications', // Fix: label is required in Field interface
-                attributes: {}
+                attributes: {
+                    form: 'formdown-form-default'
+                }
             }
             
             const html = generator.generateFieldHTML(field)
@@ -150,7 +166,9 @@ describe('Checkbox Content Attribute', () => {
                 type: 'checkbox',
                 label: 'Terms', // Fix: label is required in Field interface
                 content: 'I agree to the <Terms> & "Conditions"',
-                attributes: {}
+                attributes: {
+                    form: 'formdown-form-default'
+                }
             }
             
             const html = generator.generateFieldHTML(field)

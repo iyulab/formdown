@@ -4,17 +4,17 @@
 
 describe('FormdownUI Module', () => {
     it('should be importable', async () => {
-        const module = await import('../src/formdown-ui');
+        const module = await import('../src/index');
         expect(module.FormdownUI).toBeDefined();
     });
 
     it('should have a FormdownUI class', async () => {
-        const { FormdownUI } = await import('../src/formdown-ui');
+        const { FormdownUI } = await import('../src/index');
         expect(typeof FormdownUI).toBe('function');
     });
 
     it('should be a constructor function', async () => {
-        const { FormdownUI } = await import('../src/formdown-ui');
+        const { FormdownUI } = await import('../src/index');
         expect(FormdownUI.prototype).toBeDefined();
     });
 });
@@ -24,7 +24,7 @@ describe('Basic Component Properties', () => {
     let component: any;
 
     beforeAll(async () => {
-        const module = await import('../src/formdown-ui');
+        const module = await import('../src/index');
         FormdownUI = module.FormdownUI;
     });
 
@@ -57,7 +57,7 @@ describe('Universal Field Synchronization', () => {
     let component: any;
 
     beforeAll(async () => {
-        const module = await import('../src/formdown-ui');
+        const module = await import('../src/index');
         FormdownUI = module.FormdownUI;
     });
 
@@ -115,7 +115,7 @@ describe('Form Data Collection', () => {
     let component: any;
 
     beforeAll(async () => {
-        const module = await import('../src/formdown-ui');
+        const module = await import('../src/index');
         FormdownUI = module.FormdownUI;
     });
 

@@ -71,16 +71,21 @@ export class HookManager implements IHookManager {
         this.emit('hooks-executing', { hook: hookName, count: hooks.length })
 
         for (const hook of hooks) {
+            let timeoutInfo: { promise: Promise<never>, cleanup: () => void } | null = null
+            
             try {
-                const timeoutPromise = this.options.timeout
+                timeoutInfo = this.options.timeout
                     ? this.createTimeoutPromise(this.options.timeout)
                     : null
 
                 const hookPromise = Promise.resolve(hook.handler(context, ...args))
 
-                const result = timeoutPromise
-                    ? await Promise.race([hookPromise, timeoutPromise])
+                const result = timeoutInfo
+                    ? await Promise.race([hookPromise, timeoutInfo.promise])
                     : await hookPromise
+
+                // Clean up timeout if it exists
+                timeoutInfo?.cleanup()
 
                 if (result !== undefined) {
                     results.push(result)
@@ -89,6 +94,8 @@ export class HookManager implements IHookManager {
                 this.emit('hook-executed', { hook: hookName, success: true })
 
             } catch (error) {
+                // Clean up timeout if it exists
+                timeoutInfo?.cleanup()
                 this.handleHookError(hookName, error)
             }
         }
@@ -168,15 +175,19 @@ export class HookManager implements IHookManager {
     /**
      * Create a timeout promise for hook execution
      */
-    private createTimeoutPromise(timeout: number): Promise<never> {
-        return new Promise((_, reject) => {
-            const timeoutId = setTimeout(() => {
+    private createTimeoutPromise(timeout: number): { promise: Promise<never>, cleanup: () => void } {
+        let timeoutId: NodeJS.Timeout
+        const promise = new Promise<never>((_, reject) => {
+            timeoutId = setTimeout(() => {
                 reject(new Error(`Hook execution timeout after ${timeout}ms`))
             }, timeout)
-
-            // Clear timeout if promise resolves
-            timeoutId.unref?.()
         })
+        
+        const cleanup = () => {
+            clearTimeout(timeoutId)
+        }
+        
+        return { promise, cleanup }
     }
 
     /**

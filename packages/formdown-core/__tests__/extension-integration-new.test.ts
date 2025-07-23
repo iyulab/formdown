@@ -30,7 +30,12 @@ describe('Extension Integration', () => {
 
     afterAll(async () => {
         // Clean up extension system after all tests
-        await extensionManager.destroy()
+        // Note: Only destroy if we're the last test suite
+        try {
+            await extensionManager.destroy()
+        } catch (error) {
+            // Ignore destruction errors during test cleanup
+        }
     })
 
     describe('Parser Extension Integration', () => {
@@ -330,9 +335,31 @@ describe('Extension Integration', () => {
             
             await extensionManager.destroy()
             expect(destroyCalled).toBe(true)
+
+            // Clear plugin state completely and reinitialize for subsequent tests
+            try {
+                await extensionManager.initialize()
+            } catch (error) {
+                // Handle case where core plugin is already registered
+                if (error instanceof Error && error.message?.includes('already registered')) {
+                    // System is in a good state, continue
+                } else {
+                    throw error
+                }
+            }
         })
 
         test('should handle plugin dependencies', async () => {
+            // Ensure extension system is initialized
+            try {
+                await extensionManager.initialize()
+            } catch (error) {
+                // Ignore if already initialized
+                if (!(error instanceof Error) || !error.message?.includes('already registered')) {
+                    throw error
+                }
+            }
+
             const dependentPlugin: Plugin = {
                 metadata: {
                     name: 'dependent-plugin',
@@ -347,6 +374,16 @@ describe('Extension Integration', () => {
     })
 
     describe('Error Handling in Extensions', () => {
+        beforeEach(async () => {
+            // Clean up any existing state and reinitialize for clean test environment
+            try {
+                await extensionManager.destroy()
+            } catch (error) {
+                // Ignore if already destroyed
+            }
+            await extensionManager.initialize()
+        })
+
         test('should handle plugin registration errors gracefully', async () => {
             const faultyPlugin: Plugin = {
                 metadata: {
@@ -358,8 +395,13 @@ describe('Extension Integration', () => {
                 }
             }
 
-            // Should not throw, but should handle the error
-            await expect(registerPlugin(faultyPlugin)).rejects.toThrow('Initialization failed')
+            // Should not throw, but warn and continue (with errorStrategy: 'warn')
+            await expect(registerPlugin(faultyPlugin)).resolves.not.toThrow()
+            
+            // Plugin should still be registered even though initialization failed
+            const stats = extensionManager.getStats()
+            const pluginNames = stats.plugins.map((p: any) => p.name || p)
+            expect(pluginNames).toContain('faulty-plugin')
         })
 
         test('should handle hook execution errors', async () => {
@@ -383,7 +425,7 @@ describe('Extension Integration', () => {
                 name: 'field-parse',
                 priority: 1,
                 handler: async () => {
-                    // Simulate a slow operation
+                    // Simulate a slow operation (longer than timeout)
                     await new Promise(resolve => setTimeout(resolve, 2000))
                     return 'completed'
                 }
@@ -391,16 +433,29 @@ describe('Extension Integration', () => {
 
             registerHook(slowHook)
             
-            // Should timeout and not hang the system
+            // Should timeout and not hang the system (with errorStrategy: 'warn')
             const start = Date.now()
             const result = await extensionManager.executeHooks('field-parse', {})
             const duration = Date.now() - start
             
-            expect(duration).toBeLessThan(1500) // Should timeout before 1.5 seconds
+            // Should timeout within reasonable bounds (around 1000ms + some buffer)
+            expect(duration).toBeGreaterThan(900) // Should take at least the timeout duration
+            expect(duration).toBeLessThan(1200) // Should timeout with small buffer
+            expect(result).toEqual([]) // Should return empty array when hooks fail
         })
     })
 
     describe('Extension System Performance', () => {
+        beforeEach(async () => {
+            // Clean up any existing state and reinitialize
+            try {
+                await extensionManager.destroy()
+            } catch (error) {
+                // Ignore if already destroyed
+            }
+            await extensionManager.initialize()
+        })
+
         test('should handle many plugins efficiently', async () => {
             const plugins = Array.from({ length: 10 }, (_, i) => ({
                 metadata: {

@@ -14,7 +14,10 @@ describe('Schema Extraction', () => {
                     required: true,
                     position: 1,
                     isInline: undefined,
-                    layout: 'vertical'
+                    layout: 'vertical',
+                    htmlAttributes: {
+                        form: 'formdown-form-default'
+                    }
                 }
             })
         })
@@ -30,7 +33,10 @@ describe('Schema Extraction', () => {
                 placeholder: 'Enter your email',
                 position: 1,
                 isInline: undefined,
-                layout: 'vertical'
+                layout: 'vertical',
+                htmlAttributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
 
@@ -41,12 +47,16 @@ describe('Schema Extraction', () => {
             expect(schema.age).toEqual({
                 type: 'number',
                 label: 'Age',
+                required: undefined,
                 position: 1,
                 isInline: undefined,
                 layout: 'vertical',
                 validation: {
                     min: 18,
                     max: 120
+                },
+                htmlAttributes: {
+                    form: 'formdown-form-default'
                 }
             })
         })
@@ -63,7 +73,10 @@ describe('Schema Extraction', () => {
                 required: true,
                 position: 1,
                 isInline: undefined,
-                layout: 'vertical'
+                layout: 'vertical',
+                htmlAttributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
 
@@ -74,12 +87,16 @@ describe('Schema Extraction', () => {
             expect(schema.age).toEqual({
                 type: 'number',
                 label: 'Age',
+                required: undefined,
                 position: 1,
                 isInline: undefined,
                 layout: 'vertical',
                 validation: {
                     min: 13,
                     max: 120
+                },
+                htmlAttributes: {
+                    form: 'formdown-form-default'
                 }
             })
         })
@@ -91,6 +108,7 @@ describe('Schema Extraction', () => {
             expect(schema.bio).toEqual({
                 type: 'textarea',
                 label: 'Bio',
+                required: undefined,
                 position: 1,
                 isInline: undefined,
                 layout: 'vertical',
@@ -98,7 +116,8 @@ describe('Schema Extraction', () => {
                     maxlength: 500
                 },
                 htmlAttributes: {
-                    rows: 4
+                    rows: 4,
+                    form: 'formdown-form-default'
                 }
             })
         })
@@ -117,6 +136,9 @@ describe('Schema Extraction', () => {
                 pattern: '^[a-zA-Z0-9_]{3,20}$',
                 validation: {
                     pattern: '^[a-zA-Z0-9_]{3,20}$'
+                },
+                htmlAttributes: {
+                    form: 'formdown-form-default'
                 }
             })
         })
@@ -130,10 +152,14 @@ describe('Schema Extraction', () => {
             expect(schema.gender).toEqual({
                 type: 'radio',
                 label: 'Gender',
+                required: undefined,
                 options: ['Male', 'Female', 'Other'],
                 position: 1,
                 isInline: undefined,
-                layout: 'vertical'
+                layout: 'vertical',
+                htmlAttributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
 
@@ -144,11 +170,15 @@ describe('Schema Extraction', () => {
             expect(schema.interests).toEqual({
                 type: 'checkbox',
                 label: 'Interests',
+                required: undefined,
                 options: ['Web', 'Mobile', 'AI'],
                 allowOther: true,
                 position: 1,
                 isInline: undefined,
-                layout: 'vertical'
+                layout: 'vertical',
+                htmlAttributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
 
@@ -159,10 +189,14 @@ describe('Schema Extraction', () => {
             expect(schema.country).toEqual({
                 type: 'select',
                 label: 'Country',
+                required: undefined,
                 options: ['USA', 'UK', 'Canada'],
                 position: 1,
                 isInline: undefined,
-                layout: 'vertical'
+                layout: 'vertical',
+                htmlAttributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
     })
@@ -175,9 +209,13 @@ describe('Schema Extraction', () => {
             expect(schema.name).toEqual({
                 type: 'text',
                 label: 'Name',
+                required: undefined,
                 position: 1,
                 isInline: true,
-                layout: 'inline'
+                layout: 'inline',
+                htmlAttributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
 
@@ -191,7 +229,10 @@ describe('Schema Extraction', () => {
                 required: true,
                 position: 1,
                 isInline: true,
-                layout: 'inline'
+                layout: 'inline',
+                htmlAttributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
     })
@@ -253,6 +294,9 @@ Please enter your email: ___@email*
                 minlength: 3,
                 maxlength: 100
             })
+            expect(schema.field.htmlAttributes).toEqual({
+                form: 'formdown-form-default'
+            })
         })
 
         test('should extract pattern validation', () => {
@@ -262,6 +306,9 @@ Please enter your email: ___@email*
             expect(schema.field.validation).toEqual({
                 pattern: 'abc123'
             })
+            expect(schema.field.htmlAttributes).toEqual({
+                form: 'formdown-form-default'
+            })
         })
 
         test('should extract file validation', () => {
@@ -270,6 +317,9 @@ Please enter your email: ___@email*
 
             expect(schema.upload.validation).toEqual({
                 accept: '.pdf,.doc'
+            })
+            expect(schema.upload.htmlAttributes).toEqual({
+                form: 'formdown-form-default'
             })
         })
     })
@@ -285,7 +335,8 @@ Please enter your email: ___@email*
             expect(schema.field.placeholder).toBe('Enter text')
             expect(schema.field.htmlAttributes).toEqual({
                 class: 'custom-input',
-                'data-test': 'field'
+                'data-test': 'field',
+                form: 'formdown-form-default'
             })
         })
     })
@@ -296,6 +347,9 @@ Please enter your email: ___@email*
             const schema = getSchema(content)
 
             expect(schema.first_name.label).toBe('First Name')
+            expect(schema.first_name.htmlAttributes).toEqual({
+                form: 'formdown-form-default'
+            })
         })
 
         test('should generate smart labels for camelCase', () => {
@@ -303,6 +357,9 @@ Please enter your email: ___@email*
             const schema = getSchema(content)
 
             expect(schema.firstName.label).toBe('First Name')
+            expect(schema.firstName.htmlAttributes).toEqual({
+                form: 'formdown-form-default'
+            })
         })
 
         test('should use custom label when provided', () => {
@@ -310,6 +367,9 @@ Please enter your email: ___@email*
             const schema = getSchema(content)
 
             expect(schema.user_name.label).toBe('Full Name')
+            expect(schema.user_name.htmlAttributes).toEqual({
+                form: 'formdown-form-default'
+            })
         })
     })
 
