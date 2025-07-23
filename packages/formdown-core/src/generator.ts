@@ -1,5 +1,5 @@
 import { marked } from 'marked'
-import { Field, FormdownContent } from './types'
+import { Field, FormdownContent, FormDeclaration } from './types'
 
 export class FormdownGenerator {
     /**
@@ -63,12 +63,53 @@ export class FormdownGenerator {
 
         // Handle both sync and async marked results
         if (typeof markdownHTML === 'string') {
-            return this.processContent(markdownHTML, content.forms)
+            return this.processContentWithHiddenForms(markdownHTML, content.forms, content.formDeclarations || [])
         } else {
             // If marked returns a Promise, we need to handle it differently
             // For now, fallback to the old method
             return this.generateLegacyHTML(content)
         }
+    }
+
+    private processContentWithHiddenForms(html: string, fields: Field[], formDeclarations: FormDeclaration[]): string {
+        if (fields.length === 0 && formDeclarations.length === 0) {
+            return html
+        }
+
+        // Generate hidden forms HTML
+        const hiddenFormsHTML = this.generateHiddenFormsHTML(formDeclarations)
+
+        // Separate inline and block fields
+        const inlineFields: Field[] = []
+        const blockFields: Field[] = []
+
+        fields.forEach(field => {
+            if (field.inline) {
+                inlineFields.push(field)
+            } else {
+                blockFields.push(field)
+            }
+        })
+
+        let result = html
+
+        // Process inline fields first
+        inlineFields.forEach((field, index) => {
+            const placeholder = `<!--FORMDOWN_FIELD_${fields.indexOf(field)}-->`
+            const fieldHTML = this.generateInlineFieldHTML(field)
+            result = result.replace(new RegExp(placeholder, 'g'), fieldHTML)
+        })
+
+        // Process block fields - replace each field at its original position with standalone field (no wrapper form)
+        blockFields.forEach(field => {
+            const fieldIndex = fields.indexOf(field)
+            const placeholder = `<!--FORMDOWN_FIELD_${fieldIndex}-->`
+            const fieldHTML = this.generateStandaloneFieldHTML(field)
+            result = result.replace(new RegExp(placeholder, 'g'), fieldHTML)
+        })
+
+        // Prepend hidden forms to the beginning of the HTML
+        return hiddenFormsHTML + result
     }
 
     private processContent(html: string, fields: Field[]): string {
@@ -134,10 +175,11 @@ export class FormdownGenerator {
         if (field.inline) {
             return this.generateInlineFieldHTML(field)
         }
+        // For hidden form architecture, generate field without wrapper form
         return `
-<form class="formdown-form">
+<div class="formdown-field-container">
 ${this.generateFieldHTML(field)}
-</form>`
+</div>`
     }
 
     generateSingleFormHTML(fields: Field[]): string {
@@ -405,6 +447,14 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
     <input type="month" ${attrString}>${generateHelpText()}
 </div>`
 
+            case 'submit':
+                const submitFormAttr = field.attributes?.form ? ` form="${field.attributes.form}"` : ''
+                return `<button type="submit"${submitFormAttr}>${field.label || 'Submit'}</button>`
+
+            case 'reset':
+                const resetFormAttr = field.attributes?.form ? ` form="${field.attributes.form}"` : ''
+                return `<button type="reset"${resetFormAttr}>${field.label || 'Reset'}</button>`
+
             default:
                 return `
 <div class="formdown-field">
@@ -412,5 +462,27 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
     <input type="${type}" ${attrString}>${generateHelpText()}
 </div>`
         }
+    }
+
+    private generateHiddenFormsHTML(formDeclarations: FormDeclaration[]): string {
+        if (formDeclarations.length === 0) {
+            return ''
+        }
+
+        return formDeclarations.map(form => this.generateHiddenFormHTML(form)).join('')
+    }
+
+    private generateHiddenFormHTML(form: FormDeclaration): string {
+        const attrString = Object.entries(form.attributes)
+            .map(([key, value]) => {
+                if (typeof value === 'boolean') {
+                    return value ? key : ''
+                }
+                return `${key}="${value}"`
+            })
+            .filter(Boolean)
+            .join(' ')
+
+        return `<form hidden id="${form.id}" ${attrString}></form>\n`
     }
 }

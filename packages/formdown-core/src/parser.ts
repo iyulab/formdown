@@ -1,24 +1,36 @@
 import { marked } from 'marked'
-import { Field, ParseError, ParseResult, FormdownContent, FormdownOptions } from './types'
+import { Field, ParseError, ParseResult, FormdownContent, FormdownOptions, FormDeclaration } from './types'
 
 export class FormdownParser {
     private options: FormdownOptions
+    private formDeclarations: FormDeclaration[] = []
+    private currentFormId: string | null = null
+    private formCounter = 1
+    private defaultFormCreated = false
 
     constructor(options: FormdownOptions = {}) {
         this.options = {
             preserveMarkdown: true,
             fieldPrefix: '@',
             inlineFieldDelimiter: '___',
+            autoGenerateFormIds: true,
             ...options
         }
     }
 
     parseFormdown(content: string): FormdownContent {
+        // Reset state for each parse
+        this.formDeclarations = []
+        this.currentFormId = null
+        this.formCounter = 1
+        this.defaultFormCreated = false
+
         const { fields, cleanedMarkdown } = this.extractFields(content)
 
         return {
             markdown: this.options.preserveMarkdown ? cleanedMarkdown : '',
-            forms: fields
+            forms: fields,
+            formDeclarations: this.formDeclarations
         }
     }
 
@@ -33,9 +45,23 @@ export class FormdownParser {
         const cleanedLines: string[] = []
 
         for (let i = 0; i < lines.length; i++) {
-            const line = lines[i]            // Extract block fields
+            const line = lines[i]
+
+            // Check for @form declaration first
+            const formDeclaration = this.parseFormDeclaration(line)
+            if (formDeclaration) {
+                this.formDeclarations.push(formDeclaration)
+                this.currentFormId = formDeclaration.id
+                // Remove @form declaration from markdown
+                cleanedLines.push('')
+                continue
+            }
+
+            // Extract block fields
             const blockField = this.parseBlockField(line)
             if (blockField) {
+                // Associate field with current form
+                this.associateFieldWithForm(blockField)
                 fields.push(blockField)
                 // Insert placeholder for field position (using a format that won't be interpreted as markdown)
                 cleanedLines.push(`<!--FORMDOWN_FIELD_${fields.length - 1}-->`)
@@ -44,6 +70,8 @@ export class FormdownParser {
 
             // Extract inline fields
             const { cleanedLine, inlineFields } = this.parseInlineFields(line)
+            // Associate inline fields with current form
+            inlineFields.forEach(field => this.associateFieldWithForm(field))
             fields.push(...inlineFields)
             cleanedLines.push(cleanedLine)
         }
@@ -462,5 +490,66 @@ export class FormdownParser {
 
         // Return as string
         return value
+    }
+
+    private parseFormDeclaration(line: string): FormDeclaration | null {
+        const trimmedLine = line.trim()
+        
+        // Match @form[attributes] pattern
+        const match = trimmedLine.match(/^@form\[([^\]]*)\]\s*$/)
+        if (!match) return null
+
+        const attributesString = match[1]
+        const attributes = this.parseAttributes(attributesString)
+        
+        // Generate or extract form ID
+        const id = attributes.id || this.generateFormId()
+        
+        // Remove id from attributes if it was specified, as it's handled separately
+        if (attributes.id) {
+            delete attributes.id
+        }
+        
+        return {
+            id,
+            attributes
+        }
+    }
+
+    private generateFormId(): string {
+        return `formdown-form-${this.formCounter++}`
+    }
+
+    private getDefaultFormId(): string {
+        if (!this.defaultFormCreated) {
+            this.defaultFormCreated = true
+            this.formDeclarations.push({
+                id: 'formdown-form-default',
+                attributes: { action: '.', method: 'GET' }
+            })
+            return 'formdown-form-default'
+        }
+        return 'formdown-form-default'
+    }
+
+    private associateFieldWithForm(field: Field): void {
+        // If field already has explicit form attribute, validate it exists
+        if (field.attributes?.form) {
+            const formExists = this.formDeclarations.some(f => f.id === field.attributes!.form)
+            if (!formExists) {
+                console.warn(`FormDown: Referenced form "${field.attributes.form}" does not exist. Using current or default form.`)
+                field.attributes.form = this.currentFormId || this.getDefaultFormId()
+            }
+            return
+        }
+        
+        // Auto-associate with current form or create default
+        if (this.currentFormId) {
+            if (!field.attributes) field.attributes = {}
+            field.attributes.form = this.currentFormId
+        } else {
+            if (!field.attributes) field.attributes = {}
+            field.attributes.form = this.getDefaultFormId()
+        }
     }
 }

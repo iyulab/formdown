@@ -39,15 +39,22 @@ export interface ParseResult {
     errors: ParseError[]
 }
 
+export interface FormDeclaration {
+    id: string
+    attributes: Record<string, any>
+}
+
 export interface FormdownContent {
     markdown: string
     forms: Field[]
+    formDeclarations?: FormDeclaration[]
 }
 
 export interface FormdownOptions {
     preserveMarkdown?: boolean
     fieldPrefix?: string
     inlineFieldDelimiter?: string
+    autoGenerateFormIds?: boolean
 }
 
 // Schema-related types for getSchema() functionality

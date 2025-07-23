@@ -55,15 +55,20 @@ formdown-editor (top-level)
 ```
 
 ### Data Flow
-1. User writes markdown with @field syntax
-2. Core parser processes syntax into structured data
+1. User writes markdown with @form and @field syntax
+2. Core parser processes form declarations and field definitions
+   - @form declarations create hidden form elements with specified attributes
+   - @field definitions automatically associate with the nearest form or explicit form ID
    - Hook system allows extensions to modify parsing behavior
    - Plugin system provides custom field types and validators
 3. Schema extractor provides metadata for validation and tooling
-4. UI component renders interactive form elements
+4. HTML generator creates hidden form structure with field associations
+   - Hidden forms: `<form hidden id="form-id" ...attributes>`
+   - Associated fields: `<input form="form-id" ...attributes>`
    - Extension system enables custom rendering behaviors
-5. User interactions update form data reactively
-6. Changes propagate back through the component tree
+5. UI component renders interactive form elements with proper form associations
+6. User interactions update form data reactively
+7. Changes propagate back through the component tree
 
 ### Build Strategy
 - **Development**: Independent package development with live reloading
@@ -77,6 +82,13 @@ Web components ensure framework-agnostic usage across React, Vue, Angular, or va
 
 **Progressive Enhancement**
 Forms work with basic HTML functionality and enhance with JavaScript interactions.
+
+**Hidden Form Architecture**
+Separates form definition from field definition using HTML5 `form` attribute for clean styling and flexible layout:
+- Hidden form elements don't interfere with CSS styling
+- Fields can be positioned anywhere in the document
+- Multiple forms supported in a single document
+- Standards-compliant HTML form association
 
 **Developer Experience**
 Intuitive syntax, comprehensive TypeScript support, and clear documentation lower the learning curve.

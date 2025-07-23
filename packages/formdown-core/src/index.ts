@@ -14,8 +14,17 @@ export function parseFormdown(input: string) {
     return parser.parseFormdown(input)
 }
 
-export function generateFormHTML(content: any) {
+export function generateFormHTML(content: string | any) {
     const generator = new FormdownGenerator()
+    
+    // If input is a string, parse it first
+    if (typeof content === 'string') {
+        const parser = new FormdownParser()
+        const parsedContent = parser.parseFormdown(content)
+        return generator.generateHTML(parsedContent)
+    }
+    
+    // If input is already parsed content, use it directly
     return generator.generateHTML(content)
 }
 

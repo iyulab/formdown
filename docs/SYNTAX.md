@@ -6,6 +6,53 @@ FormDown extends Markdown with form field syntax while maintaining **100% compat
 
 FormDown fields use the pattern `@field_name: [type attributes]` for clarity and Markdown compatibility.
 
+## Form Declaration and Hidden Form Architecture
+
+FormDown uses a **hidden form architecture** that separates form definition from field definition for clean styling and flexible layout:
+
+### Form Declaration Syntax
+```formdown
+// Basic form declaration
+@form[action="/submit" method="POST"]
+
+// Form with custom ID
+@form[id="contact-form" action="/contact" method="POST"]
+
+// Multiple forms in one document
+@form[id="login" action="/login" method="POST"]
+@form[id="register" action="/register" method="POST"]
+```
+
+### Hidden Form Implementation
+FormDown generates hidden form elements that don't interfere with your document styling:
+
+```html
+<!-- Generated hidden form -->
+<form hidden id="formdown-form-1" action="/submit" method="POST"></form>
+
+<!-- Fields reference the form via form attribute -->
+<input type="text" name="username" form="formdown-form-1">
+<input type="email" name="email" form="formdown-form-1">
+```
+
+### Field-Form Association
+```formdown
+@form[action="/submit" method="POST"]
+
+// Fields automatically associate with the most recent @form
+@username: [text required]
+@email: [email required]
+
+// Or explicitly specify form association
+@special_field: [text form="other-form-id"]
+```
+
+**Benefits of Hidden Form Architecture:**
+- ✅ **Clean styling**: No form wrapper interfering with CSS layout
+- ✅ **Flexible positioning**: Fields can be placed anywhere in the document
+- ✅ **Multiple forms**: Support multiple forms in one document
+- ✅ **HTML standards**: Uses native HTML `form` attribute for proper association
+
 ## Smart Label Generation
 
 FormDown automatically generates human-readable labels from field names when no custom label is provided. This feature helps create clean, readable forms without requiring explicit labels for every field.
@@ -385,14 +432,19 @@ Additional notes: ___@notes[textarea rows=3 placeholder="Special delivery instru
 
 ### HTML Output
 ```formdown
+@form[action="/contact" method="POST"]
 @email(Email Address): [email required autocomplete="email" class="form-control"]
 ```
 
 Renders to:
 ```html
+<!-- Hidden form element -->
+<form hidden id="formdown-form-1" action="/contact" method="POST"></form>
+
+<!-- Field with form association -->
 <div class="formdown-field">
     <label for="email">Email Address *</label>
-    <input type="email" id="email" name="email" required autocomplete="email" class="form-control">
+    <input type="email" id="email" name="email" required autocomplete="email" class="form-control" form="formdown-form-1">
 </div>
 ```
 
