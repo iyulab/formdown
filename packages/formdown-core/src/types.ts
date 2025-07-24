@@ -14,6 +14,7 @@ export interface Field {
     description?: string
     errorMessage?: string
     inline?: boolean
+    position?: number  // Position in the source content for form association
 }
 
 export interface ValidationRule {
@@ -42,6 +43,7 @@ export interface ParseResult {
 export interface FormDeclaration {
     id: string
     attributes: Record<string, any>
+    position?: number  // Position in the source content for nearest form logic
 }
 
 export interface FormdownContent {

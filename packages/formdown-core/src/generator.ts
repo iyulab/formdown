@@ -2,6 +2,7 @@ import { marked } from 'marked'
 import { Field, FormdownContent, FormDeclaration } from './types'
 
 export class FormdownGenerator {
+    private formCounter = 0
     /**
      * Escape HTML special characters
      * @param text - The text to escape
@@ -58,11 +59,136 @@ export class FormdownGenerator {
         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     }
 
+    /**
+     * Determine the form ID for a field based on explicit form attribute or default assignment
+     * @param field - The field to determine form ID for
+     * @param defaultFormId - The default form ID to use if no explicit form is specified
+     * @returns The form ID to use for this field
+     */
+    private determineFormId(field: Field, defaultFormId?: string): string | undefined {
+        // Priority 1: Explicit form attribute in field attributes
+        if (field.attributes?.form) {
+            return field.attributes.form as string
+        }
+
+        // Priority 2: Default form ID provided (usually from nearest @form declaration)
+        if (defaultFormId) {
+            return defaultFormId
+        }
+
+        // Priority 3: Generate default form ID if no form context is available
+        if (!defaultFormId) {
+            return this.generateDefaultFormId()
+        }
+
+        return undefined
+    }
+
+    /**
+     * Generate a default form ID using the formdown-form-{counter} pattern
+     * @returns A unique default form ID
+     */
+    private generateDefaultFormId(): string {
+        if (this.formCounter === 0) {
+            return 'formdown-form-default'
+        }
+        return `formdown-form-${this.formCounter++}`
+    }
+
+    /**
+     * Ensure there's at least a default form declaration if fields exist but no forms are declared
+     * @param formDeclarations - Existing form declarations
+     * @param fields - Fields that need form association
+     * @returns Form declarations with default form added if needed
+     */
+    private ensureDefaultForm(formDeclarations: FormDeclaration[], fields: Field[]): FormDeclaration[] {
+        if (fields.length === 0) {
+            return formDeclarations
+        }
+
+        if (formDeclarations.length === 0) {
+            // Create default form if no forms are declared but fields exist
+            const defaultForm: FormDeclaration = {
+                id: this.generateDefaultFormId(),
+                attributes: {}
+            }
+            return [defaultForm]
+        }
+
+        return formDeclarations
+    }
+
+    /**
+     * Create a mapping between fields and their associated forms
+     * @param fields - All fields in the content
+     * @param formDeclarations - All form declarations
+     * @returns Map of field to form ID associations
+     */
+    private createFormContext(fields: Field[], formDeclarations: FormDeclaration[]): Map<Field, string> {
+        const formContext = new Map<Field, string>()
+        
+        if (formDeclarations.length === 0) {
+            return formContext
+        }
+
+        // Sort form declarations by position for nearest form logic
+        const sortedForms = [...formDeclarations].sort((a, b) => (a.position || 0) - (b.position || 0))
+        const defaultFormId = sortedForms[0].id
+
+        fields.forEach(field => {
+            // If field has explicit form attribute, respect it
+            if (field.attributes?.form) {
+                const explicitFormId = field.attributes.form as string
+                // Validate that the form exists
+                const formExists = formDeclarations.some(form => form.id === explicitFormId)
+                if (formExists) {
+                    formContext.set(field, explicitFormId)
+                } else {
+                    // Fallback to default form if explicit form doesn't exist
+                    console.warn(`Form '${explicitFormId}' referenced by field '${field.name}' does not exist. Using default form.`)
+                    formContext.set(field, defaultFormId)
+                }
+            } else {
+                // Auto-associate with nearest preceding form based on position
+                const nearestForm = this.findNearestForm(field, sortedForms)
+                formContext.set(field, nearestForm?.id || defaultFormId)
+            }
+        })
+
+        return formContext
+    }
+
+    /**
+     * Find the nearest preceding form declaration for a field
+     * @param field - The field to find a form for
+     * @param sortedForms - Form declarations sorted by position
+     * @returns The nearest form declaration or undefined
+     */
+    private findNearestForm(field: Field, sortedForms: FormDeclaration[]): FormDeclaration | undefined {
+        if (!field.position) {
+            return sortedForms[0] // Fallback to first form if no position info
+        }
+
+        // Find the last form that appears before this field
+        let nearestForm: FormDeclaration | undefined = undefined
+        
+        for (const form of sortedForms) {
+            if (!form.position || form.position <= field.position) {
+                nearestForm = form
+            } else {
+                break // Forms are sorted, so we can stop here
+            }
+        }
+
+        return nearestForm || sortedForms[0]
+    }
+
     generateHTML(content: FormdownContent): string {
         const markdownHTML = content.markdown ? marked(content.markdown) : ''
 
         // Handle both sync and async marked results
         if (typeof markdownHTML === 'string') {
+            // Use Hidden Form Architecture as the default behavior
             return this.processContentWithHiddenForms(markdownHTML, content.forms, content.formDeclarations || [])
         } else {
             // If marked returns a Promise, we need to handle it differently
@@ -76,8 +202,14 @@ export class FormdownGenerator {
             return html
         }
 
+        // Ensure we have at least a default form if fields exist but no forms declared
+        const effectiveFormDeclarations = this.ensureDefaultForm(formDeclarations, fields)
+        
         // Generate hidden forms HTML
-        const hiddenFormsHTML = this.generateHiddenFormsHTML(formDeclarations)
+        const hiddenFormsHTML = this.generateHiddenFormsHTML(effectiveFormDeclarations)
+
+        // Create form context mapping for field-to-form association
+        const formContext = this.createFormContext(fields, effectiveFormDeclarations)
 
         // Separate inline and block fields
         const inlineFields: Field[] = []
@@ -93,18 +225,20 @@ export class FormdownGenerator {
 
         let result = html
 
-        // Process inline fields first
+        // Process inline fields first with form context
         inlineFields.forEach((field, index) => {
             const placeholder = `<!--FORMDOWN_FIELD_${fields.indexOf(field)}-->`
-            const fieldHTML = this.generateInlineFieldHTML(field)
+            const defaultFormId = formContext.get(field)
+            const fieldHTML = this.generateInlineFieldHTML(field, defaultFormId)
             result = result.replace(new RegExp(placeholder, 'g'), fieldHTML)
         })
 
-        // Process block fields - replace each field at its original position with standalone field (no wrapper form)
+        // Process block fields with form context
         blockFields.forEach(field => {
             const fieldIndex = fields.indexOf(field)
             const placeholder = `<!--FORMDOWN_FIELD_${fieldIndex}-->`
-            const fieldHTML = this.generateStandaloneFieldHTML(field)
+            const defaultFormId = formContext.get(field)
+            const fieldHTML = this.generateStandaloneFieldHTML(field, defaultFormId)
             result = result.replace(new RegExp(placeholder, 'g'), fieldHTML)
         })
 
@@ -171,22 +305,27 @@ export class FormdownGenerator {
         return markdownHTML + formHTML
     }
 
-    generateStandaloneFieldHTML(field: Field): string {
+    generateStandaloneFieldHTML(field: Field, defaultFormId?: string): string {
         if (field.inline) {
-            return this.generateInlineFieldHTML(field)
+            return this.generateInlineFieldHTML(field, defaultFormId)
         }
         // For hidden form architecture, generate field without wrapper form
         return `
 <div class="formdown-field-container">
-${this.generateFieldHTML(field)}
+${this.generateFieldHTML(field, defaultFormId)}
 </div>`
     }
 
+    /**
+     * @deprecated This method is deprecated. Use processContentWithHiddenForms() for Hidden Form Architecture.
+     * Will be removed in future versions.
+     */
     generateSingleFormHTML(fields: Field[]): string {
+        console.warn('generateSingleFormHTML() is deprecated. Use Hidden Form Architecture instead.')
         if (fields.length === 0) return ''
 
-        const fieldsHTML = fields.map(field => this.generateFieldHTML(field)).join('\n')
         const formId = `form_multi_${Math.random().toString(36).substr(2, 9)}`
+        const fieldsHTML = fields.map(field => this.generateFieldHTML(field, formId)).join('\n')
 
         return `
 <form class="formdown-form" role="form" id="${formId}">
@@ -194,9 +333,15 @@ ${fieldsHTML}
 </form>`
     }
 
+    /**
+     * @deprecated This method violates Hidden Form Architecture by wrapping each field in a separate form.
+     * Use generateStandaloneFieldHTML() with form attribute connection instead.
+     * Will be removed in future versions.
+     */
     generateSingleFieldFormHTML(field: Field): string {
-        const fieldHTML = this.generateFieldHTML(field)
+        console.warn('generateSingleFieldFormHTML() is deprecated and violates Hidden Form Architecture. Use generateStandaloneFieldHTML() instead.')
         const formId = `form_${field.name}_${Math.random().toString(36).substr(2, 9)}`
+        const fieldHTML = this.generateFieldHTML(field, formId)
 
         return `
 <form class="formdown-form" role="form" id="${formId}">
@@ -204,9 +349,12 @@ ${fieldHTML}
 </form>`
     }
 
-    generateInlineFieldHTML(field: Field): string {
+    generateInlineFieldHTML(field: Field, defaultFormId?: string): string {
         const { name, type, required, placeholder, attributes } = field
         const displayLabel = field.label || this.generateSmartLabel(name)
+
+        // Form attribute auto-connection logic
+        const formId = this.determineFormId(field, defaultFormId)
 
         // For inline fields, use contenteditable spans
         const commonAttrs = {
@@ -217,6 +365,7 @@ ${fieldHTML}
             'contenteditable': 'true',
             'role': 'textbox',
             ...(required && { 'data-required': 'true' }),
+            ...(formId && { 'data-form': formId }),
             ...(attributes && attributes)
         }
 
@@ -233,18 +382,25 @@ ${fieldHTML}
         return `<span ${attrString}>${displayLabel}</span>`
     }
 
+    /**
+     * @deprecated This method is part of legacy form generation. 
+     * Use Hidden Form Architecture with processContentWithHiddenForms() instead.
+     * Will be removed in future versions.
+     */
     generateFormHTML(fields: Field[]): string {
+        console.warn('generateFormHTML() is deprecated. Use Hidden Form Architecture instead.')
         if (fields.length === 0) return ''
 
-        const fieldsHTML = fields.map(field => this.generateFieldHTML(field)).join('\n')
+        const formId = `formdown-legacy-${Math.random().toString(36).substr(2, 9)}`
+        const fieldsHTML = fields.map(field => this.generateFieldHTML(field, formId)).join('\n')
 
         return `
-<form class="formdown-form">
+<form class="formdown-form" id="${formId}">
 ${fieldsHTML}
 </form>`
     }
 
-    generateFieldHTML(field: Field): string {
+    generateFieldHTML(field: Field, defaultFormId?: string): string {
         const { name, type, label, required, placeholder, attributes, options, description, errorMessage, pattern, format, allowOther, content } = field
 
         // Use smart label generation if no label is provided
@@ -260,6 +416,9 @@ ${fieldsHTML}
         const descriptionId = description ? `${name}-description` : undefined
         const errorId = errorMessage ? `${name}-error` : undefined
 
+        // Form attribute auto-connection logic
+        const formId = this.determineFormId(field, defaultFormId)
+
         const commonAttrs = {
             id: fieldId,
             name,
@@ -269,6 +428,7 @@ ${fieldsHTML}
             ...(format && { format }),
             ...(description && { 'aria-describedby': descriptionId }),
             ...(errorMessage && { 'aria-describedby': `${descriptionId ? descriptionId + ' ' : ''}${errorId}` }),
+            ...(formId && { form: formId }),
             ...attributes
         }
 
@@ -448,11 +608,11 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
 </div>`
 
             case 'submit':
-                const submitFormAttr = field.attributes?.form ? ` form="${field.attributes.form}"` : ''
+                const submitFormAttr = formId ? ` form="${formId}"` : ''
                 return `<button type="submit"${submitFormAttr}>${field.label || 'Submit'}</button>`
 
             case 'reset':
-                const resetFormAttr = field.attributes?.form ? ` form="${field.attributes.form}"` : ''
+                const resetFormAttr = formId ? ` form="${formId}"` : ''
                 return `<button type="reset"${resetFormAttr}>${field.label || 'Reset'}</button>`
 
             default:
