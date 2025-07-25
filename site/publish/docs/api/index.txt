@@ -11,12 +11,12 @@ e:I[9665,[],"ViewportBoundary"]
 10:I[9665,[],"MetadataBoundary"]
 12:I[6614,[],""]
 :HL["/_next/static/css/fade14fe1c19a32b.css","style"]
-0:{"P":null,"b":"xMHKKHXdz5IsGzGphkEO0","p":"","c":["","docs","api",""],"i":false,"f":[[["",{"children":["docs",{"children":[["slug","api","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/fade14fe1c19a32b.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              (function() {\n                try {\n                  const savedTheme = localStorage.getItem('formdown-theme');\n                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');\n                  \n                  if (theme === 'dark') {\n                    document.documentElement.classList.add('dark');\n                    document.body.classList.add('dark');\n                  }\n                } catch (e) {\n                  // Silently fail\n                }\n              })();\n            "}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Formdown\",\"description\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Web Browser\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"creator\":{\"@type\":\"Organization\",\"name\":\"iyulab\",\"url\":\"https://github.com/iyulab\"},\"url\":\"https://formdown.dev\",\"downloadUrl\":\"https://github.com/iyulab/formdown\",\"sameAs\":[\"https://github.com/iyulab/formdown\",\"https://www.npmjs.com/package/@formdown/core\"]}"}}],["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}]]}],["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","div",null,{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center max-w-md mx-auto px-4","children":[["$","h1",null,{"className":"text-6xl font-bold text-blue-600 mb-4","children":"404"}],["$","h2",null,{"className":"text-2xl font-bold text-gray-900 mb-4","children":"Page Not Found"}],["$","p",null,{"className":"text-gray-600 mb-8","children":"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."}],["$","div",null,{"className":"space-x-4","children":[["$","$L6",null,{"href":"/","className":"bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block","children":"Go Home"}],["$","$L6",null,{"href":"/docs","className":"bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block","children":"View Docs"}]]}]]}]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}]]}],{"children":["docs",["$","$1","c",{"children":[null,["$","div",null,{"className":"docs-layout","children":[["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]]}],{"children":[["slug","api","d"],["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L8",null,["$","$L9",null,{"children":["$La","$Lb",["$","$Lc",null,{"promise":"$@d"}]]}]]}],{},null,false]},null,false]},null,false]},[["$","div","l",{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center","children":[["$","div",null,{"className":"inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"}],["$","p",null,{"className":"text-gray-600","children":"Loading Formdown..."}]]}]}],[],[]],false],["$","$1","h",{"children":[null,["$","$1","arWWp7YZUpGfi4D-RbwiBv",{"children":[["$","$Le",null,{"children":"$Lf"}],null]}],["$","$L10",null,{"children":"$L11"}]]}],false]],"m":"$undefined","G":["$12","$undefined"],"s":false,"S":true}
+0:{"P":null,"b":"xSbFvcjyAngLHa5pMcdv1","p":"","c":["","docs","api",""],"i":false,"f":[[["",{"children":["docs",{"children":[["slug","api","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/fade14fe1c19a32b.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              (function() {\n                try {\n                  const savedTheme = localStorage.getItem('formdown-theme');\n                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');\n                  \n                  if (theme === 'dark') {\n                    document.documentElement.classList.add('dark');\n                    document.body.classList.add('dark');\n                  }\n                } catch (e) {\n                  // Silently fail\n                }\n              })();\n            "}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Formdown\",\"description\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Web Browser\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"creator\":{\"@type\":\"Organization\",\"name\":\"iyulab\",\"url\":\"https://github.com/iyulab\"},\"url\":\"https://formdown.dev\",\"downloadUrl\":\"https://github.com/iyulab/formdown\",\"sameAs\":[\"https://github.com/iyulab/formdown\",\"https://www.npmjs.com/package/@formdown/core\"]}"}}],["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}]]}],["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","div",null,{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center max-w-md mx-auto px-4","children":[["$","h1",null,{"className":"text-6xl font-bold text-blue-600 mb-4","children":"404"}],["$","h2",null,{"className":"text-2xl font-bold text-gray-900 mb-4","children":"Page Not Found"}],["$","p",null,{"className":"text-gray-600 mb-8","children":"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."}],["$","div",null,{"className":"space-x-4","children":[["$","$L6",null,{"href":"/","className":"bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block","children":"Go Home"}],["$","$L6",null,{"href":"/docs","className":"bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block","children":"View Docs"}]]}]]}]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}]]}],{"children":["docs",["$","$1","c",{"children":[null,["$","div",null,{"className":"docs-layout","children":[["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]]}],{"children":[["slug","api","d"],["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L8",null,["$","$L9",null,{"children":["$La","$Lb",["$","$Lc",null,{"promise":"$@d"}]]}]]}],{},null,false]},null,false]},null,false]},[["$","div","l",{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center","children":[["$","div",null,{"className":"inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"}],["$","p",null,{"className":"text-gray-600","children":"Loading Formdown..."}]]}]}],[],[]],false],["$","$1","h",{"children":[null,["$","$1","E9bV2JbtJgaUJfx62xjmTv",{"children":[["$","$Le",null,{"children":"$Lf"}],null]}],["$","$L10",null,{"children":"$L11"}]]}],false]],"m":"$undefined","G":["$12","$undefined"],"s":false,"S":true}
 13:"$Sreact.suspense"
 14:I[4911,[],"AsyncMetadata"]
 16:I[984,["874","static/chunks/874-994f48b66e83c627.js","375","static/chunks/375-811e0189f6b673fa.js","508","static/chunks/app/docs/%5Bslug%5D/page-1286a5c53c96b553.js"],"default"]
 11:["$","div",null,{"hidden":true,"children":["$","$13",null,{"fallback":null,"children":["$","$L14",null,{"promise":"$@15"}]}]}]
-17:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-218:T15e79,<h2>@formdown/core</h2>
+17:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-218:T1be42,<h2>@formdown/core</h2>
 <h3>Core Functions</h3>
 <h4><code>parseFormdown(input: string): FormdownContent</code></h4>
 <p>Parses Formdown syntax into structured data containing both form fields and markdown content.</p>
@@ -95,6 +95,204 @@ e:I[9665,[],"ViewportBoundary"]
     <span class="token keyword">return</span> enhancedField<span class="token punctuation">;</span>
   <span class="token punctuation">}</span>
 <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><hr>
+<h2>FormdownFieldHelper</h2>
+<p><strong>FormdownFieldHelper</strong> provides a predictable and rational API for interacting with Formdown form fields. It automatically handles &quot;other&quot; options across all field types and provides a consistent interface for getting and setting field values.</p>
+<h3>Core Methods</h3>
+<h4><code>get(fieldName, form?): FieldValue</code></h4>
+<p>Gets the current value(s) of a field.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>fieldName</code> (string): Name of the field</li>
+<li><code>form</code> (HTMLFormElement, optional): Form element to search in</li>
+</ul>
+<p><strong>Returns:</strong> </p>
+<ul>
+<li>String for single-value fields (radio, select, text)</li>
+<li>String array for checkbox fields</li>
+<li><code>null</code> if field not found</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> FormdownFieldHelper <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Radio/Select: single value</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">)</span>  <span class="token comment">// → "Medium" | null</span>
+
+<span class="token comment">// Checkbox: array of values</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">)</span>    <span class="token comment">// → ["JavaScript", "Rust"] | []</span>
+
+<span class="token comment">// Text: string value</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">)</span>      <span class="token comment">// → "John Doe" | null</span></code></pre><h4><code>set(fieldName, value, options?): boolean</code></h4>
+<p>Sets field value(s). Automatically uses &quot;other&quot; option for values not in predefined options.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>fieldName</code> (string): Name of the field</li>
+<li><code>value</code> (string | string[]): Value to set</li>
+<li><code>options</code> (FieldHelperOptions, optional): Configuration options</li>
+</ul>
+<p><strong>Returns:</strong> <code>boolean</code> - Success status</p>
+<p><strong>Example:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Set existing option</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">,</span> <span class="token string">'High'</span><span class="token punctuation">)</span>     <span class="token comment">// → true</span>
+
+<span class="token comment">// Set other option (automatically detected)</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">,</span> <span class="token string">'Urgent'</span><span class="token punctuation">)</span>   <span class="token comment">// → true (uses other option)</span>
+
+<span class="token comment">// Set checkbox values</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'JavaScript'</span><span class="token punctuation">,</span> <span class="token string">'CustomSkill'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>  <span class="token comment">// → true</span>
+
+<span class="token comment">// Set text field</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'John Doe'</span><span class="token punctuation">)</span>     <span class="token comment">// → true</span></code></pre><h4><code>clear(fieldName, options?): boolean</code></h4>
+<p>Clears all values from a field.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>fieldName</code> (string): Name of the field</li>
+<li><code>options</code> (FieldHelperOptions, optional): Configuration options</li>
+</ul>
+<p><strong>Returns:</strong> <code>boolean</code> - Success status</p>
+<p><strong>Example:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">)</span>  <span class="token comment">// → true</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">)</span>    <span class="token comment">// → true (clears all checkboxes)</span></code></pre><h4><code>has(fieldName, value, form?): boolean</code></h4>
+<p>Checks if a field has a specific value.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>fieldName</code> (string): Name of the field</li>
+<li><code>value</code> (string): Value to check for</li>
+<li><code>form</code> (HTMLFormElement, optional): Form element to search in</li>
+</ul>
+<p><strong>Returns:</strong> <code>boolean</code> - Whether the field has the value</p>
+<p><strong>Example:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">has</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">,</span> <span class="token string">'High'</span><span class="token punctuation">)</span>     <span class="token comment">// → true/false</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">has</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">,</span> <span class="token string">'JavaScript'</span><span class="token punctuation">)</span> <span class="token comment">// → true/false (searches in array)</span></code></pre><h3>Checkbox-Specific Methods</h3>
+<h4><code>add(fieldName, value, options?): boolean</code></h4>
+<p>Adds a value to a checkbox field while preserving existing selections.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>fieldName</code> (string): Name of the checkbox field</li>
+<li><code>value</code> (string): Value to add</li>
+<li><code>options</code> (FieldHelperOptions, optional): Configuration options</li>
+</ul>
+<p><strong>Returns:</strong> <code>boolean</code> - Success status</p>
+<p><strong>Example:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">,</span> <span class="token string">'Python'</span><span class="token punctuation">)</span>     <span class="token comment">// Add to existing selections</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">,</span> <span class="token string">'CustomSkill'</span><span class="token punctuation">)</span> <span class="token comment">// Add as other option</span></code></pre><h4><code>remove(fieldName, value, options?): boolean</code></h4>
+<p>Removes a specific value from a checkbox field.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>fieldName</code> (string): Name of the checkbox field</li>
+<li><code>value</code> (string): Value to remove</li>
+<li><code>options</code> (FieldHelperOptions, optional): Configuration options</li>
+</ul>
+<p><strong>Returns:</strong> <code>boolean</code> - Success status</p>
+<p><strong>Example:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">,</span> <span class="token string">'JavaScript'</span><span class="token punctuation">)</span>  <span class="token comment">// Remove specific value</span></code></pre><h4><code>toggle(fieldName, value, options?): boolean</code></h4>
+<p>Toggles a value in a checkbox field (add if not present, remove if present).</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>fieldName</code> (string): Name of the checkbox field</li>
+<li><code>value</code> (string): Value to toggle</li>
+<li><code>options</code> (FieldHelperOptions, optional): Configuration options</li>
+</ul>
+<p><strong>Returns:</strong> <code>boolean</code> - Success status</p>
+<p><strong>Example:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">toggle</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">,</span> <span class="token string">'Python'</span><span class="token punctuation">)</span>  <span class="token comment">// Add or remove based on current state</span></code></pre><h3>Utility Methods</h3>
+<h4><code>getFieldType(fieldName, form?): FormFieldType</code></h4>
+<p>Gets the type of a field.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>fieldName</code> (string): Name of the field</li>
+<li><code>form</code> (HTMLFormElement, optional): Form element to search in</li>
+</ul>
+<p><strong>Returns:</strong> <code>FormFieldType</code> - Field type (&#39;radio&#39; | &#39;checkbox&#39; | &#39;select&#39; | &#39;text&#39; | &#39;textarea&#39; | &#39;unknown&#39;)</p>
+<p><strong>Example:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">getFieldType</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">)</span>  <span class="token comment">// → 'radio'</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">getFieldType</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">)</span>    <span class="token comment">// → 'checkbox'</span></code></pre><h4><code>isOtherValue(fieldName, value, form?): boolean</code></h4>
+<p>Checks if a value would be treated as an &quot;other&quot; option.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>fieldName</code> (string): Name of the field</li>
+<li><code>value</code> (string): Value to check</li>
+<li><code>form</code> (HTMLFormElement, optional): Form element to search in</li>
+</ul>
+<p><strong>Returns:</strong> <code>boolean</code> - Whether the value would use the &quot;other&quot; option</p>
+<p><strong>Example:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">isOtherValue</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">,</span> <span class="token string">'High'</span><span class="token punctuation">)</span>    <span class="token comment">// → false (existing option)</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">isOtherValue</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">,</span> <span class="token string">'Urgent'</span><span class="token punctuation">)</span>  <span class="token comment">// → true (other option)</span></code></pre><h3>Options Configuration</h3>
+<h4><code>FieldHelperOptions</code></h4>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">interface</span> <span class="token class-name">FieldHelperOptions</span> <span class="token punctuation">{</span>
+    silent<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span>        <span class="token comment">// Suppress console warnings (default: false)</span>
+    dispatchEvents<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span><span class="token punctuation">;</span> <span class="token comment">// Dispatch change/input events (default: true)</span>
+<span class="token punctuation">}</span></code></pre><p><strong>Example:</strong></p>
+<pre class="language-javascript"><code class="language-javascript">FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">,</span> <span class="token string">'Urgent'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> 
+    <span class="token literal-property property">silent</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>           <span class="token comment">// No warning messages</span>
+    <span class="token literal-property property">dispatchEvents</span><span class="token operator">:</span> <span class="token boolean">false</span>   <span class="token comment">// Don't trigger events</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3>Other Option Handling</h3>
+<p>The FormdownFieldHelper automatically handles &quot;other&quot; options for all field types:</p>
+<p><strong>Formdown Syntax:</strong></p>
+<pre class="language-markup"><code class="language-markup">@priority{Low,Medium,High,*(Priority Level)}: r[]
+@skills{JavaScript,Python,Java,*(Other Skills)}: c[]
+@country{USA,Canada,UK,*(Other Country)}: s[]</code></pre><p><strong>Automatic Detection:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// These automatically use "other" option since values don't exist in predefined options</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">,</span> <span class="token string">'Urgent'</span><span class="token punctuation">)</span>   <span class="token comment">// Uses "Priority Level" other option</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">,</span> <span class="token string">'Rust'</span><span class="token punctuation">)</span>       <span class="token comment">// Uses "Other Skills" other option</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'country'</span><span class="token punctuation">,</span> <span class="token string">'Korea'</span><span class="token punctuation">)</span>     <span class="token comment">// Uses "Other Country" other option</span></code></pre><p><strong>Data Structure:</strong>
+The resulting form data maintains clean structure:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Clean data structure (no _other suffixes)</span>
+<span class="token punctuation">{</span>
+  <span class="token string-property property">"priority"</span><span class="token operator">:</span> <span class="token string">"Urgent"</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"skills"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"JavaScript"</span><span class="token punctuation">,</span> <span class="token string">"Rust"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token string-property property">"country"</span><span class="token operator">:</span> <span class="token string">"Korea"</span>
+<span class="token punctuation">}</span></code></pre><h3>Field Type Behaviors</h3>
+<h4>Radio Fields</h4>
+<ul>
+<li><strong>Single selection</strong>: Only one value can be selected</li>
+<li><strong>Other option</strong>: Automatically used for values not in predefined options</li>
+<li><strong>Clear</strong>: Deselects all options</li>
+</ul>
+<h4>Checkbox Fields</h4>
+<ul>
+<li><strong>Multiple selection</strong>: Multiple values can be selected simultaneously</li>
+<li><strong>Other option</strong>: Can be used alongside predefined options</li>
+<li><strong>Add/Remove</strong>: Supports granular value management</li>
+</ul>
+<h4>Select Fields</h4>
+<ul>
+<li><strong>Single selection</strong>: Only one value can be selected</li>
+<li><strong>Other option</strong>: Shows text input when selected</li>
+<li><strong>Clear</strong>: Resets to empty selection</li>
+</ul>
+<h4>Text/Textarea Fields</h4>
+<ul>
+<li><strong>Direct value</strong>: Set and get text values directly</li>
+<li><strong>No other option</strong>: Not applicable to text fields</li>
+</ul>
+<h3>Complete Example</h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> FormdownFieldHelper <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Form with other options</span>
+<span class="token keyword">const</span> formContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+@priority{Low,Medium,High,*(Priority Level)}: r[]
+@skills{JavaScript,Python,Java,*(Other Skills)}: c[]
+@country{USA,Canada,UK,*(Other Country)}: s[]
+@name: [text required]
+</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+
+<span class="token comment">// Set values (mix of existing and other options)</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">,</span> <span class="token string">'Critical'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// Other option</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'JavaScript'</span><span class="token punctuation">,</span> <span class="token string">'Rust'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// Mix of existing and other</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'country'</span><span class="token punctuation">,</span> <span class="token string">'Korea'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>         <span class="token comment">// Other option</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'John Doe'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>         <span class="token comment">// Text field</span>
+
+<span class="token comment">// Add more values</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">,</span> <span class="token string">'Go'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>             <span class="token comment">// Add another other option</span>
+
+<span class="token comment">// Check values</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// → "Critical"</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token comment">// → ["JavaScript", "Rust", "Go"]</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">has</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">,</span> <span class="token string">'Rust'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// → true</span>
+
+<span class="token comment">// Get field types</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">getFieldType</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// → 'radio'</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">isOtherValue</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">,</span> <span class="token string">'Critical'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// → true</span></code></pre><hr>
 <h2>@formdown/ui</h2>
 <h3><code>renderForm(source, options?)</code></h3>
 <p>Renders a Formdown source string into an HTML form element.</p>

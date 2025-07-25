@@ -1,0 +1,145 @@
+# FormdownFieldHelper API Demo
+
+This sample demonstrates the **FormdownFieldHelper** API for programmatic form interaction with automatic "other" option handling.
+
+## Interactive Test Form
+
+Try interacting with this form using the JavaScript console or buttons below!
+
+@priority{Low,Medium,High,*(Priority Level)}: r[required]
+@skills{JavaScript,Python,Java,*(Other Skills)}: c[]
+@country{USA,Canada,UK,*(Other Country)}: s[]
+@experience{Beginner,Intermediate,Advanced,*(Custom Level)}: r[]
+@tools{VS Code,IntelliJ,Vim,*(Other Tools)}: c[]
+@name: [text required placeholder="Enter your name"]
+@feedback: T3[placeholder="Share your thoughts..."]
+
+## API Usage Examples
+
+### Basic Operations
+```javascript
+import { FormdownFieldHelper } from '@formdown/core';
+
+// Get current values
+FormdownFieldHelper.get('priority');     // → current selection
+FormdownFieldHelper.get('skills');       // → array of selected skills
+FormdownFieldHelper.get('name');         // → text value
+
+// Set values (auto-detects other options)
+FormdownFieldHelper.set('priority', 'Critical');  // Uses "Priority Level" other
+FormdownFieldHelper.set('country', 'Korea');      // Uses "Other Country" other
+FormdownFieldHelper.set('name', 'John Doe');      // Direct text input
+
+// Check if field has specific value
+FormdownFieldHelper.has('skills', 'JavaScript'); // → true/false
+```
+
+### Checkbox Management
+```javascript
+// Add values to checkboxes
+FormdownFieldHelper.add('skills', 'Rust');        // Add as other option
+FormdownFieldHelper.add('skills', 'Python');      // Add existing option
+FormdownFieldHelper.add('tools', 'Neovim');       // Add as other option
+
+// Remove specific values
+FormdownFieldHelper.remove('skills', 'Java');     // Remove specific skill
+FormdownFieldHelper.remove('tools', 'VS Code');   // Remove specific tool
+
+// Toggle values
+FormdownFieldHelper.toggle('skills', 'TypeScript'); // Add/remove based on current state
+```
+
+### Utility Functions
+```javascript
+// Get field information
+FormdownFieldHelper.getFieldType('priority');           // → 'radio'
+FormdownFieldHelper.getFieldType('skills');             // → 'checkbox'
+FormdownFieldHelper.getFieldType('name');               // → 'text'
+
+// Check if value would use other option
+FormdownFieldHelper.isOtherValue('priority', 'High');     // → false (existing)
+FormdownFieldHelper.isOtherValue('priority', 'Critical'); // → true (other)
+FormdownFieldHelper.isOtherValue('skills', 'JavaScript'); // → false (existing)
+FormdownFieldHelper.isOtherValue('skills', 'Rust');       // → true (other)
+```
+
+### Form Management
+```javascript
+// Clear fields
+FormdownFieldHelper.clear('priority');    // Clear radio selection
+FormdownFieldHelper.clear('skills');      // Clear all checkboxes
+FormdownFieldHelper.clear('name');        // Clear text input
+
+// Batch operations
+const formData = {
+  priority: 'Critical',
+  skills: ['JavaScript', 'Rust', 'Go'],
+  country: 'Singapore',
+  name: 'Jane Developer'
+};
+
+// Set multiple fields
+Object.entries(formData).forEach(([field, value]) => {
+  FormdownFieldHelper.set(field, value);
+});
+```
+
+## Try These Commands
+
+Open your browser's developer console and try these commands:
+
+### Set Values (Mix of Existing and Other Options)
+```javascript
+FormdownFieldHelper.set('priority', 'Critical');
+FormdownFieldHelper.set('skills', ['JavaScript', 'Rust', 'Go']);
+FormdownFieldHelper.set('country', 'Singapore');
+FormdownFieldHelper.set('name', 'John Developer');
+```
+
+### Add Individual Skills
+```javascript
+FormdownFieldHelper.add('skills', 'TypeScript');
+FormdownFieldHelper.add('skills', 'Kotlin');
+FormdownFieldHelper.add('tools', 'Cursor');
+```
+
+### Check Current State
+```javascript
+console.log('Priority:', FormdownFieldHelper.get('priority'));
+console.log('Skills:', FormdownFieldHelper.get('skills'));
+console.log('Country:', FormdownFieldHelper.get('country'));
+console.log('Name:', FormdownFieldHelper.get('name'));
+```
+
+### Field Type Information
+```javascript
+console.log('Priority type:', FormdownFieldHelper.getFieldType('priority'));
+console.log('Is "Critical" other option?', FormdownFieldHelper.isOtherValue('priority', 'Critical'));
+console.log('Has skill "Rust"?', FormdownFieldHelper.has('skills', 'Rust'));
+```
+
+## Key Features Demonstrated
+
+### ✅ Automatic Other Option Detection
+- Values not in predefined options automatically use "other" option
+- Custom other labels (`*(Priority Level)`) are respected
+- Clean data structure without `_other` suffixes
+
+### ✅ Predictable API
+- Consistent method signatures across all field types
+- Boolean return values for success/failure
+- Null/empty returns for missing data
+
+### ✅ Type-Specific Behavior
+- **Radio/Select**: Single value selection
+- **Checkbox**: Array-based multiple selection with add/remove/toggle
+- **Text**: Direct string value assignment
+
+### ✅ Real-time Updates
+- Changes trigger appropriate DOM events
+- Form data updates immediately
+- Visual feedback reflects API changes
+
+The **FormdownFieldHelper** provides a clean, predictable interface for form interaction while automatically handling the complexity of "other" options behind the scenes.
+
+@submit: [submit label="Test Form Submission"]
