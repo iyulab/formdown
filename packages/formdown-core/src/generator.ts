@@ -495,7 +495,7 @@ ${fieldsHTML}
                 const radioInputsHTML = options.map((opt, index) => {
                     const inputId = `${name}_${index}`
                     const isRequired = required && index === 0
-                    const hideOtherOnChange = allowOther ? ` onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; if(otherInput) { otherInput.style.display = 'none'; }"` : ''
+                    const hideOtherOnChange = allowOther ? ` onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('.formdown-other-input') : null; if(otherInput) { otherInput.style.display = 'none'; }"` : ''
                     return `
         <label for="${inputId}" class="formdown-option-label">
             <input type="radio" id="${inputId}" name="${name}" value="${opt}" ${isRequired ? 'required' : ''} ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}${hideOtherOnChange}>
@@ -505,9 +505,9 @@ ${fieldsHTML}
                 
                 const otherRadioHTML = allowOther ? `
         <label for="${name}_other_radio" class="formdown-option-label">
-            <input type="radio" id="${name}_other_radio" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; if(otherInput) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value; }">
+            <input type="radio" id="${name}_other_radio" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('.formdown-other-input') : null; if(otherInput) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value || ''; }"
             <span>${this.escapeHtml(field.otherLabel || 'Other')}:</span>
-            <input type="text" id="${name}_other_input" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; }">
+            <input type="text" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; otherRadio.dispatchEvent(new Event('change', {bubbles: true})); }"
         </label>` : ''
 
                 const isVertical = attributes?.layout === 'vertical'
@@ -547,9 +547,9 @@ ${radioInputsHTML}${otherRadioHTML}
                     
                     const otherCheckboxHTML = allowOther ? `
         <label for="${name}_other_checkbox" class="formdown-option-label">
-            <input type="checkbox" id="${name}_other_checkbox" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${name}_other_input') : null; if(otherInput) { if(this.checked) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value; } else { otherInput.style.display = 'none'; this.value = ''; } }">
+            <input type="checkbox" id="${name}_other_checkbox" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('.formdown-other-input') : null; if(otherInput) { if(this.checked) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value || ''; } else { otherInput.style.display = 'none'; this.value = ''; } }"
             <span>${this.escapeHtml(field.otherLabel || 'Other')}:</span>
-            <input type="text" id="${name}_other_input" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${name}_other_checkbox') : null; if(otherCheckbox) { otherCheckbox.checked = true; otherCheckbox.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${name}_other_checkbox') : null; if(otherCheckbox && otherCheckbox.checked) { otherCheckbox.value = this.value; }">
+            <input type="text" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${name}_other_checkbox') : null; if(otherCheckbox) { otherCheckbox.checked = true; otherCheckbox.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${name}_other_checkbox') : null; if(otherCheckbox && otherCheckbox.checked) { otherCheckbox.value = this.value; otherCheckbox.dispatchEvent(new Event('change', {bubbles: true})); }">
         </label>` : ''
 
                     const isVertical = attributes?.layout === 'vertical'

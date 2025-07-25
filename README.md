@@ -23,6 +23,8 @@
 | **Shorthand Syntax** | Write forms 50% faster |
 | **Smart Labels** | Automatic label generation |
 | **Inline Fields** | Embed forms in text content |
+| **Other Options** | Custom "other" options with automatic handling |
+| **Field Helper API** | Programmatic form interaction with predictable API |
 
 ## 🚀 Quick Start
 
@@ -157,6 +159,27 @@ import '@formdown/ui';
 ```formdown
 Hello ___@name*! Your order #___@order_id is ready.
 Delivery date: ___@delivery_date: d[]
+```
+
+### Other Options with Custom Labels
+```formdown
+@priority{Low,Medium,High,*(Priority Level)}: r[]
+@skills{JavaScript,Python,Java,*(Other Skills)}: c[]
+@country{USA,Canada,UK,*(Other Country)}: s[]
+```
+
+### Field Helper API
+```javascript
+import { FormdownFieldHelper } from '@formdown/core';
+
+// Set values (automatically handles other options)
+FormdownFieldHelper.set('priority', 'Critical');    // Uses "Priority Level" other
+FormdownFieldHelper.set('skills', ['JavaScript', 'Rust']); // Mix of existing and other
+FormdownFieldHelper.add('skills', 'Go');            // Add another other option
+
+// Get current values
+console.log(FormdownFieldHelper.get('priority'));   // → "Critical"
+console.log(FormdownFieldHelper.get('skills'));     // → ["JavaScript", "Rust", "Go"]
 ```
 
 ### JavaScript API

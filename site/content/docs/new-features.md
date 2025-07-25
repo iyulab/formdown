@@ -2,7 +2,55 @@
 
 Formdown continues to evolve with powerful new features that make form creation even more intuitive and flexible.
 
-## 🔌 Extension System (Latest)
+## 📋 Field Helper API (Latest)
+
+**Major Release:** Introducing the **FormdownFieldHelper** API - a predictable and rational interface for programmatic form interaction with automatic "other" option handling.
+
+### What's New
+
+The Field Helper API provides:
+
+- **Predictable Interface**: Consistent method signatures across all field types
+- **Automatic Other Options**: Smart detection and handling of custom options
+- **Type-Specific Behavior**: Optimized for single-value (radio, select) and multi-value (checkbox) fields
+- **Clean Data Structure**: No `_other` field suffixes in form data
+- **Real-time Updates**: Automatic DOM event dispatching
+- **Error Handling**: Safe operations with clear success/failure indicators
+
+### Quick Example
+
+```javascript
+import { FormdownFieldHelper } from '@formdown/core';
+
+// Form with other options
+// @priority{Low,Medium,High,*(Priority Level)}: r[]
+// @skills{JavaScript,Python,Java,*(Other Skills)}: c[]
+
+// Set values (automatically uses other options when needed)
+FormdownFieldHelper.set('priority', 'Critical');    // → Uses "Priority Level" other option
+FormdownFieldHelper.add('skills', 'Rust');          // → Uses "Other Skills" other option
+
+// Get clean data
+console.log(FormdownFieldHelper.get('priority'));   // → "Critical"
+console.log(FormdownFieldHelper.get('skills'));     // → ["Rust"] (or existing + new)
+
+// Field information
+console.log(FormdownFieldHelper.getFieldType('priority')); // → 'radio'
+console.log(FormdownFieldHelper.isOtherValue('priority', 'Critical')); // → true
+```
+
+### Key Benefits
+
+1. **Automatic Other Detection**: Values not in predefined options automatically use other option
+2. **Clean Data**: Form data structure remains simple: `{priority: "Critical"}` instead of `{priority: "_other", priority_other: "Critical"}`
+3. **Type Safety**: Full TypeScript support with proper typing
+4. **Consistent API**: Same methods work across radio, checkbox, select, and text fields
+
+[**Learn More →**](/docs/field-helper)
+
+---
+
+## 🔌 Extension System
 
 **Major Release:** Formdown now features a complete plugin architecture that allows developers to customize and extend every aspect of form parsing, generation, and validation.
 

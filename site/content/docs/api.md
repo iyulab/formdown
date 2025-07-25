@@ -119,6 +119,288 @@ registerHook({
 
 ---
 
+## FormdownFieldHelper
+
+**FormdownFieldHelper** provides a predictable and rational API for interacting with Formdown form fields. It automatically handles "other" options across all field types and provides a consistent interface for getting and setting field values.
+
+### Core Methods
+
+#### `get(fieldName, form?): FieldValue`
+
+Gets the current value(s) of a field.
+
+**Parameters:**
+- `fieldName` (string): Name of the field
+- `form` (HTMLFormElement, optional): Form element to search in
+
+**Returns:** 
+- String for single-value fields (radio, select, text)
+- String array for checkbox fields
+- `null` if field not found
+
+**Example:**
+```javascript
+import { FormdownFieldHelper } from '@formdown/core';
+
+// Radio/Select: single value
+FormdownFieldHelper.get('priority')  // → "Medium" | null
+
+// Checkbox: array of values
+FormdownFieldHelper.get('skills')    // → ["JavaScript", "Rust"] | []
+
+// Text: string value
+FormdownFieldHelper.get('name')      // → "John Doe" | null
+```
+
+#### `set(fieldName, value, options?): boolean`
+
+Sets field value(s). Automatically uses "other" option for values not in predefined options.
+
+**Parameters:**
+- `fieldName` (string): Name of the field
+- `value` (string | string[]): Value to set
+- `options` (FieldHelperOptions, optional): Configuration options
+
+**Returns:** `boolean` - Success status
+
+**Example:**
+```javascript
+// Set existing option
+FormdownFieldHelper.set('priority', 'High')     // → true
+
+// Set other option (automatically detected)
+FormdownFieldHelper.set('priority', 'Urgent')   // → true (uses other option)
+
+// Set checkbox values
+FormdownFieldHelper.set('skills', ['JavaScript', 'CustomSkill'])  // → true
+
+// Set text field
+FormdownFieldHelper.set('name', 'John Doe')     // → true
+```
+
+#### `clear(fieldName, options?): boolean`
+
+Clears all values from a field.
+
+**Parameters:**
+- `fieldName` (string): Name of the field
+- `options` (FieldHelperOptions, optional): Configuration options
+
+**Returns:** `boolean` - Success status
+
+**Example:**
+```javascript
+FormdownFieldHelper.clear('priority')  // → true
+FormdownFieldHelper.clear('skills')    // → true (clears all checkboxes)
+```
+
+#### `has(fieldName, value, form?): boolean`
+
+Checks if a field has a specific value.
+
+**Parameters:**
+- `fieldName` (string): Name of the field
+- `value` (string): Value to check for
+- `form` (HTMLFormElement, optional): Form element to search in
+
+**Returns:** `boolean` - Whether the field has the value
+
+**Example:**
+```javascript
+FormdownFieldHelper.has('priority', 'High')     // → true/false
+FormdownFieldHelper.has('skills', 'JavaScript') // → true/false (searches in array)
+```
+
+### Checkbox-Specific Methods
+
+#### `add(fieldName, value, options?): boolean`
+
+Adds a value to a checkbox field while preserving existing selections.
+
+**Parameters:**
+- `fieldName` (string): Name of the checkbox field
+- `value` (string): Value to add
+- `options` (FieldHelperOptions, optional): Configuration options
+
+**Returns:** `boolean` - Success status
+
+**Example:**
+```javascript
+FormdownFieldHelper.add('skills', 'Python')     // Add to existing selections
+FormdownFieldHelper.add('skills', 'CustomSkill') // Add as other option
+```
+
+#### `remove(fieldName, value, options?): boolean`
+
+Removes a specific value from a checkbox field.
+
+**Parameters:**
+- `fieldName` (string): Name of the checkbox field
+- `value` (string): Value to remove
+- `options` (FieldHelperOptions, optional): Configuration options
+
+**Returns:** `boolean` - Success status
+
+**Example:**
+```javascript
+FormdownFieldHelper.remove('skills', 'JavaScript')  // Remove specific value
+```
+
+#### `toggle(fieldName, value, options?): boolean`
+
+Toggles a value in a checkbox field (add if not present, remove if present).
+
+**Parameters:**
+- `fieldName` (string): Name of the checkbox field
+- `value` (string): Value to toggle
+- `options` (FieldHelperOptions, optional): Configuration options
+
+**Returns:** `boolean` - Success status
+
+**Example:**
+```javascript
+FormdownFieldHelper.toggle('skills', 'Python')  // Add or remove based on current state
+```
+
+### Utility Methods
+
+#### `getFieldType(fieldName, form?): FormFieldType`
+
+Gets the type of a field.
+
+**Parameters:**
+- `fieldName` (string): Name of the field
+- `form` (HTMLFormElement, optional): Form element to search in
+
+**Returns:** `FormFieldType` - Field type ('radio' | 'checkbox' | 'select' | 'text' | 'textarea' | 'unknown')
+
+**Example:**
+```javascript
+FormdownFieldHelper.getFieldType('priority')  // → 'radio'
+FormdownFieldHelper.getFieldType('skills')    // → 'checkbox'
+```
+
+#### `isOtherValue(fieldName, value, form?): boolean`
+
+Checks if a value would be treated as an "other" option.
+
+**Parameters:**
+- `fieldName` (string): Name of the field
+- `value` (string): Value to check
+- `form` (HTMLFormElement, optional): Form element to search in
+
+**Returns:** `boolean` - Whether the value would use the "other" option
+
+**Example:**
+```javascript
+FormdownFieldHelper.isOtherValue('priority', 'High')    // → false (existing option)
+FormdownFieldHelper.isOtherValue('priority', 'Urgent')  // → true (other option)
+```
+
+### Options Configuration
+
+#### `FieldHelperOptions`
+
+```typescript
+interface FieldHelperOptions {
+    silent?: boolean;        // Suppress console warnings (default: false)
+    dispatchEvents?: boolean; // Dispatch change/input events (default: true)
+}
+```
+
+**Example:**
+```javascript
+FormdownFieldHelper.set('priority', 'Urgent', { 
+    silent: true,           // No warning messages
+    dispatchEvents: false   // Don't trigger events
+});
+```
+
+### Other Option Handling
+
+The FormdownFieldHelper automatically handles "other" options for all field types:
+
+**Formdown Syntax:**
+```formdown
+@priority{Low,Medium,High,*(Priority Level)}: r[]
+@skills{JavaScript,Python,Java,*(Other Skills)}: c[]
+@country{USA,Canada,UK,*(Other Country)}: s[]
+```
+
+**Automatic Detection:**
+```javascript
+// These automatically use "other" option since values don't exist in predefined options
+FormdownFieldHelper.set('priority', 'Urgent')   // Uses "Priority Level" other option
+FormdownFieldHelper.add('skills', 'Rust')       // Uses "Other Skills" other option
+FormdownFieldHelper.set('country', 'Korea')     // Uses "Other Country" other option
+```
+
+**Data Structure:**
+The resulting form data maintains clean structure:
+```javascript
+// Clean data structure (no _other suffixes)
+{
+  "priority": "Urgent",
+  "skills": ["JavaScript", "Rust"],
+  "country": "Korea"
+}
+```
+
+### Field Type Behaviors
+
+#### Radio Fields
+- **Single selection**: Only one value can be selected
+- **Other option**: Automatically used for values not in predefined options
+- **Clear**: Deselects all options
+
+#### Checkbox Fields
+- **Multiple selection**: Multiple values can be selected simultaneously
+- **Other option**: Can be used alongside predefined options
+- **Add/Remove**: Supports granular value management
+
+#### Select Fields
+- **Single selection**: Only one value can be selected
+- **Other option**: Shows text input when selected
+- **Clear**: Resets to empty selection
+
+#### Text/Textarea Fields
+- **Direct value**: Set and get text values directly
+- **No other option**: Not applicable to text fields
+
+### Complete Example
+
+```javascript
+import { FormdownFieldHelper } from '@formdown/core';
+
+// Form with other options
+const formContent = `
+@priority{Low,Medium,High,*(Priority Level)}: r[]
+@skills{JavaScript,Python,Java,*(Other Skills)}: c[]
+@country{USA,Canada,UK,*(Other Country)}: s[]
+@name: [text required]
+`;
+
+// Set values (mix of existing and other options)
+FormdownFieldHelper.set('priority', 'Critical');     // Other option
+FormdownFieldHelper.set('skills', ['JavaScript', 'Rust']); // Mix of existing and other
+FormdownFieldHelper.set('country', 'Korea');         // Other option
+FormdownFieldHelper.set('name', 'John Doe');         // Text field
+
+// Add more values
+FormdownFieldHelper.add('skills', 'Go');             // Add another other option
+
+// Check values
+console.log(FormdownFieldHelper.get('priority'));    // → "Critical"
+console.log(FormdownFieldHelper.get('skills'));      // → ["JavaScript", "Rust", "Go"]
+console.log(FormdownFieldHelper.has('skills', 'Rust')); // → true
+
+// Get field types
+console.log(FormdownFieldHelper.getFieldType('priority')); // → 'radio'
+console.log(FormdownFieldHelper.isOtherValue('priority', 'Critical')); // → true
+```
+
+---
+
 ## @formdown/ui
 
 ### `renderForm(source, options?)`

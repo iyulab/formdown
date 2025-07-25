@@ -1,6 +1,6 @@
 import { LitElement, html, css, unsafeCSS } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
-import { parseFormdown, getSchema, generateFormHTML, type ParseResult as CoreParseResult, type FormDownSchema } from '@formdown/core'
+import { parseFormdown, getSchema, type ParseResult as CoreParseResult, type FormDownSchema } from '@formdown/core'
 import { editorExtensionSupport } from './extension-support'
 import styles from './styles.css?inline'
 import { renderEditorPanel, renderPreviewPanel } from './templates'
