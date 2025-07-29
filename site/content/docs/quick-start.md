@@ -4,13 +4,25 @@ This guide will get you up and running with Formdown in minutes.
 
 ## Installation
 
-Install the core package for form rendering:
+### Core Package (Recommended)
+
+For maximum flexibility and framework-agnostic usage:
+
+```bash
+npm install @formdown/core
+```
+
+### UI Components (Optional)
+
+For ready-to-use web components:
 
 ```bash
 npm install @formdown/ui
 ```
 
-For development with the editor:
+### Development Tools (Optional)
+
+For live editing and preview:
 
 ```bash
 npm install @formdown/editor
@@ -45,6 +57,67 @@ You can also use the full syntax for more control:
 @name(Name): [text required]
 @email(Email Address): [email required]
 @message(Message): [textarea]
+```
+
+## Modern Approach: Core-First Architecture
+
+### Using FormManager (Recommended)
+
+The modern way to use Formdown with maximum control and framework independence:
+
+```javascript
+import { FormManager } from '@formdown/core';
+
+// Create form content
+const formContent = `
+# Contact Form
+
+@name*: [placeholder="Enter your name"]
+@email*: @[placeholder="your.email@example.com"]
+@message: [textarea rows=4 placeholder="Your message"]
+`;
+
+// Initialize FormManager
+const manager = new FormManager();
+manager.parse(formContent);
+
+// Set up reactive updates
+manager.on('data-change', ({ field, value, formData }) => {
+  console.log(`${field} changed:`, value);
+  // Update your UI here
+});
+
+// Render to HTML
+const html = manager.render();
+document.getElementById('form-container').innerHTML = html;
+
+// Interact with form data
+manager.setFieldValue('name', 'John Doe');
+console.log('Current data:', manager.getData());
+
+// Validate
+const validation = manager.validate();
+if (validation.isValid) {
+  console.log('Form is valid!');
+}
+```
+
+### Using Convenience Functions
+
+For quick one-time rendering:
+
+```javascript
+import { renderForm } from '@formdown/core';
+
+const html = renderForm(`
+@name*: []
+@email*: @[]
+`, { 
+  name: 'John Doe', 
+  email: 'john@example.com' 
+});
+
+document.body.innerHTML = html;
 ```
 
 ### Rendering with Web Components

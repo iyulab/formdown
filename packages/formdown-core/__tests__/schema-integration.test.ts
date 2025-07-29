@@ -201,7 +201,8 @@ Please enter your name: ___@first_name* and ___@last_name*
             })
             expect(schema.field.placeholder).toBe('Enter text')
             expect(schema.field.htmlAttributes).toEqual({
-                class: 'custom-input'
+                class: 'custom-input',
+                form: 'formdown-form-default'
             })
         })
     })

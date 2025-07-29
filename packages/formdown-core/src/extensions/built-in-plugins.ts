@@ -5,6 +5,7 @@
 
 import type { Plugin, FieldTypePlugin, ValidationPlugin } from './types.js'
 import type { Field, ValidationRule } from '../types.js'
+import { rangeFieldPlugin } from './field-types/range-field.js'
 
 // ================================
 // Built-in Field Type Plugins
@@ -200,7 +201,8 @@ export const corePlugin: Plugin = {
     fieldTypes: [
         textFieldPlugin,
         emailFieldPlugin,
-        selectFieldPlugin
+        selectFieldPlugin,
+        rangeFieldPlugin
     ],
     validators: [
         requiredValidator,

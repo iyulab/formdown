@@ -1,5 +1,7 @@
 import { marked } from 'marked'
 import { Field, ParseError, ParseResult, FormdownContent, FormdownOptions, FormDeclaration } from './types'
+import { defaultExtensionManager } from './extensions/extension-manager.js'
+import type { HookContext } from './extensions/types.js'
 
 export class FormdownParser {
     private options: FormdownOptions
@@ -85,15 +87,25 @@ export class FormdownParser {
     private parseBlockField(line: string): Field | null {
         const trimmedLine = line.trim()
         
+        // Try to parse using registered field type extensions first
+        const context: HookContext = {
+            input: trimmedLine
+        }
+        
+        const extensionField = defaultExtensionManager.getFieldTypeRegistry().parseField(trimmedLine, context)
+        if (extensionField) {
+            return extensionField
+        }
+        
         // Check if this could be shorthand syntax (has shorthand-specific features)
         // Standard syntax: @name(Label): [type attributes] should NOT be treated as shorthand
         // Shorthand syntax: @name*: [], @name{pattern}: [], @name: @[], etc.
         const hasShorthandMarker = /^@\w+\*/.test(trimmedLine) ||                          // Required marker
                                    /^@\w+\{.*?\}/.test(trimmedLine) ||                      // Content
-                                   /^@\w+\s*:\s*(dt|d|[#@%&t?TrscRFCMW])\d*\[/.test(trimmedLine) || // Type marker 
+                                   /^@\w+\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])\d*\[/.test(trimmedLine) || // Type marker 
                                    /^@\w+\([^)]+\)\*/.test(trimmedLine) ||                  // Label + required
                                    /^@\w+\([^)]+\)\{.*?\}/.test(trimmedLine) ||             // Label + content
-                                   /^@\w+\([^)]+\)\s*:\s*(dt|d|[#@%&t?TrscRFCMW])\d*\[/.test(trimmedLine) // Label + type marker
+                                   /^@\w+\([^)]+\)\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])\d*\[/.test(trimmedLine) // Label + type marker
         
         
         if (hasShorthandMarker) {
@@ -117,11 +129,11 @@ export class FormdownParser {
         // Handle 'dt' as a special case (two-character type marker)
         // Make type marker optional to handle cases like @name*: []
         // Handle both orders: @name*{content}(label) and @name(label)*{content}
-        let shorthandMatch = line.match(/^@(\w+)(\*)?(?:\{(.*?)\})?(?:\(([^)]+)\))?\s*:\s*(dt|d|[#@%&t?TrscRFCMW])?(\d*)\[([^\]]*)\].*$/)
+        let shorthandMatch = line.match(/^@(\w+)(\*)?(?:\{(.*?)\})?(?:\(([^)]+)\))?\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])?(\d*)\[([^\]]*)\].*$/)
         
         // Try alternative order: @name(label)*{content}
         if (!shorthandMatch) {
-            shorthandMatch = line.match(/^@(\w+)(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*:\s*(dt|d|[#@%&t?TrscRFCMW])?(\d*)\[([^\]]*)\].*$/)
+            shorthandMatch = line.match(/^@(\w+)(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])?(\d*)\[([^\]]*)\].*$/)
             if (shorthandMatch) {
                 // Reorder to match expected destructuring: [, name, requiredMarker, content, customLabel, typeMarker, rowsOrModifier, attributes]
                 const [, name, customLabel, requiredMarker, content, typeMarker, rowsOrModifier, attributes] = shorthandMatch
@@ -151,9 +163,9 @@ export class FormdownParser {
         const delimiter = this.options.inlineFieldDelimiter!
 
         // Support shorthand inline fields: typeMarker___@fieldName*{content}(label)[attributes]
-        // Examples: @___@email*, #___@age, d___@birth_date{yyyy-MM-dd}
+        // Examples: @___@email*, #___@age, d___@birth_date{yyyy-MM-dd}, $___@price
         // Note: need to handle single 'd' separately from 'dt'
-        const shorthandPattern = new RegExp(`(dt|d|[#@%&t?TrscRFCMW]?)${delimiter}@(\\w+)(\\*)?(?:\\{(.*?)\\})?(?:\\(([^)]+)\\))?(?:\\[([^\\]]*)\\])?`, 'g')
+        const shorthandPattern = new RegExp(`(dt|d|[#@%&t?TrscRFCMW$]?)${delimiter}@(\\w+)(\\*)?(?:\\{(.*?)\\})?(?:\\(([^)]+)\\))?(?:\\[([^\\]]*)\\])?`, 'g')
         
         let cleanedLine = line.replace(shorthandPattern, (match, typeMarker, name, requiredMarker, content, customLabel, attributes) => {
             // Only process as shorthand if it has actual shorthand features
@@ -220,7 +232,8 @@ export class FormdownParser {
             'F': 'file',
             'C': 'color',
             'M': 'month',
-            'W': 'week'
+            'W': 'week',
+            '$': 'number'  // Money input - will add currency formatting
         }
         
         const type = typeMap[typeMarker] || 'text'
@@ -236,6 +249,15 @@ export class FormdownParser {
         // Add rows for textarea
         if (type === 'textarea' && rowsOrModifier) {
             fieldAttributes.rows = parseInt(rowsOrModifier, 10)
+        }
+        
+        // Add money-specific attributes
+        if (typeMarker === '$') {
+            fieldAttributes.inputmode = 'decimal'
+            fieldAttributes.step = '0.01'
+            if (!fieldAttributes.placeholder) {
+                fieldAttributes.placeholder = '0.00'
+            }
         }
         
         // Interpret content based on type
@@ -362,8 +384,26 @@ export class FormdownParser {
 
         if (matches.length === 0) return null
 
-        const type = matches[0][1]
-        if (!type) return null
+        // Find the type (first match without a value, or 'text' as default)
+        let type = 'text'
+        let typeIndex = -1
+        
+        for (let i = 0; i < matches.length; i++) {
+            const [, key, quotedValue1, quotedValue2, unquotedValue] = matches[i]
+            // If this key has no value and is a valid field type, use it as the type
+            if (!quotedValue1 && !quotedValue2 && !unquotedValue) {
+                // Check if it's a valid HTML input type or special form type
+                const validTypes = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 
+                                   'date', 'time', 'datetime-local', 'month', 'week', 'color',
+                                   'file', 'range', 'radio', 'checkbox', 'select', 'textarea',
+                                   'submit', 'reset', 'button', 'hidden']
+                if (validTypes.includes(key)) {
+                    type = key
+                    typeIndex = i
+                    break
+                }
+            }
+        }
 
         const field: Field = {
             name,
@@ -372,8 +412,9 @@ export class FormdownParser {
             attributes: {}
         }
 
-        // Process attributes starting from the second match
-        for (let i = 1; i < matches.length; i++) {
+        // Process all attributes, skipping the one we used as type
+        for (let i = 0; i < matches.length; i++) {
+            if (i === typeIndex) continue // Skip the type match
             const [, key, quotedValue1, quotedValue2, unquotedValue] = matches[i]
 
             if (key === 'required') {
@@ -425,6 +466,17 @@ export class FormdownParser {
                 field.pattern = quotedValue1 || quotedValue2 || unquotedValue
             } else if (key === 'content' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
                 field.content = quotedValue1 || quotedValue2 || unquotedValue
+            } else if (key === 'value') {
+                if (quotedValue1 !== undefined || quotedValue2 !== undefined) {
+                    // For quoted values, preserve as string (don't parse as boolean/number)
+                    field.value = quotedValue1 !== undefined ? quotedValue1 : quotedValue2
+                } else if (unquotedValue !== undefined) {
+                    // For unquoted values, parse them (can become boolean/number)
+                    field.value = this.parseAttributeValue(unquotedValue)
+                } else {
+                    // value attribute with no value defaults to empty string
+                    field.value = ''
+                }
             } else if (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined) {
                 const value = quotedValue1 || quotedValue2 || unquotedValue
                 field.attributes![key] = this.parseAttributeValue(value)
@@ -474,13 +526,18 @@ export class FormdownParser {
     }
 
     private parseAttributeValue(value: string): any {
-        // Try to parse as integer
-        if (/^\d+$/.test(value)) {
+        // Handle empty string explicitly
+        if (value === '') {
+            return ''
+        }
+
+        // Try to parse as integer (including negative)
+        if (/^-?\d+$/.test(value)) {
             return parseInt(value, 10)
         }
 
-        // Try to parse as float
-        if (/^\d*\.\d+$/.test(value)) {
+        // Try to parse as float (including negative)
+        if (/^-?\d*\.\d+$/.test(value)) {
             return parseFloat(value)
         }
 

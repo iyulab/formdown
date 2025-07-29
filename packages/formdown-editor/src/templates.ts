@@ -35,6 +35,9 @@ export function renderEditorPanel(
                     <button class="toolbar-button" @click=${() => insertSnippet(`@country: [select required options="USA,Canada,UK"]`)}>
                         Select
                     </button>
+                    <button class="toolbar-button" @click=${() => insertSnippet(`@volume: [range min=0 max=100 unit="%"]`)}>
+                        Range
+                    </button>
                 </div>
             ` : ''}
 

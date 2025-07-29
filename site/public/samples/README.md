@@ -4,6 +4,13 @@ This directory contains comprehensive examples showcasing FormDown's syntax and 
 
 ## Sample Files Overview
 
+### 🏗️ **core-first-architecture.fd** - Core-First Architecture (Latest)
+- Demonstrates FormManager and FormDataBinding usage
+- Event-driven form management
+- Framework-agnostic Core APIs
+- Value priority system implementation
+- Reactive data binding examples
+
 ### 📚 **basic.fd** - Getting Started
 - Minimal syntax examples (empty brackets, optional inline brackets)
 - Both label definition methods (parentheses vs. attributes)

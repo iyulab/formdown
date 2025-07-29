@@ -39,6 +39,10 @@ export class SchemaExtractor {
             schema.placeholder = field.placeholder
         }
 
+        if (field.value !== undefined) {
+            schema.value = field.value
+        }
+
         if (field.options) {
             schema.options = field.options
         }

@@ -67,8 +67,8 @@ describe('Other Option Data Handling', () => {
       const parsed = parseFormdown(content)
       const html = generateFormHTML(parsed)
       
-      // Should generate individual form for single field
-      expect(html).toContain('<form class="formdown-form"')
+      // Should generate hidden form for single field
+      expect(html).toContain('<form hidden id="formdown-form-default"')
       expect(html).not.toContain('onsubmit="handleFormdownSubmit(event, this)"')
       expect(html).not.toContain('name="country_other"')  // Text input doesn't have name
       

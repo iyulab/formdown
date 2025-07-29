@@ -11,34 +11,60 @@ Formdown is a simple, human-readable format for creating web forms. It combines 
 
 ## Architecture
 
-Formdown consists of three main packages with a powerful extension system:
+Formdown features a **Core-First architecture** where all business logic resides in the Core package, making it framework-agnostic and highly reusable:
 
-### @formdown/core
-The foundational parsing engine with comprehensive extension capabilities:
-- **formdown → html**: Parse syntax and generate semantic HTML forms
-- **formdown → get-schema**: Extract structured metadata for validation and tooling
-- **Extension System**: Hook-based plugin architecture for unlimited customization
-- **Type Safety**: Full TypeScript support for third-party plugin development
+### @formdown/core - The Foundation
+The Core package provides comprehensive form management through centralized classes:
 
-### @formdown/ui
-Web components that leverage the core extension system for enhanced functionality:
-- Uses @formdown/core extension hooks for custom behaviors
-- Plugin-based rendering and validation
-- Framework-agnostic web components
+#### FormManager Class
+- **Complete Form Lifecycle**: Parse → Render → Data Management → Validation
+- **Event-Driven System**: Reactive updates through publishers/subscribers
+- **Schema Integration**: Automatic field discovery and validation rules
+- **Framework Agnostic**: Works with React, Vue, Angular, vanilla JS
 
-### @formdown/editor
-Development tools with plugin support for enhanced editing experiences:
-- Live editor with syntax highlighting and real-time preview
-- Leverages @formdown/core plugins for advanced features
-- Extensible development environment
+#### FormDataBinding Class  
+- **Reactive Data Management**: Schema-driven defaults with change detection
+- **Value Priority System**: `context.data` > `schema value` > `empty`
+- **Validation Integration**: Field-level and form-level validation
+- **State Management**: Dirty checking, snapshots, reset functionality
+
+#### Extension System
+- **Hook-based Architecture**: 14 different hook types for maximum customization
+- **Plugin System**: Complete plugin lifecycle management with error handling
+- **Type Safety**: Full TypeScript support with compile-time validation
+
+### @formdown/ui - Thin Presentation Layer
+Web components that delegate all business logic to Core:
+- **FormManager Integration**: Internal FormManager instance handles all logic
+- **Event Forwarding**: UI events forwarded from Core FormManager
+- **Reactive Properties**: Data binding synchronized with Core state
+- **Backward Compatibility**: Existing APIs preserved while using Core internally
+
+### @formdown/editor - Development Tools
+Development environment enhanced by Core architecture:
+- **FormManager-Based**: Uses Core APIs for form processing and validation
+- **Real-time Preview**: Live updates through Core event system
+- **Enhanced Testing**: Business logic testable independently of UI
+
+### Key Architectural Benefits
+
+1. **Framework Independence**: Core can be used with any UI framework
+2. **Enhanced Testability**: Business logic separated from presentation
+3. **Single Source of Truth**: All form behavior centralized in Core
+4. **Event-Driven Reactivity**: Subscribe to data changes, validation, submission
+5. **Better Maintainability**: Clean separation of concerns
+6. **Backward Compatibility**: Existing code continues to work unchanged
 
 ## Key Features
 
+- **Hidden Form Architecture**: Revolutionary form system with no layout interference
+- **Value Attribute System**: Comprehensive default values for all field types (`value="text"`)
 - **Shorthand syntax**: Write forms faster with intuitive shortcuts (`@name*: []`, `@email: @[]`)
 - **Smart label generation**: Automatic conversion of field names to readable labels
+- **Multiple Forms**: Support multiple forms in one document with automatic association
 - **Inline fields**: Embed form fields directly in markdown text
 - **Rich field types**: Support for all HTML5 input types plus custom components via plugins
-- **Extension System**: Hook-based plugins for custom field types, validators, and renderers
+- **Extension System**: Hook-based plugins for custom field types, validators, and renderers (14 hook types)
 - **Schema Extraction**: Get structured metadata for validation, documentation, and tooling
 - **Flexible attributes**: Control validation, styling, and behavior
 - **Markdown integration**: Mix forms with rich text content

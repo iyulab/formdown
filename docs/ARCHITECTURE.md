@@ -15,7 +15,9 @@ The Formdown ecosystem consists of three main packages and a documentation site:
 **formdown-core**
 - The foundational parsing and generation engine with extension system
 - Primary role: formdown → html and formdown → get-schema transformations
-- Hook-based plugin architecture for external extensibility
+- Hidden Form Architecture for clean form association
+- Value Attribute support for default field values
+- Hook-based plugin architecture for external extensibility (14 hook types)
 - Contains TypeScript definitions, core utilities, and extension APIs
 - Provides the essential building blocks for other packages
 
@@ -104,5 +106,74 @@ Formdown can be integrated in multiple ways:
 - **NPM Installation**: Modular imports for build-optimized applications
 - **Framework Integration**: First-class support in modern JavaScript frameworks
 - **Static Sites**: Pre-rendered forms for JAMstack architectures
+
+## Hidden Form Architecture
+
+Formdown uses a revolutionary **Hidden Form Architecture** that separates form definition from field definition for optimal styling flexibility and modern web standards compliance.
+
+### Core Concept
+
+Traditional form builders wrap fields in visible `<form>` elements, which can interfere with CSS layouts and styling. Formdown solves this by:
+
+1. **Hidden Form Elements**: Forms are generated as `<form hidden>` elements that don't affect layout
+2. **Form Attribute Association**: Fields use HTML5 `form="form-id"` attribute to associate with forms
+3. **Flexible Positioning**: Fields can be positioned anywhere in the document while maintaining form association
+
+### Implementation
+
+```formdown
+@form[action="/submit" method="POST"]
+
+@name: [text required]
+@email: [email required]
+```
+
+Generates:
+```html
+<!-- Hidden form - no layout impact -->
+<form hidden id="formdown-form-1" action="/submit" method="POST"></form>
+
+<!-- Fields with form association -->
+<div class="formdown-field">
+    <label for="name">Name *</label>
+    <input type="text" id="name" name="name" required form="formdown-form-1">
+</div>
+<div class="formdown-field">
+    <label for="email">Email *</label>
+    <input type="email" id="email" name="email" required form="formdown-form-1">
+</div>
+```
+
+### Benefits
+
+- ✅ **Clean styling**: No form wrapper interfering with CSS layout
+- ✅ **Flexible positioning**: Fields can be placed anywhere in the document
+- ✅ **Multiple forms**: Support multiple forms in one document
+- ✅ **HTML standards**: Uses native HTML `form` attribute for proper association
+- ✅ **Accessibility**: Maintains proper form semantics and screen reader support
+
+## Value Attribute System
+
+Formdown supports comprehensive default value setting through the `value` attribute for all field types:
+
+### Text and Input Fields
+```formdown
+@name: [text value="John Doe"]
+@age: [number value=25]
+@birth_date: [date value="1995-05-15"]
+```
+
+### Selection Fields
+```formdown
+@country: [select value="USA" options="USA,Canada,UK"]
+@priority: [radio value="Medium" options="Low,Medium,High"]
+@features: [checkbox value="Email,SMS" options="Email,SMS,Push,Phone"]
+```
+
+### Advanced Value Processing
+- **Boolean values**: `value=true/false` for single checkboxes
+- **Multiple values**: `value="A,B,C"` for checkbox groups
+- **Type-aware parsing**: Automatic type conversion for numbers, booleans, dates
+- **HTML generation**: Proper `selected`, `checked`, and `value` attribute generation
 
 This architecture enables Formdown to serve both rapid prototyping needs and enterprise-scale applications while maintaining simplicity and performance.

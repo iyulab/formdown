@@ -2,7 +2,261 @@
 
 Formdown continues to evolve with powerful new features that make form creation even more intuitive and flexible.
 
-## 📋 Field Helper API (Latest)
+## 🏗️ Core-First Architecture (Latest)
+
+**Major Release:** Revolutionary architecture that moves all business logic to the Core package, making Formdown framework-agnostic and highly reusable.
+
+### What's New
+
+The Core-First Architecture provides:
+
+- **FormManager Class**: Complete form lifecycle management in Core package
+- **FormDataBinding Class**: Reactive data management with schema-driven defaults  
+- **Event-Driven System**: Publishers/subscribers for reactive form interactions
+- **Framework Agnostic**: Core can be used with any UI framework or vanilla JavaScript
+- **Thin Presentation Layers**: UI and Editor packages delegate to Core APIs
+- **Enhanced Testability**: Business logic separated from presentation for easier testing
+
+### FormManager - The Central API
+
+The FormManager class is the heart of the new architecture:
+
+```javascript
+import { FormManager, createFormManager } from '@formdown/core';
+
+// Full control approach
+const manager = new FormManager();
+manager.parse('@name*: [placeholder="Enter name"]');
+manager.setFieldValue('name', 'John Doe');
+const html = manager.render();
+
+// Convenience approach  
+const quickManager = createFormManager('@email*: @[]');
+quickManager.updateData({ email: 'user@example.com' });
+```
+
+### Key Benefits
+
+1. **Framework Independence**: Use Formdown with React, Vue, Angular, or vanilla JS
+2. **Business Logic Separation**: All form logic centralized in Core package
+3. **Event-Driven Reactivity**: Subscribe to data changes, validation events, form submission
+4. **Enhanced Reusability**: Same Core logic across different presentation layers
+5. **Easier Testing**: Test business logic independently of UI components
+6. **Better Maintainability**: Single source of truth for form behavior
+
+### Migration Path
+
+Existing code continues to work unchanged. The new architecture is additive:
+
+**Legacy approach (still works):**
+```javascript
+import { parseFormdown, generateFormHTML } from '@formdown/core';
+
+const parsed = parseFormdown(content);
+const html = generateFormHTML(parsed);
+```
+
+**Modern approach (recommended):**
+```javascript
+import { FormManager } from '@formdown/core';
+
+const manager = new FormManager();
+manager.parse(content);
+manager.on('data-change', ({ field, value }) => {
+  console.log(`${field} changed to ${value}`);
+});
+const html = manager.render();
+```
+
+### Complete Example
+
+```javascript
+import { FormManager } from '@formdown/core';
+
+const formContent = `
+# User Registration
+
+@name(Full Name)*: [placeholder="Enter your full name"]
+@email(Email Address)*: @[placeholder="your.email@example.com"]
+@age: [number min=18 max=100 value=25]
+@interests{Web,Mobile,AI,*(Custom Interest)}: c[]
+`;
+
+// Create and initialize form manager
+const manager = new FormManager();
+manager.parse(formContent);
+
+// Set up reactive event handlers
+manager.on('data-change', ({ field, value, formData }) => {
+  console.log(`Field ${field} changed:`, value);
+  console.log('Full form data:', formData);
+});
+
+manager.on('validation-error', ({ field, errors }) => {
+  console.log(`Validation error in ${field}:`, errors);
+});
+
+// Interact with form data
+manager.setFieldValue('name', 'Jane Smith');
+manager.updateData({ 
+  email: 'jane@example.com',
+  interests: ['Web', 'Custom Framework']
+});
+
+// Validate and render
+const validation = manager.validate();
+if (validation.isValid) {
+  const html = manager.render();
+  document.body.innerHTML = html;
+}
+
+// Check for changes
+console.log('Form has changes:', manager.isDirty());
+console.log('Current data:', manager.getData());
+```
+
+[**Learn More →**](/docs/api#formmanager-class)
+
+---
+
+## 🎯 Value Attribute for Default Values (Latest)
+
+**Major Release:** Comprehensive default value support for all field types using the intuitive `value` attribute.
+
+### What's New
+
+The Value Attribute system provides:
+
+- **Universal Support**: Default values for all field types (text, select, radio, checkbox, etc.)
+- **Type-Aware Processing**: Automatic value conversion and validation
+- **Selection Pre-selection**: Pre-check radio buttons, checkboxes, and select options
+- **Boolean Support**: `value=true/false` for single checkboxes
+- **Multiple Values**: `value="A,B,C"` for checkbox groups
+- **Clean Syntax**: Natural, HTML-like attribute syntax
+
+### Quick Examples
+
+```formdown
+# Contact Form with Defaults
+
+@form[action="/contact" method="POST"]
+
+// Text fields with default values
+@name: [text value="John Doe" placeholder="Enter your full name"]
+@email: [email value="user@example.com" required]
+@phone: [tel value="+1-555-0123"]
+
+// Number fields with defaults
+@age: [number value=25 min=18 max=100]
+@quantity: [number value=1 min=1 max=10]
+
+// Date/time fields with defaults  
+@meeting_date: [date value="2024-12-25"]
+@appointment_time: [time value="14:30"]
+
+// Text area with default content
+@message: [textarea value="Please enter your message here..." rows=4]
+
+// Selection fields with defaults
+@country: [select value="USA" options="USA,Canada,UK,Australia"]
+@priority: [radio value="Medium" options="Low,Medium,High"]
+@features: [checkbox value="Email,SMS" options="Email,SMS,Push,Phone"]
+
+// Single checkbox (boolean)
+@newsletter: [checkbox value=true content="Subscribe to newsletter"]
+
+// Range with default value
+@satisfaction: [range value=8 min=1 max=10]
+```
+
+### Key Benefits
+
+1. **Intuitive Syntax**: Uses familiar HTML `value` attribute pattern
+2. **Type Safety**: Automatic type conversion for numbers, booleans, dates
+3. **Selection Logic**: Smart pre-selection for radio, checkbox, and select fields
+4. **Edge Case Handling**: Graceful handling of invalid or missing values
+5. **HTML Standards**: Generates proper `selected`, `checked`, and `value` attributes
+
+[**Learn More →**](/docs/syntax#default-values-with-value-attribute)
+
+---
+
+## 🏗️ Hidden Form Architecture
+
+**Major Release:** Revolutionary form architecture that separates form definition from field positioning for maximum styling flexibility.
+
+### What's New
+
+The Hidden Form Architecture provides:
+
+- **Clean Styling**: No form wrapper interfering with CSS layout
+- **Flexible Positioning**: Fields can be placed anywhere in the document  
+- **Multiple Forms**: Support multiple forms in one document
+- **HTML Standards**: Uses native HTML `form` attribute for proper association
+- **Accessibility**: Maintains proper form semantics and screen reader support
+
+### How It Works
+
+Traditional form builders wrap fields in visible `<form>` elements, which can interfere with CSS layouts. Formdown's Hidden Form Architecture solves this:
+
+```formdown
+@form[action="/submit" method="POST"]
+
+@name: [text required]
+@email: [email required]
+```
+
+Generates:
+```html
+<!-- Hidden form - no layout impact -->
+<form hidden id="formdown-form-1" action="/submit" method="POST"></form>
+
+<!-- Fields with form association -->
+<div class="formdown-field">
+    <label for="name">Name *</label>
+    <input type="text" id="name" name="name" required form="formdown-form-1">
+</div>
+<div class="formdown-field">
+    <label for="email">Email *</label>
+    <input type="email" id="email" name="email" required form="formdown-form-1">
+</div>
+```
+
+### Multiple Forms Example
+
+```formdown
+# Multi-Form Document
+
+@form[id="login" action="/login" method="POST"]
+
+## Login
+@username: [text required]
+@password: [password required]
+
+@form[id="register" action="/register" method="POST"]
+
+## Register  
+@new_username: [text required]
+@new_password: [password required]
+@email: [email required]
+
+// Explicit form association
+@special_field: [text form="login"]
+```
+
+### Benefits
+
+- ✅ **Clean CSS**: No form wrapper interfering with layout
+- ✅ **Flexible Design**: Fields positioned anywhere in content
+- ✅ **Multiple Forms**: Several forms in one document
+- ✅ **Modern Standards**: Uses HTML5 `form` attribute
+- ✅ **Backward Compatible**: Existing code works unchanged
+
+[**Learn More →**](/docs/syntax#hidden-form-architecture)
+
+---
+
+## 📋 Field Helper API
 
 **Major Release:** Introducing the **FormdownFieldHelper** API - a predictable and rational interface for programmatic form interaction with automatic "other" option handling.
 

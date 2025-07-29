@@ -1,8 +1,12 @@
 import { marked } from 'marked'
 import { Field, FormdownContent, FormDeclaration } from './types'
+import { defaultExtensionManager } from './extensions/extension-manager.js'
+import type { HookContext } from './extensions/types.js'
 
 export class FormdownGenerator {
     private formCounter = 0
+    private fieldCounter = 0
+    private usedIds = new Set<string>()
     /**
      * Escape HTML special characters
      * @param text - The text to escape
@@ -184,6 +188,10 @@ export class FormdownGenerator {
     }
 
     generateHTML(content: FormdownContent): string {
+        // Reset ID tracking for each form generation
+        this.usedIds.clear()
+        this.fieldCounter = 0
+        
         const markdownHTML = content.markdown ? marked(content.markdown) : ''
 
         // Handle both sync and async marked results
@@ -309,10 +317,38 @@ export class FormdownGenerator {
         if (field.inline) {
             return this.generateInlineFieldHTML(field, defaultFormId)
         }
-        // For hidden form architecture, generate field without wrapper form
+        
+        // Always wrap fields in proper structure for accessibility
+        const fieldHTML = this.generateFieldHTML(field, defaultFormId)
+        
+        // If the field HTML already contains proper form structure, return as is
+        if (fieldHTML.includes('<div class="formdown-field">')) {
+            return `
+<div class="formdown-field-container">
+${fieldHTML}
+</div>`
+        }
+        
+        // Buttons (submit, reset, button) don't need labels - they are self-labeling
+        if (['submit', 'reset', 'button'].includes(field.type)) {
+            return `
+<div class="formdown-field-container">
+${fieldHTML}
+</div>`
+        }
+        
+        // For input fields, wrap in proper label structure
+        const fieldId = this.generateUniqueId(field.name, defaultFormId)
+        const displayLabel = field.label || this.generateSmartLabel(field.name)
+        const formId = this.determineFormId(field, defaultFormId)
+        const requiredMark = field.required ? ' *' : ''
+        
         return `
 <div class="formdown-field-container">
-${this.generateFieldHTML(field, defaultFormId)}
+<div class="formdown-field">
+    <label for="${fieldId}">${displayLabel}${requiredMark}</label>
+    ${fieldHTML.replace(/id="[^"]*"/, `id="${fieldId}"`).replace(/form="[^"]*"/, formId ? `form="${formId}"` : '')}
+</div>
 </div>`
     }
 
@@ -401,7 +437,20 @@ ${fieldsHTML}
     }
 
     generateFieldHTML(field: Field, defaultFormId?: string): string {
-        const { name, type, label, required, placeholder, attributes, options, description, errorMessage, pattern, format, allowOther, content } = field
+        const { name, type, label, required, placeholder, attributes, options, description, errorMessage, pattern, format, allowOther, content, value } = field
+
+        // Try to generate HTML using registered field type extensions first
+        const context: HookContext = {
+            field,
+            metadata: { formId: defaultFormId }
+        }
+
+        const extensionHTML = defaultExtensionManager.getFieldTypeRegistry().generateFieldHTML(field, context)
+        if (extensionHTML) {
+            return extensionHTML
+        }
+
+        // Fall back to built-in field type generation
 
         // Use smart label generation if no label is provided
         const displayLabel = label || this.generateSmartLabel(name)
@@ -412,12 +461,39 @@ ${fieldsHTML}
             displayLabel
 
         // Generate unique IDs for accessibility
-        const fieldId = name
-        const descriptionId = description ? `${name}-description` : undefined
-        const errorId = errorMessage ? `${name}-error` : undefined
+        const fieldId = this.generateUniqueId(name, defaultFormId)
+        const descriptionId = description ? `${fieldId}-description` : undefined
+        const errorId = errorMessage ? `${fieldId}-error` : undefined
 
         // Form attribute auto-connection logic
         const formId = this.determineFormId(field, defaultFormId)
+
+        // Add intelligent autocomplete attributes
+        const autoCompleteMapping: Record<string, string> = {
+            'name': 'name',
+            'first_name': 'given-name',
+            'last_name': 'family-name', 
+            'email': 'email',
+            'phone': 'tel',
+            'phone_number': 'tel',
+            'password': 'current-password',
+            'new_password': 'new-password',
+            'confirm_password': 'new-password',
+            'username': 'username',
+            'company': 'organization',
+            'address': 'street-address',
+            'city': 'address-level2',
+            'state': 'address-level1',
+            'zip': 'postal-code',
+            'country': 'country',
+            'birth_date': 'bday',
+            'birthday': 'bday'
+        }
+        
+        const suggestedAutocomplete = autoCompleteMapping[name.toLowerCase()] || 
+                                     (type === 'email' ? 'email' : 
+                                      type === 'tel' ? 'tel' : 
+                                      type === 'password' ? 'current-password' : undefined)
 
         const commonAttrs = {
             id: fieldId,
@@ -426,9 +502,11 @@ ${fieldsHTML}
             ...(placeholder && { placeholder }),
             ...(pattern && { pattern }),
             ...(format && { format }),
+            ...(value !== undefined && value !== null && !['textarea', 'select', 'radio', 'checkbox', 'range', 'file'].includes(type) && { value }),
             ...(description && { 'aria-describedby': descriptionId }),
             ...(errorMessage && { 'aria-describedby': `${descriptionId ? descriptionId + ' ' : ''}${errorId}` }),
             ...(formId && { form: formId }),
+            ...(suggestedAutocomplete && !attributes?.autocomplete && { autocomplete: suggestedAutocomplete }),
             ...attributes
         }
 
@@ -456,14 +534,18 @@ ${fieldsHTML}
 
         switch (type) {
             case 'textarea':
+                const textareaContent = value ? this.escapeHtml(String(value)) : ''
                 return `
 <div class="formdown-field">
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <textarea ${attrString}></textarea>${generateHelpText()}
+    <textarea ${attrString}>${textareaContent}</textarea>${generateHelpText()}
 </div>`
 
             case 'select':
-                const optionsHTML = options?.map(opt => `<option value="${opt}">${opt}</option>`).join('\n') || ''
+                const optionsHTML = options?.map(opt => {
+                    const isSelected = value && String(value) === opt ? ' selected' : ''
+                    return `<option value="${opt}"${isSelected}>${opt}</option>`
+                }).join('\n') || ''
                 const otherOptionHTML = allowOther ? `\n        <option value="">${this.escapeHtml(field.otherLabel || 'Other')} (please specify)</option>` : ''
                 const otherInputHTML = allowOther ? `\n    <input type="text" id="${fieldId}_other" placeholder="Please specify..." style="display: none; margin-top: 8px; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #fff; width: 100%; max-width: 300px;" class="formdown-other-input">` : ''
                 
@@ -493,21 +575,26 @@ ${fieldsHTML}
                 }
 
                 const radioInputsHTML = options.map((opt, index) => {
-                    const inputId = `${name}_${index}`
+                    const inputId = this.generateUniqueId(`${name}_${index}`, defaultFormId)
                     const isRequired = required && index === 0
+                    const isChecked = value && String(value) === opt
                     const hideOtherOnChange = allowOther ? ` onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('.formdown-other-input') : null; if(otherInput) { otherInput.style.display = 'none'; }"` : ''
+                    const requiredAttr = isRequired ? ' required' : ''
+                    const checkedAttr = isChecked ? ' checked' : ''
+                    const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
                     return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="radio" id="${inputId}" name="${name}" value="${opt}" ${isRequired ? 'required' : ''} ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}${hideOtherOnChange}>
+            <input type="radio" id="${inputId}" name="${name}" value="${opt}"${requiredAttr}${checkedAttr}${ariaAttr}${hideOtherOnChange}>
             <span>${opt}</span>
         </label>`
                 }).join('\n')
                 
+                const otherRadioId = this.generateUniqueId(`${name}_other_radio`, defaultFormId)
                 const otherRadioHTML = allowOther ? `
-        <label for="${name}_other_radio" class="formdown-option-label">
-            <input type="radio" id="${name}_other_radio" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('.formdown-other-input') : null; if(otherInput) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value || ''; }"
+        <label for="${otherRadioId}" class="formdown-option-label">
+            <input type="radio" id="${otherRadioId}" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('.formdown-other-input') : null; if(otherInput) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value || ''; }"
             <span>${this.escapeHtml(field.otherLabel || 'Other')}:</span>
-            <input type="text" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${name}_other_radio') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; otherRadio.dispatchEvent(new Event('change', {bubbles: true})); }"
+            <input type="text" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${otherRadioId}') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${otherRadioId}') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; otherRadio.dispatchEvent(new Event('change', {bubbles: true})); }"
         </label>` : ''
 
                 const isVertical = attributes?.layout === 'vertical'
@@ -526,30 +613,59 @@ ${radioInputsHTML}${otherRadioHTML}
             case 'checkbox':
                 if (!options || options.length === 0) {
                     // Single checkbox - use content with priority: content > label > smart_label(name)
+                    // Handle boolean value for single checkbox
+                    const isChecked = value && (value === true || value === 'true' || String(value).toLowerCase() === 'true')
+                    
+                    // Create checkbox-specific attributes (excluding duplicates)
+                    const checkboxAttrs: any = { ...commonAttrs }
+                    delete checkboxAttrs.id  // We'll add manually to avoid duplication
+                    delete checkboxAttrs.name  // We'll add manually to avoid duplication
+                    delete checkboxAttrs.form  // We'll add manually to avoid duplication
+                    
+                    const checkboxAttrString = Object.entries(checkboxAttrs)
+                        .map(([key, value]) => {
+                            if (typeof value === 'boolean') {
+                                return value ? key : ''
+                            }
+                            return `${key}="${value}"`
+                        })
+                        .filter(Boolean)
+                        .join(' ')
+                    
+                    const requiredAttr = required ? ' required' : ''
+                    const checkedAttr = isChecked ? ' checked' : ''
+                    const formAttr = formId ? ` form="${formId}"` : ''
+                    
                     return `
 <div class="formdown-field">
     <label for="${fieldId}" class="formdown-checkbox-label">
-        <input type="checkbox" id="${fieldId}" name="${name}" value="true" ${required ? 'required' : ''} ${attrString}>
+        <input type="checkbox" id="${fieldId}" name="${name}" value="true"${requiredAttr}${checkedAttr}${formAttr} ${checkboxAttrString}>
         <span>${this.escapeHtml(checkboxDisplayText)}${required ? ' *' : ''}</span>
     </label>${generateHelpText()}
 </div>`
                 } else {
-                    // Checkbox group
+                    // Checkbox group - handle comma-separated values
+                    const selectedValues = value ? String(value).split(',').map(v => v.trim()) : []
                     const checkboxInputsHTML = options.map((opt, index) => {
-                        const inputId = `${name}_${index}`
+                        const inputId = this.generateUniqueId(`${name}_${index}`, defaultFormId)
                         const isRequired = required && index === 0
+                        const isChecked = selectedValues.includes(opt)
+                        const requiredAttr = isRequired ? ' required' : ''
+                        const checkedAttr = isChecked ? ' checked' : ''
+                        const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
                         return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="checkbox" id="${inputId}" name="${name}" value="${opt}" ${isRequired ? 'required' : ''} ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
+            <input type="checkbox" id="${inputId}" name="${name}" value="${opt}"${requiredAttr}${checkedAttr}${ariaAttr}>
             <span>${opt}</span>
         </label>`
                     }).join('\n')
                     
+                    const otherCheckboxId = this.generateUniqueId(`${name}_other_checkbox`, defaultFormId)
                     const otherCheckboxHTML = allowOther ? `
-        <label for="${name}_other_checkbox" class="formdown-option-label">
-            <input type="checkbox" id="${name}_other_checkbox" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('.formdown-other-input') : null; if(otherInput) { if(this.checked) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value || ''; } else { otherInput.style.display = 'none'; this.value = ''; } }"
+        <label for="${otherCheckboxId}" class="formdown-option-label">
+            <input type="checkbox" id="${otherCheckboxId}" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('.formdown-other-input') : null; if(otherInput) { if(this.checked) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value || ''; } else { otherInput.style.display = 'none'; this.value = ''; } }"
             <span>${this.escapeHtml(field.otherLabel || 'Other')}:</span>
-            <input type="text" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${name}_other_checkbox') : null; if(otherCheckbox) { otherCheckbox.checked = true; otherCheckbox.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${name}_other_checkbox') : null; if(otherCheckbox && otherCheckbox.checked) { otherCheckbox.value = this.value; otherCheckbox.dispatchEvent(new Event('change', {bubbles: true})); }">
+            <input type="text" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${otherCheckboxId}') : null; if(otherCheckbox) { otherCheckbox.checked = true; otherCheckbox.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${otherCheckboxId}') : null; if(otherCheckbox && otherCheckbox.checked) { otherCheckbox.value = this.value; otherCheckbox.dispatchEvent(new Event('change', {bubbles: true})); }">
         </label>` : ''
 
                     const isVertical = attributes?.layout === 'vertical'
@@ -571,12 +687,12 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
                 const min = attributes?.min || 0
                 const max = attributes?.max || 100
                 const step = attributes?.step || 1
-                const value = attributes?.value || Math.floor((min + max) / 2)
+                const rangeValue = value !== undefined ? value : (attributes?.value || Math.floor((min + max) / 2))
                 return `
 <div class="formdown-field">
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <input type="range" ${attrString} value="${value}">
-    <output for="${fieldId}" class="formdown-range-output">${value}</output>${generateHelpText()}
+    <input type="range" ${attrString} value="${rangeValue}">
+    <output for="${fieldId}" class="formdown-range-output">${rangeValue}</output>${generateHelpText()}
 </div>`
 
             case 'file':
@@ -609,11 +725,33 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
 
             case 'submit':
                 const submitFormAttr = formId ? ` form="${formId}"` : ''
-                return `<button type="submit"${submitFormAttr}>${field.label || 'Submit'}</button>`
+                const submitButtonAttrs = Object.entries(attributes || {})
+                    .filter(([key]) => !['form'].includes(key)) // exclude form attr as it's handled separately
+                    .map(([key, value]) => {
+                        if (typeof value === 'boolean') {
+                            return value ? key : ''
+                        }
+                        return `${key}="${value}"`
+                    })
+                    .filter(Boolean)
+                    .join(' ')
+                const submitAttrString = submitButtonAttrs ? ` ${submitButtonAttrs}` : ''
+                return `<button type="submit" id="${fieldId}"${submitFormAttr}${submitAttrString}>${field.label || 'Submit'}</button>`
 
             case 'reset':
                 const resetFormAttr = formId ? ` form="${formId}"` : ''
-                return `<button type="reset"${resetFormAttr}>${field.label || 'Reset'}</button>`
+                const resetButtonAttrs = Object.entries(attributes || {})
+                    .filter(([key]) => !['form'].includes(key))
+                    .map(([key, value]) => {
+                        if (typeof value === 'boolean') {
+                            return value ? key : ''
+                        }
+                        return `${key}="${value}"`
+                    })
+                    .filter(Boolean)
+                    .join(' ')
+                const resetAttrString = resetButtonAttrs ? ` ${resetButtonAttrs}` : ''
+                return `<button type="reset" id="${fieldId}"${resetFormAttr}${resetAttrString}>${field.label || 'Reset'}</button>`
 
             default:
                 return `
@@ -644,5 +782,32 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
             .join(' ')
 
         return `<form hidden id="${form.id}" ${attrString}></form>\n`
+    }
+
+    /**
+     * Generate unique ID for form fields to prevent duplicates
+     */
+    private generateUniqueId(baseName: string, formId?: string): string {
+        // Try the base name first
+        let candidateId = baseName
+        
+        // If it's already used, add form prefix
+        if (this.usedIds.has(candidateId) && formId) {
+            const formPrefix = formId.replace(/^formdown-form-/, '').replace(/-/g, '_')
+            candidateId = `${formPrefix}_${baseName}`
+        }
+        
+        // If still conflicts, add counter
+        if (this.usedIds.has(candidateId)) {
+            candidateId = `${baseName}_${++this.fieldCounter}`
+        }
+        
+        // Keep adding counter until unique
+        while (this.usedIds.has(candidateId)) {
+            candidateId = `${baseName}_${++this.fieldCounter}`
+        }
+        
+        this.usedIds.add(candidateId)
+        return candidateId
     }
 }

@@ -26,7 +26,8 @@ export class PluginManager implements IPluginManager {
     constructor(
         private hookManager: HookManager,
         private options: ExtensionOptions = {},
-        private eventEmitter?: EventEmitter
+        private eventEmitter?: EventEmitter,
+        private fieldTypeRegistry?: import('./field-type-registry.js').FieldTypeRegistry
     ) { }
 
     /**
@@ -54,6 +55,8 @@ export class PluginManager implements IPluginManager {
         if (plugin.fieldTypes) {
             for (const fieldType of plugin.fieldTypes) {
                 this.fieldTypes.set(fieldType.type, fieldType)
+                // Also register with field type registry if available
+                this.fieldTypeRegistry?.register(fieldType)
             }
         }
 
@@ -128,6 +131,8 @@ export class PluginManager implements IPluginManager {
         if (plugin.fieldTypes) {
             for (const fieldType of plugin.fieldTypes) {
                 this.fieldTypes.delete(fieldType.type)
+                // Also unregister from field type registry if available
+                this.fieldTypeRegistry?.unregister(fieldType.type)
             }
         }
 
@@ -258,6 +263,20 @@ export class PluginManager implements IPluginManager {
      */
     getFieldTypes(): Map<string, FieldTypePlugin> {
         return new Map(this.fieldTypes)
+    }
+
+    /**
+     * Get a specific field type plugin
+     */
+    getFieldType(type: string): FieldTypePlugin | undefined {
+        return this.fieldTypes.get(type)
+    }
+
+    /**
+     * Check if a field type is registered
+     */
+    hasFieldType(type: string): boolean {
+        return this.fieldTypes.has(type)
     }
 
     /**

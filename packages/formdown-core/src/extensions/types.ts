@@ -64,6 +64,27 @@ export interface FieldTypePlugin {
     generator?: (field: Field, context: HookContext) => string
     /** Default attributes for this field type */
     defaultAttributes?: Record<string, any>
+    /** Data processor for handling field values */
+    dataProcessor?: FieldDataProcessor
+    /** Schema generator for JSON Schema validation */
+    schemaGenerator?: (field: Field) => object
+    /** CSS styles specific to this field type */
+    styles?: string
+    /** Client-side initialization script */
+    clientScript?: string
+}
+
+export interface FieldDataProcessor {
+    /** Process input value before form submission */
+    processInput?: (value: any, field: Field) => any
+    /** Process value for display */
+    processOutput?: (value: any, field: Field) => any
+    /** Validate data format */
+    validate?: (value: any, field: Field) => { valid: boolean; error?: string }
+    /** Serialize data for storage */
+    serialize?: (value: any, field: Field) => string
+    /** Deserialize data from storage */
+    deserialize?: (value: string, field: Field) => any
 }
 
 export interface ValidationPlugin {
@@ -129,8 +150,30 @@ export interface ExtensionContext {
     hooks: HookManager
     /** Plugin manager instance */
     plugins: PluginManager
+    /** Field type registry instance */
+    fieldTypes: FieldTypeRegistry
     /** Configuration options */
     options: ExtensionOptions
+}
+
+export interface FieldTypeRegistry {
+    register(plugin: FieldTypePlugin): void
+    unregister(type: string): void
+    get(type: string): FieldTypePlugin | undefined
+    has(type: string): boolean
+    getAll(): Map<string, FieldTypePlugin>
+    parseField(content: string, context: HookContext): Field | null
+    generateFieldHTML(field: Field, context: HookContext): string | null
+    validateField(field: Field, value: any): ValidationRule[]
+    processFieldData(field: Field, value: any, operation: 'input' | 'output' | 'serialize' | 'deserialize'): any
+    validateFieldData(field: Field, value: any): { valid: boolean; error?: string }
+    generateFieldSchema(field: Field): object | null
+    getAllStyles(): string
+    getStylesForTypes(types: string[]): string
+    getAllScripts(): string
+    getScriptsForTypes(types: string[]): string
+    getStats(): object
+    clear(): void
 }
 
 export interface ExtensionOptions {

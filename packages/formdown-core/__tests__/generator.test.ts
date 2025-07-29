@@ -33,15 +33,17 @@ describe('FormdownGenerator', () => {
                     label: 'Name',
                     required: true,
                     attributes: {}
-                }]
+                }],
+                formDeclarations: []
             }
 
             const html = generator.generateHTML(content)
 
             expect(html).toContain('<h1>Contact Us</h1>')
             expect(html).toContain('<p>Please fill out the form below:</p>')
-            expect(html).toContain('<form class="formdown-form"')
+            expect(html).toContain('<form hidden id="formdown-form-default"')
             expect(html).toContain('<input type="text"')
+            expect(html).toContain('form="formdown-form-default"')
         })
     })
 
@@ -62,10 +64,11 @@ describe('FormdownGenerator', () => {
 
             const html = generator.generateFormHTML(fields)
 
+            // Legacy method should create wrapper forms (deprecated warning expected)
             expect(html).toContain('<form class="formdown-form"')
             expect(html).toContain('<div class="formdown-field">')
             expect(html).toContain('<label for="username">Username *</label>')
-            expect(html).toContain('<input type="text" id="username" name="username" required>')
+            expect(html).toContain('<input type="text" id="username" name="username" required form=')
         })
 
         test('should generate email input with placeholder', () => {
@@ -384,11 +387,12 @@ Simple fields with minimal syntax (defaults to text input):
             expect(html).toContain('<h2>')
             expect(html).toContain('Minimal Syntax')
 
-            // Should contain form fields
-            expect(html).toContain('<form class="formdown-form"')
+            // Should contain hidden form and form fields with form attributes
+            expect(html).toContain('<form hidden id="formdown-form-default"')
             expect(html).toContain('name="name"')
             expect(html).toContain('name="email"')
             expect(html).toContain('name="phone"')
+            expect(html).toContain('form="formdown-form-default"')
         })
 
         test('should preserve markdown content when fields are present', () => {
@@ -412,10 +416,11 @@ Thank you for registering!`
             expect(html).toContain('Please fill out this form')
             expect(html).toContain('Thank you for registering')
 
-            // Should also have form fields
-            expect(html).toContain('<form class="formdown-form"')
+            // Should also have hidden form and form fields
+            expect(html).toContain('<form hidden id="formdown-form-default"')
             expect(html).toContain('username')
             expect(html).toContain('password')
+            expect(html).toContain('form="formdown-form-default"')
         })
 
         test('should handle mixed markdown and fields correctly', () => {

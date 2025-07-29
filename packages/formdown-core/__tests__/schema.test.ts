@@ -40,6 +40,42 @@ describe('Schema Extraction', () => {
             })
         })
 
+        test('should extract field with value attribute', () => {
+            const content = '@name(Full Name)*: [placeholder="Enter your full name" value="hello"]'
+            const schema = getSchema(content)
+
+            expect(schema.name).toEqual({
+                type: 'text',
+                label: 'Full Name',
+                required: true,
+                placeholder: 'Enter your full name',
+                value: 'hello',
+                position: 1,
+                isInline: undefined,
+                layout: 'vertical',
+                htmlAttributes: {
+                    form: 'formdown-form-default'
+                }
+            })
+        })
+
+        test('should extract different value types correctly', () => {
+            const content = `
+@text_field: [text value="string value"]
+@number_field: [number value=42]
+@boolean_field: [checkbox value=true]
+@quoted_boolean: [checkbox value="false"]
+@empty_value: [text value=""]
+            `
+            const schema = getSchema(content)
+
+            expect(schema.text_field.value).toBe('string value')
+            expect(schema.number_field.value).toBe(42)
+            expect(schema.boolean_field.value).toBe(true)
+            expect(schema.quoted_boolean.value).toBe('false')
+            expect(schema.empty_value.value).toBe('')
+        })
+
         test('should extract number field with validation', () => {
             const content = '@age: [number min=18 max=120]'
             const schema = getSchema(content)

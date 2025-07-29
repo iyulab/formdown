@@ -2,7 +2,119 @@
 
 Explore practical examples demonstrating Formdown's powerful features, including the latest smart field ordering and custom "other" options.
 
-## 🆕 New Features Showcase
+## 🆕 Latest Features Showcase
+
+### Core-First Architecture with FormManager
+
+This example demonstrates the new Core-First architecture using FormManager for complete form lifecycle management:
+
+```javascript
+import { FormManager, createFormManager } from '@formdown/core';
+
+// Define form content
+const formContent = `
+# Event Registration
+
+@form[action="/register" method="POST"]
+
+@name(Full Name)*: [placeholder="Enter your full name" value="John Doe"]
+@email(Email Address)*: @[placeholder="your.email@example.com"]
+@role{Attendee,Speaker,Sponsor,*(Custom Role)}: r[value="Attendee"]
+@interests{Tech,Design,Marketing,*(Other Interest)}: c[value="Tech,Design"]
+@dietary{None,Vegetarian,Vegan,*(Special Requirement)}: c[]
+`;
+
+// Create FormManager instance
+const manager = new FormManager();
+manager.parse(formContent);
+
+// Set up reactive event handlers
+manager.on('data-change', ({ field, value, formData }) => {
+  console.log(`Field ${field} changed to:`, value);
+  updateUI(formData); // Update your UI reactively
+});
+
+manager.on('validation-error', ({ field, errors }) => {
+  showFieldError(field, errors[0].message);
+});
+
+// Programmatic form interaction
+manager.setFieldValue('email', 'jane@example.com');
+manager.updateData({ 
+  role: 'Volunteer', // Uses "Custom Role" other option automatically
+  interests: ['Tech', 'Custom Framework'] // Adds "Other Interest" option
+});
+
+// Validation and rendering
+const validation = manager.validate();
+if (validation.isValid) {
+  const html = manager.render();
+  document.getElementById('form-container').innerHTML = html;
+  
+  console.log('Form data:', manager.getData());
+  // Output: { name: "John Doe", email: "jane@example.com", 
+  //          role: "Volunteer", interests: ["Tech", "Custom Framework"] }
+}
+
+// Form state management
+console.log('Form has changes:', manager.isDirty());
+console.log('Schema:', manager.getSchema());
+
+// Reset form
+document.getElementById('reset-btn').onclick = () => {
+  manager.reset(); // Resets to schema defaults
+};
+```
+
+**Key Benefits:**
+- **Framework Agnostic**: Works with React, Vue, Angular, vanilla JavaScript
+- **Event-Driven**: Reactive updates through proper event system
+- **Clean Data Structure**: No `_other` field suffixes in form data
+- **Complete API**: Parse, render, validate, manage state in one class
+- **Testable**: Business logic separated from presentation layer
+
+### Hidden Form Architecture & Value Attributes
+
+This example demonstrates the latest features including hidden forms, default values, and multiple form support:
+
+```formdown
+# Multi-Form Dashboard
+
+@form[id="profile" action="/profile" method="POST"]
+
+## User Profile
+
+@name: [text value="John Doe" required placeholder="Enter your full name"]
+@email: [email value="john@example.com" required]
+@age: [number value=30 min=18 max=100]
+@country: [select value="USA" options="USA,Canada,UK,Australia"]
+
+@form[id="preferences" action="/preferences" method="POST"]
+
+## Preferences 
+
+@theme: [radio value="Dark" options="Light,Dark,Auto"]
+@notifications: [checkbox value="Email,SMS" options="Email,SMS,Push,Phone"]
+@newsletter: [checkbox value=true content="Subscribe to weekly newsletter"]
+
+@form[id="feedback" action="/feedback" method="POST"]
+
+## Quick Feedback
+
+@rating: [range value=8 min=1 max=10]
+@comments: [textarea value="Great interface!" rows=3]
+
+// Explicit form association
+@special_note: [text form="profile" placeholder="Add to profile"]
+```
+
+**Generated HTML includes:**
+- Three hidden forms with clean association
+- Pre-filled default values for all fields
+- Clean styling without form wrapper interference
+- Flexible field positioning throughout content
+
+### Traditional Examples with Custom "Other" Labels
 
 This example demonstrates smart field ordering and custom "other" labels:
 

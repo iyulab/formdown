@@ -4,6 +4,8 @@ export * from './generator.js'
 export * from './schema.js'
 export * from './extensions/index.js'
 export * from './component-utils.js'
+export * from './form-manager.js'
+export * from './form-data-binding.js'
 export { FormdownFieldHelper, type FieldHelperOptions, type FieldValue, type FormFieldType } from './field-helper.js'
 
 import { FormdownParser } from './parser.js'

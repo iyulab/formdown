@@ -6,11 +6,48 @@ Choose your preferred method to get started with Formdown:
 
 | Method | Installation Command | Use Case |
 |--------|---------------------|----------|
-| **CDN (Recommended)** | `<script src="https://unpkg.com/@formdown/ui@latest/dist/standalone.js"></script>` | Quick prototyping, static sites |
-| **NPM** | `npm install @formdown/ui` | Modern build tools, bundlers |
+| **Core Package (Recommended)** | `npm install @formdown/core` | Framework-agnostic, maximum flexibility |
+| **UI Components** | `npm install @formdown/ui` | Ready-to-use web components |
+| **CDN** | `<script src="https://unpkg.com/@formdown/ui@latest/dist/standalone.js"></script>` | Quick prototyping, static sites |
 | **Editor Tools** | `npm install @formdown/editor` | Development environment |
 
 ## Installation Methods
+
+### Core Package (Recommended)
+
+For maximum flexibility and framework-agnostic usage:
+
+```bash
+npm install @formdown/core
+```
+
+**JavaScript usage:**
+```javascript
+import { FormManager, createFormManager, renderForm } from '@formdown/core';
+
+// Full control with FormManager
+const manager = new FormManager();
+manager.parse('@name*: [] @email*: @[]');
+
+// Set up reactive events
+manager.on('data-change', ({ field, value }) => {
+  console.log(`${field} changed to ${value}`);
+});
+
+// Render HTML
+const html = manager.render();
+document.getElementById('container').innerHTML = html;
+
+// Or use convenience functions
+const quickHTML = renderForm('@name*: []', { name: 'John Doe' });
+```
+
+**Framework Integration:**
+- ✅ React, Vue, Angular, Svelte
+- ✅ Vanilla JavaScript
+- ✅ Node.js server-side rendering
+- ✅ Complete programmatic control
+- ✅ Event-driven architecture
 
 ### CDN (Browser)
 

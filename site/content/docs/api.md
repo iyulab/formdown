@@ -2,6 +2,312 @@
 
 ## @formdown/core
 
+### Core-First Architecture
+
+Formdown features a Core-First architecture where the `@formdown/core` package provides comprehensive form management capabilities through the **FormManager** and **FormDataBinding** classes. The UI and Editor packages are thin presentation layers that delegate to these core APIs.
+
+### FormManager Class
+
+The **FormManager** is the central API for all form operations in Formdown. It provides complete form lifecycle management with reactive data binding and event-driven architecture.
+
+#### Constructor
+
+```typescript
+new FormManager(options?: FormManagerOptions)
+
+interface FormManagerOptions {
+  preserveMarkdown?: boolean
+  fieldPrefix?: string
+  inlineFieldDelimiter?: string
+  autoGenerateFormIds?: boolean
+  theme?: Record<string, any>
+}
+```
+
+#### Core Methods
+
+##### `parse(content: string): FormdownContent`
+
+Parses Formdown content and initializes the form manager with schema and data binding.
+
+**Parameters:**
+- `content` (string): The Formdown source code
+
+**Returns:** `FormdownContent` - Parsed form structure
+
+**Example:**
+```javascript
+import { FormManager } from '@formdown/core';
+
+const manager = new FormManager();
+const result = manager.parse('@name*: [placeholder="Enter name"]');
+// Returns parsed content and initializes internal schema
+```
+
+##### `render(options?: RenderOptions): string`
+
+Renders the parsed form to HTML with current data values.
+
+**Parameters:**
+- `options` (RenderOptions, optional): Rendering options
+
+```typescript
+interface RenderOptions {
+  theme?: Record<string, any>
+  customAttributes?: Record<string, any>
+  outputFormat?: 'html' | 'json'
+}
+```
+
+**Returns:** HTML string or JSON based on output format
+
+**Example:**
+```javascript
+const manager = new FormManager();
+manager.parse('@email*: @[]');
+manager.setFieldValue('email', 'user@example.com');
+const html = manager.render();
+// Returns HTML with email field pre-filled
+```
+
+##### `getData(): Record<string, any>`
+
+Gets current form data with proper value priority (`context.data` > `schema value` > `empty`).
+
+**Returns:** Current form data object
+
+**Example:**
+```javascript
+const data = manager.getData();
+console.log(data); // { name: "John", email: "john@example.com" }
+```
+
+##### `setFieldValue(field: string, value: any): void`
+
+Sets a single field value and triggers data change events.
+
+**Parameters:**
+- `field` (string): Field name
+- `value` (any): Value to set
+
+**Example:**
+```javascript
+manager.setFieldValue('priority', 'High');
+// Triggers 'data-change' event automatically
+```
+
+##### `updateData(newData: Record<string, any>): void`
+
+Updates multiple form fields at once.
+
+**Parameters:**
+- `newData` (Record<string, any>): Object with field values to update
+
+**Example:**
+```javascript
+manager.updateData({
+  name: 'Jane Smith',
+  email: 'jane@example.com',
+  age: 30
+});
+```
+
+##### `validate(): ValidationResult`
+
+Validates current form data against the schema.
+
+**Returns:** `ValidationResult`
+
+```typescript
+interface ValidationResult {
+  isValid: boolean
+  errors: FieldError[]
+}
+```
+
+**Example:**
+```javascript
+const result = manager.validate();
+if (!result.isValid) {
+  console.log('Validation errors:', result.errors);
+}
+```
+
+##### `getSchema(): FormDownSchema | null`
+
+Gets the extracted form schema.
+
+**Returns:** Schema object or null if no form is parsed
+
+##### `reset(): void`
+
+Resets form data to schema defaults and emits reset event.
+
+##### `isDirty(): boolean`
+
+Checks if form has unsaved changes from defaults.
+
+**Returns:** `true` if form data has changed from defaults
+
+#### Event System
+
+FormManager provides an event-driven architecture for reactive form interactions.
+
+##### `on<K extends keyof FormManagerEvents>(event: K, handler: Function): void`
+
+Subscribes to form events.
+
+**Events:**
+- `data-change`: Fired when field values change
+- `validation-error`: Fired when validation fails
+- `form-submit`: Fired on form submission
+- `form-reset`: Fired when form is reset
+
+**Example:**
+```javascript
+manager.on('data-change', ({ field, value, formData }) => {
+  console.log(`Field ${field} changed to:`, value);
+  console.log('Current form data:', formData);
+});
+
+manager.on('validation-error', ({ field, errors }) => {
+  console.log(`Validation failed for ${field}:`, errors);
+});
+```
+
+##### `off<K extends keyof FormManagerEvents>(event: K, handler: Function): void`
+
+Unsubscribes from form events.
+
+#### Utility Methods
+
+##### `getField(fieldName: string): Field | null`
+
+Gets field definition by name.
+
+##### `getFields(): Field[]`
+
+Gets all form fields.
+
+##### `getDefaultValues(): Record<string, any>`
+
+Gets default values from schema.
+
+##### `clone(): FormManager`
+
+Creates a new FormManager instance with same options.
+
+##### `export(): FormManagerExport`
+
+Exports form configuration for serialization.
+
+##### `import(config: FormManagerImport): void`
+
+Imports form configuration.
+
+### FormDataBinding Class
+
+**FormDataBinding** provides reactive data management with schema-driven defaults and validation.
+
+#### Constructor
+
+```typescript
+new FormDataBinding(schema?: FormDownSchema, initialData?: Record<string, any>)
+```
+
+#### Core Methods
+
+##### `set(field: string, value: any): void`
+
+Sets a field value with change detection.
+
+##### `get(field: string): any`
+
+Gets a field value with priority: `current data` > `schema default` > `undefined`.
+
+##### `getAll(): Record<string, any>`
+
+Gets all form data merging schema defaults with current values.
+
+##### `updateAll(newData: Record<string, any>): void`
+
+Updates multiple fields atomically.
+
+##### `reset(): void`
+
+Resets to schema defaults.
+
+##### `validate(): ValidationResult`
+
+Validates all fields against schema.
+
+##### `isDirty(): boolean`
+
+Checks if data differs from schema defaults.
+
+##### `subscribe(listener: ChangeListener): () => void`
+
+Subscribes to data changes. Returns unsubscribe function.
+
+##### `subscribeToField(listener: FieldChangeListener): () => void`
+
+Subscribes to specific field changes.
+
+### Convenience Functions
+
+#### `createFormManager(content: string, options?: FormManagerOptions): FormManager`
+
+Creates and initializes a FormManager in one call.
+
+**Example:**
+```javascript
+import { createFormManager } from '@formdown/core';
+
+const manager = createFormManager(`
+  @name*: [placeholder="Enter name"]
+  @email*: @[]
+`);
+
+console.log(manager.getData()); // { name: "", email: "" }
+```
+
+#### `renderForm(content: string, data?: Record<string, any>, options?: FormManagerOptions & RenderOptions): string`
+
+One-time form rendering convenience function.
+
+**Example:**
+```javascript
+import { renderForm } from '@formdown/core';
+
+const html = renderForm(
+  '@name*: [placeholder="Enter name"]',
+  { name: 'John Doe' }
+);
+// Returns HTML with name field pre-filled
+```
+
+### Migration from Legacy Functions
+
+The Core-First architecture maintains backward compatibility while providing enhanced functionality:
+
+**Legacy approach:**
+```javascript
+import { parseFormdown, generateFormHTML } from '@formdown/core';
+
+const parsed = parseFormdown(content);
+const html = generateFormHTML(parsed);
+```
+
+**Modern approach (recommended):**
+```javascript
+import { FormManager } from '@formdown/core';
+
+const manager = new FormManager();
+manager.parse(content);
+const html = manager.render();
+// Plus: reactive data binding, events, validation, etc.
+```
+
 ### Core Functions
 
 #### `parseFormdown(input: string): FormdownContent`
@@ -403,53 +709,31 @@ console.log(FormdownFieldHelper.isOtherValue('priority', 'Critical')); // → tr
 
 ## @formdown/ui
 
-### `renderForm(source, options?)`
-
-Renders a Formdown source string into an HTML form element.
-
-**Parameters:**
-- `source` (string): The Formdown source code
-- `options` (object, optional): Rendering options
-
-**Returns:** HTMLFormElement
-
-**Example:**
-```javascript
-import { renderForm } from '@formdown/ui';
-
-const form = renderForm('name[text]:Name*');
-document.body.appendChild(form);
-```
-
----
+The UI package provides thin presentation layer components that delegate core functionality to the FormManager from `@formdown/core`.
 
 ### Web Components
 
 #### `<formdown-ui>`
 
-A custom element that renders Formdown source as interactive forms with validation support.
+A custom element that renders Formdown source as interactive forms with validation support. Internally uses FormManager for all business logic.
 
 **Attributes:**
 - `content` (string): The Formdown source content
 - `form-id` (string): ID for the generated form
 - `show-submit-button` (boolean): Show/hide submit button
 - `submit-text` (string): Text for submit button
+- `select-on-focus` (boolean): Select text on focus
 
 **Methods:**
 
-##### `validate()`
-Validates all form fields and returns validation results with visual feedback.
+##### `validate(): ValidationResult`
+Validates all form fields using the internal FormManager and returns validation results with visual feedback.
 
 **Returns:** `ValidationResult`
 ```typescript
 interface ValidationResult {
   isValid: boolean;
   errors: FieldError[];
-}
-
-interface FieldError {
-  field: string;
-  message: string;
 }
 ```
 
@@ -464,10 +748,10 @@ if (!validation.isValid) {
 }
 ```
 
-##### `getFormData()`
-Gets current form data as an object.
+##### `getFormData(): Record<string, any>`
+Gets current form data via the internal FormManager.
 
-**Returns:** `Record<string, any>`
+**Returns:** Current form data object
 
 **Example:**
 ```javascript
@@ -476,18 +760,67 @@ const data = formdownUI.getFormData();
 console.log('Form data:', data);
 ```
 
-##### `resetForm()`
-Resets the form to its initial state and clears validation states.
+##### `updateData(newData: Record<string, any>): void`
+Updates form data using the internal FormManager.
+
+**Parameters:**
+- `newData` (Record<string, any>): Data to update
 
 **Example:**
 ```javascript
 const formdownUI = document.querySelector('formdown-ui');
-formdownUI.resetForm();
+formdownUI.updateData({ name: 'John Doe', email: 'john@example.com' });
 ```
 
+##### `updateField(fieldName: string, value: any): void`
+Updates a single field using the internal FormManager.
+
+**Parameters:**
+- `fieldName` (string): Field name
+- `value` (any): Field value
+
+##### `reset(): void`
+Resets the form to schema defaults using the internal FormManager.
+
+**Example:**
+```javascript
+const formdownUI = document.querySelector('formdown-ui');
+formdownUI.reset();
+```
+
+##### `isDirty(): boolean`
+Checks if form has unsaved changes using the internal FormManager.
+
+**Returns:** `true` if form data has changed from defaults
+
+##### `getSchema(): FormDownSchema | null`
+Gets the form schema from the internal FormManager.
+
+**Returns:** Schema object or null
+
+**Properties:**
+- `data` (Record<string, any>): Reactive data property that syncs with FormManager
+
 **Events:**
-- `formdown-change`: Fired when any field value changes
-- `formdown-data-update`: Fired when form data is updated
+- `validation-error`: Fired when validation fails (forwarded from FormManager)
+- `form-submit`: Fired on form submission (forwarded from FormManager)
+
+**Internal Architecture:**
+The `<formdown-ui>` component maintains an internal FormManager instance and forwards all business logic to it:
+
+```javascript
+// Internal implementation concept
+class FormdownUI extends LitElement {
+  private formManager: FormManager;
+  
+  validate() {
+    return this.formManager.validate(); // Delegates to FormManager
+  }
+  
+  getFormData() {
+    return this.formManager.getData(); // Delegates to FormManager
+  }
+}
 
 **Example:**
 ```html

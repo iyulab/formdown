@@ -21,7 +21,9 @@ describe('Other Option (*) Functionality', () => {
                 label: 'Country',
                 options: ['USA', 'Canada', 'UK'],
                 allowOther: true,
-                attributes: {}
+                attributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
 
@@ -35,7 +37,9 @@ describe('Other Option (*) Functionality', () => {
                 label: 'Gender',
                 options: ['Male', 'Female', 'Other'],
                 allowOther: true,
-                attributes: {}
+                attributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
 
@@ -49,7 +53,9 @@ describe('Other Option (*) Functionality', () => {
                 label: 'Interests',
                 options: ['Programming', 'Design', 'Music'],
                 allowOther: true,
-                attributes: {}
+                attributes: {
+                    form: 'formdown-form-default'
+                }
             })
         })
 
@@ -197,7 +203,7 @@ describe('Other Option (*) Functionality', () => {
             const parsed = parser.parseFormdown(content)
             const html = generator.generateHTML(parsed)
 
-            expect(html).toContain('<form class="formdown-form"')
+            expect(html).toContain('<form hidden id="formdown-form-default"')
             expect(html).toContain('<select')
             expect(html).toContain('required')
             expect(html).toContain('<option value="USA">USA</option>')

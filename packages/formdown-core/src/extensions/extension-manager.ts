@@ -6,6 +6,7 @@
 import { HookManager } from './hooks.js'
 import { PluginManager } from './plugin-manager.js'
 import { EventEmitter } from './event-emitter.js'
+import { FieldTypeRegistry } from './field-type-registry.js'
 import { corePlugin } from './built-in-plugins.js'
 
 import type {
@@ -21,6 +22,7 @@ export class ExtensionManager {
     private eventEmitter: EventEmitter
     private hookManager: HookManager
     private pluginManager: PluginManager
+    private fieldTypeRegistry: FieldTypeRegistry
     private context: ExtensionContext
     private initialized = false
 
@@ -37,12 +39,14 @@ export class ExtensionManager {
         // Initialize components
         this.eventEmitter = new EventEmitter()
         this.hookManager = new HookManager(defaultOptions, this.eventEmitter)
-        this.pluginManager = new PluginManager(this.hookManager, defaultOptions, this.eventEmitter)
+        this.fieldTypeRegistry = new FieldTypeRegistry()
+        this.pluginManager = new PluginManager(this.hookManager, defaultOptions, this.eventEmitter, this.fieldTypeRegistry)
 
         // Create extension context
         this.context = {
             hooks: this.hookManager,
             plugins: this.pluginManager,
+            fieldTypes: this.fieldTypeRegistry,
             options: defaultOptions
         }
 
@@ -159,6 +163,13 @@ export class ExtensionManager {
      */
     getContext(): ExtensionContext {
         return { ...this.context }
+    }
+
+    /**
+     * Get field type registry
+     */
+    getFieldTypeRegistry(): FieldTypeRegistry {
+        return this.fieldTypeRegistry
     }
 
     /**

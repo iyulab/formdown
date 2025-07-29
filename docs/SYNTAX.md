@@ -296,9 +296,9 @@ Please enter ___@age and ___@email.
 ### Universal Attributes
 - `label="text"` - Custom field label (overrides field name)
 - `content="text"` - Display text for checkboxes (priority: content > label > name)
+- `value="text"` - Default value for the field
 - `required` - Field is mandatory
 - `placeholder="text"` - Placeholder text
-- `value="default"` - Default value
 - `disabled` - Disable field
 
 ### Validation Attributes
@@ -415,13 +415,59 @@ Additional notes: ___@notes[textarea rows=3 placeholder="Special delivery instru
 @birth_date(Date of Birth): [date max="2010-12-31"]
 @bio: [textarea rows=4 maxlength=500 placeholder="Tell us about yourself..."]
 
-@theme(Theme Preference): [radio options="Light,Dark,Auto"]
+@theme(Theme Preference): [radio options="Light,Dark,Auto" value="Auto"]
 @notifications(Notification Settings): [checkbox options="Email,SMS,Push" class="notification-options"]
 
-@privacy_level(Privacy Level): [range min=1 max=5 step=1 style="width: 200px"]
+@privacy_level(Privacy Level): [range min=1 max=5 step=1 value=3 style="width: 200px"]
 
 @save_profile: [submit label="Save Changes" class="btn btn-primary"]
 ```
+
+### Default Values with Value Attribute
+```formdown
+# Contact Form with Defaults
+
+@form[action="/contact" method="POST"]
+
+// Text fields with default values
+@name: [text value="John Doe" placeholder="Enter your full name"]
+@email: [email value="user@example.com" required]
+@phone: [tel value="+1-555-0123"]
+
+// Number fields with defaults
+@age: [number value=25 min=18 max=100]
+@quantity: [number value=1 min=1 max=10]
+
+// Date/time fields with defaults
+@meeting_date: [date value="2024-12-25"]
+@appointment_time: [time value="14:30"]
+@deadline: [datetime-local value="2024-12-25T14:30"]
+
+// Text area with default content
+@message: [textarea value="Please enter your message here..." rows=4]
+
+// Selection fields with defaults
+@country: [select value="USA" options="USA,Canada,UK,Australia"]
+@priority: [radio value="Medium" options="Low,Medium,High"]
+@features: [checkbox value="Email,SMS" options="Email,SMS,Push,Phone"]
+
+// Range with default value
+@satisfaction: [range value=8 min=1 max=10]
+
+// Single checkbox (boolean)
+@newsletter: [checkbox value=true content="Subscribe to newsletter"]
+
+@submit: [submit label="Send Message"]
+```
+
+**Default Value Behavior:**
+- **Text fields**: Pre-filled with the specified value
+- **Number/Date fields**: Display the default value 
+- **Select**: Pre-selects the matching option
+- **Radio**: Pre-selects the matching option
+- **Checkbox group**: Pre-checks matching options (comma-separated values)
+- **Single checkbox**: `value=true` checks the box, `value=false` unchecks it
+- **Range**: Sets the initial position
 
 ## Implementation Notes
 

@@ -10,6 +10,7 @@ export interface Field {
     format?: string
     pattern?: string
     content?: string  // For checkbox display text with priority: content > label > name
+    value?: any      // Default value for the field
     attributes?: Record<string, any>
     description?: string
     errorMessage?: string
@@ -18,7 +19,7 @@ export interface Field {
 }
 
 export interface ValidationRule {
-    type: 'required' | 'pattern' | 'min' | 'max' | 'minlength' | 'maxlength' | 'custom'
+    type: 'required' | 'pattern' | 'min' | 'max' | 'minlength' | 'maxlength' | 'step' | 'type' | 'custom'
     value?: any
     message?: string
 }
@@ -65,6 +66,7 @@ export interface FieldSchema {
     label?: string
     required?: boolean
     defaultValue?: any
+    value?: any
     
     // Validation rules
     validation?: ValidationRules

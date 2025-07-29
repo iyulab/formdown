@@ -1,15 +1,12 @@
 import { LitElement, html, css } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import { 
-  generateFormHTML,
-  FormdownParser, 
-  FormdownGenerator, 
-  getSchema, 
   validateField,
-  validateForm,
+  extensionManager as defaultExtensionManager,
+  FormManager,
   type FormDownSchema,
   type FieldError,
-  type ValidationResult 
+  type ValidationResult
 } from '@formdown/core'
 import { uiExtensionSupport } from './extension-support'
 
@@ -42,6 +39,15 @@ export class FormdownUI extends LitElement {
     .formdown-field {
       margin-bottom: 1.5rem;
       max-width: 100%;
+    }
+
+    /* Add spacing between consecutive field containers */
+    .formdown-field-container {
+      margin-bottom: 0.75rem;
+    }
+    
+    .formdown-field-container:last-child {
+      margin-bottom: 0;
     }
 
     label {
@@ -400,25 +406,39 @@ export class FormdownUI extends LitElement {
   }
 
   set data(newData: Record<string, any>) {
+    if (this._isUpdatingUI) return // Prevent infinite loops
+    
     const oldData = this._data
     // Handle null, undefined, or empty object cases properly
     this._data = (newData !== null && newData !== undefined && typeof newData === 'object')
       ? { ...newData }
       : {}
     this.requestUpdate('data', oldData)
+    
+    // Sync with FormManager
+    if (this.formManager && this._schema && !this._isUpdatingUI) {
+      this.formManager.updateData(this._data)
+    }
   }
 
   // Public method to update data programmatically
   updateData(newData: Record<string, any>) {
     this.data = newData
+    // Sync with FormManager
+    if (this.formManager && this._schema) {
+      this.formManager.updateData(newData)
+    }
   }
 
   // Public method to update single field
   updateField(fieldName: string, value: any) {
     this.data = { ...this.data, [fieldName]: value }
+    // Sync with FormManager
+    if (this.formManager && this._schema) {
+      this.formManager.setFieldValue(fieldName, value)
+    }
   }
-  private parser = new FormdownParser()
-  private generator = new FormdownGenerator()
+  private formManager: FormManager
   private fieldRegistry: Map<string, Set<HTMLElement>> = new Map()
   private _isUpdatingUI = false  // Prevent infinite loops
   private _schema: FormDownSchema | null = null
@@ -427,6 +447,85 @@ export class FormdownUI extends LitElement {
     super()
     // Generate unique form ID if not provided
     this._uniqueFormId = this.formId || `formdown-${Math.random().toString(36).substring(2, 15)}`
+    
+    // Initialize FormManager
+    this.formManager = new FormManager()
+    
+    // Set up event forwarding from FormManager to UI
+    this.setupFormManagerEvents()
+  }
+
+  /**
+   * Set up event forwarding from FormManager to UI
+   */
+  private setupFormManagerEvents() {
+    // Forward data changes from FormManager to UI data property
+    this.formManager.on('data-change', ({ formData }) => {
+      // Update UI data without triggering infinite loops
+      if (!this._isUpdatingUI) {
+        this._isUpdatingUI = true
+        this.data = formData
+        this._isUpdatingUI = false
+      }
+    })
+
+    // Handle validation errors
+    this.formManager.on('validation-error', ({ field, errors }) => {
+      // Dispatch validation error event for external listeners
+      this.dispatchEvent(new CustomEvent('validation-error', {
+        detail: { field, errors },
+        bubbles: true
+      }))
+    })
+
+    // Handle form submission
+    this.formManager.on('form-submit', ({ formData }) => {
+      this.dispatchEvent(new CustomEvent('form-submit', {
+        detail: { formData },
+        bubbles: true
+      }))
+    })
+  }
+
+  /**
+   * Public API methods to expose FormManager functionality
+   */
+  
+  /**
+   * Validate the current form data
+   */
+  validate(): ValidationResult {
+    if (!this.formManager || !this._schema) {
+      return { isValid: true, errors: [] }
+    }
+    return this.formManager.validate()
+  }
+
+  /**
+   * Get form schema
+   */
+  getSchema(): FormDownSchema | null {
+    return this._schema
+  }
+
+  /**
+   * Reset form to default values
+   */
+  reset(): void {
+    if (this.formManager && this._schema) {
+      this.formManager.reset()
+      this.data = this.formManager.getData()
+    }
+  }
+
+  /**
+   * Check if form has unsaved changes
+   */
+  isDirty(): boolean {
+    if (!this.formManager || !this._schema) {
+      return false
+    }
+    return this.formManager.isDirty()
   }
 
   async connectedCallback() {
@@ -454,8 +553,16 @@ export class FormdownUI extends LitElement {
     }
 
     try {
-      const parseResult = this.parser.parseFormdown(this.content)
-      const generatedHTML = this.generator.generateHTML(parseResult)
+      // Parse content using FormManager
+      this.formManager.parse(this.content)
+      this._schema = this.formManager.getSchema()
+      
+      // Sync data with FormManager
+      if (this.data && Object.keys(this.data).length > 0) {
+        this.formManager.updateData(this.data)
+      }
+      
+      const generatedHTML = this.formManager.render()
 
       if (!generatedHTML || !generatedHTML.trim()) {
         return html`<div class="error">Generated HTML is empty</div>`
@@ -469,10 +576,11 @@ export class FormdownUI extends LitElement {
   }  // Override firstUpdated to set innerHTML after the initial render
   override firstUpdated() {
     this.updateContent()
-    // Initialize UI with existing data
-    if (Object.keys(this.data).length > 0) {
+    // Always sync UI (includes both existing data and schema defaults)
+    // Use setTimeout to ensure DOM is fully ready
+    setTimeout(() => {
       this.syncUIFromData()
-    }
+    }, 0)
   }
   // Override updated to update content when properties change
   override updated(changedProperties: Map<string | number | symbol, unknown>) {
@@ -480,6 +588,11 @@ export class FormdownUI extends LitElement {
 
     if (changedProperties.has('content')) {
       this.updateContent()
+      // After updating content and schema, sync UI with new default values
+      // Use setTimeout to ensure DOM is fully updated
+      setTimeout(() => {
+        this.syncUIFromData()
+      }, 0)
     }
 
     // React to data changes - sync UI when data property changes
@@ -498,28 +611,30 @@ export class FormdownUI extends LitElement {
         return
       }
 
-      // Use core functions for consistency
-      let generatedHTML = generateFormHTML(this.content)
+      // Use FormManager for content processing
+      this.formManager.parse(this.content)
+      this._schema = this.formManager.getSchema()
       
-      // Extract and cache schema for validation
-      this._schema = getSchema(this.content)
+      // Sync existing data with FormManager
+      if (this.data && Object.keys(this.data).length > 0) {
+        this.formManager.updateData(this.data)
+      }
+      
+      let generatedHTML = this.formManager.render()
 
       if (!generatedHTML || generatedHTML.trim() === '') {
-        container.innerHTML = `<div class="error">Generator returned empty HTML</div>`
+        container.innerHTML = `<div class="error">FormManager returned empty HTML</div>`
         return
       }
 
-      // For backward compatibility, still process form HTML if needed
-      // (the generateFormHTML should already handle hidden forms properly)
-      if (!generatedHTML.includes('<form hidden')) {
-        // Fallback to old method if core doesn't generate hidden forms yet
-        const parseResult = this.parser.parseFormdown(this.content)
-        generatedHTML = this.generator.generateHTML(parseResult)
-        const formId = this.getFormId()
-        generatedHTML = this.processFormHTML(generatedHTML, formId)
-      }
+      // Process HTML for hidden form architecture
+      const formId = this.getFormId()
+      generatedHTML = this.processFormHTML(generatedHTML, formId)
 
       container.innerHTML = generatedHTML
+
+      // Inject extension styles and scripts
+      this.injectExtensionAssets(container)
 
       // Setup keyboard navigation and inline field handlers
       this.setupFieldHandlers(container)
@@ -530,7 +645,93 @@ export class FormdownUI extends LitElement {
         container.innerHTML = `<div class="error">Error: ${errorMessage}</div>`
       }
     }
-  } private setupFieldHandlers(container: Element) {
+  }
+
+  /**
+   * Inject extension styles and scripts into the component
+   */
+  private injectExtensionAssets(container: Element) {
+    try {
+      // Get field types used in this form
+      const fieldTypes = this.getUsedFieldTypes(container)
+      
+      // Inject styles for the used field types
+      const extensionStyles = defaultExtensionManager.getFieldTypeRegistry().getStylesForTypes(fieldTypes)
+      if (extensionStyles) {
+        this.injectStyles(extensionStyles)
+      }
+      
+      // Inject scripts for the used field types
+      const extensionScripts = defaultExtensionManager.getFieldTypeRegistry().getScriptsForTypes(fieldTypes)
+      if (extensionScripts) {
+        this.injectScripts(extensionScripts)
+      }
+    } catch (error) {
+      console.debug('Extension asset injection failed:', error)
+    }
+  }
+
+  /**
+   * Get list of field types used in the rendered form
+   */
+  private getUsedFieldTypes(container: Element): string[] {
+    const fieldTypes = new Set<string>()
+    
+    // Look for data-field-type attributes on elements
+    const fieldsWithType = container.querySelectorAll('[data-field-type]')
+    fieldsWithType.forEach(field => {
+      const type = field.getAttribute('data-field-type')
+      if (type) fieldTypes.add(type)
+    })
+    
+    // Look for class names that might indicate field types
+    const specialFields = container.querySelectorAll('[class*="formdown-"][class*="-field"]')
+    specialFields.forEach(field => {
+      const classes = field.className
+      const rangeMatch = classes.match(/formdown-(\w+)-field/)
+      if (rangeMatch) fieldTypes.add(rangeMatch[1])
+    })
+    
+    return Array.from(fieldTypes)
+  }
+
+  /**
+   * Inject CSS styles into the shadow DOM
+   */
+  private injectStyles(css: string) {
+    if (!css.trim()) return
+    
+    // Check if styles are already injected
+    const existingStyle = this.shadowRoot?.querySelector('#extension-styles')
+    if (existingStyle) {
+      existingStyle.textContent = css
+    } else {
+      const style = document.createElement('style')
+      style.id = 'extension-styles'
+      style.textContent = css
+      this.shadowRoot?.appendChild(style)
+    }
+  }
+
+  /**
+   * Inject JavaScript into the document (global scope for form interactions)
+   */
+  private injectScripts(js: string) {
+    if (!js.trim()) return
+    
+    // Check if script is already injected
+    const scriptId = 'formdown-extension-scripts'
+    if (document.getElementById(scriptId)) {
+      return // Script already loaded
+    }
+    
+    const script = document.createElement('script')
+    script.id = scriptId
+    script.textContent = js
+    document.head.appendChild(script)
+  }
+
+  private setupFieldHandlers(container: Element) {
     // Clear previous registry
     this.fieldRegistry.clear()
 
@@ -547,10 +748,21 @@ export class FormdownUI extends LitElement {
         // Register field in universal registry
         this.registerField(fieldName, htmlElement)
 
-        // Initialize field with existing data
+        // Initialize field with three-level priority system
+        // Priority: context.data > schema default value > empty
         const existingValue = this.data[fieldName]
         if (existingValue !== undefined) {
+          // User data (context.data) takes highest precedence
           this.setElementValue(htmlElement, existingValue)
+        } else {
+          // Check for schema default value from parsed field.value
+          const schemaDefaultValue = this.getSchemaDefaultValue(fieldName)
+          if (schemaDefaultValue !== undefined) {
+            // Schema value attribute provides the default
+            this.updateDataReactively(fieldName, schemaDefaultValue, htmlElement)
+          }
+          // Note: HTML value attribute is already handled by the generator
+          // and rendered into the HTML, no need to extract it again
         }
 
         // Setup universal event handlers
@@ -763,6 +975,7 @@ export class FormdownUI extends LitElement {
     this.emitFieldEvents(fieldName, value)
   }
 
+
   private syncUIFromData(fieldName?: string, sourceElement?: HTMLElement) {
     this._isUpdatingUI = true
 
@@ -782,7 +995,7 @@ export class FormdownUI extends LitElement {
       }
 
       fieldsToSync.forEach(field => {
-        const value = this.data[field] ?? '' // Use empty string as default for clearing
+        const value = this.data[field] ?? '' // Use current data or empty string
         const boundElements = this.fieldRegistry.get(field)
 
         if (boundElements) {
@@ -936,6 +1149,60 @@ export class FormdownUI extends LitElement {
     return ''
   }
 
+  // Extract initial value from HTML attributes (for HTML-standard value initialization)
+  // Note: This method is preserved for compatibility but not actively used
+  // since we now rely on schema values instead of HTML attributes
+  // @ts-ignore - preserved for test compatibility
+  private getElementInitialValue(element: HTMLElement): string | boolean | string[] | null {
+    if (element instanceof HTMLInputElement) {
+      if (element.type === 'checkbox') {
+        // For checkboxes, return true if checked attribute is present
+        if (element.hasAttribute('checked')) {
+          return element.value === 'true' ? true : element.value
+        }
+        return null
+      } else if (element.type === 'radio') {
+        // For radio buttons, return value if checked attribute is present
+        if (element.hasAttribute('checked')) {
+          return element.value
+        }
+        return null
+      } else {
+        // For other input types, return value attribute
+        if (element.hasAttribute('value') && element.getAttribute('value')) {
+          return element.getAttribute('value') || ''
+        }
+        return null
+      }
+    } else if (element instanceof HTMLTextAreaElement) {
+      // For textarea, return text content if it has initial value
+      const textContent = element.textContent?.trim()
+      if (textContent) {
+        return textContent
+      }
+      return null
+    } else if (element instanceof HTMLSelectElement) {
+      // For select, check if any option has selected attribute
+      const selectedOption = element.querySelector('option[selected]') as HTMLOptionElement
+      if (selectedOption) {
+        return selectedOption.value
+      }
+      return null
+    } else if (element.hasAttribute('contenteditable')) {
+      // For contenteditable, check data-value attribute or text content
+      const dataValue = element.getAttribute('data-value')
+      if (dataValue) {
+        return dataValue
+      }
+      const textContent = element.textContent?.trim()
+      if (textContent && textContent !== element.dataset.placeholder) {
+        return textContent
+      }
+      return null
+    }
+    return null
+  }
+
   // Register field in the universal registry
   private registerField(fieldName: string, element: HTMLElement) {
     if (!this.fieldRegistry.has(fieldName)) {
@@ -980,49 +1247,27 @@ export class FormdownUI extends LitElement {
     return { ...this.data }
   }
 
-  // Validation methods - now using core validation with schema
-  validate(): ValidationResult {
-    const errors: FieldError[] = []
-    const container = this.shadowRoot?.querySelector('#content-container')
-
-    if (!container) {
-      return { isValid: false, errors: [{ field: 'general', message: 'Form container not found' }] }
-    }
-
-    // Clear previous validation states
-    this.clearValidationStates()
-
-    // Use core validateForm if schema is available
-    if (this._schema && Object.keys(this._schema).length > 0) {
-      const validationResult = validateForm(this.data, this._schema)
-      
-      // Apply visual feedback
-      this.applyValidationFeedback(validationResult.errors)
-      
-      return validationResult
-    }
-
-    // Fallback to field-by-field validation
-    const allFields = container.querySelectorAll('input, textarea, select, [contenteditable="true"]')
-
-    allFields.forEach(element => {
-      const htmlElement = element as HTMLElement
-      const fieldName = this.getFieldName(htmlElement)
-
-      if (fieldName) {
-        const fieldErrors = this.validateField(htmlElement, fieldName)
-        errors.push(...fieldErrors)
+  // Get default values from schema (keeping for backward compatibility)
+  getDefaultValues() {
+    if (!this._schema) return {}
+    
+    const defaults: Record<string, any> = {}
+    Object.entries(this._schema).forEach(([fieldName, fieldSchema]) => {
+      if (fieldSchema.value !== undefined) {
+        defaults[fieldName] = fieldSchema.value
       }
     })
-
-    // Apply visual feedback
-    this.applyValidationFeedback(errors)
-
-    return {
-      isValid: errors.length === 0,
-      errors
-    }
+    return defaults
   }
+
+  // Get schema default value for a specific field
+  private getSchemaDefaultValue(fieldName: string): any {
+    if (!this._schema || !this._schema[fieldName]) {
+      return undefined
+    }
+    return this._schema[fieldName].value
+  }
+
 
   private validateField(element: HTMLElement, fieldName: string): FieldError[] {
     // Use core validation with enhanced field-specific logic
@@ -1120,43 +1365,6 @@ export class FormdownUI extends LitElement {
     })
   }
 
-  private applyValidationFeedback(errors: FieldError[]) {
-    const container = this.shadowRoot?.querySelector('#content-container')
-    if (!container) return
-
-    // Group errors by field
-    const errorsByField = new Map<string, FieldError[]>()
-    errors.forEach(error => {
-      if (!errorsByField.has(error.field)) {
-        errorsByField.set(error.field, [])
-      }
-      errorsByField.get(error.field)!.push(error)
-    })
-
-    // Apply visual feedback
-    const allFields = container.querySelectorAll('input, textarea, select, [contenteditable="true"]')
-
-    allFields.forEach(element => {
-      const htmlElement = element as HTMLElement
-      const fieldName = this.getFieldName(htmlElement)
-
-      if (fieldName) {
-        const fieldErrors = errorsByField.get(fieldName)
-
-        if (fieldErrors && fieldErrors.length > 0) {
-          // Add error styling
-          htmlElement.classList.add('field-error')
-          htmlElement.classList.remove('field-valid')
-
-          // Add error message
-          this.addErrorMessage(htmlElement, fieldErrors[0].message)
-        } else {
-          // Remove error styling if no errors (but don't add valid styling)
-          htmlElement.classList.remove('field-error', 'field-valid')
-        }
-      }
-    })
-  }
 
   private addErrorMessage(element: HTMLElement, message: string) {
     // Find the parent container
