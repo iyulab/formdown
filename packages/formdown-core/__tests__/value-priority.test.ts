@@ -157,7 +157,7 @@ describe('Value Priority System', () => {
                 type: 'text',
                 label: 'Test',
                 value: undefined,
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
             
             const html = generator.generateFieldHTML(field)

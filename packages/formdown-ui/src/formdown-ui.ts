@@ -1,11 +1,9 @@
 import { LitElement, html, css } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import { 
-  validateField,
   extensionManager as defaultExtensionManager,
   FormManager,
   type FormDownSchema,
-  type FieldError,
   type ValidationResult
 } from '@formdown/core'
 import { uiExtensionSupport } from './extension-support'
@@ -1269,87 +1267,7 @@ export class FormdownUI extends LitElement {
   }
 
 
-  private validateField(element: HTMLElement, fieldName: string): FieldError[] {
-    // Use core validation with enhanced field-specific logic
-    const value = this.getFieldValue(element)
-    const fieldSchema = this._schema?.[fieldName]
-    
-    if (!fieldSchema) {
-      return this.validateFieldBasic(element, fieldName)
-    }
 
-    // For checkbox and radio, handle special validation logic
-    if (element instanceof HTMLInputElement) {
-      if (element.type === 'checkbox') {
-        const allCheckboxes = this.shadowRoot?.querySelectorAll(`input[type="checkbox"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
-        const isAnyChecked = Array.from(allCheckboxes).some(cb => cb.checked)
-        
-        if (fieldSchema.required && !isAnyChecked) {
-          return [{ field: fieldName, message: 'This field is required' }]
-        }
-        return []
-      } else if (element.type === 'radio') {
-        const allRadios = this.shadowRoot?.querySelectorAll(`input[type="radio"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
-        const isAnySelected = Array.from(allRadios).some(radio => radio.checked)
-        
-        if (fieldSchema.required && !isAnySelected) {
-          return [{ field: fieldName, message: 'Please select an option' }]
-        }
-        return []
-      }
-    }
-
-    // Use core validation for standard fields
-    return validateField(value, { ...fieldSchema, name: fieldName })
-  }
-
-  // Fallback basic validation for when schema is not available
-  private validateFieldBasic(element: HTMLElement, fieldName: string): FieldError[] {
-    const errors: FieldError[] = []
-
-    // Check required fields
-    if (this.isFieldRequired(element)) {
-      const value = this.getFieldValue(element)
-
-      // Handle different input types
-      if (element instanceof HTMLInputElement) {
-        if (element.type === 'checkbox') {
-          // For checkboxes, check if any are selected
-          const allCheckboxes = this.shadowRoot?.querySelectorAll(`input[type="checkbox"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
-          const isAnyChecked = Array.from(allCheckboxes).some(cb => cb.checked)
-
-          if (!isAnyChecked) {
-            errors.push({ field: fieldName, message: 'This field is required' })
-          }
-        } else if (element.type === 'radio') {
-          // For radio buttons, check if any in the group are selected
-          const allRadios = this.shadowRoot?.querySelectorAll(`input[type="radio"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
-          const isAnySelected = Array.from(allRadios).some(radio => radio.checked)
-
-          if (!isAnySelected) {
-            errors.push({ field: fieldName, message: 'Please select an option' })
-          }
-        } else if (!value || value.trim() === '') {
-          errors.push({ field: fieldName, message: 'This field is required' })
-        }
-      } else if (!value || value.trim() === '') {
-        errors.push({ field: fieldName, message: 'This field is required' })
-      }
-    }
-
-    return errors
-  }
-
-  private isFieldRequired(element: HTMLElement): boolean {
-    if (element instanceof HTMLInputElement ||
-      element instanceof HTMLTextAreaElement ||
-      element instanceof HTMLSelectElement) {
-      return element.required
-    }
-
-    // For contenteditable elements, check data-required attribute
-    return element.dataset.required === 'true'
-  }
 
   private clearValidationStates() {
     const container = this.shadowRoot?.querySelector('#content-container')
@@ -1366,31 +1284,6 @@ export class FormdownUI extends LitElement {
   }
 
 
-  private addErrorMessage(element: HTMLElement, message: string) {
-    // Find the parent container
-    let parent = element.parentElement
-
-    // For radio/checkbox groups, find the fieldset or container
-    if (element instanceof HTMLInputElement && (element.type === 'radio' || element.type === 'checkbox')) {
-      while (parent && !parent.classList.contains('radio-group') && !parent.classList.contains('checkbox-group') && parent.tagName !== 'FIELDSET') {
-        parent = parent.parentElement
-      }
-    }
-
-    if (parent) {
-      // Remove existing error message
-      const existingError = parent.querySelector('.validation-error-message')
-      if (existingError) {
-        existingError.remove()
-      }
-
-      // Add new error message
-      const errorEl = document.createElement('span')
-      errorEl.className = 'validation-error-message'
-      errorEl.textContent = message
-      parent.appendChild(errorEl)
-    }
-  }
 
   // Reset form method
   resetForm() {

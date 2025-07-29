@@ -97,7 +97,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 type: 'text',
                 label: 'Name',
                 value: 'John Doe',
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -111,7 +111,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 type: 'textarea',
                 label: 'Message',
                 value: 'Default message text',
-                attributes: { rows: 4 }
+                attributes: { rows: 4, form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -127,7 +127,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 label: 'Country',
                 value: 'Canada',
                 options: ['USA', 'Canada', 'UK', 'Australia'],
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -143,7 +143,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 label: 'Priority',
                 value: 'High',
                 options: ['Low', 'Medium', 'High'],
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -158,7 +158,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 type: 'checkbox',
                 label: 'Newsletter',
                 value: true,
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -173,7 +173,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 label: 'Features',
                 value: 'Email,Push',
                 options: ['Email', 'SMS', 'Push', 'Phone'],
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -191,7 +191,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 type: 'range',
                 label: 'Satisfaction',
                 value: 7,
-                attributes: { min: 1, max: 10 }
+                attributes: { min: 1, max: 10, form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -207,7 +207,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 type: 'textarea',
                 label: 'Description',
                 value: 'Text with <special> & "characters"',
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -220,7 +220,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 type: 'file',
                 label: 'Avatar',
                 value: 'should-not-appear.jpg',
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -331,7 +331,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 label: 'Country',
                 value: 'NonExistentCountry',
                 options: ['USA', 'Canada', 'UK'],
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)

@@ -2,6 +2,51 @@
  * Simple unit tests for FormdownUI component with real-time data features
  */
 
+// Mock the core module
+jest.mock('@formdown/core', () => ({
+  FormManager: jest.fn().mockImplementation(() => ({
+    parse: jest.fn(),
+    render: jest.fn(() => '<div>mock form</div>'),
+    getData: jest.fn(() => ({})),
+    setFieldValue: jest.fn(),
+    updateData: jest.fn(),
+    validate: jest.fn(() => ({ isValid: true, errors: [] })),
+    getSchema: jest.fn(() => ({})),
+    on: jest.fn(),
+    off: jest.fn(),
+    emit: jest.fn(),
+    reset: jest.fn()
+  })),
+  extensionManager: {
+    initialize: jest.fn(),
+    getPlugin: jest.fn(),
+    executeHook: jest.fn(),
+    getFieldTypeRegistry: jest.fn().mockReturnValue({
+      getStylesForTypes: jest.fn().mockReturnValue(''),
+      getScriptsForTypes: jest.fn().mockReturnValue('')
+    })
+  }
+}))
+
+// Mock lit
+jest.mock('lit', () => ({
+  LitElement: class MockLitElement {
+    shadowRoot = null
+    requestUpdate = jest.fn()
+    connectedCallback = jest.fn()
+    render = jest.fn()
+    firstUpdated = jest.fn()
+    updated = jest.fn()
+  },
+  html: (strings: any, ...values: any[]) => ({ strings, values }),
+  css: (strings: any, ...values: any[]) => ({ strings, values })
+}))
+
+jest.mock('lit/decorators.js', () => ({
+  customElement: () => (_target: any) => _target,
+  property: () => (_target: any, _propertyKey: string) => {}
+}))
+
 describe('FormdownUI Module', () => {
     it('should be importable', async () => {
         const module = await import('../src/index');

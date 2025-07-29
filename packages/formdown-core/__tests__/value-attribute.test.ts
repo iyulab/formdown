@@ -166,7 +166,7 @@ describe('Value Attribute Support', () => {
                 type: 'text',
                 label: 'Name',
                 value: 'John Doe',
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -180,7 +180,7 @@ describe('Value Attribute Support', () => {
                 type: 'textarea',
                 label: 'Message',
                 value: 'Default message text',
-                attributes: { rows: 4 }
+                attributes: { rows: 4, form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -195,7 +195,7 @@ describe('Value Attribute Support', () => {
                 label: 'Country',
                 value: 'Canada',
                 options: ['USA', 'Canada', 'UK', 'Australia'],
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -211,7 +211,7 @@ describe('Value Attribute Support', () => {
                 label: 'Priority',
                 value: 'High',
                 options: ['Low', 'Medium', 'High'],
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -227,7 +227,7 @@ describe('Value Attribute Support', () => {
                 label: 'Newsletter',
                 value: true,
                 content: 'Subscribe to newsletter',
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -243,7 +243,7 @@ describe('Value Attribute Support', () => {
                 label: 'Features',
                 value: 'Email,Push',
                 options: ['Email', 'SMS', 'Push', 'Phone'],
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -261,7 +261,7 @@ describe('Value Attribute Support', () => {
                 type: 'range',
                 label: 'Satisfaction',
                 value: 7,
-                attributes: { min: 1, max: 10 }
+                attributes: { min: 1, max: 10, form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -277,7 +277,7 @@ describe('Value Attribute Support', () => {
                 type: 'textarea',
                 label: 'Description',
                 value: 'Text with <special> & "characters"',
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -290,7 +290,7 @@ describe('Value Attribute Support', () => {
                 type: 'file',
                 label: 'Avatar',
                 value: 'should-not-appear.jpg',
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -367,7 +367,7 @@ describe('Value Attribute Support', () => {
                 label: 'Country',
                 value: 'NonExistentCountry',
                 options: ['USA', 'Canada', 'UK'],
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)

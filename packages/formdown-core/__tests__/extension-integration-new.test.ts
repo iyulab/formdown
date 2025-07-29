@@ -183,7 +183,7 @@ describe('Extension Integration', () => {
                     name: 'test',
                     type: 'text',
                     label: 'Test',
-                    attributes: {}
+                    attributes: { form: "formdown-form-default" }
                 }
             })
 

@@ -21,6 +21,19 @@ jest.mock('lit/decorators.js', () => ({
 
 // Mock the core module
 jest.mock('@formdown/core', () => ({
+  FormManager: jest.fn().mockImplementation(() => ({
+    parse: jest.fn(),
+    render: jest.fn(() => '<div>mock form</div>'),
+    getData: jest.fn(() => ({})),
+    setFieldValue: jest.fn(),
+    updateData: jest.fn(),
+    validate: jest.fn(() => ({ isValid: true, errors: [] })),
+    getSchema: jest.fn(() => ({})),
+    on: jest.fn(),
+    off: jest.fn(),
+    emit: jest.fn(),
+    reset: jest.fn()
+  })),
   generateFormHTML: jest.fn(),
   FormdownParser: jest.fn().mockImplementation(() => ({
     parseFormdown: jest.fn()

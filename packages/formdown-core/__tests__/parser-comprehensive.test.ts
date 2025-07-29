@@ -19,7 +19,9 @@ describe('FormdownParser - Comprehensive', () => {
                     type: 'text',
                     label: 'Name',
                     required: true,
-                    attributes: {}
+                    attributes: {
+                        form: "formdown-form-default"
+                    }
                 })
             })
 
@@ -32,7 +34,9 @@ describe('FormdownParser - Comprehensive', () => {
                     type: 'text',
                     label: 'Full Name',
                     required: true,
-                    attributes: {}
+                    attributes: {
+                        form: "formdown-form-default"
+                    }
                 })
             })
 
@@ -46,7 +50,9 @@ describe('FormdownParser - Comprehensive', () => {
                     label: 'Email',
                     required: true,
                     placeholder: 'Enter email',
-                    attributes: {}
+                    attributes: {
+                        form: "formdown-form-default"
+                    }
                 })
             })
         })
@@ -60,7 +66,7 @@ describe('FormdownParser - Comprehensive', () => {
                     name: 'age',
                     type: 'number',
                     label: 'Age',
-                    attributes: { min: 18, max: 100 }
+                    attributes: { min: 18, max: 100, form: "formdown-form-default" }
                 })
             })
 
@@ -72,7 +78,7 @@ describe('FormdownParser - Comprehensive', () => {
                     name: 'description',
                     type: 'textarea',
                     label: 'Description',
-                    attributes: { rows: 4, cols: 50 }
+                    attributes: { rows: 4, cols: 50, form: "formdown-form-default" }
                 })
             })
 
@@ -93,7 +99,8 @@ describe('FormdownParser - Comprehensive', () => {
                     min: 0,
                     max: 100,
                     'data-unit': '%',
-                    'class': 'custom-slider'
+                    'class': 'custom-slider',
+                    form: "formdown-form-default"
                 })
             })
 
@@ -103,7 +110,8 @@ describe('FormdownParser - Comprehensive', () => {
                 expect(result.fields[0].attributes).toEqual({
                     disabled: true,
                     readonly: true,
-                    autofocus: true
+                    autofocus: true,
+                    form: "formdown-form-default"
                 })
             })
 
@@ -112,7 +120,8 @@ describe('FormdownParser - Comprehensive', () => {
 
                 expect(result.fields[0].attributes).toEqual({
                     'aria-required': true,
-                    'aria-describedby': 'bio-hint'
+                    'aria-describedby': 'bio-hint',
+                    form: "formdown-form-default"
                 })
             })
         })
@@ -129,7 +138,9 @@ describe('FormdownParser - Comprehensive', () => {
                     type: 'text',
                     label: 'Name',
                     required: true,
-                    attributes: {}
+                    attributes: {
+                        form: "formdown-form-default"
+                    }
                 })
             })
 
@@ -142,7 +153,9 @@ describe('FormdownParser - Comprehensive', () => {
                     type: 'text',
                     label: 'Full Name',
                     required: true,
-                    attributes: {}
+                    attributes: {
+                        form: "formdown-form-default"
+                    }
                 })
             })
         })
@@ -279,7 +292,9 @@ describe('FormdownParser - Comprehensive', () => {
                     required: true,
                     pattern: '^[a-zA-Z0-9_]{3,20}$',
                     placeholder: 'Enter username',
-                    attributes: {}
+                    attributes: {
+                        form: "formdown-form-default"
+                    }
                 })
             })
 
@@ -293,7 +308,9 @@ describe('FormdownParser - Comprehensive', () => {
                     label: 'Email Address',
                     required: true,
                     placeholder: 'your@email.com',
-                    attributes: {}
+                    attributes: {
+                        form: "formdown-form-default"
+                    }
                 })
             })
         })
@@ -310,7 +327,7 @@ describe('FormdownParser - Comprehensive', () => {
                 label: 'Username',
                 required: true,
                 inline: true,
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             })
         })
 
@@ -324,7 +341,7 @@ describe('FormdownParser - Comprehensive', () => {
                 label: 'Email',
                 required: true,
                 inline: true,
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             })
         })
 

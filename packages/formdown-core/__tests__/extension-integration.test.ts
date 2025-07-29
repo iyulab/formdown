@@ -46,7 +46,7 @@ describe('Extension System Integration', () => {
                             name,
                             type: 'rating',
                             label: name,
-                            attributes: { max }
+                            attributes: { max, form: "formdown-form-default" }
                         }
                     },
                     generator: (field: Field): string => {
@@ -161,8 +161,8 @@ describe('Extension System Integration', () => {
 
             // Simulate post-parse hook execution
             const mockFields: Field[] = [
-                { name: 'email', type: 'email', label: 'Email' },
-                { name: 'name', type: 'text', label: 'Name' }
+                { name: 'email', type: 'email', label: 'Email', attributes: { form: "formdown-form-default" } },
+                { name: 'name', type: 'text', label: 'Name', attributes: { form: "formdown-form-default" } }
             ]
 
             const context: HookContext = {

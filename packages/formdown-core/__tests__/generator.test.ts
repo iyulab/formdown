@@ -32,7 +32,7 @@ describe('FormdownGenerator', () => {
                     type: 'text',
                     label: 'Name',
                     required: true,
-                    attributes: {}
+                    attributes: { form: "formdown-form-default" }
                 }],
                 formDeclarations: []
             }
@@ -305,7 +305,7 @@ describe('FormdownGenerator', () => {
                     type: 'text',
                     label: 'Full Name',
                     required: true,
-                    attributes: {}
+                    attributes: { form: "formdown-form-default" }
                 },
                 {
                     name: 'email',
@@ -313,13 +313,13 @@ describe('FormdownGenerator', () => {
                     label: 'Email',
                     required: true,
                     placeholder: 'your@email.com',
-                    attributes: {}
+                    attributes: { form: "formdown-form-default" }
                 },
                 {
                     name: 'age',
                     type: 'number',
                     label: 'Age',
-                    attributes: { min: 18 }
+                    attributes: { min: 18, form: "formdown-form-default" }
                 }
             ]
 

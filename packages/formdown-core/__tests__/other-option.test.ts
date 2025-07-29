@@ -100,7 +100,7 @@ describe('Other Option (*) Functionality', () => {
                 label: 'Country',
                 options: ['USA', 'Canada', 'UK'],
                 allowOther: true,
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -123,7 +123,7 @@ describe('Other Option (*) Functionality', () => {
                 label: 'Gender',
                 options: ['Male', 'Female'],
                 allowOther: true,
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -146,7 +146,7 @@ describe('Other Option (*) Functionality', () => {
                 label: 'Interests',
                 options: ['Programming', 'Design', 'Music'],
                 allowOther: true,
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -170,7 +170,7 @@ describe('Other Option (*) Functionality', () => {
                 label: 'Country',
                 options: ['USA', 'Canada', 'UK'],
                 allowOther: false,
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)
@@ -186,7 +186,7 @@ describe('Other Option (*) Functionality', () => {
                 type: 'select',
                 label: 'Country',
                 options: ['USA', 'Canada', 'UK'],
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }
 
             const html = generator.generateFieldHTML(field)

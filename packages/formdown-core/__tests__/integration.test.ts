@@ -33,7 +33,7 @@ Your username is ___@username[text required].`
                     type: 'textarea',
                     label: 'Message',
                     required: true,
-                    attributes: { rows: 4 }
+                    attributes: { rows: 4, form: "formdown-form-default" }
                 }]
             }
 

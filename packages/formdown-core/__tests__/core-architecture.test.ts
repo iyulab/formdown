@@ -202,7 +202,7 @@ Please fill out your information.
                     name: 'test',
                     type: 'text',
                     label: 'Test',
-                    attributes: {}
+                    attributes: { form: "formdown-form-default" }
                 }]
             }
             
@@ -296,7 +296,7 @@ Please fill out your information.
                 name: `field${i}`,
                 type: 'text',
                 label: `Field ${i}`,
-                attributes: {}
+                attributes: { form: "formdown-form-default" }
             }))
             
             const content = {
