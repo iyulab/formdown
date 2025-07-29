@@ -303,6 +303,33 @@ The extension system includes built-in support for:
 - `checkbox` - Checkbox inputs
 - `radio` - Radio button groups
 - `textarea` - Multi-line text areas
+- `range` - Range slider inputs with live value display
+
+### Range Field Example
+
+The range field demonstrates a complete field type implementation:
+
+```markdown
+# Basic range field
+@volume: [range]
+
+# Range with custom attributes
+@temperature: [range min=0 max=40 step=0.5 unit="°C"]
+
+# Range with custom label
+@brightness(Display Brightness): [range max=255]
+
+# Required range with hidden value display
+@opacity: [range hideValue] required
+```
+
+The range field plugin includes:
+- Comprehensive parsing for multiple syntax variations
+- Full validation with min/max/step checking
+- HTML generation with live value display
+- Data processing for input/output operations
+- JSON schema generation
+- CSS styles and client-side JavaScript
 
 ### Core Validators
 
@@ -337,11 +364,61 @@ class ExtensionManager {
   // Execute hooks
   async executeHooks<T>(hookName: HookName, context: HookContext, ...args: any[]): Promise<T[]>
   
+  // Get field type registry
+  getFieldTypeRegistry(): FieldTypeRegistry
+  
   // Get system statistics
   getStats(): ExtensionStats
   
   // Enable debug mode
   enableDebug(): void
+}
+```
+
+### FieldTypeRegistry
+
+The Field Type Registry provides specialized methods for custom field types:
+
+```typescript
+class FieldTypeRegistry {
+  // Register a field type plugin
+  register(plugin: FieldTypePlugin): void
+  
+  // Unregister a field type
+  unregister(type: string): void
+  
+  // Get a field type plugin
+  get(type: string): FieldTypePlugin | undefined
+  
+  // Check if a field type is registered
+  has(type: string): boolean
+  
+  // Parse field content using registered parsers
+  parseField(content: string, context: HookContext): Field | null
+  
+  // Generate HTML using registered generators
+  generateFieldHTML(field: Field, context: HookContext): string | null
+  
+  // Validate field using registered validators
+  validateField(field: Field, value: any): ValidationRule[]
+  
+  // Process field data with registered processors
+  processFieldData(field: Field, value: any, operation: 'input' | 'output' | 'serialize' | 'deserialize'): any
+  
+  // Validate field data format
+  validateFieldData(field: Field, value: any): { valid: boolean; error?: string }
+  
+  // Generate JSON schema for a field
+  generateFieldSchema(field: Field): object | null
+  
+  // Get CSS styles for specific field types
+  getStylesForTypes(types: string[]): string
+  
+  // Get JavaScript for specific field types
+  getScriptsForTypes(types: string[]): string
+  
+  // Get registry statistics
+  getStats(): RegistryStats
 }
 ```
 
@@ -362,6 +439,22 @@ const results = await executeHooks('field-parse', context)
 
 // Get statistics
 const stats = getExtensionStats()
+
+// Access field type registry
+import { defaultExtensionManager } from '@formdown/core'
+const registry = defaultExtensionManager.getFieldTypeRegistry()
+
+// Parse content with custom field types
+const field = registry.parseField('@volume: [range]', context)
+
+// Generate HTML with custom field types
+const html = registry.generateFieldHTML(field, context)
+
+// Get styles for used field types
+const styles = registry.getStylesForTypes(['range', 'rating'])
+
+// Process form data
+const processedValue = registry.processFieldData(field, rawValue, 'input')
 ```
 
 ### Event System
