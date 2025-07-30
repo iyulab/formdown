@@ -11,41 +11,46 @@ e:I[9665,[],"ViewportBoundary"]
 10:I[9665,[],"MetadataBoundary"]
 12:I[6614,[],""]
 :HL["/_next/static/css/bab744f35232d94d.css","style"]
-0:{"P":null,"b":"OC3N9BqVihwrLxTOcAn_W","p":"","c":["","docs","architecture",""],"i":false,"f":[[["",{"children":["docs",{"children":[["slug","architecture","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/bab744f35232d94d.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              (function() {\n                try {\n                  const savedTheme = localStorage.getItem('formdown-theme');\n                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');\n                  \n                  if (theme === 'dark') {\n                    document.documentElement.classList.add('dark');\n                    document.body.classList.add('dark');\n                  }\n                } catch (e) {\n                  // Silently fail\n                }\n              })();\n            "}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Formdown\",\"description\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Web Browser\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"creator\":{\"@type\":\"Organization\",\"name\":\"iyulab\",\"url\":\"https://github.com/iyulab\"},\"url\":\"https://formdown.dev\",\"downloadUrl\":\"https://github.com/iyulab/formdown\",\"sameAs\":[\"https://github.com/iyulab/formdown\",\"https://www.npmjs.com/package/@formdown/core\"]}"}}],["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}]]}],["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","div",null,{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center max-w-md mx-auto px-4","children":[["$","h1",null,{"className":"text-6xl font-bold text-blue-600 mb-4","children":"404"}],["$","h2",null,{"className":"text-2xl font-bold text-gray-900 mb-4","children":"Page Not Found"}],["$","p",null,{"className":"text-gray-600 mb-8","children":"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."}],["$","div",null,{"className":"space-x-4","children":[["$","$L6",null,{"href":"/","className":"bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block","children":"Go Home"}],["$","$L6",null,{"href":"/docs","className":"bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block","children":"View Docs"}]]}]]}]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}]]}],{"children":["docs",["$","$1","c",{"children":[null,["$","div",null,{"className":"docs-layout","children":[["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]]}],{"children":[["slug","architecture","d"],["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L8",null,["$","$L9",null,{"children":["$La","$Lb",["$","$Lc",null,{"promise":"$@d"}]]}]]}],{},null,false]},null,false]},null,false]},[["$","div","l",{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center","children":[["$","div",null,{"className":"inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"}],["$","p",null,{"className":"text-gray-600","children":"Loading Formdown..."}]]}]}],[],[]],false],["$","$1","h",{"children":[null,["$","$1","p9SYcH1ba4pd0FvGKSMGuv",{"children":[["$","$Le",null,{"children":"$Lf"}],null]}],["$","$L10",null,{"children":"$L11"}]]}],false]],"m":"$undefined","G":["$12","$undefined"],"s":false,"S":true}
+0:{"P":null,"b":"kMYvbW-Nh9lS73GRPX2Zy","p":"","c":["","docs","architecture",""],"i":false,"f":[[["",{"children":["docs",{"children":[["slug","architecture","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/bab744f35232d94d.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              (function() {\n                try {\n                  const savedTheme = localStorage.getItem('formdown-theme');\n                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');\n                  \n                  if (theme === 'dark') {\n                    document.documentElement.classList.add('dark');\n                    document.body.classList.add('dark');\n                  }\n                } catch (e) {\n                  // Silently fail\n                }\n              })();\n            "}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Formdown\",\"description\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Web Browser\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"creator\":{\"@type\":\"Organization\",\"name\":\"iyulab\",\"url\":\"https://github.com/iyulab\"},\"url\":\"https://formdown.dev\",\"downloadUrl\":\"https://github.com/iyulab/formdown\",\"sameAs\":[\"https://github.com/iyulab/formdown\",\"https://www.npmjs.com/package/@formdown/core\"]}"}}],["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}]]}],["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","div",null,{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center max-w-md mx-auto px-4","children":[["$","h1",null,{"className":"text-6xl font-bold text-blue-600 mb-4","children":"404"}],["$","h2",null,{"className":"text-2xl font-bold text-gray-900 mb-4","children":"Page Not Found"}],["$","p",null,{"className":"text-gray-600 mb-8","children":"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."}],["$","div",null,{"className":"space-x-4","children":[["$","$L6",null,{"href":"/","className":"bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block","children":"Go Home"}],["$","$L6",null,{"href":"/docs","className":"bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block","children":"View Docs"}]]}]]}]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}]]}],{"children":["docs",["$","$1","c",{"children":[null,["$","div",null,{"className":"docs-layout","children":[["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]]}],{"children":[["slug","architecture","d"],["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L8",null,["$","$L9",null,{"children":["$La","$Lb",["$","$Lc",null,{"promise":"$@d"}]]}]]}],{},null,false]},null,false]},null,false]},[["$","div","l",{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center","children":[["$","div",null,{"className":"inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"}],["$","p",null,{"className":"text-gray-600","children":"Loading Formdown..."}]]}]}],[],[]],false],["$","$1","h",{"children":[null,["$","$1","OQKdVt8dGk0xhJKD_Taq7v",{"children":[["$","$Le",null,{"children":"$Lf"}],null]}],["$","$L10",null,{"children":"$L11"}]]}],false]],"m":"$undefined","G":["$12","$undefined"],"s":false,"S":true}
 13:"$Sreact.suspense"
 14:I[4911,[],"AsyncMetadata"]
 16:I[984,["874","static/chunks/874-994f48b66e83c627.js","375","static/chunks/375-811e0189f6b673fa.js","508","static/chunks/app/docs/%5Bslug%5D/page-1286a5c53c96b553.js"],"default"]
 11:["$","div",null,{"hidden":true,"children":["$","$13",null,{"fallback":null,"children":["$","$L14",null,{"promise":"$@15"}]}]}]
-17:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-218:T49c5,<h2>Core Architecture</h2>
-<p>Formdown features a Core-First architecture where the <code>@formdown/core</code> package provides comprehensive form management capabilities through the <strong>FormManager</strong> and <strong>FormDataBinding</strong> classes. The UI and Editor packages are thin presentation layers that delegate to these core APIs.</p>
+17:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-218:T504d,<h2>Core-First Architecture (Phase 2 Complete)</h2>
+<p>Formdown features a revolutionary <strong>Core-First architecture</strong> where the <code>@formdown/core</code> package provides comprehensive form management capabilities through the <strong>FormManager</strong> and <strong>4 Core modules</strong>. The UI and Editor packages are thin presentation layers that delegate 100% of their operations to these core APIs.</p>
+<p><strong>Phase 2 Achievement</strong>: Complete legacy code elimination with 100% Core module integration across all packages.</p>
 <h3>Package Structure</h3>
 <p>Formdown is organized as a monorepo with three main packages:</p>
 <ul>
-<li><strong>@formdown/core</strong> - Parser and generator engine for Formdown syntax (depends only on <code>marked</code>)</li>
-<li><strong>@formdown/ui</strong> - Web component renderer built with Lit (depends on core + Lit)</li>
-<li><strong>@formdown/editor</strong> - Development editor with live preview capabilities (depends on core + ui + Lit)</li>
+<li><strong>@formdown/core</strong> ⭐ - Complete form lifecycle engine with 4 Core modules (depends only on <code>marked</code>)</li>
+<li><strong>@formdown/ui</strong> 🎨 - Web component renderer with 100% Core delegation (1186 lines, 9.3% optimized)</li>
+<li><strong>@formdown/editor</strong> ✏️ - Development editor with Core-powered real-time preview (505 lines + template consolidation)</li>
 </ul>
 <h3>Package Dependencies and Relationships</h3>
 <ul>
-<li><p><strong>formdown-core</strong>: Standalone parser (depends only on <code>marked</code> for markdown processing)</p>
+<li><p><strong>formdown-core</strong>: Core-First architecture hub (depends only on <code>marked</code> for markdown processing)</p>
 <ul>
+<li><strong>FormManager</strong>: Central API with 12+ methods for complete form lifecycle management</li>
+<li><strong>4 Core Modules</strong>: FieldProcessor, DOMBinder, ValidationManager, EventOrchestrator</li>
 <li>Entry point: <code>packages/formdown-core/src/index.ts</code></li>
 <li>Main parser: <code>packages/formdown-core/src/parser.ts</code> </li>
 <li>HTML generator: <code>packages/formdown-core/src/generator.ts</code></li>
 <li>Extensions system: <code>packages/formdown-core/src/extensions/</code></li>
 </ul>
 </li>
-<li><p><strong>formdown-ui</strong>: Web component renderer (depends on formdown-core + Lit)</p>
+<li><p><strong>formdown-ui</strong>: Rendering layer with 100% Core integration (depends on formdown-core + Lit)</p>
 <ul>
+<li><strong>Phase 2.1 Complete</strong>: Full FormManager delegation, DOMBinder integration</li>
 <li>Entry point: <code>packages/formdown-ui/src/index.ts</code></li>
-<li>Main component: <code>packages/formdown-ui/src/formdown-ui.ts</code></li>
+<li>Main component: <code>packages/formdown-ui/src/formdown-ui.ts</code> (1186 lines)</li>
 <li>Standalone build: <code>packages/formdown-ui/src/standalone.ts</code></li>
 </ul>
 </li>
-<li><p><strong>formdown-editor</strong>: Development editor (depends on formdown-core + formdown-ui + Lit)</p>
+<li><p><strong>formdown-editor</strong>: Development layer with 100% Core integration (depends on formdown-core + formdown-ui + Lit)</p>
 <ul>
+<li><strong>Phase 2.2 Complete</strong>: Full EventOrchestrator integration, legacy elimination</li>
 <li>Entry point: <code>packages/formdown-editor/src/index.ts</code> </li>
-<li>Editor component: <code>packages/formdown-editor/src/formdown-editor.ts</code></li>
+<li>Editor component: <code>packages/formdown-editor/src/formdown-editor.ts</code> (505 lines)</li>
 <li>Standalone build: <code>packages/formdown-editor/src/standalone.ts</code></li>
 </ul>
 </li>
@@ -62,30 +67,38 @@ e:I[9665,[],"ViewportBoundary"]
 </ul>
 </li>
 </ul>
-<h2>Core-First Design Pattern</h2>
-<p>The Core-First architecture ensures:</p>
+<h2>Core-First Design Pattern (Phase 2 Implementation)</h2>
+<p>The Core-First architecture ensures complete business logic centralization through 4 specialized Core modules:</p>
 <ol>
-<li><strong>Business Logic Centralization</strong>: All form parsing, validation, and data management logic resides in the core package</li>
+<li><strong>Business Logic Centralization</strong>: 100% of form operations handled by Core modules</li>
 <li><strong>Framework Independence</strong>: Core functionality works without any UI framework</li>
-<li><strong>Consistent Behavior</strong>: All UI layers (web components, React, Vue, etc.) share the same underlying behavior</li>
-<li><strong>Easier Testing</strong>: Core logic can be unit tested without UI dependencies</li>
-<li><strong>Better Performance</strong>: Lightweight core with opt-in UI layers</li>
+<li><strong>Consistent Behavior</strong>: All UI layers share identical Core-powered behavior</li>
+<li><strong>Modular Architecture</strong>: 4 specialized modules for different concerns</li>
+<li><strong>Better Performance</strong>: Optimized Core with thin presentation layers</li>
 </ol>
-<h3>FormManager as Central API</h3>
-<p>The FormManager class serves as the single source of truth for:</p>
+<h3>FormManager + 4 Core Modules Architecture</h3>
+<p><strong>FormManager</strong> serves as the central coordinator for:</p>
 <ul>
-<li>Form schema extraction</li>
-<li>Data binding and state management</li>
-<li>Validation rules and execution</li>
-<li>Event handling and notifications</li>
-<li>HTML generation</li>
+<li><strong>FieldProcessor</strong>: Field type processing, validation, and value extraction</li>
+<li><strong>DOMBinder</strong>: DOM manipulation, event handling, and data synchronization</li>
+<li><strong>ValidationManager</strong>: Async validation pipelines with caching and debouncing</li>
+<li><strong>EventOrchestrator</strong>: Component-to-component event coordination and bridging</li>
 </ul>
-<h3>Data Flow</h3>
-<pre class="language-markup"><code class="language-markup">User Input → UI Component → FormManager → FormDataBinding
-                ↓                ↓              ↓
-           Event Dispatch    Validation    State Update
-                ↓                ↓              ↓
-            UI Update      Error Display   Data Persistence</code></pre><h2>Hidden Form Architecture</h2>
+<h3>Enhanced Data Flow (Phase 2)</h3>
+<pre class="language-markup"><code class="language-markup">User Input → UI Component → FormManager
+    ↓              ↓              ↓
+EventOrchestrator → FieldProcessor → DOMBinder
+    ↓              ↓              ↓
+Event Coordination → Validation → DOM Updates
+    ↓              ↓              ↓
+Component Bridge → ValidationManager → Data Persistence</code></pre><h3>Core Module Responsibilities</h3>
+<ul>
+<li><strong>FieldProcessor</strong>: <code>extractFieldValue()</code>, <code>setFieldValue()</code>, <code>processCheckboxGroup()</code></li>
+<li><strong>DOMBinder</strong>: <code>setupElementEventHandlers()</code>, <code>syncFormData()</code>, <code>clearAllBindings()</code></li>
+<li><strong>ValidationManager</strong>: <code>validateAsync()</code>, <code>registerValidator()</code>, <code>dispose()</code></li>
+<li><strong>EventOrchestrator</strong>: <code>createCoreUIBridge()</code>, <code>bridgeComponentEvents()</code>, <code>dispose()</code></li>
+</ul>
+<h2>Hidden Form Architecture</h2>
 <p>Formdown uses a hidden form architecture to ensure maximum compatibility and progressive enhancement.</p>
 <h3>How It Works</h3>
 <ol>
