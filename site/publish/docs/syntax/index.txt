@@ -10,17 +10,50 @@ c:I[4911,[],"AsyncMetadataOutlet"]
 e:I[9665,[],"ViewportBoundary"]
 10:I[9665,[],"MetadataBoundary"]
 12:I[6614,[],""]
-:HL["/_next/static/css/45d3d3ecbdd89e88.css","style"]
-0:{"P":null,"b":"HHjMOL4QWgjziJixgY8cj","p":"","c":["","docs","syntax",""],"i":false,"f":[[["",{"children":["docs",{"children":[["slug","syntax","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/45d3d3ecbdd89e88.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              (function() {\n                try {\n                  const savedTheme = localStorage.getItem('formdown-theme');\n                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');\n                  \n                  if (theme === 'dark') {\n                    document.documentElement.classList.add('dark');\n                    document.body.classList.add('dark');\n                  }\n                } catch (e) {\n                  // Silently fail\n                }\n              })();\n            "}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Formdown\",\"description\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Web Browser\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"creator\":{\"@type\":\"Organization\",\"name\":\"iyulab\",\"url\":\"https://github.com/iyulab\"},\"url\":\"https://formdown.dev\",\"downloadUrl\":\"https://github.com/iyulab/formdown\",\"sameAs\":[\"https://github.com/iyulab/formdown\",\"https://www.npmjs.com/package/@formdown/core\"]}"}}],["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}]]}],["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","div",null,{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center max-w-md mx-auto px-4","children":[["$","h1",null,{"className":"text-6xl font-bold text-blue-600 mb-4","children":"404"}],["$","h2",null,{"className":"text-2xl font-bold text-gray-900 mb-4","children":"Page Not Found"}],["$","p",null,{"className":"text-gray-600 mb-8","children":"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."}],["$","div",null,{"className":"space-x-4","children":[["$","$L6",null,{"href":"/","className":"bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block","children":"Go Home"}],["$","$L6",null,{"href":"/docs","className":"bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block","children":"View Docs"}]]}]]}]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}]]}],{"children":["docs",["$","$1","c",{"children":[null,["$","div",null,{"className":"docs-layout","children":[["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]]}],{"children":[["slug","syntax","d"],["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L8",null,["$","$L9",null,{"children":["$La","$Lb",["$","$Lc",null,{"promise":"$@d"}]]}]]}],{},null,false]},null,false]},null,false]},[["$","div","l",{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center","children":[["$","div",null,{"className":"inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"}],["$","p",null,{"className":"text-gray-600","children":"Loading Formdown..."}]]}]}],[],[]],false],["$","$1","h",{"children":[null,["$","$1","OhlR14TkN6HQULNgnC0Aqv",{"children":[["$","$Le",null,{"children":"$Lf"}],null]}],["$","$L10",null,{"children":"$L11"}]]}],false]],"m":"$undefined","G":["$12","$undefined"],"s":false,"S":true}
+:HL["/_next/static/css/bab744f35232d94d.css","style"]
+0:{"P":null,"b":"OC3N9BqVihwrLxTOcAn_W","p":"","c":["","docs","syntax",""],"i":false,"f":[[["",{"children":["docs",{"children":[["slug","syntax","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/bab744f35232d94d.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              (function() {\n                try {\n                  const savedTheme = localStorage.getItem('formdown-theme');\n                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');\n                  \n                  if (theme === 'dark') {\n                    document.documentElement.classList.add('dark');\n                    document.body.classList.add('dark');\n                  }\n                } catch (e) {\n                  // Silently fail\n                }\n              })();\n            "}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Formdown\",\"description\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Web Browser\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"creator\":{\"@type\":\"Organization\",\"name\":\"iyulab\",\"url\":\"https://github.com/iyulab\"},\"url\":\"https://formdown.dev\",\"downloadUrl\":\"https://github.com/iyulab/formdown\",\"sameAs\":[\"https://github.com/iyulab/formdown\",\"https://www.npmjs.com/package/@formdown/core\"]}"}}],["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}]]}],["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","div",null,{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center max-w-md mx-auto px-4","children":[["$","h1",null,{"className":"text-6xl font-bold text-blue-600 mb-4","children":"404"}],["$","h2",null,{"className":"text-2xl font-bold text-gray-900 mb-4","children":"Page Not Found"}],["$","p",null,{"className":"text-gray-600 mb-8","children":"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."}],["$","div",null,{"className":"space-x-4","children":[["$","$L6",null,{"href":"/","className":"bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block","children":"Go Home"}],["$","$L6",null,{"href":"/docs","className":"bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block","children":"View Docs"}]]}]]}]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}]]}],{"children":["docs",["$","$1","c",{"children":[null,["$","div",null,{"className":"docs-layout","children":[["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]]}],{"children":[["slug","syntax","d"],["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L8",null,["$","$L9",null,{"children":["$La","$Lb",["$","$Lc",null,{"promise":"$@d"}]]}]]}],{},null,false]},null,false]},null,false]},[["$","div","l",{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center","children":[["$","div",null,{"className":"inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"}],["$","p",null,{"className":"text-gray-600","children":"Loading Formdown..."}]]}]}],[],[]],false],["$","$1","h",{"children":[null,["$","$1","Y8kL3M7LHVTlzf20B4S5Sv",{"children":[["$","$Le",null,{"children":"$Lf"}],null]}],["$","$L10",null,{"children":"$L11"}]]}],false]],"m":"$undefined","G":["$12","$undefined"],"s":false,"S":true}
 13:"$Sreact.suspense"
 14:I[4911,[],"AsyncMetadata"]
 16:I[984,["874","static/chunks/874-994f48b66e83c627.js","375","static/chunks/375-811e0189f6b673fa.js","508","static/chunks/app/docs/%5Bslug%5D/page-1286a5c53c96b553.js"],"default"]
 11:["$","div",null,{"hidden":true,"children":["$","$13",null,{"fallback":null,"children":["$","$L14",null,{"promise":"$@15"}]}]}]
-17:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-218:T68ae,<p>FormDown extends Markdown with form field syntax while maintaining <strong>100% compatibility</strong> with existing Markdown.</p>
+17:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-218:T41bd,<p>FormDown extends Markdown with form field syntax while maintaining <strong>100% compatibility</strong> with existing Markdown.</p>
 <h2>Core Principle</h2>
 <p>FormDown fields use the pattern <code>@field_name: [type attributes]</code> for clarity and Markdown compatibility.</p>
+<h2>Form Declaration and Hidden Form Architecture</h2>
+<p>FormDown uses a <strong>hidden form architecture</strong> that separates form definition from field definition for clean styling and flexible layout:</p>
+<h3>Form Declaration Syntax</h3>
+<pre class="language-markup"><code class="language-markup">// Basic form declaration
+@form[action="/submit" method="POST"]
+
+// Form with custom ID
+@form[id="contact-form" action="/contact" method="POST"]
+
+// Multiple forms in one document
+@form[id="login" action="/login" method="POST"]
+@form[id="register" action="/register" method="POST"]</code></pre><h3>Hidden Form Implementation</h3>
+<p>FormDown generates hidden form elements that don&#39;t interfere with your document styling:</p>
+<pre class="language-html"><code class="language-html"><span class="token comment">&lt;!-- Generated hidden form --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">hidden</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-form-1<span class="token punctuation">"</span></span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/submit<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>POST<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span>
+
+<span class="token comment">&lt;!-- Fields reference the form via form attribute --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span> <span class="token attr-name">form</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-form-1<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">form</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-form-1<span class="token punctuation">"</span></span><span class="token punctuation">></span></span></code></pre><h3>Field-Form Association</h3>
+<pre class="language-markup"><code class="language-markup">@form[action="/submit" method="POST"]
+
+// Fields automatically associate with the most recent @form
+@username: [text required]
+@email: [email required]
+
+// Or explicitly specify form association
+@special_field: [text form="other-form-id"]</code></pre><p><strong>Benefits of Hidden Form Architecture:</strong></p>
+<ul>
+<li>✅ <strong>Clean styling</strong>: No form wrapper interfering with CSS layout</li>
+<li>✅ <strong>Flexible positioning</strong>: Fields can be placed anywhere in the document</li>
+<li>✅ <strong>Multiple forms</strong>: Support multiple forms in one document</li>
+<li>✅ <strong>HTML standards</strong>: Uses native HTML <code>form</code> attribute for proper association</li>
+</ul>
 <h2>Smart Label Generation</h2>
-<p>FormDown automatically generates human-readable labels from field names when no custom label is provided. This feature helps create clean, readable forms without requiring explicit labels for every field.</p>
+<p>FormDown automatically generates human-readable labels from field names when no custom label is provided.</p>
 <h3>Field Naming Rules</h3>
 <ul>
 <li>Field names must start with a letter (a-z, A-Z)</li>
@@ -54,426 +87,214 @@ e:I[9665,[],"ViewportBoundary"]
 
 // Examples
 @user_name(Full Name): [text required]           // Custom label via parentheses
-@user_name: [text required label="Full Name"]    // Custom label via attribute
-@user_name: [text required]                      // Smart label: "User Name"</code></pre><p>All methods are equivalent and produce the same result when using custom labels.</p>
-<h2>Label Definition Methods</h2>
-<h3>Method 1: Parentheses Syntax (Recommended)</h3>
-<pre class="language-markup"><code class="language-markup">@user_name(Full Name): [text required]
-@email_address(Email Address): [email required]
-@phone_number(Phone): [tel]</code></pre><p><strong>Benefits:</strong></p>
-<ul>
-<li><strong>Cleaner syntax</strong> - Separates label from attributes</li>
-<li><strong>Better readability</strong> - Label stands out visually</li>
-<li><strong>Less verbose</strong> - No need for <code>label=</code> attribute</li>
-</ul>
-<h3>Method 2: Label Attribute</h3>
-<pre class="language-markup"><code class="language-markup">@user_name: [text required label="Full Name"]
-@email_address: [email required label="Email Address"]
-@phone_number: [tel label="Phone"]</code></pre><p><strong>Benefits:</strong></p>
-<ul>
-<li><strong>Attribute consistency</strong> - Treats label like any other attribute</li>
-<li><strong>Familiar pattern</strong> - Similar to HTML attributes</li>
-<li><strong>Conditional labels</strong> - Can use dynamic values in frameworks</li>
-</ul>
-<h3>When to Use Which?</h3>
-<p><strong>Use parentheses <code>@field(Label):</code> when:</strong></p>
-<ul>
-<li>Writing static forms with fixed labels</li>
-<li>Prioritizing readability and clean syntax</li>
-<li>Labels are simple text without special characters</li>
-</ul>
-<p><strong>Use <code>label=</code> attribute when:</strong></p>
-<ul>
-<li>Labels contain quotes or special characters</li>
-<li>Building dynamic forms with template engines</li>
-<li>Consistency with other attribute patterns is important</li>
-</ul>
-<p><strong>Mixed usage is perfectly fine:</strong></p>
-<pre class="language-markup"><code class="language-markup">@name(Full Name): [text required]
-@description: [textarea label="Tell us about yourself" rows=4]
-@submit_btn: [submit label="Send Application"]</code></pre><h2>Minimal Syntax</h2>
-<p>FormDown supports minimal syntax for common use cases:</p>
-<h3>Block Fields - Empty Brackets</h3>
-<pre class="language-markup"><code class="language-markup">// Minimal syntax (defaults to text input)
-@name: []
-@email: []
-@phone: []
-
-// Equivalent to
-@name: [text]
-@email: [text] 
-@phone: [text]</code></pre><h3>Inline Fields - Optional Brackets</h3>
-<pre class="language-markup"><code class="language-markup">// Minimal inline syntax
-Hello ___@name!
-Your age is ___@age.
-
-// Equivalent to
-Hello ___@name[text]!
-Your age is ___@age[text].</code></pre><p><strong>When to use minimal syntax:</strong></p>
-<ul>
-<li>✅ <strong>Simple text inputs</strong> without validation</li>
-<li>✅ <strong>Rapid prototyping</strong> and quick forms</li>
-<li>✅ <strong>Default behavior</strong> is sufficient</li>
-</ul>
-<p><strong>When to use full syntax:</strong></p>
-<ul>
-<li>🔧 <strong>Specific input types</strong> (email, number, date, etc.)</li>
-<li>🛡️ <strong>Validation rules</strong> (required, min/max, pattern)</li>
-<li>🎨 <strong>Custom attributes</strong> (classes, data attributes)</li>
-</ul>
-<h2>Shorthand Syntax</h2>
-<p>FormDown provides powerful shorthand syntax for even more concise form creation. This is <strong>sugar syntax</strong> that converts to standard FormDown syntax while maintaining full compatibility.</p>
-<h3>Core Principles</h3>
-<ol>
-<li><strong>Complete compatibility</strong>: All shorthand converts to <code>[attributes]</code> syntax</li>
-<li><strong>Type-based interpretation</strong>: <code>{content}</code> is interpreted based on field type</li>
-<li><strong>Progressive complexity</strong>: Start simple, add complexity as needed</li>
-</ol>
-<h3>Required Fields with <code>*</code></h3>
-<pre class="language-markup"><code class="language-markup">// Shorthand
-@name*: []
-@email*: []
-
-// Converts to
-@name: [text required]
-@email: [text required]</code></pre><h3>Type Markers</h3>
-<p>Common input types can be specified with single-character markers before <code>[]</code>:</p>
-<pre class="language-markup"><code class="language-markup">// Shorthand
-@email: @[]           // email type
-@age: #[]             // number type  
-@phone: %[]           // tel type
-@website: &amp;[]         // url type
-@password: ?[]        // password type
-@birth_date: d[]      // date type
-@meeting_time: t[]    // time type
-@appointment: dt[]    // datetime-local type
-@description: T[]     // textarea
-@notes: T4[]          // textarea with 4 rows
-
-// Converts to
-@email: [email]
-@age: [number]
-@phone: [tel] 
-@website: [url]
-@password: [password]
-@birth_date: [date]
-@meeting_time: [time]
-@appointment: [datetime-local]
-@description: [textarea]
-@notes: [textarea rows=4]</code></pre><h3>Combining Required + Type</h3>
-<pre class="language-markup"><code class="language-markup">// Shorthand
-@email*: @[]
-@age*: #[]
-@description*: T6[]
-
-// Converts to
+@email: [email label="Email Address"]            // Custom label via attribute
+@phone_number: [tel]                             // Auto-generated: "Phone Number"</code></pre><h2>Field Types</h2>
+<h3>Text Input Types</h3>
+<h4>Basic Text Input</h4>
+<pre class="language-markup"><code class="language-markup">@username: []                    // Type defaults to 'text'
+@username: [text]               // Explicit type
+@username: [text required]      // Required field
+@username: [placeholder="Enter username"]</code></pre><h4>Email Input</h4>
+<pre class="language-markup"><code class="language-markup">@email: [email]
 @email: [email required]
-@age: [number required]
-@description: [textarea required rows=6]</code></pre><h3>Content Patterns with <code>{content}</code></h3>
-<p>The <code>{content}</code> syntax is interpreted differently based on the field type:</p>
-<p><strong>Text types</strong> → <code>pattern</code> attribute (validation):</p>
-<pre class="language-markup"><code class="language-markup">// Shorthand - Pattern validation
-@username{^[a-zA-Z0-9_]{3,20}$}: []
-@phone{(###)###-####}: []
-@email{*@company.com}: []
-
-// Converts to
-@username: [text pattern="^[a-zA-Z0-9_]{3,20}$"]
-@phone: [text pattern="^\(\d{3}\)\d{3}-\d{4}$"]
-@email: [text pattern="^.*@company\.com$"]</code></pre><p><strong>Date/time types</strong> → <code>format</code> attribute:</p>
-<pre class="language-markup"><code class="language-markup">// Shorthand - Format specification
-@birth_date{yyyy-MM-dd}: d[]
-@meeting_time{HH:mm}: t[]
-
-// Converts to  
-@birth_date: [date format="yyyy-MM-dd"]
-@meeting_time: [time format="HH:mm"]</code></pre><p><strong>Selection types</strong> → <code>options</code> attribute:</p>
-<pre class="language-markup"><code class="language-markup">// Shorthand - Options list
-@size{S,M,L,XL}: r[]           // radio
-@country{USA,Canada,UK}: s[]   // select
-@skills{JS,Python,Java}: c[]   // checkbox group
-
-// Converts to
-@size: [radio options="S,M,L,XL"]
-@country: [select options="USA,Canada,UK"]
-@skills: [checkbox options="JS,Python,Java"]</code></pre><p><strong>&quot;Other&quot; option support</strong> - Use <code>*</code> to allow custom user input:</p>
-<pre class="language-markup"><code class="language-markup">// Selection fields with "other" option
-@country{USA,Canada,UK,*}: s[]
-@skills{JavaScript,Python,Java,*}: c[]
-@contact_method{Email,Phone,*}: r[]
-
-// Also works with standard syntax
-@country: [select options="USA,Canada,UK,*"]
-@skills: [checkbox options="JavaScript,Python,Java,*"]
-@contact_method: [radio options="Email,Phone,*"]</code></pre><p>When <code>*</code> is included in options, FormDown automatically:</p>
-<ul>
-<li>✅ Adds an &quot;Other (please specify)&quot; option</li>
-<li>✅ Shows a text input field when &quot;Other&quot; is selected</li>
-<li>✅ Sets <code>allowOther: true</code> in the field schema</li>
-<li>✅ Creates separate form fields: <code>country</code> and <code>country_other</code></li>
-</ul>
-<h3>Pattern Shortcuts</h3>
-<p>FormDown automatically converts user-friendly patterns to regex:</p>
-<pre class="language-markup"><code class="language-markup">// Mask patterns (# = digit, * = any)
-@phone{(###)###-####}: []
-@ssn{###-##-####}: []
-
-// Glob patterns (* = wildcard)
-@work_email{*@company.com}: []
-@filename{*.pdf}: []
-
-// Converts to proper regex patterns automatically</code></pre><h3>Custom Labels with <code>()</code></h3>
-<pre class="language-markup"><code class="language-markup">// Shorthand
-@first_name(Full Name)*: []
-@user_email(Email Address)*: @[]
-@birth_date(Date of Birth){yyyy-MM-dd}: d[]
-
-// Converts to
-@first_name: [text required label="Full Name"]
-@user_email: [email required label="Email Address"] 
-@birth_date: [date format="yyyy-MM-dd" label="Date of Birth"]</code></pre><h3>Inline Shorthand</h3>
-<pre class="language-markup"><code class="language-markup">// Shorthand inline
-Hello @___@name*!
-Your email: @___@email*
-Age: #___@age* years old
-Birth date: d___@birth_date{yyyy-MM-dd}
-
-// Converts to
-Hello ___@name[text required]!
-Your email: ___@email[email required]
-Age: ___@age[number required] years old
-Birth date: ___@birth_date[date format="yyyy-MM-dd"]</code></pre><h3>Complex Examples</h3>
-<p><strong>Registration form with shorthand:</strong></p>
-<pre class="language-markup"><code class="language-markup"># User Registration
-
-@username(Username)*{^[a-zA-Z0-9_]{3,20}$}: [placeholder="3-20 characters"]
-@email(Email Address)*: @[]
-@password(Password)*{^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$}: ?[]
-@birth_date(Birth Date){yyyy-MM-dd}: d[min="1900-01-01" max="2010-12-31"]
-
-@gender(Gender){male,female,other}: r[]
-@interests(Interests){Web,Mobile,AI,Gaming,*}: c[]
-@newsletter(Subscribe to newsletter): c[]
-
-@terms(I agree to terms and conditions)*: c[]
-@register: [submit label="Create Account"]</code></pre><p><strong>Appointment booking with inline shorthand:</strong></p>
-<pre class="language-markup"><code class="language-markup"># Appointment Booking
-
-Dear @___@customer_name*,
-
-Please schedule your appointment:
-- Service: s___@service{Consultation,Checkup,Treatment}
-- Date: d___@appointment_date{yyyy-MM-dd}[min="2024-01-01"]  
-- Time: t___@appointment_time{HH:mm}[min="09:00" max="17:00"]
-- Phone: %___@phone{(###)###-####}
-
-@special_requests(Special Requests): T3[placeholder="Any special requirements?"]
-@book_appointment: [submit label="Book Appointment"]</code></pre><h3>When to Use Shorthand vs Standard</h3>
-<p><strong>Use shorthand for:</strong></p>
-<ul>
-<li>✅ <strong>Simple forms</strong> with common patterns</li>
-<li>✅ <strong>Rapid prototyping</strong> and quick development</li>
-<li>✅ <strong>Common field types</strong> (email, phone, dates)</li>
-<li>✅ <strong>Standard validation</strong> patterns</li>
-</ul>
-<p><strong>Use standard syntax for:</strong></p>
-<ul>
-<li>🔧 <strong>Complex validation</strong> rules</li>
-<li>🎨 <strong>Custom attributes</strong> and styling</li>
-<li>🔌 <strong>Framework integration</strong> with dynamic values</li>
-<li>📋 <strong>Complex form logic</strong> and conditional fields</li>
-</ul>
-<p><strong>Mixed usage is recommended:</strong></p>
-<pre class="language-markup"><code class="language-markup">// Simple fields - use shorthand
-@name*: []
-@email*: @[]
-@phone{(###)###-####}: []
-
-// Complex fields - use standard syntax  
-@bio: [textarea rows=4 maxlength=500 class="bio-field" data-counter="true"]
-@advanced_options: [checkbox options="opt1,opt2,opt3" class="advanced" data-toggle="collapse"]</code></pre><h2>Field Types</h2>
-<h3>Text Inputs</h3>
-<pre class="language-markup"><code class="language-markup">@name: [text required]
-@email: [email required]
-@password: [password minlength=8]
-@phone: [tel]
-@website: [url]
-@age: [number min=18 max=100]
-@birth_date: [date]
+@contact_email: [email placeholder="your@email.com"]</code></pre><h4>Password Input</h4>
+<pre class="language-markup"><code class="language-markup">@password: [password]
+@password: [password required minlength=8]
+@confirm_password: [password placeholder="Re-enter password"]</code></pre><h4>Number Input</h4>
+<pre class="language-markup"><code class="language-markup">@age: [number]
+@age: [number min=18 max=120]
+@quantity: [number min=1 max=10 step=1]
+@price: [number step=0.01 placeholder="0.00"]</code></pre><h4>Date/Time Inputs</h4>
+<pre class="language-markup"><code class="language-markup">@birth_date: [date]
 @appointment_time: [time]
+@event_datetime: [datetime-local]
+@birth_month: [month]
+@week_number: [week]</code></pre><h4>Other Input Types</h4>
+<pre class="language-markup"><code class="language-markup">@website: [url]
+@phone: [tel]
+@color_choice: [color]
+@skill_level: [range min=0 max=100]
+@profile_pic: [file accept="image/*"]
+@documents: [file multiple accept=".pdf,.doc,.docx"]
+@search_query: [search]
+@user_id: [hidden value="12345"]</code></pre><h3>Textarea</h3>
+<pre class="language-markup"><code class="language-markup">@message: [textarea]
+@message: [textarea rows=5]
+@message: [textarea rows=5 cols=40]
+@bio: [textarea placeholder="Tell us about yourself..." maxlength=500]</code></pre><h3>Selection Fields</h3>
+<h4>Radio Buttons</h4>
+<pre class="language-markup"><code class="language-markup">@gender: [radio options="Male, Female, Other"]
+@plan: [radio options="Basic, Pro, Enterprise" value="Pro"]
+@preferred_contact: [radio options="Email, Phone, SMS" required]</code></pre><h4>Checkboxes</h4>
+<pre class="language-markup"><code class="language-markup">@subscribe: [checkbox]
+@subscribe: [checkbox checked]
+@subscribe: [checkbox label="Subscribe to newsletter"]
+@terms: [checkbox required label="I agree to terms"]
 
-// Minimal syntax - defaults to text input
-@name: []
-@description: []</code></pre><h3>Text Areas</h3>
-<pre class="language-markup"><code class="language-markup">@description: [textarea rows=4]
-@comments: [textarea required placeholder="Your thoughts..."]</code></pre><h3>Selection Fields</h3>
-<pre class="language-markup"><code class="language-markup">// Radio buttons - single selection (inline by default)
-@gender: [radio options="Male,Female,Other"]
+// Multiple checkboxes
+@interests: [checkbox options="Sports, Music, Travel, Technology"]
+@features: [checkbox options="Feature A, Feature B, Feature C" value="Feature A, Feature C"]</code></pre><h4>Select Dropdown</h4>
+<pre class="language-markup"><code class="language-markup">@country: [select options="USA, Canada, UK, Other"]
+@country: [select options="USA, Canada, UK, Other" value="USA"]
+@language: [select options="English, Spanish, French" required]
+@countries: [select options="USA, Canada, UK" multiple]</code></pre><h3>Buttons</h3>
+<pre class="language-markup"><code class="language-markup">@submit: [submit]
+@submit: [submit value="Send Message"]
+@reset: [reset]
+@reset: [reset value="Clear Form"]
+@cancel: [button value="Cancel"]
+@preview: [button value="Preview"]</code></pre><h2>Inline Fields</h2>
+<p>Inline fields appear within text flow using triple underscores:</p>
+<pre class="language-markup"><code class="language-markup">My name is ___@name[text required placeholder="your name"] and 
+I'm ___@age[number min=1 max=120] years old.
 
-// Single checkbox - for yes/no or agreement
-@newsletter(Subscribe to newsletter): [checkbox]
-@terms(I agree to terms and conditions): [checkbox required]
+I prefer ___@color[select options="Red, Blue, Green"] as my favorite color.</code></pre><h2>Advanced Features</h2>
+<h3>Pattern Validation</h3>
+<pre class="language-markup"><code class="language-markup">// Using field name pattern
+@username{^[a-zA-Z0-9_]{3,20}$}: []
+@employee_id{^EMP[0-9]{6}$}: [placeholder="EMP000000"]
 
-// Checkbox group - multiple selection (inline by default)
-@interests: [checkbox options="Web,Mobile,AI,Design"]
+// Using pattern attribute
+@product_code: [pattern="^[A-Z]{3}-[0-9]{4}$" placeholder="ABC-1234"]</code></pre><h3>Option Patterns</h3>
+<pre class="language-markup"><code class="language-markup">// Inline options with custom syntax
+@priority{Low|Medium|High}: [radio]
+@skills{JavaScript|Python|Go|Rust}: [checkbox]
 
-// Vertical layout for longer option lists
-@preferences: [checkbox layout="vertical" options="Email Notifications,SMS Alerts,Phone Calls,Push Notifications"]
+// Options with commas
+@status{Draft,Under Review,Published,Archived}: [select]</code></pre><h3>Other Options</h3>
+<pre class="language-markup"><code class="language-markup">// Radio with other option
+@browser: [radio options="Chrome, Firefox, Safari, *"]
+@browser{Chrome|Firefox|Safari|*}: r[]
 
-// Select dropdown
-@country: [select options="USA,Canada,UK,Other"]</code></pre><p><strong>Checkbox Types:</strong></p>
-<ul>
-<li><strong>Single checkbox</strong>: <code>[checkbox]</code> - Creates a single checkbox for yes/no, agreement, or subscription</li>
-<li><strong>Checkbox group</strong>: <code>[checkbox options=&quot;...&quot;]</code> - Creates multiple checkboxes for multi-select</li>
-</ul>
-<p><strong>Layout Options:</strong></p>
-<ul>
-<li><strong>Default (inline)</strong>: Options are displayed horizontally, wrapping to new lines as needed</li>
-<li><strong><code>layout=&quot;vertical&quot;</code></strong>: Options are displayed vertically, each on its own line</li>
-</ul>
-<h3>Actions</h3>
-<pre class="language-markup"><code class="language-markup">@submit_btn: [submit label="Submit Form"]
-@reset_btn: [reset label="Clear Form"]</code></pre><h2>Inline Fields</h2>
-<p>For embedding fields within text flow, use the <code>___@field[type attributes]</code> pattern:</p>
-<pre class="language-markup"><code class="language-markup">Welcome back, ___@user_name[text required]!
+// Checkbox with other option
+@languages: [checkbox options="English, Spanish, French, *"]
+@languages{English|Spanish|French|*(Other Languages)}: c[]
 
-Your order details:
-- Quantity: ___@quantity[number min=1 max=100] items
-- Delivery date: ___@delivery_date[date required]
-- Total amount: $___@amount[number min=0 step=0.01]
+// Select with other option
+@country: [select options="USA, Canada, UK, *"]
+@country{USA|Canada|UK|*(Other Country)}: s[]</code></pre><h2>Shorthand Syntax</h2>
+<p>FormDown supports abbreviated syntax for faster form creation:</p>
+<h3>Field Type Shortcuts</h3>
+<pre class="language-markup"><code class="language-markup">@email: @[]                    // Email field
+@age: #[]                      // Number field
+@password: ***[]               // Password field
+@website: http://[]            // URL field
+@phone: tel:[]                 // Tel field
+@birthdate: date:[]            // Date field
+@bio: T[]                      // Textarea (default)
+@bio: T5[]                     // Textarea with 5 rows
+@agree: []                     // Checkbox (single)
+@plan: ()                      // Radio (with options)
+@country: v[]                  // Select dropdown</code></pre><h3>Required Fields</h3>
+<pre class="language-markup"><code class="language-markup">@username*: []                 // Required field (asterisk after name)
+@email*: @[]                   // Required email
+@age*: #[min=18]              // Required number with validation</code></pre><h3>Option Shortcuts</h3>
+<pre class="language-markup"><code class="language-markup">// Radio shorthand
+@size: (S,M,L,XL)             // Radio buttons
+@size: (S,M,L,XL=L)           // With default value
 
-Special instructions: ___@notes[textarea rows=2 placeholder="Optional notes"]
+// Checkbox shorthand  
+@features: [x,y,z]            // Multiple checkboxes
+@features: [x,y=y,z=z]        // With default checked
 
-Contact preference: ___@contact_method[radio options="Email,Phone,SMS"]
-
-// Minimal inline syntax - brackets optional for simple cases
-Welcome ___@user_name!
-Please enter ___@age and ___@email.</code></pre><p><strong>Benefits of <code>___</code> prefix:</strong></p>
-<ul>
-<li><strong>Consistency</strong>: Uses same <code>@field[type]</code> syntax as block fields</li>
-<li><strong>Visibility</strong>: Easy to spot inline fields in text</li>
-<li><strong>No conflicts</strong>: Unlikely to clash with existing Markdown syntax</li>
-<li><strong>Parsing simplicity</strong>: Clear delimiter for parsers</li>
-<li><strong>Minimal syntax</strong>: Brackets can be omitted for simple text fields</li>
-</ul>
-<h2>Attributes</h2>
-<h3>Universal Attributes</h3>
-<ul>
-<li><code>label=&quot;text&quot;</code> - Custom field label (overrides field name)</li>
-<li><code>required</code> - Field is mandatory</li>
-<li><code>placeholder=&quot;text&quot;</code> - Placeholder text</li>
-<li><code>value=&quot;default&quot;</code> - Default value</li>
-<li><code>disabled</code> - Disable field</li>
-</ul>
-<h3>Validation Attributes</h3>
-<ul>
-<li><code>minlength=n</code> / <code>maxlength=n</code> - Text length constraints</li>
-<li><code>min=n</code> / <code>max=n</code> - Numeric/date constraints</li>
-<li><code>pattern=&quot;regex&quot;</code> - Custom validation pattern</li>
-</ul>
-<h3>Selection Attributes</h3>
-<ul>
-<li><code>options=&quot;item1,item2,item3&quot;</code> - Available choices</li>
-</ul>
-<h3>Text Area Attributes</h3>
-<ul>
-<li><code>rows=n</code> - Number of visible rows</li>
-</ul>
-<h3>HTML Extensibility</h3>
-<p><strong>All HTML attributes are supported</strong> - FormDown passes through any attributes you specify:</p>
-<pre class="language-markup"><code class="language-markup">// Standard HTML attributes
-@email: [email required autocomplete="email" spellcheck="false"]
-@phone: [tel maxlength=15 inputmode="tel"]
-@search: [text autocomplete="off" aria-label="Search products"]
-
-// CSS classes and styling
-@username: [text class="form-control" style="border: 2px solid blue"]
-@password: [password data-strength="true" aria-describedby="pwd-help"]
-
-// Custom data attributes for JavaScript
-@slider: [range min=0 max=100 step=5 data-unit="%" data-live-update="true"]
-@upload: [file accept="image/*" data-max-size="5MB" data-preview="true"]
-
-// Accessibility attributes
-@bio: [textarea rows=4 aria-required="true" aria-describedby="bio-hint"]</code></pre><p><strong>Attribute Processing:</strong></p>
-<ul>
-<li>Boolean attributes: <code>required</code>, <code>disabled</code>, <code>readonly</code></li>
-<li>String attributes: Quoted values <code>placeholder=&quot;Enter name&quot;</code></li>
-<li>Numeric attributes: Unquoted numbers <code>min=18</code>, <code>max=100</code></li>
-<li>All attributes are passed directly to HTML elements</li>
-</ul>
-<h2>Examples</h2>
+// Select shorthand
+@country: v[USA,Canada,UK]    // Select dropdown
+@country: v[USA,Canada=Canada,UK]  // With default</code></pre><h2>Validation Attributes</h2>
+<h3>Common Validation</h3>
+<pre class="language-markup"><code class="language-markup">@field: [required]                    // Required field
+@field: [disabled]                    // Disabled field
+@field: [readonly]                    // Read-only field</code></pre><h3>Text Validation</h3>
+<pre class="language-markup"><code class="language-markup">@username: [minlength=3 maxlength=20]
+@bio: [textarea maxlength=500]
+@code: [pattern="[A-Z]{3}[0-9]{3}"]</code></pre><h3>Number Validation</h3>
+<pre class="language-markup"><code class="language-markup">@age: [number min=0 max=120]
+@price: [number min=0.01 step=0.01]
+@quantity: [number min=1 max=100 step=1]</code></pre><h3>File Validation</h3>
+<pre class="language-markup"><code class="language-markup">@photo: [file accept="image/*"]
+@document: [file accept=".pdf,.doc,.docx"]
+@photos: [file multiple accept="image/*" max=5]</code></pre><h2>Real-World Examples</h2>
 <h3>Contact Form</h3>
 <pre class="language-markup"><code class="language-markup"># Contact Us
 
-@name(Full Name): [text required]
-@email(Email Address): [email required]
-@subject: [text required maxlength=100]
-@message: [textarea required rows=5 placeholder="Your message..."]
+@form[action="/contact" method="POST"]
 
-@priority: [radio options="Low,Medium,High"]
-@newsletter(Subscribe to newsletter): [checkbox]
+@name*: [placeholder="Your full name"]
+@email*: @[placeholder="your@email.com"]
+@subject: [placeholder="Message subject"]
+@message*: T5[placeholder="Your message here..."]
+@newsletter: [] Subscribe to our newsletter
+@submit: [submit value="Send Message"]</code></pre><h3>User Registration</h3>
+<pre class="language-markup"><code class="language-markup"># Create Account
 
-@submit_form: [submit label="Send Message"]</code></pre><h3>Registration Form</h3>
-<pre class="language-markup"><code class="language-markup"># User Registration
+@form[action="/register" method="POST"]
 
-@username: [text required minlength=4 pattern="[a-zA-Z0-9_]+"]
-@email: [email required]
-@password: [password required minlength=8]
-@age: [number min=13 max=120]
+## Account Information
+@username*{^[a-zA-Z0-9_]{3,20}$}: [placeholder="Choose username"]
+@email*: @[]
+@password*: ***[minlength=8]
+@confirm_password*: ***[placeholder="Confirm password"]
 
-@terms(I agree to terms and conditions): [checkbox required]
+## Profile Details  
+@full_name*: []
+@birth_date: date:[max="2006-01-01"]
+@gender: (Male,Female,Other,Prefer not to say)
+@bio: T4[maxlength=500 placeholder="Tell us about yourself"]
 
-@register: [submit label="Create Account"]</code></pre><h3>Order Form with Inline Fields</h3>
-<pre class="language-markup"><code class="language-markup"># Order Confirmation
+## Preferences
+@interests: [Sports,Music,Travel,Technology,Gaming,Reading]
+@newsletter: [checked] Receive weekly newsletter
+@terms*: [] I agree to the [terms of service](/terms)
 
-Dear ___@customer_name[text required],
+@submit: [submit value="Create Account"]</code></pre><h3>Survey Form</h3>
+<pre class="language-markup"><code class="language-markup"># Customer Satisfaction Survey
 
-Please confirm your order:
-- Product: ___@product[select options="Laptop,Phone,Tablet"]
-- Quantity: ___@quantity[number min=1 max=10] units
-- Delivery by: ___@delivery_date[date required]
+@form[action="/survey" method="POST"]
 
-Payment method: ___@payment[radio options="Credit Card,PayPal,Bank Transfer"]
+@satisfaction: (Very Unsatisfied,Unsatisfied,Neutral,Satisfied,Very Satisfied=Neutral)
+How satisfied are you with our service?
 
-Additional notes: ___@notes[textarea rows=3 placeholder="Special delivery instructions"]
+@recommend: [range min=0 max=10 value=5]
+How likely are you to recommend us? (0-10)
 
-@confirm_order: [submit label="Confirm Order"]</code></pre><h3>Advanced Form with Custom Attributes</h3>
-<pre class="language-markup"><code class="language-markup"># User Profile
+@improvements: [UI/UX,Performance,Features,Support,Documentation,*]
+What areas need improvement?
 
-@avatar(Profile Picture): [file accept="image/*" class="file-upload"]
-@username: [text required minlength=3 autocomplete="username" spellcheck="false"]
-@email(Email Address): [email required autocomplete="email" class="form-control"]
-@birth_date(Date of Birth): [date max="2010-12-31"]
-@bio: [textarea rows=4 maxlength=500 placeholder="Tell us about yourself..."]
+@comments: T5[placeholder="Additional comments..."]
 
-@theme(Theme Preference): [radio options="Light,Dark,Auto"]
-@notifications(Notification Settings): [checkbox options="Email,SMS,Push" class="notification-options"]
+@email: @[placeholder="Email (optional)"]
+@submit: [submit value="Submit Survey"]</code></pre><h2>Best Practices</h2>
+<h3>1. Use Smart Labels</h3>
+<p>Let FormDown generate labels from well-named fields:</p>
+<pre class="language-markup"><code class="language-markup">// Good
+@first_name: []              // Generates "First Name"
+@email_address: @[]          // Generates "Email Address"
 
-@privacy_level(Privacy Level): [range min=1 max=5 step=1 style="width: 200px"]
+// Avoid
+@fname: []                   // Generates "Fname" (unclear)
+@em: @[]                     // Generates "Em" (unclear)</code></pre><h3>2. Group Related Fields</h3>
+<p>Use Markdown headers to organize forms:</p>
+<pre class="language-markup"><code class="language-markup">## Personal Information
+@first_name*: []
+@last_name*: []
+@email*: @[]
 
-@save_profile: [submit label="Save Changes" class="btn btn-primary"]</code></pre><h2>Implementation Notes</h2>
-<h3>Field Names</h3>
-<ul>
-<li>Use snake_case for API compatibility: <code>user_name</code>, <code>email_address</code></li>
-<li>Field names become HTML <code>name</code> attributes</li>
-<li>Labels can be customized using <code>label=&quot;Custom Text&quot;</code></li>
-</ul>
-<h3>HTML Output</h3>
-<pre class="language-markup"><code class="language-markup">@email(Email Address): [email required autocomplete="email" class="form-control"]</code></pre><p>Renders to:</p>
-<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-field<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span> <span class="token attr-name">for</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Email Address *<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">required</span> <span class="token attr-name">autocomplete</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>form-control<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></code></pre><p><strong>Custom attributes are preserved:</strong></p>
-<pre class="language-markup"><code class="language-markup">@slider(Volume Control): [range min=0 max=100 step=5 class="custom-slider"]</code></pre><p>Renders to:</p>
-<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-field<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span> <span class="token attr-name">for</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slider<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Volume Control<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>range<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slider<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>slider<span class="token punctuation">"</span></span> <span class="token attr-name">min</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>0<span class="token punctuation">"</span></span> <span class="token attr-name">max</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100<span class="token punctuation">"</span></span> <span class="token attr-name">step</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>custom-slider<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></code></pre><h3>Data Collection</h3>
-<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
-  <span class="token property">"email"</span><span class="token operator">:</span> <span class="token string">"user@example.com"</span><span class="token punctuation">,</span>
-  <span class="token property">"user_name"</span><span class="token operator">:</span> <span class="token string">"John Doe"</span>
-<span class="token punctuation">}</span></code></pre>8:["$","$L16",null,{"currentSlug":"syntax","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"FormDown Syntax Reference"}],["$","article",null,{"className":"$17","dangerouslySetInnerHTML":{"__html":"$18"}}]]}]}]
+## Address
+@street_address: []
+@city: []
+@postal_code: []</code></pre><h3>3. Provide Clear Placeholders</h3>
+<p>Help users understand expected input:</p>
+<pre class="language-markup"><code class="language-markup">@phone: tel:[placeholder="(555) 123-4567"]
+@date: date:[placeholder="MM/DD/YYYY"]
+@username: [placeholder="Letters, numbers, underscore only"]</code></pre><h3>4. Use Appropriate Input Types</h3>
+<p>Choose the right input type for better UX:</p>
+<pre class="language-markup"><code class="language-markup">@email: @[]                  // Email keyboard on mobile
+@phone: tel:[]               // Number pad on mobile
+@website: http://[]          // URL keyboard on mobile
+@age: #[min=0 max=120]      // Number spinner</code></pre><h3>5. Add Helpful Validation</h3>
+<p>Validate on the client side when possible:</p>
+<pre class="language-markup"><code class="language-markup">@password: ***[minlength=8 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"]
+@username{^[a-zA-Z0-9_]{3,20}$}: [required]
+@age: #[min=13 max=120 required]</code></pre>8:["$","$L16",null,{"currentSlug":"syntax","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Syntax Reference"}],["$","article",null,{"className":"$17","dangerouslySetInnerHTML":{"__html":"$18"}}]]}]}]
 b:null
 f:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
 a:null

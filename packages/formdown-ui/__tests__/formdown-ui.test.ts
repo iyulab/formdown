@@ -15,8 +15,46 @@ jest.mock('@formdown/core', () => ({
     on: jest.fn(),
     off: jest.fn(),
     emit: jest.fn(),
-    reset: jest.fn()
+    reset: jest.fn(),
+    // Phase 1 Core module creation methods
+    createFieldProcessor: jest.fn(() => ({
+      processCheckboxGroup: jest.fn(() => ({ success: true, value: [] })),
+      processRadioGroup: jest.fn(() => ({ success: true, value: null })),
+      validateFieldValue: jest.fn(() => ({ success: true, value: '', errors: [] })),
+      getFieldType: jest.fn(() => 'text'),
+      extractFieldValue: jest.fn(() => ''),
+      setFieldValue: jest.fn(() => true)
+    })),
+    createDOMBinder: jest.fn(() => ({
+      bindFieldToElement: jest.fn(() => ({ fieldName: 'test', elements: new Set(), unbind: jest.fn() })),
+      syncFormData: jest.fn(),
+      getRegisteredFields: jest.fn(() => []),
+      setupElementEventHandlers: jest.fn()
+    })),
+    createValidationManager: jest.fn(() => ({
+      registerCustomValidator: jest.fn(),
+      createValidationPipeline: jest.fn(() => ({ rules: [], executeOrder: 'fail-fast' })),
+      validateAsync: jest.fn(() => Promise.resolve({ isValid: true, errors: [], warnings: [] }))
+    })),
+    createEventOrchestrator: jest.fn(() => ({
+      createEventBus: jest.fn(() => ({ emit: jest.fn(), on: jest.fn(), off: jest.fn() })),
+      bridgeComponentEvents: jest.fn(() => 'mock-bridge-id'),
+      getEventStats: jest.fn(() => ({ totalEventBuses: 0, totalBridges: 0, activeBridges: 0 }))
+    })),
+    // Phase 1 additional methods
+    processFieldValue: jest.fn(() => ({ success: true, value: '' })),
+    validateFieldWithPipeline: jest.fn(() => Promise.resolve({ isValid: true, errors: [] })),
+    setupComponentBridge: jest.fn(() => 'mock-bridge-id'),
+    renderToTemplate: jest.fn(() => ({ fields: [], formDeclarations: [], schema: {}, data: {}, html: '<div>Mock template</div>' })),
+    handleUIEvent: jest.fn(),
+    createPreviewTemplate: jest.fn(() => ({ html: '<div>Mock preview</div>', errors: [], schema: {}, fields: [] })),
+    getCoreModules: jest.fn(() => ({ fieldProcessor: null, domBinder: null, validationManager: null, eventOrchestrator: null })),
+    dispose: jest.fn()
   })),
+  FieldProcessor: jest.fn(),
+  DOMBinder: jest.fn(),
+  ValidationManager: jest.fn(),
+  EventOrchestrator: jest.fn(),
   extensionManager: {
     initialize: jest.fn(),
     getPlugin: jest.fn(),

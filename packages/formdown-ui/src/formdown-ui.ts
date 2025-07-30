@@ -3,6 +3,8 @@ import { customElement, property } from 'lit/decorators.js'
 import { 
   extensionManager as defaultExtensionManager,
   FormManager,
+  FieldProcessor,
+  DOMBinder,
   type FormDownSchema,
   type ValidationResult
 } from '@formdown/core'
@@ -370,30 +372,7 @@ export class FormdownUI extends LitElement {
     return this.formId || this._uniqueFormId
   }
 
-  // Process HTML to replace form wrapper with hidden form and add form attributes
-  private processFormHTML(html: string, formId: string): string {
-    // Create a hidden form element
-    const hiddenForm = `<form id="${formId}" class="formdown-form" style="display: none;"></form>`
-
-    // Remove the existing form wrapper and add form attributes to all form fields
-    let processedHTML = html.replace(/<form[^>]*class="formdown-form"[^>]*>/g, '')
-      .replace(/<\/form>/g, '')
-
-    // Add form attribute to all input, textarea, and select elements
-    processedHTML = processedHTML.replace(
-      /<(input|textarea|select)([^>]*?)>/g,
-      (match, tagName, attributes) => {
-        // Check if form attribute already exists
-        if (attributes.includes('form=')) {
-          return match
-        }
-        return `<${tagName}${attributes} form="${formId}">`
-      }
-    )
-
-    // Add the hidden form at the beginning
-    return hiddenForm + processedHTML
-  }
+  // Method removed - HTML processing now handled by Core template system
 
   // Reactive data source - this is the single source of truth
   private _data: Record<string, any> = {}
@@ -437,6 +416,11 @@ export class FormdownUI extends LitElement {
     }
   }
   private formManager: FormManager
+  
+  // Core modules for delegated functionality
+  private fieldProcessor: FieldProcessor
+  private domBinder: DOMBinder
+  
   private fieldRegistry: Map<string, Set<HTMLElement>> = new Map()
   private _isUpdatingUI = false  // Prevent infinite loops
   private _schema: FormDownSchema | null = null
@@ -449,8 +433,35 @@ export class FormdownUI extends LitElement {
     // Initialize FormManager
     this.formManager = new FormManager()
     
+    // Initialize Core modules through FormManager
+    this.fieldProcessor = this.formManager.createFieldProcessor()
+    this.domBinder = this.formManager.createDOMBinder()
+    
+    // Set up component bridge for Core-UI integration
+    this.setupCoreUIBridge()
+    
     // Set up event forwarding from FormManager to UI
     this.setupFormManagerEvents()
+  }
+
+  /**
+   * Set up Core-UI component bridge using EventOrchestrator
+   */
+  private setupCoreUIBridge() {
+    const uiComponent = {
+      id: 'formdown-ui',
+      type: 'ui' as const,
+      emit: (event: string, data?: any) => {
+        // UI component event emission (for debugging or extension hooks)
+        this.dispatchEvent(new CustomEvent(event, { detail: data, bubbles: true }))
+      },
+      on: (_event: string, _handler: any) => {
+        // Set up UI event listeners if needed
+        return () => {} // Return unsubscribe function
+      }
+    }
+    
+    this.formManager.setupComponentBridge(uiComponent)
   }
 
   /**
@@ -560,9 +571,12 @@ export class FormdownUI extends LitElement {
         this.formManager.updateData(this.data)
       }
       
-      const generatedHTML = this.formManager.render()
+      // Use new Core template rendering system
+      const template = this.formManager.renderToTemplate({
+        container: this
+      })
 
-      if (!generatedHTML || !generatedHTML.trim()) {
+      if (!template.html || !template.html.trim()) {
         return html`<div class="error">Generated HTML is empty</div>`
       }
 
@@ -609,7 +623,7 @@ export class FormdownUI extends LitElement {
         return
       }
 
-      // Use FormManager for content processing
+      // Use Core template rendering system - much simpler!
       this.formManager.parse(this.content)
       this._schema = this.formManager.getSchema()
       
@@ -618,23 +632,21 @@ export class FormdownUI extends LitElement {
         this.formManager.updateData(this.data)
       }
       
-      let generatedHTML = this.formManager.render()
+      const template = this.formManager.renderToTemplate({
+        container: this
+      })
 
-      if (!generatedHTML || generatedHTML.trim() === '') {
+      if (!template.html || template.html.trim() === '') {
         container.innerHTML = `<div class="error">FormManager returned empty HTML</div>`
         return
       }
 
-      // Process HTML for hidden form architecture
-      const formId = this.getFormId()
-      generatedHTML = this.processFormHTML(generatedHTML, formId)
-
-      container.innerHTML = generatedHTML
+      container.innerHTML = template.html
 
       // Inject extension styles and scripts
       this.injectExtensionAssets(container)
 
-      // Setup keyboard navigation and inline field handlers
+      // Setup keyboard navigation and field handlers - now delegated to Core
       this.setupFieldHandlers(container)
     } catch (error) {
       const container = this.shadowRoot?.querySelector('#content-container')
@@ -798,68 +810,22 @@ export class FormdownUI extends LitElement {
     })
   }
 
-  private setupFieldEventHandlers(element: HTMLElement, fieldName: string) {    // Universal input/change handler
-    const handleValueChange = () => {
-      // For checkbox handling
-      if (element instanceof HTMLInputElement && element.type === 'checkbox') {
-        const allCheckboxes = this.shadowRoot?.querySelectorAll(`input[type="checkbox"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
-
-        // Check if this is a single checkbox (value="true") or checkbox group (multiple with different values)
-        const isSingleCheckbox = allCheckboxes.length === 1 && allCheckboxes[0].value === 'true'
-
-        if (isSingleCheckbox) {
-          // Single checkbox (returns boolean)
-          this.updateDataReactively(fieldName, element.checked, element)
-          return
-        } else {
-          // Multiple checkboxes with same name = checkbox group (returns array)
-          const checkedValues: string[] = []
-          allCheckboxes.forEach(cb => {
-            if (cb.checked) {
-              // For "other" option checkboxes with empty values, use the actual text input value if available
-              if (cb.value === '' && cb.id.includes('_other_checkbox')) {
-                const otherInput = this.shadowRoot?.querySelector(`#${cb.id.replace('_checkbox', '_input')}`) as HTMLInputElement
-                if (otherInput && otherInput.value.trim()) {
-                  checkedValues.push(otherInput.value.trim())
-                }
-              } else if (cb.value !== '') {
-                checkedValues.push(cb.value)
-              }
-            }
-          })
-          this.updateDataReactively(fieldName, checkedValues, element)
-          return
-        }
-      }
-
-      // For radio button handling
-      if (element instanceof HTMLInputElement && element.type === 'radio') {
-        const allRadios = this.shadowRoot?.querySelectorAll(`input[type="radio"][name="${fieldName}"]`) as NodeListOf<HTMLInputElement>
-        let selectedValue = ''
-        
-        allRadios.forEach(radio => {
-          if (radio.checked) {
-            // For "other" option radios with empty values, use the actual text input value if available
-            if (radio.value === '' && radio.id.includes('_other_radio')) {
-              const otherInput = this.shadowRoot?.querySelector(`#${radio.id.replace('_radio', '_input')}`) as HTMLInputElement
-              if (otherInput && otherInput.value.trim()) {
-                selectedValue = otherInput.value.trim()
-              }
-            } else {
-              selectedValue = radio.value
-            }
-          }
-        })
-        
-        this.updateDataReactively(fieldName, selectedValue, element)
-        return
-      }
-
-      const value = this.getFieldValue(element)
-      this.updateDataReactively(fieldName, value, element)
+  private setupFieldEventHandlers(element: HTMLElement, fieldName: string) {
+    // Delegate event handling to Core through FormManager
+    const handleValueChange = (event: Event) => {
+      this.formManager.handleUIEvent(event, this.domBinder)
     }
 
-    // Add appropriate event listeners based on element type
+    // Create DOM container adapter for FieldProcessor
+    const container = {
+      querySelector: (selector: string) => this.shadowRoot?.querySelector(selector) as any,
+      querySelectorAll: (selector: string) => Array.from(this.shadowRoot?.querySelectorAll(selector) || []) as any[]
+    }
+
+    // Bind field to DOM using DOMBinder
+    this.domBinder.bindFieldToElement(fieldName, element as any, container)
+
+    // Set up simplified event listeners
     if (element.hasAttribute('contenteditable')) {
       element.addEventListener('input', handleValueChange)
     } else {
@@ -959,167 +925,89 @@ export class FormdownUI extends LitElement {
     }
   }
 
-  // Reactive data management - data is the single source of truth
+  // Reactive data management - delegated to FormManager
   private updateDataReactively(fieldName: string, value: string | string[] | boolean, sourceElement?: HTMLElement) {
     if (this._isUpdatingUI) return // Prevent infinite loops
 
-    // Update the reactive data property (source of truth)
+    // Delegate to FormManager for centralized data management
+    this.formManager.setFieldValue(fieldName, value)
+    
+    // Update local reactive data (FormManager events will sync back)
     this.data = { ...this.data, [fieldName]: value }
 
     // Sync UI elements based on data
     this.syncUIFromData(fieldName, sourceElement)
 
-    // Emit events
+    // Emit legacy events for backward compatibility
     this.emitFieldEvents(fieldName, value)
   }
 
 
   private syncUIFromData(fieldName?: string, sourceElement?: HTMLElement) {
+    if (this._isUpdatingUI) return // Prevent infinite loops
+    
     this._isUpdatingUI = true
 
     try {
-      let fieldsToSync: string[]
-
-      if (fieldName) {
-        // Sync specific field
-        fieldsToSync = [fieldName]
-      } else {
-        // When syncing all fields, we need to consider both:
-        // 1. Fields in current data (to set values)
-        // 2. All registered fields (to clear values not in data)
-        const registeredFields = Array.from(this.fieldRegistry.keys())
-        const dataFields = Object.keys(this.data)
-        fieldsToSync = [...new Set([...registeredFields, ...dataFields])]
+      // Create DOM container adapter
+      const container = {
+        querySelector: (selector: string) => this.shadowRoot?.querySelector(selector) as any,
+        querySelectorAll: (selector: string) => Array.from(this.shadowRoot?.querySelectorAll(selector) || []) as any[]
       }
 
-      fieldsToSync.forEach(field => {
-        const value = this.data[field] ?? '' // Use current data or empty string
-        const boundElements = this.fieldRegistry.get(field)
-
-        if (boundElements) {
-          boundElements.forEach(element => {
-            if (element === sourceElement) return // Skip source element
+      // Delegate to DOMBinder for efficient data synchronization
+      this.domBinder.syncFormData(this.data, container)
+      
+      // Fallback for UI-specific elements not handled by DOMBinder
+      if (fieldName) {
+        const value = this.data[fieldName] ?? ''
+        const boundElements = this.fieldRegistry.get(fieldName)
+        
+        boundElements?.forEach(element => {
+          if (element !== sourceElement) {
             this.setElementValue(element, value)
-          })
-        }
-      })
+          }
+        })
+      }
     } finally {
       this._isUpdatingUI = false
     }
   }
-  // Universal element value setter
+  // Universal element value setter - delegated to Core FieldProcessor
   private setElementValue(element: HTMLElement, value: string | string[] | boolean) {
-    if (element.hasAttribute('contenteditable')) {
-      const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
-      if (element.textContent !== stringValue) {
-        element.textContent = stringValue
-      }
-    } else if (element instanceof HTMLInputElement) {
-      if (element.type === 'checkbox') {
-        // Handle checkbox logic
-        if (Array.isArray(value)) {
-          // Checkbox group - check if this element's value is in the array
-          const isMatch = value.includes(element.value)
-          element.checked = isMatch
-          
-          // Handle "other" option for checkbox groups
-          if (!isMatch && element.id.includes('_other_checkbox') && element.value === '') {
-            // Check if there are values not among regular options
-            const fieldName = element.name
-            const allCheckboxes = this.shadowRoot?.querySelectorAll(`input[type="checkbox"][name="${fieldName}"]:not([id*="_other_checkbox"])`) as NodeListOf<HTMLInputElement>
-            const regularValues = Array.from(allCheckboxes).map(cb => cb.value).filter(v => v !== '')
-            
-            const otherValues = value.filter(v => !regularValues.includes(v) && v !== '')
-            if (otherValues.length > 0) {
-              // There are "other" values, select the "other" checkbox and set text input
-              element.checked = true
-              const otherInput = this.shadowRoot?.querySelector(`#${element.id.replace('_checkbox', '_input')}`) as HTMLInputElement
-              if (otherInput) {
-                otherInput.value = otherValues.join(', ') // Join multiple "other" values
-                otherInput.style.display = 'inline-block'
-              }
-            }
-          }
-        } else if (typeof value === 'boolean') {
-          // Single checkbox - use boolean value directly
-          element.checked = value
-        } else {
-          // Fallback for string values
-          element.checked = Boolean(value) && (value === 'true' || value === element.value)
-        }
-      } else if (element.type === 'radio') {
-        const stringValue = String(value)
-        // Check if this is the matching radio button
-        const isMatch = element.value === stringValue
-        element.checked = isMatch
-        
-        // Handle "other" option for radio buttons
-        if (!isMatch && element.id.includes('_other_radio') && element.value === '') {
-          // Check if the value is not among regular options
-          const fieldName = element.name
-          const allRadios = this.shadowRoot?.querySelectorAll(`input[type="radio"][name="${fieldName}"]:not([id*="_other_radio"])`) as NodeListOf<HTMLInputElement>
-          const regularValues = Array.from(allRadios).map(r => r.value).filter(v => v !== '')
-          
-          if (stringValue && !regularValues.includes(stringValue)) {
-            // Value is not among regular options, select "other" and set text input
-            element.checked = true
-            const otherInput = this.shadowRoot?.querySelector(`#${element.id.replace('_radio', '_input')}`) as HTMLInputElement
-            if (otherInput) {
-              otherInput.value = stringValue
-              otherInput.style.display = 'inline-block'
-            }
-          }
-        }
-      } else {
-        // Other input types
+    // Create DOM container adapter
+    const container = {
+      querySelector: (selector: string) => this.shadowRoot?.querySelector(selector) as any,
+      querySelectorAll: (selector: string) => Array.from(this.shadowRoot?.querySelectorAll(selector) || []) as any[]
+    }
+
+    // Get field type from element
+    const fieldType = this.fieldProcessor.getFieldType(element as any)
+    
+    // Delegate to Core FieldProcessor
+    const success = this.fieldProcessor.setFieldValue(element as any, value, fieldType, container)
+    
+    if (!success && element instanceof HTMLElement) {
+      // Fallback for simple cases where Core delegation might not handle UI-specific logic
+      if (element.hasAttribute('contenteditable')) {
         const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
-        
-        // Handle "other" text input fields specially
-        if (element.id.includes('_other_input')) {
-          // This is an "other" text input, only set value if corresponding control is checked
-          const fieldName = element.id.replace('_other_input', '')
-          const otherRadio = this.shadowRoot?.querySelector(`#${fieldName}_other_radio`) as HTMLInputElement
-          const otherCheckbox = this.shadowRoot?.querySelector(`#${fieldName}_other_checkbox`) as HTMLInputElement
-          
-          if ((otherRadio && otherRadio.checked) || (otherCheckbox && otherCheckbox.checked)) {
-            if (element.value !== stringValue) {
-              element.value = stringValue
-            }
-          }
-        } else {
+        if (element.textContent !== stringValue) {
+          element.textContent = stringValue
+        }
+      } else if (element instanceof HTMLInputElement) {
+        if (element.type === 'checkbox' && typeof value === 'boolean') {
+          element.checked = value
+        } else if (element.type !== 'checkbox' && element.type !== 'radio') {
+          const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
           if (element.value !== stringValue) {
             element.value = stringValue
           }
         }
-      }
-    } else if (element instanceof HTMLSelectElement) {
-      const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
-      
-      // Check if the value exists as an option
-      const optionExists = Array.from(element.options).some(option => option.value === stringValue)
-      
-      if (optionExists) {
-        element.value = stringValue
-      } else if (stringValue) {
-        // Value doesn't exist as option, check for "other" option
-        const otherOption = Array.from(element.options).find(option => option.value === '')
-        if (otherOption) {
-          // Select the "other" option and set the text input
-          element.value = ''
-          const fieldName = element.name || element.id
-          const otherInput = this.shadowRoot?.querySelector(`#${fieldName}_other`) as HTMLInputElement
-          if (otherInput) {
-            otherInput.value = stringValue
-            otherInput.style.display = 'block'
-          }
+      } else if (element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
+        const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
+        if (element.value !== stringValue) {
+          element.value = stringValue
         }
-      } else {
-        element.value = stringValue
-      }
-    } else if (element instanceof HTMLTextAreaElement) {
-      const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
-      if (element.value !== stringValue) {
-        element.value = stringValue
       }
     }
   }
@@ -1135,17 +1023,8 @@ export class FormdownUI extends LitElement {
     return element.dataset.fieldName || element.id || null
   }
 
-  // Universal field value extractor
-  private getFieldValue(element: HTMLElement): string {
-    if (element.hasAttribute('contenteditable')) {
-      return element.textContent?.trim() || ''
-    } else if (element instanceof HTMLInputElement ||
-      element instanceof HTMLTextAreaElement ||
-      element instanceof HTMLSelectElement) {
-      return element.value || ''
-    }
-    return ''
-  }
+  // Universal field value extractor - delegated to FieldProcessor
+  // These methods were removed - functionality delegated to Core modules
 
   // Extract initial value from HTML attributes (for HTML-standard value initialization)
   // Note: This method is preserved for compatibility but not actively used

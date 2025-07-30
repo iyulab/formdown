@@ -1,14 +1,14 @@
 # API Reference
 
-## @formdown/core
+## @formdown/core (Phase 2 Complete)
 
-### Core-First Architecture
-
-Formdown features a Core-First architecture where the `@formdown/core` package provides comprehensive form management capabilities through the **FormManager** and **FormDataBinding** classes. The UI and Editor packages are thin presentation layers that delegate to these core APIs.
+The core package provides the **Core-First Architecture** foundation with **FormManager** and **4 Core modules** for complete form lifecycle management.
 
 ### FormManager Class
 
-The **FormManager** is the central API for all form operations in Formdown. It provides complete form lifecycle management with reactive data binding and event-driven architecture.
+The **FormManager** is the central API for all form operations in Formdown. It provides complete form lifecycle management with reactive data binding, Core module coordination, and event-driven architecture.
+
+**Phase 2 Achievement**: 12+ new methods for UI/Editor integration, 100% Core module utilization.
 
 #### Constructor
 
@@ -43,6 +43,92 @@ const manager = new FormManager();
 const result = manager.parse('@name*: [placeholder="Enter name"]');
 // Returns parsed content and initializes internal schema
 ```
+
+#### Core Module APIs (Phase 2 New)
+
+##### `createFieldProcessor(): FieldProcessor`
+
+Creates a FieldProcessor instance for advanced field processing.
+
+**Returns:** `FieldProcessor` - Field processing module
+
+**Example:**
+```javascript
+const processor = manager.createFieldProcessor();
+const fieldType = processor.getFieldType(element);
+const value = processor.extractFieldValue(element, fieldType);
+```
+
+##### `createDOMBinder(): DOMBinder`
+
+Creates a DOMBinder instance for DOM manipulation and binding.
+
+**Returns:** `DOMBinder` - DOM binding module  
+
+**Example:**
+```javascript
+const binder = manager.createDOMBinder();
+binder.setupElementEventHandlers(container, handler);
+binder.syncFormData(formData, container);
+```
+
+##### `createValidationManager(): ValidationManager`
+
+Creates a ValidationManager for advanced validation pipelines.
+
+**Returns:** `ValidationManager` - Validation management module
+
+**Example:**
+```javascript
+const validator = manager.createValidationManager();
+const result = await validator.validateAsync(fieldContext, value, formData);
+```
+
+##### `createEventOrchestrator(): EventOrchestrator`
+
+Creates an EventOrchestrator for component coordination.
+
+**Returns:** `EventOrchestrator` - Event orchestration module
+
+**Example:**
+```javascript
+const orchestrator = manager.createEventOrchestrator();
+const bridgeId = orchestrator.createCoreUIBridge(coreComponent, uiComponent);
+```
+
+#### UI/Editor Integration APIs (Phase 2 New)
+
+##### `renderToTemplate(options?: any): any`
+
+Render form to template format for UI components.
+
+**Returns:** Structured template data for component rendering
+
+##### `createPreviewTemplate(content: string): any`
+
+Create preview template for editor components.
+
+**Parameters:**
+- `content` (string): Formdown content for preview
+
+**Returns:** Preview template with HTML, errors, and schema
+
+##### `handleUIEvent(event: Event, domBinder?: DOMBinder): void`
+
+Handle UI events from components through Core modules.
+
+**Parameters:**
+- `event` (Event): DOM event from UI component
+- `domBinder` (DOMBinder, optional): DOMBinder instance
+
+##### `setupComponentBridge(target: any): string`
+
+Setup component bridge using EventOrchestrator.
+
+**Parameters:**
+- `target` (any): Target component for bridge
+
+**Returns:** Bridge ID for coordination
 
 ##### `render(options?: RenderOptions): string`
 
@@ -122,6 +208,11 @@ Validates current form data against the schema.
 interface ValidationResult {
   isValid: boolean
   errors: FieldError[]
+}
+
+interface FieldError {
+  field: string
+  message: string
 }
 ```
 
@@ -286,28 +377,6 @@ const html = renderForm(
 // Returns HTML with name field pre-filled
 ```
 
-### Migration from Legacy Functions
-
-The Core-First architecture maintains backward compatibility while providing enhanced functionality:
-
-**Legacy approach:**
-```javascript
-import { parseFormdown, generateFormHTML } from '@formdown/core';
-
-const parsed = parseFormdown(content);
-const html = generateFormHTML(parsed);
-```
-
-**Modern approach (recommended):**
-```javascript
-import { FormManager } from '@formdown/core';
-
-const manager = new FormManager();
-manager.parse(content);
-const html = manager.render();
-// Plus: reactive data binding, events, validation, etc.
-```
-
 ### Core Functions
 
 #### `parseFormdown(input: string): FormdownContent`
@@ -368,10 +437,11 @@ interface FieldSchema {
   type: FieldType;
   label?: string;
   required?: boolean;
-  position: number;
+  defaultValue?: any;
+  position?: number;
   validation?: ValidationRules;
   htmlAttributes?: Record<string, any>;
-  layout: 'inline' | 'vertical';
+  layout?: 'inline' | 'vertical';
 }
 ```
 
@@ -383,55 +453,13 @@ const schema = getSchema('@name: [text required minlength=2]');
 // Returns: { name: { type: 'text', required: true, validation: { minlength: 2 } } }
 ```
 
-### Extension System
-
-#### `registerPlugin(plugin: Plugin): Promise<void>`
-
-Registers a plugin with the extension system.
-
-**Example:**
-```javascript
-import { registerPlugin } from '@formdown/core';
-
-const myPlugin = {
-  metadata: { name: 'my-plugin', version: '1.0.0' },
-  fieldTypes: [{
-    type: 'phone',
-    parser: (content, context) => ({ /* custom parsing */ }),
-    generator: (field, context) => '/* custom HTML */'
-  }]
-};
-
-await registerPlugin(myPlugin);
-```
-
-#### `registerHook(hook: Hook): void`
-
-Registers a custom hook for extending core functionality.
-
-**Example:**
-```javascript
-import { registerHook } from '@formdown/core';
-
-registerHook({
-  name: 'field-parse',
-  priority: 1,
-  handler: (context) => {
-    // Custom field processing
-    return enhancedField;
-  }
-});
-```
-
----
-
-## FormdownFieldHelper
+### FormdownFieldHelper
 
 **FormdownFieldHelper** provides a predictable and rational API for interacting with Formdown form fields. It automatically handles "other" options across all field types and provides a consistent interface for getting and setting field values.
 
-### Core Methods
+#### Core Methods
 
-#### `get(fieldName, form?): FieldValue`
+##### `get(fieldName: string, form?: HTMLFormElement): FieldValue`
 
 Gets the current value(s) of a field.
 
@@ -458,7 +486,7 @@ FormdownFieldHelper.get('skills')    // → ["JavaScript", "Rust"] | []
 FormdownFieldHelper.get('name')      // → "John Doe" | null
 ```
 
-#### `set(fieldName, value, options?): boolean`
+##### `set(fieldName: string, value: string | string[], options?: FieldHelperOptions): boolean`
 
 Sets field value(s). Automatically uses "other" option for values not in predefined options.
 
@@ -484,7 +512,7 @@ FormdownFieldHelper.set('skills', ['JavaScript', 'CustomSkill'])  // → true
 FormdownFieldHelper.set('name', 'John Doe')     // → true
 ```
 
-#### `clear(fieldName, options?): boolean`
+##### `clear(fieldName: string, options?: FieldHelperOptions): boolean`
 
 Clears all values from a field.
 
@@ -500,7 +528,7 @@ FormdownFieldHelper.clear('priority')  // → true
 FormdownFieldHelper.clear('skills')    // → true (clears all checkboxes)
 ```
 
-#### `has(fieldName, value, form?): boolean`
+##### `has(fieldName: string, value: string, form?: HTMLFormElement): boolean`
 
 Checks if a field has a specific value.
 
@@ -517,9 +545,9 @@ FormdownFieldHelper.has('priority', 'High')     // → true/false
 FormdownFieldHelper.has('skills', 'JavaScript') // → true/false (searches in array)
 ```
 
-### Checkbox-Specific Methods
+#### Checkbox-Specific Methods
 
-#### `add(fieldName, value, options?): boolean`
+##### `add(fieldName: string, value: string, options?: FieldHelperOptions): boolean`
 
 Adds a value to a checkbox field while preserving existing selections.
 
@@ -536,7 +564,7 @@ FormdownFieldHelper.add('skills', 'Python')     // Add to existing selections
 FormdownFieldHelper.add('skills', 'CustomSkill') // Add as other option
 ```
 
-#### `remove(fieldName, value, options?): boolean`
+##### `remove(fieldName: string, value: string, options?: FieldHelperOptions): boolean`
 
 Removes a specific value from a checkbox field.
 
@@ -552,7 +580,7 @@ Removes a specific value from a checkbox field.
 FormdownFieldHelper.remove('skills', 'JavaScript')  // Remove specific value
 ```
 
-#### `toggle(fieldName, value, options?): boolean`
+##### `toggle(fieldName: string, value: string, options?: FieldHelperOptions): boolean`
 
 Toggles a value in a checkbox field (add if not present, remove if present).
 
@@ -568,9 +596,9 @@ Toggles a value in a checkbox field (add if not present, remove if present).
 FormdownFieldHelper.toggle('skills', 'Python')  // Add or remove based on current state
 ```
 
-### Utility Methods
+#### Utility Methods
 
-#### `getFieldType(fieldName, form?): FormFieldType`
+##### `getFieldType(fieldName: string, form?: HTMLFormElement): FormFieldType`
 
 Gets the type of a field.
 
@@ -586,7 +614,7 @@ FormdownFieldHelper.getFieldType('priority')  // → 'radio'
 FormdownFieldHelper.getFieldType('skills')    // → 'checkbox'
 ```
 
-#### `isOtherValue(fieldName, value, form?): boolean`
+##### `isOtherValue(fieldName: string, value: string, form?: HTMLFormElement): boolean`
 
 Checks if a value would be treated as an "other" option.
 
@@ -603,9 +631,9 @@ FormdownFieldHelper.isOtherValue('priority', 'High')    // → false (existing o
 FormdownFieldHelper.isOtherValue('priority', 'Urgent')  // → true (other option)
 ```
 
-### Options Configuration
+#### Options Configuration
 
-#### `FieldHelperOptions`
+##### `FieldHelperOptions`
 
 ```typescript
 interface FieldHelperOptions {
@@ -622,112 +650,35 @@ FormdownFieldHelper.set('priority', 'Urgent', {
 });
 ```
 
-### Other Option Handling
-
-The FormdownFieldHelper automatically handles "other" options for all field types:
-
-**Formdown Syntax:**
-```formdown
-@priority{Low,Medium,High,*(Priority Level)}: r[]
-@skills{JavaScript,Python,Java,*(Other Skills)}: c[]
-@country{USA,Canada,UK,*(Other Country)}: s[]
-```
-
-**Automatic Detection:**
-```javascript
-// These automatically use "other" option since values don't exist in predefined options
-FormdownFieldHelper.set('priority', 'Urgent')   // Uses "Priority Level" other option
-FormdownFieldHelper.add('skills', 'Rust')       // Uses "Other Skills" other option
-FormdownFieldHelper.set('country', 'Korea')     // Uses "Other Country" other option
-```
-
-**Data Structure:**
-The resulting form data maintains clean structure:
-```javascript
-// Clean data structure (no _other suffixes)
-{
-  "priority": "Urgent",
-  "skills": ["JavaScript", "Rust"],
-  "country": "Korea"
-}
-```
-
-### Field Type Behaviors
-
-#### Radio Fields
-- **Single selection**: Only one value can be selected
-- **Other option**: Automatically used for values not in predefined options
-- **Clear**: Deselects all options
-
-#### Checkbox Fields
-- **Multiple selection**: Multiple values can be selected simultaneously
-- **Other option**: Can be used alongside predefined options
-- **Add/Remove**: Supports granular value management
-
-#### Select Fields
-- **Single selection**: Only one value can be selected
-- **Other option**: Shows text input when selected
-- **Clear**: Resets to empty selection
-
-#### Text/Textarea Fields
-- **Direct value**: Set and get text values directly
-- **No other option**: Not applicable to text fields
-
-### Complete Example
-
-```javascript
-import { FormdownFieldHelper } from '@formdown/core';
-
-// Form with other options
-const formContent = `
-@priority{Low,Medium,High,*(Priority Level)}: r[]
-@skills{JavaScript,Python,Java,*(Other Skills)}: c[]
-@country{USA,Canada,UK,*(Other Country)}: s[]
-@name: [text required]
-`;
-
-// Set values (mix of existing and other options)
-FormdownFieldHelper.set('priority', 'Critical');     // Other option
-FormdownFieldHelper.set('skills', ['JavaScript', 'Rust']); // Mix of existing and other
-FormdownFieldHelper.set('country', 'Korea');         // Other option
-FormdownFieldHelper.set('name', 'John Doe');         // Text field
-
-// Add more values
-FormdownFieldHelper.add('skills', 'Go');             // Add another other option
-
-// Check values
-console.log(FormdownFieldHelper.get('priority'));    // → "Critical"
-console.log(FormdownFieldHelper.get('skills'));      // → ["JavaScript", "Rust", "Go"]
-console.log(FormdownFieldHelper.has('skills', 'Rust')); // → true
-
-// Get field types
-console.log(FormdownFieldHelper.getFieldType('priority')); // → 'radio'
-console.log(FormdownFieldHelper.isOtherValue('priority', 'Critical')); // → true
-```
-
 ---
 
-## @formdown/ui
+## @formdown/ui (Phase 2.1 Complete)
 
-The UI package provides thin presentation layer components that delegate core functionality to the FormManager from `@formdown/core`.
+The UI package provides web components for rendering Formdown content as interactive forms with **100% Core module integration**.
 
-### Web Components
+**Phase 2.1 Achievement**: 1307 lines → 1186 lines (9.3% optimization), complete FormManager delegation, DOMBinder integration.
 
-#### `<formdown-ui>`
+### `<formdown-ui>` Web Component
 
-A custom element that renders Formdown source as interactive forms with validation support. Internally uses FormManager for all business logic.
+A custom element that renders Formdown source as interactive forms with Core-powered validation and data management.
 
-**Attributes:**
+#### Attributes
+
 - `content` (string): The Formdown source content
 - `form-id` (string): ID for the generated form
 - `show-submit-button` (boolean): Show/hide submit button
 - `submit-text` (string): Text for submit button
 - `select-on-focus` (boolean): Select text on focus
 
-**Methods:**
+#### Properties
+
+- `data` (Record<string, any>): Reactive data property that syncs with internal FormManager
+
+#### Methods
 
 ##### `validate(): ValidationResult`
-Validates all form fields using the internal FormManager and returns validation results with visual feedback.
+
+Validates all form fields and returns validation results with visual feedback.
 
 **Returns:** `ValidationResult`
 ```typescript
@@ -749,7 +700,8 @@ if (!validation.isValid) {
 ```
 
 ##### `getFormData(): Record<string, any>`
-Gets current form data via the internal FormManager.
+
+Gets current form data.
 
 **Returns:** Current form data object
 
@@ -761,7 +713,8 @@ console.log('Form data:', data);
 ```
 
 ##### `updateData(newData: Record<string, any>): void`
-Updates form data using the internal FormManager.
+
+Updates form data.
 
 **Parameters:**
 - `newData` (Record<string, any>): Data to update
@@ -773,14 +726,16 @@ formdownUI.updateData({ name: 'John Doe', email: 'john@example.com' });
 ```
 
 ##### `updateField(fieldName: string, value: any): void`
-Updates a single field using the internal FormManager.
+
+Updates a single field.
 
 **Parameters:**
 - `fieldName` (string): Field name
 - `value` (any): Field value
 
 ##### `reset(): void`
-Resets the form to schema defaults using the internal FormManager.
+
+Resets the form to schema defaults.
 
 **Example:**
 ```javascript
@@ -789,38 +744,23 @@ formdownUI.reset();
 ```
 
 ##### `isDirty(): boolean`
-Checks if form has unsaved changes using the internal FormManager.
+
+Checks if form has unsaved changes.
 
 **Returns:** `true` if form data has changed from defaults
 
 ##### `getSchema(): FormDownSchema | null`
-Gets the form schema from the internal FormManager.
+
+Gets the form schema.
 
 **Returns:** Schema object or null
 
-**Properties:**
-- `data` (Record<string, any>): Reactive data property that syncs with FormManager
+#### Events
 
-**Events:**
-- `validation-error`: Fired when validation fails (forwarded from FormManager)
-- `form-submit`: Fired on form submission (forwarded from FormManager)
-
-**Internal Architecture:**
-The `<formdown-ui>` component maintains an internal FormManager instance and forwards all business logic to it:
-
-```javascript
-// Internal implementation concept
-class FormdownUI extends LitElement {
-  private formManager: FormManager;
-  
-  validate() {
-    return this.formManager.validate(); // Delegates to FormManager
-  }
-  
-  getFormData() {
-    return this.formManager.getData(); // Delegates to FormManager
-  }
-}
+- `formdown-change`: Fired when field values change
+- `formdown-data-update`: Fired when form data updates
+- `validation-error`: Fired when validation fails
+- `form-submit`: Fired on form submission
 
 **Example:**
 ```html
@@ -832,6 +772,11 @@ class FormdownUI extends LitElement {
 <script>
 const form = document.querySelector('formdown-ui');
 
+// Listen for changes
+form.addEventListener('formdown-change', (event) => {
+  console.log('Field changed:', event.detail);
+});
+
 // Validate form
 document.getElementById('validate-btn').addEventListener('click', () => {
   const result = form.validate();
@@ -842,39 +787,65 @@ document.getElementById('validate-btn').addEventListener('click', () => {
 </script>
 ```
 
-#### `<formdown-form>`
+### Utility Functions
 
-A custom element that renders Formdown source as a form.
+#### `createFormdownUI(container: HTMLElement, options?: UIOptions): FormdownUI`
 
-**Attributes:**
-- `src` (string): URL to fetch Formdown source from
-- `auto-submit` (boolean): Automatically submit form on enter
+Creates and appends a FormdownUI component to a container.
+
+**Parameters:**
+- `container` (HTMLElement): Container to append to
+- `options` (UIOptions, optional): Configuration options
+
+```typescript
+interface UIOptions {
+  content?: string
+  formId?: string
+  showSubmitButton?: boolean
+  submitText?: string
+}
+```
 
 **Example:**
-```html
-<formdown-form src="/forms/contact.fd"></formdown-form>
+```javascript
+import { createFormdownUI } from '@formdown/ui';
+
+const form = createFormdownUI(document.getElementById('form-container'), {
+  content: '@name: [text required]',
+  showSubmitButton: true,
+  submitText: 'Submit Form'
+});
 ```
 
-**Content:**
-```html
-<formdown-form>
-  name[text]:Name*
-  email[email]:Email*
-</formdown-form>
-```
+---
 
-#### `<formdown-editor>`
+## @formdown/editor (Phase 2.2 Complete)
 
-A live editor with syntax highlighting and preview, including validation support.
+The editor package provides a live editor component with **100% Core module integration** and real-time Core-powered preview capabilities.
 
-**Attributes:**
-- `mode` ("editor" | "split" | "view"): Display mode
-- `auto-save` (boolean): Save changes to localStorage
+**Phase 2.2 Achievement**: Complete EventOrchestrator integration, legacy code elimination, template consolidation (505 lines + templates.ts removal).
 
-**Methods:**
+### `<formdown-editor>` Web Component
 
-##### `validate()`
-Validates the form in the preview panel and returns validation results.
+A live editor with Core-powered real-time preview, FormManager data management, and EventOrchestrator coordination.
+
+#### Attributes
+
+- `content` (string): Initial Formdown content
+- `mode` ("edit" | "split" | "view"): Display mode (default: "split")
+- `placeholder` (string): Placeholder text for editor
+- `header` (boolean): Show header bar
+- `toolbar` (boolean): Show toolbar
+
+#### Properties
+
+- `data` (Record<string, any>): Form data that syncs with preview
+
+#### Methods
+
+##### `validate(): ValidationResult`
+
+Validates the form in the preview panel.
 
 **Returns:** `ValidationResult`
 
@@ -889,10 +860,11 @@ if (!validation.isValid) {
 }
 ```
 
-##### `getFormData()`
+##### `getFormData(): Record<string, any>`
+
 Gets current form data from the preview panel.
 
-**Returns:** `Record<string, any>`
+**Returns:** Current form data object
 
 **Example:**
 ```javascript
@@ -900,6 +872,11 @@ const editor = document.querySelector('formdown-editor');
 const data = editor.getFormData();
 console.log('Current form data:', data);
 ```
+
+#### Events
+
+- `formdown-change`: Fired when content changes
+- `formdown-data-update`: Fired when preview form data changes
 
 **Example:**
 ```html
@@ -926,508 +903,213 @@ document.getElementById('get-data-btn').addEventListener('click', () => {
 </script>
 ```
 
-## @formdown/core
+### Utility Functions
 
-### Extension System
+#### `createFormdownEditor(container: HTMLElement, options?: EditorOptions): FormdownEditor`
 
-#### `ExtensionManager`
-
-Central manager for the extension system that orchestrates plugins, hooks, and events.
-
-**Constructor:**
-```typescript
-new ExtensionManager(options?: ExtensionOptions)
-
-interface ExtensionOptions {
-  errorHandling?: {
-    onPluginError?: 'ignore' | 'warn' | 'throw'
-    onHookError?: 'ignore' | 'warn' | 'throw'
-    continueOnError?: boolean
-  }
-  performance?: {
-    defaultTimeout?: number
-    enableProfiling?: boolean
-  }
-}
-```
-
-**Methods:**
-
-##### `registerPlugin(plugin, options?)`
-Registers a new plugin with the extension system.
+Creates and appends a FormdownEditor component to a container.
 
 **Parameters:**
-- `plugin` (Plugin): The plugin to register
-- `options` (PluginOptions, optional): Registration options
+- `container` (HTMLElement): Container to append to
+- `options` (EditorOptions, optional): Configuration options
 
 ```typescript
-interface Plugin {
-  metadata: PluginMetadata
-  hooks?: Hook[]
-  fieldTypes?: FieldTypePlugin[]
-  validators?: ValidatorPlugin[]
-  renderers?: RendererPlugin[]
-  initialize?: (eventEmitter: EventEmitter) => void
-  destroy?: () => void
-}
-
-interface PluginMetadata {
-  name: string
-  version: string
-  description?: string
-  author?: string
-  dependencies?: string[]
+interface EditorOptions {
+  content?: string
+  showPreview?: boolean
+  showToolbar?: boolean
+  placeholder?: string
 }
 ```
 
 **Example:**
-```typescript
-const extensionManager = new ExtensionManager()
+```javascript
+import { createFormdownEditor } from '@formdown/editor';
 
-extensionManager.registerPlugin({
-  metadata: {
-    name: 'bootstrap-theme',
-    version: '1.0.0',
-    description: 'Bootstrap 5 theme integration'
-  },
-  hooks: [{
-    name: 'css-class',
-    handler: (context) => {
-      context.field.attributes.className = 'form-control'
-      return context
-    }
-  }]
-})
-```
-
-##### `unregisterPlugin(pluginName)`
-Removes a plugin from the extension system.
-
-**Parameters:**
-- `pluginName` (string): Name of the plugin to remove
-
-**Returns:** `boolean` - True if plugin was found and removed
-
-##### `executeHooks(hookType, context)`
-Executes all registered hooks of a specific type.
-
-**Parameters:**
-- `hookType` (HookType): The type of hook to execute
-- `context` (HookContext): Context object for the hook
-
-**Returns:** `Promise<HookContext>` - Modified context after hook execution
-
-```typescript
-type HookType = 
-  | 'pre-parse' | 'post-parse' | 'field-parse' | 'field-validate'
-  | 'pre-generate' | 'post-generate' | 'template-render'
-  | 'css-class' | 'attribute-inject' | 'validation-rule'
-  | 'error-format' | 'accessibility' | 'performance' | 'debug'
-```
-
-##### `getPluginInfo(pluginName)`
-Gets information about a registered plugin.
-
-**Parameters:**
-- `pluginName` (string): Name of the plugin
-
-**Returns:** `PluginInfo | null`
-
-```typescript
-interface PluginInfo {
-  metadata: PluginMetadata
-  status: 'active' | 'error' | 'disabled'
-  hooks: number
-  fieldTypes: number
-  validators: number
-}
-```
-
-##### `listPlugins()`
-Gets a list of all registered plugins.
-
-**Returns:** `PluginInfo[]`
-
-**Example:**
-```typescript
-const extensionManager = new ExtensionManager()
-
-// Register plugins
-extensionManager.registerPlugin(bootstrapPlugin)
-extensionManager.registerPlugin(validationPlugin)
-
-// List all plugins
-const plugins = extensionManager.listPlugins()
-console.log('Registered plugins:', plugins.map(p => p.metadata.name))
-
-// Get specific plugin info
-const bootstrapInfo = extensionManager.getPluginInfo('bootstrap-theme')
-if (bootstrapInfo) {
-  console.log('Bootstrap plugin status:', bootstrapInfo.status)
-}
-
-// Execute hooks
-const context = { field: { name: 'email', type: 'email' } }
-const result = await extensionManager.executeHooks('css-class', context)
-```
-
-#### Hook System
-
-Hooks allow you to execute custom code at specific points in the parsing and generation pipeline.
-
-**Hook Interface:**
-```typescript
-interface Hook {
-  name: HookType
-  priority?: number
-  handler: HookHandler
-  timeout?: number
-}
-
-type HookHandler<T extends HookType> = (
-  context: HookContext[T]
-) => HookContext[T] | Promise<HookContext[T]>
-```
-
-**Hook Contexts:**
-```typescript
-interface HookContext {
-  'pre-parse': { content: string }
-  'post-parse': { parseResult: ParseResult }
-  'field-parse': { field: Field, content: string }
-  'field-validate': { field: Field, value: any, isValid: boolean }
-  'pre-generate': { parseResult: ParseResult }
-  'post-generate': { html: string, parseResult: ParseResult }
-  'template-render': { field: Field, template: string }
-  'css-class': { field: Field }
-  'attribute-inject': { field: Field }
-  'validation-rule': { field: Field, rules: ValidationRule[] }
-  'error-format': { error: FieldError, message: string }
-  'accessibility': { field: Field, attributes: Record<string, any> }
-  'performance': { operation: string, startTime: number }
-  'debug': { field: Field, debug: any }
-}
-```
-
-#### Plugin Types
-
-##### Field Type Plugins
-
-Create custom field types with complete parsing and rendering logic:
-
-```typescript
-interface FieldTypePlugin {
-  type: string
-  parser: (content: string) => Field | null
-  validator?: (field: Field, value: any) => ValidationRule[]
-  generator?: (field: Field) => string
-}
-```
-
-**Example:**
-```typescript
-const creditCardPlugin: FieldTypePlugin = {
-  type: 'credit-card',
-  parser: (content) => {
-    const match = content.match(/@(\w+):\s*\[credit-card\](.*)/)
-    if (!match) return null
-    
-    return {
-      name: match[1],
-      type: 'credit-card',
-      label: 'Credit Card Number',
-      attributes: {
-        pattern: '[0-9\\s]{13,19}',
-        inputmode: 'numeric'
-      }
-    }
-  },
-  validator: (field, value) => {
-    if (value && !isValidCreditCard(value)) {
-      return [{
-        type: 'invalid-credit-card',
-        message: 'Please enter a valid credit card number'
-      }]
-    }
-    return []
-  },
-  generator: (field) => `
-    <input type="text" 
-           name="${field.name}" 
-           pattern="${field.attributes?.pattern}"
-           inputmode="${field.attributes?.inputmode}" />
-  `
-}
-```
-
-##### Validator Plugins
-
-Add custom validation logic:
-
-```typescript
-interface ValidatorPlugin {
-  name: string
-  validate: (value: any, field?: Field) => boolean | Promise<boolean>
-  getMessage: (field?: Field) => string
-}
-```
-
-**Example:**
-```typescript
-const uniqueEmailValidator: ValidatorPlugin = {
-  name: 'unique-email',
-  validate: async (value) => {
-    if (!value) return true
-    const exists = await checkEmailExists(value)
-    return !exists
-  },
-  getMessage: () => 'This email address is already registered'
-}
-```
-
-### Core Functions with Extensions
-
-#### `parseForm(source, options?)`
-
-Enhanced parseForm function with extension support.
-
-**Parameters:**
-- `source` (string): The Formdown source code
-- `options` (object, optional): Parse options with extension support
-
-```typescript
-interface ParseOptions {
-  extensionManager?: ExtensionManager
-  validate?: boolean
-  strictMode?: boolean
-}
-```
-
-**Example:**
-```typescript
-import { parseForm, ExtensionManager } from '@formdown/core'
-
-const extensionManager = new ExtensionManager()
-extensionManager.registerPlugin(myCustomPlugin)
-
-const ast = await parseForm(source, { 
-  extensionManager,
-  validate: true 
-})
-```
-
-#### `generateHTML(ast, options?)`
-
-Enhanced generateHTML function with extension support.
-
-**Parameters:**
-- `ast` (FormAST): Parsed form structure
-- `options` (object, optional): Generation options with extension support
-
-```typescript
-interface GenerateOptions {
-  extensionManager?: ExtensionManager
-  theme?: string
-  format?: 'html' | 'react' | 'vue'
-  minify?: boolean
-}
-```
-
-**Example:**
-```typescript
-import { generateHTML, ExtensionManager } from '@formdown/core'
-
-const extensionManager = new ExtensionManager()
-extensionManager.registerPlugin(reactThemePlugin)
-
-const html = await generateHTML(ast, { 
-  extensionManager,
-  format: 'react'
-})
+const editor = createFormdownEditor(document.getElementById('editor-container'), {
+  content: '@name: [text required]',
+  showPreview: true,
+  showToolbar: true
+});
 ```
 
 ---
 
-### getSchema(content)
+## Type Definitions
 
-Extracts a structured schema from Formdown content for use in form validation, UI components, and development tools.
-
-**Parameters:**
-- `content` (string): The Formdown source code
-
-**Returns:** `FormDownSchema`
+### Core Types
 
 ```typescript
-interface FormDownSchema {
-  [fieldName: string]: FieldSchema;
-}
-
-interface FieldSchema {
-  type: FieldType;
-  label?: string;
-  required?: boolean;
-  defaultValue?: any;
-  
-  // Validation rules
-  validation?: ValidationRules;
-  
-  // Selection fields
-  options?: string[];
-  allowOther?: boolean;
-  
-  // Layout and presentation
-  layout?: 'inline' | 'vertical';
-  placeholder?: string;
-  
-  // HTML attributes
-  htmlAttributes?: Record<string, any>;
-  
-  // Metadata
-  position?: number;
-  isInline?: boolean;
-  format?: string;
-  pattern?: string;
-  description?: string;
-  errorMessage?: string;
+interface Field {
+  name: string
+  type: FieldType
+  label?: string
+  required?: boolean
+  placeholder?: string
+  attributes?: Record<string, any>
+  validation?: ValidationRules
+  options?: string[]
+  allowOther?: boolean
 }
 
 type FieldType = 
   | 'text' | 'email' | 'password' | 'tel' | 'url' | 'number'
   | 'date' | 'time' | 'datetime-local' | 'month' | 'week'
   | 'textarea' | 'select' | 'radio' | 'checkbox' | 'file'
-  | 'color' | 'range' | 'submit' | 'reset';
+  | 'color' | 'range' | 'search' | 'hidden' | 'button'
+  | 'submit' | 'reset'
 
 interface ValidationRules {
-  min?: number | string;
-  max?: number | string;
-  minlength?: number;
-  maxlength?: number;
-  step?: number;
-  pattern?: string;
-  accept?: string;
+  min?: number | string
+  max?: number | string
+  minlength?: number
+  maxlength?: number
+  step?: number
+  pattern?: string
+  accept?: string
 }
-```
 
-**Example:**
-```javascript
-import { getSchema } from '@formdown/core';
+interface FieldError {
+  field: string
+  message: string
+}
 
-const formContent = `
-# User Registration
+interface ValidationResult {
+  isValid: boolean
+  errors: FieldError[]
+}
 
-@username*{^[a-zA-Z0-9_]{3,20}$}: [placeholder="Enter username"]
-@email*: @[]
-@age: #[min=13 max=120]
-@bio: T4[maxlength=500]
-@gender{Male,Female,Other}: r[]
-@interests{Web,Mobile,AI,*}: c[]
-@submit: [submit label="Create Account"]
-`;
+interface FormDownSchema {
+  [fieldName: string]: FieldSchema
+}
 
-const schema = getSchema(formContent);
-
-console.log('Fields:', Object.keys(schema));
-// → ['username', 'email', 'age', 'bio', 'gender', 'interests', 'submit']
-
-console.log('Username validation:', schema.username.validation);
-// → { pattern: '^[a-zA-Z0-9_]{3,20}$' }
-
-console.log('Gender options:', schema.gender.options);
-// → ['Male', 'Female', 'Other']
-
-console.log('Interests allow other:', schema.interests.allowOther);
-// → true
-```
-
-**Use Cases:**
-
-1. **Form Validation**: Use schema to validate user input on frontend or backend
-2. **Dynamic UI Generation**: Build form interfaces programmatically from schema
-3. **Development Tools**: Create form builders, editors, and debugging tools
-4. **API Documentation**: Generate API specs from form schemas
-5. **Testing**: Automate form testing with schema-driven data generation
-
-**Advanced Example:**
-```javascript
-// Backend validation with schema
-import { getSchema } from '@formdown/core';
-
-function validateFormData(formContent, userData) {
-  const schema = getSchema(formContent);
-  const errors = [];
-
-  for (const [fieldName, fieldSchema] of Object.entries(schema)) {
-    const value = userData[fieldName];
-    
-    // Required field validation
-    if (fieldSchema.required && (!value || value.trim() === '')) {
-      errors.push({ field: fieldName, message: `${fieldSchema.label} is required` });
-      continue;
-    }
-    
-    // Type-specific validation
-    if (value && fieldSchema.validation) {
-      const rules = fieldSchema.validation;
-      
-      if (rules.pattern && !new RegExp(rules.pattern).test(value)) {
-        errors.push({ field: fieldName, message: `${fieldSchema.label} format is invalid` });
-      }
-      
-      if (rules.min !== undefined && value < rules.min) {
-        errors.push({ field: fieldName, message: `${fieldSchema.label} must be at least ${rules.min}` });
-      }
-      
-      if (rules.maxlength !== undefined && value.length > rules.maxlength) {
-        errors.push({ field: fieldName, message: `${fieldSchema.label} must be no more than ${rules.maxlength} characters` });
-      }
-    }
-  }
-  
-  return { isValid: errors.length === 0, errors };
+interface FieldSchema {
+  type: FieldType
+  label?: string
+  required?: boolean
+  defaultValue?: any
+  position?: number
+  validation?: ValidationRules
+  htmlAttributes?: Record<string, any>
+  layout?: 'inline' | 'vertical'
 }
 ```
 
 ---
 
-### parseForm(source)
+## Migration Guide
 
-Parses Formdown source into an abstract syntax tree.
+### From Legacy Functions to FormManager
 
-**Parameters:**
-- `source` (string): The Formdown source code
+The new FormManager API provides enhanced functionality while maintaining backward compatibility:
 
-**Returns:** FormAST
-
-### generateHTML(ast, options?)
-
-Generates HTML from a parsed form AST.
-
-**Parameters:**
-- `ast` (FormAST): Parsed form structure
-- `options` (object, optional): Generation options
-
-**Returns:** string
-
-## Events
-
-### Form Events
-
-All forms emit standard HTML events:
-- `submit`: Form submission
-- `change`: Field value changes
-- `input`: Real-time input changes
-
-### Custom Events
-
-#### `formdown:ready`
-Fired when a form is fully rendered and ready for interaction.
-
-#### `formdown:validate`
-Fired during form validation with validation results.
-
-**Example:**
+**Legacy approach:**
 ```javascript
-form.addEventListener('formdown:validate', (event) => {
-  console.log('Validation results:', event.detail);
+import { parseFormdown, generateFormHTML } from '@formdown/core';
+
+const parsed = parseFormdown(content);
+const html = generateFormHTML(parsed);
+```
+
+**Modern approach (recommended):**
+```javascript
+import { FormManager } from '@formdown/core';
+
+const manager = new FormManager();
+manager.parse(content);
+const html = manager.render();
+// Plus: reactive data binding, events, validation, etc.
+```
+
+### Benefits of FormManager
+
+1. **Reactive Data Binding**: Automatic synchronization between form data and UI
+2. **Event-Driven Architecture**: Subscribe to form events for real-time updates
+3. **Built-in Validation**: Schema-based validation with error handling
+4. **State Management**: Track dirty state, reset to defaults, export/import configuration
+5. **Type Safety**: Full TypeScript support with comprehensive type definitions
+
+---
+
+## Best Practices
+
+### 1. Use FormManager for Interactive Forms
+
+For forms that require user interaction, validation, or data management:
+
+```javascript
+import { FormManager } from '@formdown/core';
+
+const manager = new FormManager();
+manager.parse(formContent);
+
+// Set up event listeners
+manager.on('data-change', ({ field, value }) => {
+  console.log(`Field ${field} changed to:`, value);
 });
+
+// Render with current data
+const html = manager.render();
+```
+
+### 2. Use FormdownFieldHelper for DOM Manipulation
+
+When working with rendered forms in the browser:
+
+```javascript
+import { FormdownFieldHelper } from '@formdown/core';
+
+// Get values
+const priority = FormdownFieldHelper.get('priority');
+
+// Set values (handles "other" options automatically)
+FormdownFieldHelper.set('skills', ['JavaScript', 'Custom Skill']);
+
+// Check specific values
+if (FormdownFieldHelper.has('skills', 'Python')) {
+  // Python is selected
+}
+```
+
+### 3. Validate Before Submission
+
+Always validate form data before processing:
+
+```javascript
+const validation = manager.validate();
+if (!validation.isValid) {
+  validation.errors.forEach(error => {
+    console.error(`${error.field}: ${error.message}`);
+  });
+  return;
+}
+
+const data = manager.getData();
+// Process valid data...
+```
+
+### 4. Handle "Other" Options Consistently
+
+The FormdownFieldHelper automatically handles "other" options:
+
+```javascript
+// Formdown syntax with other option
+const content = '@priority{Low,Medium,High,*(Custom Priority)}: r[]';
+
+// Setting a custom value automatically uses the other option
+FormdownFieldHelper.set('priority', 'Urgent'); // Uses "Custom Priority" option
+```
+
+### 5. Use Web Components for Quick Integration
+
+For rapid prototyping or simple integrations:
+
+```html
+<!-- Include the UI component -->
+<script type="module" src="@formdown/ui"></script>
+
+<!-- Use directly in HTML -->
+<formdown-ui content="@name: [text required]
+@email: [email required]">
+</formdown-ui>
 ```

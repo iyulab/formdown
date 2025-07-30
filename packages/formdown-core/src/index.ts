@@ -6,6 +6,33 @@ export * from './extensions/index.js'
 export * from './component-utils.js'
 export * from './form-manager.js'
 export * from './form-data-binding.js'
+export * from './dom-binder.js'
+export * from './event-orchestrator.js'
+
+// Export field-processor with renamed conflicting types
+export { 
+  FieldProcessor, 
+  type ProcessResult,
+  type OtherResult,
+  type FieldType as ProcessorFieldType,
+  type FieldElement,
+  type ElementContainer 
+} from './field-processor.js'
+
+// Export validation-manager with renamed conflicting types
+export {
+  ValidationManager,
+  type ValidationResult as AdvancedValidationResult,
+  type ValidationError,
+  type ValidationWarning,
+  type ValidationRule as AdvancedValidationRule,
+  type ValidationPipeline,
+  type ValidatorFunction,
+  type FieldValidationContext,
+  type AsyncValidationConfig,
+  CrossFieldValidators,
+  type CrossFieldRule
+} from './validation-manager.js'
 export { FormdownFieldHelper, type FieldHelperOptions, type FieldValue, type FormFieldType } from './field-helper.js'
 
 import { FormdownParser } from './parser.js'

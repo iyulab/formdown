@@ -1,10 +1,12 @@
 # Architecture
 
-Formdown is a comprehensive form building solution that transforms markdown-like syntax into interactive web forms. The project is designed with modularity, performance, and developer experience in mind.
+Formdown is a comprehensive form building solution that transforms markdown-like syntax into interactive web forms. The project is designed with **Core-First Architecture**, modularity, performance, and developer experience in mind.
 
 ## Core Philosophy
 
 Formdown bridges the gap between content creation and form functionality by allowing developers to write forms using familiar markdown syntax while maintaining the power and flexibility of modern web components.
+
+**Phase 2 Achievement**: Complete Core-First Architecture implementation with 100% legacy code elimination and unified Core module utilization across all packages.
 
 ## Project Structure
 
@@ -12,27 +14,30 @@ The Formdown ecosystem consists of three main packages and a documentation site:
 
 ### `/packages` - Core Libraries
 
-**formdown-core**
-- The foundational parsing and generation engine with extension system
+**formdown-core** ⭐ Core-First Architecture Hub
+- **FormManager**: Complete form lifecycle management with 12+ Core module APIs
+- **4 Core Modules**: FieldProcessor, DOMBinder, ValidationManager, EventOrchestrator
 - Primary role: formdown → html and formdown → get-schema transformations
 - Hidden Form Architecture for clean form association
 - Value Attribute support for default field values
 - Hook-based plugin architecture for external extensibility (14 hook types)
 - Contains TypeScript definitions, core utilities, and extension APIs
-- Provides the essential building blocks for other packages
+- **Phase 2 Achievement**: 100% API coverage for all UI/Editor operations
 
-**formdown-ui**
-- Web component for form rendering and interaction
+**formdown-ui** 🎨 Rendering & Interaction Layer  
+- Web component for form rendering and interaction (1186 lines, 9.3% optimized)
+- **Core Integration**: 100% FormManager delegation for DOM operations
 - Built with Lit for universal framework compatibility
-- Uses @formdown/core extension system for custom behaviors
-- Handles form validation, data binding, and user interactions
+- **Phase 2.1 Achievement**: Complete DOMBinder integration, processFormHTML elimination
+- Handles form validation, data binding, and user interactions via Core modules
 - Produces clean, accessible HTML forms from parsed content
 
-**formdown-editor**
-- Interactive editor component with real-time preview
+**formdown-editor** ✏️ Development Environment
+- Interactive editor component with real-time preview (505 lines + template consolidation)  
+- **Core Integration**: 100% FormManager delegation for parsing and data management
 - Supports multiple viewing modes (edit, split, preview)
-- Leverages @formdown/core plugins for enhanced editing capabilities
-- Integrates both core parsing and UI rendering
+- **Phase 2.2 Achievement**: Complete EventOrchestrator integration, legacy code elimination
+- Real-time Core-powered parsing with createPreviewTemplate
 - Provides developer tools and debugging capabilities
 
 ### `/site` - Documentation & Demos
@@ -45,32 +50,43 @@ A Next.js-powered website that serves as:
 
 ## Technical Architecture
 
-### Component Hierarchy
+### Core-First Architecture (Phase 2 Complete)
 ```
-formdown-editor (top-level)
-├── Editor Panel (markdown input)
-├── Preview Panel (live rendering)
-└── formdown-ui (form component)
-    ├── Form Fields (various input types)
-    ├── Validation Logic
-    └── Data Binding
+FormManager (Central Hub)
+├── FieldProcessor (Field logic processing)
+├── DOMBinder (DOM manipulation & binding)
+├── ValidationManager (Async validation pipelines)
+├── EventOrchestrator (Component coordination)
+└── FormDataBinding (Reactive data management)
+
+formdown-editor (Development Layer)
+├── FormManager Integration (100% Core delegation)
+├── EventOrchestrator Bridge (Editor ↔ Core events)
+├── createPreviewTemplate (Real-time parsing)
+└── formdown-ui (Embedded rendering)
+
+formdown-ui (Rendering Layer)  
+├── FormManager Integration (100% Core delegation)
+├── DOMBinder Integration (DOM operations)
+├── FieldProcessor Integration (Field handling)
+└── ValidationManager Integration (Form validation)
 ```
 
-### Data Flow
-1. User writes markdown with @form and @field syntax
-2. Core parser processes form declarations and field definitions
-   - @form declarations create hidden form elements with specified attributes
-   - @field definitions automatically associate with the nearest form or explicit form ID
+### Core-First Data Flow (Phase 2 Implementation)
+1. **User Input**: Markdown with @form and @field syntax
+2. **FormManager.parse()**: Central parsing via Core modules
+   - FieldProcessor handles field type processing and validation
+   - Conditional logic parsing (Phase 3.1 ready)
    - Hook system allows extensions to modify parsing behavior
-   - Plugin system provides custom field types and validators
-3. Schema extractor provides metadata for validation and tooling
-4. HTML generator creates hidden form structure with field associations
+3. **FormManager.getSchema()**: Schema extraction for metadata and tooling
+4. **FormManager.render()**: HTML generation with hidden form architecture
    - Hidden forms: `<form hidden id="form-id" ...attributes>`
    - Associated fields: `<input form="form-id" ...attributes>`
-   - Extension system enables custom rendering behaviors
-5. UI component renders interactive form elements with proper form associations
-6. User interactions update form data reactively
-7. Changes propagate back through the component tree
+   - DOMBinder manages DOM operations and event handling
+5. **UI Component Rendering**: FormManager.renderToTemplate() for consistent rendering
+6. **Reactive Updates**: EventOrchestrator coordinates component-to-component events
+7. **Data Management**: FormDataBinding provides unified data flow across UI/Editor
+8. **Validation**: ValidationManager handles async validation pipelines
 
 ### Build Strategy
 - **Development**: Independent package development with live reloading

@@ -3,6 +3,10 @@ import { FormdownGenerator } from './generator.js'
 import { getSchema } from './schema.js'
 import { validateForm, validateField } from './index.js'
 import { FormDataBinding } from './form-data-binding.js'
+import { FieldProcessor } from './field-processor.js'
+import { DOMBinder } from './dom-binder.js'
+import { ValidationManager } from './validation-manager.js'
+import { EventOrchestrator } from './event-orchestrator.js'
 import type { Field, FormdownContent, FormDeclaration, FormDownSchema, ValidationResult, FieldError } from './types'
 
 export interface FormManagerOptions {
@@ -38,6 +42,12 @@ export class FormManager {
   private schema: FormDownSchema | null = null
   private dataBinding: FormDataBinding | null = null
   private eventListeners: Map<keyof FormManagerEvents, Set<Function>> = new Map()
+  
+  // New Core modules
+  private fieldProcessor: FieldProcessor | null = null
+  private domBinder: DOMBinder | null = null
+  private validationManager: ValidationManager | null = null
+  private eventOrchestrator: EventOrchestrator | null = null
   
   constructor(private options: FormManagerOptions = {}) {
     this.parser = new FormdownParser(options)
@@ -261,6 +271,261 @@ export class FormManager {
     
     if (config.data) {
       this.updateData(config.data)
+    }
+  }
+
+  // =========================================================================
+  // NEW CORE MODULE INTEGRATION APIs (Phase 1 Enhancement)
+  // =========================================================================
+
+  /**
+   * Create a FieldProcessor instance for advanced field processing
+   */
+  createFieldProcessor(): FieldProcessor {
+    if (!this.fieldProcessor) {
+      this.fieldProcessor = new FieldProcessor()
+    }
+    return this.fieldProcessor
+  }
+
+  /**
+   * Create a DOMBinder instance for DOM manipulation and binding
+   */
+  createDOMBinder(): DOMBinder {
+    if (!this.domBinder) {
+      this.domBinder = new DOMBinder()
+    }
+    return this.domBinder
+  }
+
+  /**
+   * Create a ValidationManager instance for advanced validation
+   */
+  createValidationManager(): ValidationManager {
+    if (!this.validationManager) {
+      this.validationManager = new ValidationManager()
+    }
+    return this.validationManager
+  }
+
+  /**
+   * Create an EventOrchestrator instance for component coordination
+   */
+  createEventOrchestrator(): EventOrchestrator {
+    if (!this.eventOrchestrator) {
+      this.eventOrchestrator = new EventOrchestrator()
+    }
+    return this.eventOrchestrator
+  }
+
+  /**
+   * Process field value using FieldProcessor
+   */
+  processFieldValue(fieldName: string, value: any): any {
+    const processor = this.createFieldProcessor()
+    const field = this.getField(fieldName)
+    
+    if (!field) {
+      console.warn(`Field ${fieldName} not found in schema`)
+      return value
+    }
+
+    const fieldType = processor.getFieldType({
+      id: fieldName,
+      name: fieldName,
+      value: String(value),
+      type: field.type || 'text',
+      hasAttribute: () => false,
+      getAttribute: () => null
+    })
+
+    return processor.extractFieldValue({
+      id: fieldName,
+      name: fieldName,
+      value: String(value),
+      type: field.type || 'text',
+      hasAttribute: () => false,
+      getAttribute: () => null
+    }, fieldType)
+  }
+
+  /**
+   * Validate field with advanced ValidationManager
+   */
+  async validateFieldWithPipeline(fieldName: string, value: any): Promise<any> {
+    const validationManager = this.createValidationManager()
+    const field = this.getField(fieldName)
+    const processor = this.createFieldProcessor()
+    
+    if (!field) {
+      return { isValid: false, errors: [`Field ${fieldName} not found`] }
+    }
+
+    const fieldType = processor.getFieldType({
+      id: fieldName,
+      name: fieldName,
+      value: String(value),
+      type: field.type || 'text',
+      hasAttribute: () => false,
+      getAttribute: () => null
+    })
+
+    const fieldContext = {
+      fieldName,
+      fieldType,
+      constraints: field.attributes || {},
+      schema: field
+    }
+
+    return await validationManager.validateAsync(fieldContext, value, this.getData())
+  }
+
+  /**
+   * Setup component bridge using EventOrchestrator
+   */
+  setupComponentBridge(target: any): string {
+    const orchestrator = this.createEventOrchestrator()
+    
+    const coreComponent = {
+      id: 'formdown-core',
+      type: 'core' as const,
+      emit: (event: string, data?: any) => {
+        // Integrate with FormManager's event system
+        if (event === 'formdown:data:change') {
+          this.emit('data-change', data)
+        } else if (event === 'formdown:validation:error') {
+          this.emit('validation-error', data)
+        }
+      },
+      on: (event: string, handler: any) => {
+        // Map to FormManager events
+        if (event === 'formdown:field:change') {
+          this.on('data-change', handler)
+        }
+        return () => {} // Return unsubscribe function
+      }
+    }
+
+    if (target.type === 'ui') {
+      return orchestrator.createCoreUIBridge(coreComponent, target)
+    } else if (target.type === 'editor') {
+      return orchestrator.createCoreEditorBridge(coreComponent, target)
+    } else {
+      // Generic bridge
+      return orchestrator.bridgeComponentEvents(coreComponent, target, [])
+    }
+  }
+
+  /**
+   * Render form to template format (for UI components)
+   */
+  renderToTemplate(options: { theme?: any, container?: any } = {}): any {
+    if (!this.parsedContent) {
+      throw new Error('No content parsed. Call parse() first.')
+    }
+
+    // This would be used by UI components to get structured data
+    // instead of raw HTML for more flexible rendering
+    return {
+      fields: this.getFields(),
+      formDeclarations: this.getFormDeclarations(),
+      schema: this.getSchema(),
+      data: this.getData(),
+      html: this.render(),
+      options
+    }
+  }
+
+  /**
+   * Handle UI events from components
+   */
+  handleUIEvent(event: Event, domBinder?: DOMBinder): void {
+    if (!domBinder) {
+      domBinder = this.createDOMBinder()
+    }
+
+    // This would be implemented by UI components to delegate
+    // event handling back to Core through the DOMBinder
+    const target = event.target as any
+    const fieldName = target?.name || target?.id
+    
+    if (fieldName && event.type === 'change') {
+      const processor = this.createFieldProcessor()
+      const fieldType = processor.getFieldType(target)
+      const value = processor.extractFieldValue(target, fieldType)
+      
+      this.setFieldValue(fieldName, value)
+    }
+  }
+
+  /**
+   * Create preview template (for Editor components)
+   */
+  createPreviewTemplate(content: string): any {
+    try {
+      const previewManager = new FormManager(this.options)
+      previewManager.parse(content)
+      
+      return {
+        html: previewManager.render(),
+        errors: [], // TODO: Collect parsing errors
+        schema: previewManager.getSchema(),
+        fields: previewManager.getFields()
+      }
+    } catch (error) {
+      return {
+        html: '',
+        errors: [String(error)],
+        schema: null,
+        fields: []
+      }
+    }
+  }
+
+  /**
+   * Get all Core module instances (for advanced usage)
+   */
+  getCoreModules(): {
+    fieldProcessor: FieldProcessor | null
+    domBinder: DOMBinder | null
+    validationManager: ValidationManager | null
+    eventOrchestrator: EventOrchestrator | null
+  } {
+    return {
+      fieldProcessor: this.fieldProcessor,
+      domBinder: this.domBinder,
+      validationManager: this.validationManager,
+      eventOrchestrator: this.eventOrchestrator
+    }
+  }
+
+  /**
+   * Dispose of all Core modules and clean up resources
+   */
+  dispose(): void {
+    if (this.validationManager) {
+      this.validationManager.dispose()
+      this.validationManager = null
+    }
+
+    if (this.domBinder) {
+      this.domBinder.clearAllBindings()
+      this.domBinder = null
+    }
+
+    if (this.eventOrchestrator) {
+      this.eventOrchestrator.dispose()
+      this.eventOrchestrator = null
+    }
+
+    this.fieldProcessor = null
+    
+    // Clear existing event listeners
+    this.eventListeners.clear()
+    
+    // Reset data binding
+    if (this.dataBinding) {
+      this.dataBinding = null
     }
   }
 }

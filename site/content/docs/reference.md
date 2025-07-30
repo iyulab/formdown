@@ -10,9 +10,9 @@ Complete reference for all Formdown field types, attributes, and patterns.
 |------|--------|-----------|-----------|-------------|
 | **Text** | `[text]` | `[]` | `text` | General text input |
 | **Email** | `[email]` | `@[]` | `email` | Email validation |
-| **Password** | `[password]` | `?[]` | `password` | Hidden text input |
-| **URL** | `[url]` | `&[]` | `url` | URL validation |
-| **Tel** | `[tel]` | `%[]` | `tel` | Phone number input |
+| **Password** | `[password]` | `***[]` | `password` | Hidden text input |
+| **URL** | `[url]` | `http://[]` | `url` | URL validation |
+| **Tel** | `[tel]` | `tel:[]` | `tel` | Phone number input |
 | **Search** | `[search]` | | `search` | Search input with clear |
 | **Number** | `[number]` | `#[]` | `number` | Numeric input with validation |
 | **Range** | `[range]` | `R[]` | `range` | Slider input with min/max |
@@ -24,7 +24,7 @@ Complete reference for all Formdown field types, attributes, and patterns.
 @email: [email required]            # Email with validation
 @email: @[]                         # Shorthand email
 @password: [password minlength=8]   # Password field
-@phone: %[]                         # Shorthand phone
+@phone: tel:[]                      # Shorthand phone
 @age: #[min=18 max=100]            # Number with constraints
 ```
 
@@ -32,8 +32,8 @@ Complete reference for all Formdown field types, attributes, and patterns.
 
 | Type | Syntax | Shorthand | HTML Type | Description |
 |------|--------|-----------|-----------|-------------|
-| **Date** | `[date]` | `d[]` | `date` | Date picker |
-| **Time** | `[time]` | `t[]` | `time` | Time selector |
+| **Date** | `[date]` | `date:[]` | `date` | Date picker |
+| **Time** | `[time]` | `time:[]` | `time` | Time selector |
 | **DateTime** | `[datetime-local]` | `dt[]` | `datetime-local` | Date and time picker |
 | **Month** | `[month]` | `M[]` | `month` | Month picker |
 | **Week** | `[week]` | `W[]` | `week` | Week picker |
@@ -41,8 +41,8 @@ Complete reference for all Formdown field types, attributes, and patterns.
 **Example:**
 ```formdown
 @birth_date: [date max="2010-12-31"]
-@birth_date: d[]                     # Shorthand
-@meeting_time: t[]                   # Time only
+@birth_date: date:[]                 # Shorthand
+@meeting_time: time:[]               # Time only
 @appointment: dt[]                   # Date and time
 @birth_month: [month]               # Month picker
 ```
@@ -96,6 +96,10 @@ Complete reference for all Formdown field types, attributes, and patterns.
 | **File** | `[file]` | `F[]` | File upload |
 | **Color** | `[color]` | `C[]` | Color picker |
 | **Range** | `[range min=0 max=100]` | `R[]` | Slider input |
+| **Hidden** | `[hidden]` | | Hidden form data |
+| **Button** | `[button]` | | Generic button |
+| **Submit** | `[submit]` | | Submit button |
+| **Reset** | `[reset]` | | Reset button |
 
 **Example:**
 ```formdown

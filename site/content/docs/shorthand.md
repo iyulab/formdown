@@ -1,414 +1,348 @@
 # Shorthand Syntax
 
-Write forms faster with Formdown's powerful shorthand syntax. Every shorthand expression converts to standard `[attributes]` syntax.
+FormDown's shorthand syntax provides **sugar syntax** for common patterns to make form creation faster and more intuitive.
 
-## Why Shorthand?
+## Core Principles
 
-Compare these equivalent forms:
+1. **Full Compatibility**: All shorthand syntax is fully convertible to `[attributes]` syntax
+2. **Type-based Interpretation**: `{content}` is interpreted appropriately by field type
+3. **Additional Validation**: Complex validation uses standard HTML5 attributes
+4. **Sugar Syntax**: Provides convenience without limiting functionality
 
-### Standard Syntax
+## Shorthand Markers
+
+### Required Marker
+- `*` - Placed after field name
+
+### Type Markers (before brackets)
+- `@` = email
+- `#` = number  
+- `***` = password
+- `http://` = url
+- `tel:` = tel
+- `date:` = date
+- `time:` = time
+- `dt` = datetime-local
+- `M` = month
+- `W` = week
+- `$` = number (money input with currency formatting)
+- `T` = textarea (+ number for rows, e.g., T5)
+- `F` = file
+- `C` = color
+- `R` = range
+- `r` = radio
+- `s` = select
+- `c` = checkbox
+
+### Content Definition (`{content}`)
+**Core Principle**: `{content}` is interpreted by type
+- **Text-based types** → `pattern` attribute (regex validation)
+- **Date/time types** → `format` attribute (format specification)
+- **Selection types** → `options` attribute (choice options)
+
+### Label Definition
+- `(Label Text)` = [label="Label Text"]
+
+### Inline Notation
+- `___@fieldname` = inline field
+
+## Type Interpretation Rules
+
+| Type Marker | Type | `{content}` Interpretation | Attribute |
+|------------|------|---------------------------|-----------|
+| `@` | email | Pattern | `pattern="{content}"` |
+| `#` | number | Min,Max,Step | Parsed as constraints |
+| `***` | password | Pattern | `pattern="{content}"` |
+| `T` | textarea | Default text | `value="{content}"` |
+| `r`, `s`, `c` | radio/select/checkbox | Options | `options="{content}"` |
+
+## Examples by Type
+
+### Text Fields
 ```formdown
-@name: [text required]
-@email: [email required]
-@age: [number min=18 max=100]
-@phone: [tel pattern="\\(\\d{3}\\)\\d{3}-\\d{4}"]
-@interests: [checkbox options="Web,Mobile,AI"]
+// Standard → Shorthand
+@username: [text] → @username: []
+@username: [text required] → @username*: []
+@username: [text pattern="[a-z0-9]{3,20}"] → @username{[a-z0-9]{3,20}}: []
 ```
 
-### Shorthand Syntax
+### Email Fields
 ```formdown
-@name*: []
-@email*: @[]
-@age: #[min=18 max=100]
-@phone{(###)###-####}: %[]
-@interests{Web,Mobile,AI}: c[]
+// Standard → Shorthand
+@email: [email] → @email: @[]
+@email: [email required] → @email*: @[]
+@work_email: [email required] → @work_email*: @[]
 ```
 
-**50% less typing, same functionality!**
-
-## Core Shorthand Patterns
-
-### Required Fields with `*`
-
-| Shorthand | Standard | Description |
-|-----------|----------|-------------|
-| `@name*: []` | `@name: [text required]` | Required text field |
-| `@email*: @[]` | `@email: [email required]` | Required email field |
-| `@age*: #[]` | `@age: [number required]` | Required number field |
-
-**Example:**
+### Number Fields
 ```formdown
-# Registration form
-@username*: []
-@email*: @[]
-@password*: ?[]
-@age*: #[min=18]
+// Standard → Shorthand
+@age: [number] → @age: #[]
+@age: [number required] → @age*: #[]
+@age: [number min=0 max=120] → @age: #[min=0 max=120]
+@price: [number step=0.01] → @price: #[step=0.01]
 ```
 
-### Type Markers
-
-Quick type specification with single characters:
-
-| Marker | Type | Full Syntax | Description |
-|--------|------|-------------|-------------|
-| `@[]` | Email | `[email]` | Email validation |
-| `#[]` | Number | `[number]` | Numeric input |
-| `%[]` | Tel | `[tel]` | Phone number |
-| `&[]` | URL | `[url]` | URL validation |
-| `?[]` | Password | `[password]` | Hidden input |
-| `d[]` | Date | `[date]` | Date picker |
-| `t[]` | Time | `[time]` | Time selector |
-| `dt[]` | DateTime | `[datetime-local]` | Date and time |
-| `M[]` | Month | `[month]` | Month picker |
-| `W[]` | Week | `[week]` | Week picker |
-| `T[]` | Textarea | `[textarea]` | Multi-line text |
-| `T4[]` | Textarea | `[textarea rows=4]` | 4-row textarea |
-| `r[]` | Radio | `[radio]` | Radio buttons |
-| `c[]` | Checkbox | `[checkbox]` | Checkbox |
-| `s[]` | Select | `[select]` | Dropdown |
-| `R[]` | Range | `[range]` | Slider input |
-| `F[]` | File | `[file]` | File upload |
-| `C[]` | Color | `[color]` | Color picker |
-
-**Example:**
+### Password Fields
 ```formdown
-@email: @[]                    # Email field
-@age: #[]                      # Number field
-@phone: %[]                    # Phone field
-@website: &[]                  # URL field
-@password: ?[]                 # Password field
-@birth_date: d[]               # Date field
-@meeting_time: t[]             # Time field
-@appointment: dt[]             # DateTime field
-@birth_month: M[]              # Month picker
-@work_week: W[]                # Week picker
-@description: T[]              # Textarea
-@bio: T4[]                     # 4-row textarea
-@volume: R[]                   # Range slider
-@avatar: F[]                   # File upload
-@theme_color: C[]              # Color picker
+// Standard → Shorthand
+@password: [password] → @password: ***[]
+@password: [password required] → @password*: ***[]
+@password: [password minlength=8] → @password*: ***[minlength=8]
 ```
 
-### Content Patterns with `{}`
-
-The `{}` syntax changes meaning based on field type:
-
-#### Selection Fields → Options
-
-| Shorthand | Standard | Description |
-|-----------|----------|-------------|
-| `{A,B,C}: r[]` | `[radio options="A,B,C"]` | Radio options |
-| `{A,B,C}: c[]` | `[checkbox options="A,B,C"]` | Checkbox options |
-| `{A,B,C}: s[]` | `[select options="A,B,C"]` | Select options |
-
-**Example:**
+### URL Fields
 ```formdown
-@size{S,M,L,XL}: r[]           # Radio buttons
-@skills{JS,Python,Java}: c[]   # Checkbox group
-@country{USA,Canada,UK}: s[]   # Select dropdown
+// Standard → Shorthand
+@website: [url] → @website: http://[]
+@website: [url required] → @website*: http://[]
 ```
 
-**"Other" Option Support:**
-Add `*` to allow custom user input for any predefined option that might not cover all cases:
-
+### Phone Fields
 ```formdown
-@size{S,M,L,XL,*}: r[]         # Radio with "Other" option
-@skills{JS,Python,Java,*}: c[] # Checkbox with "Other" option  
-@country{USA,Canada,UK,*}: s[] # Select with "Other" option
+// Standard → Shorthand  
+@phone: [tel] → @phone: tel:[]
+@phone: [tel required] → @phone*: tel:[]
 ```
 
-**Custom "Other" Labels:**
-Use `*(Custom Label)` to personalize the "other" option text:
-
+### Date/Time Fields
 ```formdown
-@source{Website,Social Media,Friend,*(Please specify)}: r[]
-@interests{Tech,Sports,Music,*(Custom Interest)}: c[]
-@country{USA,Canada,UK,*(Other Country)}: s[]
+// Standard → Shorthand
+@birthdate: [date] → @birthdate: date:[]
+@appointment: [time] → @appointment: time:[]
+@birthdate: [date required] → @birthdate*: date:[]
 ```
 
-When `*` or `*(label)` is included:
-- ✅ Adds "Other (please specify)" or custom label option
-- ✅ Shows text input when "Other" is selected  
-- ✅ **NEW**: User input becomes the field value directly (not `_other` prefix)
-- ✅ **NEW**: Custom labels replace default "Other:" text
-- ✅ Enables `allowOther: true` in field schema
-
-**Data Output:**
-When user selects "other" and enters "Custom Value", the form data is:
-```json
-{
-  "field_name": "Custom Value"
-}
-```
-Instead of the old format:
-```json
-{
-  "field_name": "_other",
-  "field_name_other": "Custom Value"  
-}
-```
-
-#### Text Fields → Validation Pattern
-
-| Shorthand | Standard | Description |
-|-----------|----------|-------------|
-| `{###-##-####}: []` | `[text pattern="\\d{3}-\\d{2}-\\d{4}"]` | SSN pattern |
-| `{(###)###-####}: []` | `[text pattern="\\(\\d{3}\\)\\d{3}-\\d{4}"]` | Phone pattern |
-| `{*@company.com}: []` | `[text pattern=".*@company\\.com$"]` | Email pattern |
-
-**Example:**
+### Textarea
 ```formdown
-@ssn{###-##-####}: []
-@phone{(###)###-####}: []
-@work_email{*@company.com}: []
+// Standard → Shorthand
+@message: [textarea] → @message: T[]
+@message: [textarea rows=5] → @message: T5[]
+@bio: [textarea rows=10 required] → @bio*: T10[]
 ```
 
-#### Date/Time Fields → Format
-
-| Shorthand | Standard | Description |
-|-----------|----------|-------------|
-| `{yyyy-MM-dd}: d[]` | `[date format="yyyy-MM-dd"]` | Date format |
-| `{HH:mm}: t[]` | `[time format="HH:mm"]` | Time format |
-
-**Example:**
+### Selection Fields
 ```formdown
-@birth_date{yyyy-MM-dd}: d[]
-@meeting_time{HH:mm}: t[]
+// Radio buttons
+@plan: [radio options="Basic,Pro,Enterprise"] → @plan: r{Basic,Pro,Enterprise}[]
+@plan: [radio options="Basic,Pro,Enterprise" value="Pro"] → @plan: r{Basic,Pro,Enterprise=Pro}[]
+
+// Checkboxes
+@features: [checkbox options="A,B,C"] → @features: c{A,B,C}[]
+@features: [checkbox options="A,B,C" value="A,C"] → @features: c{A,B=A,C=C}[]
+
+// Select dropdown
+@country: [select options="USA,Canada,UK"] → @country: s{USA,Canada,UK}[]
 ```
 
-## Combining Shorthand
-
-### Required + Type
+### Options with "Other"
 ```formdown
-@email*: @[]              # Required email
-@age*: #[]                # Required number
-@password*: ?[]           # Required password
-@description*: T4[]       # Required 4-row textarea
+// Radio with other
+@browser: r{Chrome,Firefox,Safari,*}[]
+@browser: r{Chrome,Firefox,Safari,*(Other Browser)}[]
+
+// Checkbox with other
+@skills: c{JavaScript,Python,Go,*}[]
+@skills: c{JavaScript,Python,Go,*(Other Skills)}[]
+
+// Select with other
+@country: s{USA,Canada,UK,*}[]
+@country: s{USA,Canada,UK,*(Other Country)}[]
 ```
 
-### Required + Type + Pattern
+## Pattern Validation Shorthand
+
+### Using Field Name Pattern
 ```formdown
-@email*{*@company.com}: @[]           # Required company email
-@phone*{(###)###-####}: %[]           # Required formatted phone
-@username*{^[a-zA-Z0-9_]{3,20}$}: []  # Required username pattern
+// Username pattern (3-20 alphanumeric + underscore)
+@username{^[a-zA-Z0-9_]{3,20}$}*: []
+
+// Employee ID pattern
+@employee_id{^EMP[0-9]{6}$}: []
+
+// Product code pattern  
+@product_code{^[A-Z]{3}-[0-9]{4}$}: []
 ```
 
-### Custom Labels + Shorthand
+### Option Definition Patterns
 ```formdown
-@first_name(Full Name)*: []
-@user_email(Email Address)*: @[]
-@birth_date(Date of Birth){yyyy-MM-dd}: d[]
-@work_phone(Work Phone){(###)###-####}: %[]
+// Pipe separator for cleaner syntax
+@priority{Low|Medium|High}: r[]
+@skills{JavaScript|Python|Go|Rust}: c[]
+
+// Comma separator (traditional)
+@status{Draft,Under Review,Published}: s[]
 ```
 
-## Pattern Shortcuts
-
-Formdown converts user-friendly patterns to proper regex:
-
-### Mask Patterns
-
-| Pattern | Meaning | Regex Equivalent |
-|---------|---------|-----------------|
-| `#` | Single digit | `\\d` |
-| `*` | Any character(s) | `.*` |
-| `###` | Three digits | `\\d{3}` |
-| `***` | Any three chars | `.{3}` |
-
-**Example:**
-```formdown
-@phone{(###)###-####}: []      # Phone format
-@ssn{###-##-####}: []          # SSN format  
-@zip{#####}: []                # 5-digit ZIP
-@license{***-###}: []          # License plate
-```
-
-### Glob Patterns
-
-| Pattern | Meaning | Use Case |
-|---------|---------|----------|
-| `*@domain.com` | Ends with domain | Company emails |
-| `user_*` | Starts with prefix | Username patterns |
-| `*.pdf` | File extension | File uploads |
-
-**Example:**
-```formdown
-@work_email{*@company.com}: @[]
-@username{user_*}: []
-@resume{*.pdf}: [file]
-```
-
-## Inline Shorthand
-
-Use shorthand in inline fields too:
+## Inline Field Shorthand
 
 ```formdown
-Hello ___@name*!
-Your email: ___@email*: @[]
-Age: ___@age*: #[] years old
-Phone: ___@phone{(###)###-####}: %[]
+// Basic inline
+My name is ___@name[] and I'm ___@age: #[] years old.
+
+// With required
+Please enter your ___@email*: @[] to continue.
+
+// With options
+I prefer ___@color: s{Red,Blue,Green}[] as my favorite color.
 ```
 
-## Complete Examples
+## Label Shorthand
 
-### Quick Contact Form
+```formdown
+// Using parentheses for labels
+@username(Username): []
+@email(Email Address)*: @[]
+@age(Your Age): #[min=0 max=120]
+
+// Combines with all other shorthand
+@password(Choose Password)*: ***[minlength=8]
+```
+
+### Money/Currency Fields
+```formdown
+// Standard → Shorthand
+@price: [number step=0.01] → @price: $[step=0.01]
+@budget: [number min=0] → @budget: $[min=0]
+@donation: [number] → @donation: $[]
+```
+
+### Special Fields
+```formdown
+// Search field
+@search: [search placeholder="Search..."]
+
+// Hidden field
+@user_id: [hidden value="12345"]
+
+// Button fields
+@save: [submit value="Save Changes"]
+@clear: [reset value="Clear Form"]
+@cancel: [button value="Cancel"]
+```
+
+## Complex Examples
+
+### Contact Form
 ```formdown
 # Contact Us
-@name*: []
+
+@name(Full Name)*: []
 @email*: @[]
-@phone{(###)###-####}: %[]
-@message*: T4[]
-@submit: [submit label="Send"]
+@phone(Phone Number): tel:[]
+@subject: []
+@message(Your Message)*: T5[]
+@newsletter: c[] Subscribe to newsletter
 ```
 
 ### User Registration
 ```formdown
-# Create Account
-@username*{^[a-zA-Z0-9_]{3,20}$}: [placeholder="3-20 characters"]
+# Sign Up
+
+@username{^[a-zA-Z0-9_]{3,20}$}*: []
 @email*: @[]
-@password*{^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$}: ?[]
-@birth_date{yyyy-MM-dd}: d[max="2010-12-31"]
-@country{USA,Canada,UK,*}: s[]
-@interests{Web,Mobile,AI,Gaming,*}: c[]
-@newsletter(Subscribe): c[]
-@terms*: c[label="I agree to terms"]
-@register: [submit label="Create Account"]
+@password*: ***[minlength=8]
+@confirm_password(Confirm Password)*: ***[]
+@age: #[min=13 max=120]
+@country: s{USA,Canada,UK,Other}[]
+@interests: c{Sports,Music,Tech,Gaming}[]
+@terms*: c[] I agree to terms
 ```
 
-### Event Booking
+### Survey Form
 ```formdown
-# Book Appointment
-Dear ___@customer_name*,
-
-Your appointment details:
-- Service: ___@service{Consultation,Checkup,Treatment}: s[]
-- Date: ___@date{yyyy-MM-dd}: d[min="2024-01-01"]
-- Time: ___@time{HH:mm}: t[min="09:00" max="17:00"]
-- Phone: ___@phone{(###)###-####}: %[]
-
-@special_requests: T3[placeholder="Any special requirements?"]
-@book: [submit label="Book Appointment"]
+@rating(How would you rate us?): r{1|2|3|4|5=3}[]
+@improve(What should we improve?): c{UI|Features|Docs|Support|*}[]
+@comments: T4[maxlength=500]
 ```
 
-## Shorthand Reference Tables
+## Migration Examples
 
-### Type Markers Quick Reference
-
-| Input Type | Marker | Example |
-|------------|--------|---------|
-| Text | `[]` | `@name: []` |
-| Email | `@[]` | `@email: @[]` |
-| Password | `?[]` | `@password: ?[]` |
-| Number | `#[]` | `@age: #[]` |
-| Tel | `%[]` | `@phone: %[]` |
-| URL | `&[]` | `@website: &[]` |
-| Date | `d[]` | `@date: d[]` |
-| Time | `t[]` | `@time: t[]` |
-| DateTime | `dt[]` | `@datetime: dt[]` |
-| Month | `M[]` | `@month: M[]` |
-| Week | `W[]` | `@week: W[]` |
-| Textarea | `T[]` | `@bio: T[]` |
-| Textarea (rows) | `T4[]` | `@bio: T4[]` |
-| Radio | `r[]` | `@size: r[]` |
-| Checkbox | `c[]` | `@agree: c[]` |
-| Select | `s[]` | `@country: s[]` |
-| Range | `R[]` | `@volume: R[]` |
-| File | `F[]` | `@upload: F[]` |
-| Color | `C[]` | `@color: C[]` |
-
-### Pattern Examples
-
-| Use Case | Shorthand | Generated Pattern |
-|----------|-----------|-------------------|
-| Phone | `{(###)###-####}` | `^\\(\\d{3}\\)\\d{3}-\\d{4}$` |
-| SSN | `{###-##-####}` | `^\\d{3}-\\d{2}-\\d{4}$` |
-| ZIP Code | `{#####}` | `^\\d{5}$` |
-| ZIP+4 | `{#####-####}` | `^\\d{5}-\\d{4}$` |
-| Credit Card | `{####-####-####-####}` | `^\\d{4}-\\d{4}-\\d{4}-\\d{4}$` |
-| Company Email | `{*@company.com}` | `^.*@company\\.com$` |
-| Username | `{user_*}` | `^user_.*$` |
-
-## When to Use Shorthand
-
-### ✅ Perfect for Shorthand
-- **Common field types**: email, phone, numbers
-- **Simple validation**: required fields, basic patterns
-- **Rapid prototyping**: quick form mockups
-- **Standard forms**: contact, registration, surveys
-
-### 🔧 Use Standard Syntax
-- **Complex validation**: multi-step regex patterns
-- **Custom attributes**: CSS classes, data attributes
-- **Framework integration**: dynamic values
-- **Advanced features**: conditional logic
-
-### 💡 Mixed Approach (Recommended)
+### From Standard to Shorthand
 ```formdown
-# Use shorthand for simple fields
-@name*: []
+// Before (Standard syntax)
+@first_name: [text required placeholder="Enter first name"]
+@email: [email required]
+@age: [number min=18 max=100]
+@bio: [textarea rows=5 maxlength=500]
+@country: [select options="USA,Canada,UK,Other"]
+@newsletter: [checkbox checked label="Subscribe"]
+
+// After (Shorthand syntax)
+@first_name*: [placeholder="Enter first name"]
 @email*: @[]
-@phone{(###)###-####}: %[]
-
-# Use standard for complex fields
-@bio: [textarea rows=4 maxlength=500 class="bio-field" 
-      placeholder="Tell us about yourself..." 
-      data-counter="true"]
-      
-@preferences: [checkbox options="Email,SMS,Phone" 
-               class="notification-prefs" 
-               data-toggle="advanced-options"]
+@age: #[min=18 max=100]
+@bio: T5[maxlength=500]
+@country: s{USA,Canada,UK,Other}[]
+@newsletter: [checked] Subscribe
 ```
 
-## Conversion Chart
+## Best Practices
 
-Every shorthand expression has a standard equivalent:
-
-| Shorthand Expression | Standard Equivalent |
-|---------------------|-------------------|
-| `@name*: []` | `@name: [text required]` |
-| `@email*: @[]` | `@email: [email required]` |
-| `@age: #[min=18]` | `@age: [number min=18]` |
-| `@phone{(###)###-####}: %[]` | `@phone: [tel pattern="^\\(\\d{3}\\)\\d{3}-\\d{4}$"]` |
-| `@size{S,M,L}: r[]` | `@size: [radio options="S,M,L"]` |
-| `@bio: T4[]` | `@bio: [textarea rows=4]` |
-| `@name(Full Name)*: []` | `@name: [text required label="Full Name"]` |
-
-## Tips for Effective Shorthand
-
-### Start Simple
+### 1. Use Shorthand for Common Patterns
 ```formdown
-# Begin with basic shorthand
-@name*: []
+// Good - Clear and concise
 @email*: @[]
+@age: #[min=0 max=120]
+@message*: T5[]
+
+// Avoid mixing when standard is clearer
+@complex_field: [text data-custom="value" aria-label="Complex"]
 ```
 
-### Add Complexity Gradually
+### 2. Pattern Validation
 ```formdown
-# Add patterns and options
-@phone{(###)###-####}: %[]
-@interests{Web,Mobile,AI}: c[]
+// Good - Clear pattern in field name
+@username{^[a-zA-Z0-9_]{3,20}$}: []
+@zip_code{^[0-9]{5}$}: []
+
+// For complex patterns, consider standard syntax
+@field: [pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"]
 ```
 
-### Mix with Standard When Needed
+### 3. Keep Options Readable
 ```formdown
-# Shorthand for simple fields
-@name*: []
-@email*: @[]
+// Good - Pipe separator for few options
+@size: r{S|M|L|XL}[]
 
-# Standard for complex requirements
-@advanced_options: [checkbox options="opt1,opt2,opt3" 
-                   class="advanced-section" 
-                   data-toggle="collapse-panel"]
+// Good - Comma for many options
+@country: s{USA,Canada,Mexico,UK,France,Germany,Japan,Australia}[]
 ```
 
-### Use Descriptive Field Names
+### 4. Smart Label Usage
 ```formdown
-# Good - descriptive names
-@work_email*: @[]
-@home_phone{(###)###-####}: %[]
+// Let FormDown generate labels from good field names
+@first_name*: []           // → "First Name"
+@email_address*: @[]       // → "Email Address"
 
-# Avoid - unclear names  
-@email1*: @[]
-@phone2{(###)###-####}: %[]
+// Use explicit labels for unclear field names
+@usr(Username)*: []
+@msg(Your Message)*: T5[]
 ```
 
-Shorthand syntax makes Formdown incredibly fast to write while maintaining full functionality and readability.
+## Reference Table
+
+| Standard | Shorthand | Notes |
+|----------|-----------|-------|
+| `[text]` | `[]` | Default type |
+| `[text required]` | `*: []` | Asterisk after field name |
+| `[email]` | `@[]` | @ prefix |
+| `[number]` | `#[]` | # prefix |
+| `[number]` (money) | `$[]` | $ prefix (currency) |
+| `[password]` | `***[]` | *** prefix |
+| `[tel]` | `tel:[]` | tel: prefix |
+| `[url]` | `http://[]` | http:// prefix |
+| `[date]` | `date:[]` | date: prefix |
+| `[time]` | `time:[]` | time: prefix |
+| `[datetime-local]` | `dt[]` | dt prefix |
+| `[month]` | `M[]` | M prefix |
+| `[week]` | `W[]` | W prefix |
+| `[file]` | `F[]` | F prefix |
+| `[color]` | `C[]` | C prefix |
+| `[range]` | `R[]` | R prefix |
+| `[textarea rows=5]` | `T5[]` | T + number |
+| `[radio options="..."]` | `r{...}[]` | r + options |
+| `[checkbox options="..."]` | `c{...}[]` | c + options |
+| `[select options="..."]` | `s{...}[]` | s + options |
+| `[label="..."]` | `(...)` | Parentheses |
+| Pattern validation | `{pattern}` | In field name |
