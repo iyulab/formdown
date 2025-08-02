@@ -1,5 +1,5 @@
 import { marked } from 'marked'
-import { Field, FormdownContent, FormDeclaration } from './types'
+import { Field, FormdownContent, FormDeclaration, DatalistDeclaration } from './types'
 import { defaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 
@@ -197,7 +197,7 @@ export class FormdownGenerator {
         // Handle both sync and async marked results
         if (typeof markdownHTML === 'string') {
             // Use Hidden Form Architecture as the default behavior
-            return this.processContentWithHiddenForms(markdownHTML, content.forms, content.formDeclarations || [])
+            return this.processContentWithHiddenForms(markdownHTML, content.forms, content.formDeclarations || [], content.datalistDeclarations || [])
         } else {
             // If marked returns a Promise, we need to handle it differently
             // For now, fallback to the old method
@@ -205,8 +205,8 @@ export class FormdownGenerator {
         }
     }
 
-    private processContentWithHiddenForms(html: string, fields: Field[], formDeclarations: FormDeclaration[]): string {
-        if (fields.length === 0 && formDeclarations.length === 0) {
+    private processContentWithHiddenForms(html: string, fields: Field[], formDeclarations: FormDeclaration[], datalistDeclarations: DatalistDeclaration[]): string {
+        if (fields.length === 0 && formDeclarations.length === 0 && datalistDeclarations.length === 0) {
             return html
         }
 
@@ -215,6 +215,9 @@ export class FormdownGenerator {
         
         // Generate hidden forms HTML
         const hiddenFormsHTML = this.generateHiddenFormsHTML(effectiveFormDeclarations)
+        
+        // Generate datalist elements HTML
+        const datalistHTML = this.generateDatalistHTML(datalistDeclarations)
 
         // Create form context mapping for field-to-form association
         const formContext = this.createFormContext(fields, effectiveFormDeclarations)
@@ -250,8 +253,8 @@ export class FormdownGenerator {
             result = result.replace(new RegExp(placeholder, 'g'), fieldHTML)
         })
 
-        // Prepend hidden forms to the beginning of the HTML
-        return hiddenFormsHTML + result
+        // Prepend hidden forms and datalist elements to the beginning of the HTML
+        return hiddenFormsHTML + datalistHTML + result
     }
 
     private processContent(html: string, fields: Field[]): string {
@@ -753,6 +756,41 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
                 const resetAttrString = resetButtonAttrs ? ` ${resetButtonAttrs}` : ''
                 return `<button type="reset" id="${fieldId}"${resetFormAttr}${resetAttrString}>${field.label || 'Reset'}</button>`
 
+            case 'button':
+                // Handle action elements created with @[button "Label"] syntax
+                const buttonType = attributes?.type || 'button'
+                const buttonFormAttr = formId ? ` form="${formId}"` : ''
+                const buttonAttrs = Object.entries(attributes || {})
+                    .filter(([key]) => !['form', 'type'].includes(key))
+                    .map(([key, value]) => {
+                        if (typeof value === 'boolean') {
+                            return value ? key : ''
+                        }
+                        return `${key}="${value}"`
+                    })
+                    .filter(Boolean)
+                    .join(' ')
+                const buttonAttrString = buttonAttrs ? ` ${buttonAttrs}` : ''
+                return `<button type="${buttonType}" id="${fieldId}"${buttonFormAttr}${buttonAttrString}>${field.label || 'Button'}</button>`
+
+            case 'image':
+                // Handle image input type @[image "alt text" src="/path"]
+                const imageSrc = attributes?.src || ''
+                const imageAlt = attributes?.alt || field.label || 'Submit'
+                const imageFormAttr = formId ? ` form="${formId}"` : ''
+                const imageAttrs = Object.entries(attributes || {})
+                    .filter(([key]) => !['form', 'src', 'alt', 'type'].includes(key))
+                    .map(([key, value]) => {
+                        if (typeof value === 'boolean') {
+                            return value ? key : ''
+                        }
+                        return `${key}="${value}"`
+                    })
+                    .filter(Boolean)
+                    .join(' ')
+                const imageAttrString = imageAttrs ? ` ${imageAttrs}` : ''
+                return `<input type="image" id="${fieldId}" src="${imageSrc}" alt="${imageAlt}"${imageFormAttr}${imageAttrString}>`
+
             default:
                 return `
 <div class="formdown-field">
@@ -782,6 +820,32 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
             .join(' ')
 
         return `<form hidden id="${form.id}" ${attrString}></form>\n`
+    }
+
+    /**
+     * Generate HTML for all datalist elements
+     * @param datalistDeclarations - Array of datalist declarations
+     * @returns HTML string for all datalist elements
+     */
+    private generateDatalistHTML(datalistDeclarations: DatalistDeclaration[]): string {
+        if (datalistDeclarations.length === 0) {
+            return ''
+        }
+
+        return datalistDeclarations.map(datalist => this.generateSingleDatalistHTML(datalist)).join('')
+    }
+
+    /**
+     * Generate HTML for a single datalist element
+     * @param datalist - Datalist declaration
+     * @returns HTML string for the datalist element
+     */
+    private generateSingleDatalistHTML(datalist: DatalistDeclaration): string {
+        const optionsHTML = datalist.options
+            .map(option => `<option value="${this.escapeHtml(option)}">${this.escapeHtml(option)}</option>`)
+            .join('')
+
+        return `<datalist id="${datalist.id}">${optionsHTML}</datalist>\n`
     }
 
     /**

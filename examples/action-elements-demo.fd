@@ -1,0 +1,125 @@
+# 🚀 Action Elements Demo - New Syntax
+
+This demo showcases the new action element syntax in FormDown.
+
+## Basic Action Elements
+
+### Submit Button
+@[submit "Send Message"]
+
+### Reset Button  
+@[reset "Clear Form"]
+
+### Custom Button with JavaScript
+@[button "Calculate Total" onclick="calculateTotal()"]
+
+### Image Button
+@[image "Submit Order" src="/images/submit-btn.png" alt="Submit Order"]
+
+---
+
+## Complete Form Example
+
+### Customer Registration
+
+@form[action="/register" method="POST"]
+
+@first_name(First Name): [text required minlength=2]
+@last_name(Last Name): [text required minlength=2]
+@email(Email Address): [email required]
+@phone(Phone Number): [tel]
+@birth_date(Date of Birth): [date max="2010-12-31"]
+
+@interests(Your Interests): [checkbox options="Technology,Sports,Music,Travel,Gaming"]
+@newsletter(Newsletter): [checkbox content="Subscribe to our weekly newsletter"]
+
+@[submit "Create Account" class="btn btn-primary btn-lg"]
+@[reset "Clear Form" class="btn btn-outline-secondary"]
+@[button "Save as Draft" class="btn btn-warning" onclick="saveDraft()"]
+
+---
+
+## Action Elements with Advanced Styling
+
+### Form with Custom Button Classes
+
+@name: [text required placeholder="Your name"]
+@email: [email required placeholder="your@email.com"]
+
+@[submit "Submit Application" class="btn btn-success btn-lg shadow-lg" data-submit="true"]
+@[button "Preview" class="btn btn-info" onclick="showPreview()" data-preview="true"]
+@[reset "Start Over" class="btn btn-danger btn-sm"]
+
+---
+
+## Mixed Syntax Compatibility
+
+You can mix the new action syntax with legacy syntax:
+
+@username: [text required]
+@password: [password required]
+
+<!-- New syntax (recommended) -->
+@[submit "Sign In"]
+
+<!-- Legacy syntax (still supported) -->  
+@forgot_password: [button label="Forgot Password?" onclick="forgotPassword()"]
+
+---
+
+## Image Buttons
+
+### Upload Form with Image Submit
+
+@files(Upload Files): [file multiple accept="image/*,application/pdf"]
+@description: [textarea rows=3 placeholder="Describe your files..."]
+
+@[image "Upload Files" src="/images/upload-btn.png" width="150" height="40"]
+@[button "Cancel Upload" class="btn-cancel" onclick="cancelUpload()"]
+
+---
+
+## Technical Benefits
+
+### 🎯 **Semantic Clarity**
+- **Input Fields**: `@field: [type]` (data collection)
+- **Actions**: `@[action "label"]` (user actions)
+
+### 📝 **Markdown Compatibility**  
+- Avoids confusion with Markdown links `[text](url)`
+- Clear FormDown namespace with `@[...]`
+
+### ⚡ **Concise & Intuitive**
+```formdown
+<!-- Before -->
+@submit_button: [submit label="Send Message" class="btn-primary"]
+
+<!-- After -->
+@[submit "Send Message" class="btn-primary"]
+```
+
+### 🔄 **Full Backward Compatibility**
+Both syntaxes work together seamlessly!
+
+---
+
+## Form Output
+
+All action elements integrate with FormDown's **Hidden Form Architecture**:
+
+```html
+<!-- Generated HTML -->
+<form hidden id="formdown-form-1" action="/register" method="POST"></form>
+
+<div class="formdown-field-container">
+  <input type="text" name="name" form="formdown-form-1" required>
+</div>
+
+<div class="formdown-field-container">
+  <button type="submit" form="formdown-form-1" class="btn btn-primary">
+    Send Message
+  </button>
+</div>
+```
+
+This ensures clean styling without form wrapper interference! ✨

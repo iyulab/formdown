@@ -1,6 +1,136 @@
 # Latest Features
 
-## 🎉 Core-First Architecture Phase 2 Complete (Latest)
+## 🎯 HTML5 Datalist Support (Latest - Phase 2)
+
+**Major Enhancement:** Complete HTML5 datalist support for advanced autocomplete functionality with dual syntax options.
+
+### What's New
+
+FormDown now supports HTML5 datalist elements for enhanced user experience:
+
+- **Dual Syntax Support**: Both explicit declarations and shorthand auto-generation
+- **Autocomplete UX**: Native browser autocomplete with custom option lists  
+- **Smart Deduplication**: Automatic reuse of identical option lists
+- **XSS Protection**: All datalist options are HTML-escaped for security
+- **Form Integration**: Seamless integration with Hidden Form Architecture
+
+### Quick Examples
+
+**Explicit Datalist Declaration (Reusable):**
+```formdown
+@datalist[id="countries" options="Korea,Japan,China,USA,Canada,UK"]
+@datalist[id="languages" options="JavaScript,TypeScript,Python,Java,Go,Rust"]
+
+@country(Preferred Country): [text datalist="countries" autocomplete="country"]
+@language(Primary Language): [text datalist="languages"]
+```
+
+**Shorthand Auto-Generation (Quick):**
+```formdown
+@city{Seoul,Tokyo,Beijing,New York,London}: [text autocomplete="address-level2"]
+@framework{React,Vue,Angular,Svelte}: [text]
+@status{Active,Inactive,Pending}: [text]
+```
+
+**Complete Registration Form:**
+```formdown
+@form[action="/register" method="POST"]
+
+# User Registration with Autocomplete
+
+@datalist[id="countries" options="Korea,Japan,China,USA,Canada,UK,Germany,France"]
+
+@name(Full Name): [text required minlength=2]
+@email(Email Address): [email required]
+@country(Country): [text datalist="countries" autocomplete="country"]
+@city{Seoul,Tokyo,Beijing,New York,London,Paris}: [text autocomplete="address-level2"]
+
+@skills{JavaScript,Python,React,Node.js,AWS,Docker}: [text placeholder="Start typing..."]
+@timezone{UTC,PST,EST,JST,CET,KST}: [text]
+
+@[submit "Complete Registration"]
+```
+
+### Key Benefits
+
+1. **Enhanced UX**: Native browser autocomplete with custom suggestions
+2. **Flexibility**: Choose between explicit reusable lists or quick shorthand
+3. **Performance**: Smart deduplication prevents duplicate datalist elements
+4. **Standards Compliant**: Uses native HTML5 `<datalist>` and `list` attribute
+5. **Accessibility**: Full keyboard navigation and screen reader support
+
+### Technical Features
+
+- **Smart ID Generation**: Hash-based unique IDs for shorthand syntax
+- **Validation**: Proper error handling for missing/empty attributes  
+- **HTML Output**: Clean `<datalist><option>` structure generation
+- **Browser Fallback**: Graceful degradation to regular text inputs
+
+[**Try the Interactive Demo →**](/demo)
+
+---
+
+## 🎯 Enhanced Action Elements (Latest - Phase 2)
+
+**Major Enhancement:** Improved action element syntax for better semantic clarity and Markdown compatibility.
+
+### What's New
+
+Enhanced action element syntax that clearly distinguishes user actions from input fields:
+
+- **Semantic Clarity**: Actions (`@[action]`) vs. Input Fields (`@field: [type]`)
+- **Markdown Compatibility**: Avoids confusion with Markdown link syntax
+- **Concise Syntax**: More intuitive and less verbose than legacy approach
+- **Full Backward Compatibility**: Both syntaxes work seamlessly together
+
+### New Action Syntax (Recommended)
+
+```formdown
+@[submit "Send Message"]                           # Submit button
+@[reset "Clear Form"]                              # Reset button  
+@[button "Calculate" onclick="calculate()"]        # Custom button
+@[image "Submit Order" src="/submit.png"]          # Image button
+```
+
+**With Advanced Styling:**
+```formdown
+@[submit "Complete Registration" class="btn btn-success btn-lg"]
+@[button "Save Draft" class="btn btn-warning" onclick="saveDraft()"]
+@[reset "Start Over" class="btn btn-outline-secondary"]
+```
+
+### Complete Form Example
+
+```formdown
+@form[action="/contact" method="POST"]
+
+# Contact Form with Enhanced Actions
+
+@name(Full Name): [text required minlength=2]
+@email(Email Address): [email required]
+@message: [textarea required rows=4 placeholder="Your message..."]
+
+@priority{Low,Medium,High}: [radio]
+@newsletter: [checkbox content="Subscribe to our newsletter"]
+
+@[submit "Send Message" class="btn btn-primary"]
+@[reset "Clear Form" class="btn btn-outline-secondary"]
+@[button "Save Draft" class="btn btn-warning" onclick="saveDraft()"]
+```
+
+### Benefits
+
+- ✅ **Clear Semantics**: Immediate distinction between data input and user actions
+- ✅ **Better Readability**: Action intent is obvious at first glance
+- ✅ **Markdown Safe**: No conflicts with `[text](url)` link syntax
+- ✅ **Framework Ready**: Generated HTML works with all CSS frameworks
+- ✅ **Backward Compatible**: Legacy `@button: [submit]` syntax still supported
+
+[**View Action Elements Demo →**](/samples/file-button-fields.fd)
+
+---
+
+## 🎉 Core-First Architecture Phase 2 Complete
 
 **Major Achievement:** Revolutionary **FormManager + 4 Core modules** architecture with 100% legacy code elimination and complete UI/Editor integration.
 

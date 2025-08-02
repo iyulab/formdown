@@ -1,0 +1,130 @@
+# 📝 Datalist Support Demo - Phase 2 HTML5 Enhancement
+
+This demo showcases FormDown's new datalist support for autocomplete functionality.
+
+## Explicit Datalist Declaration
+
+You can define reusable datalist elements:
+
+```formdown
+@datalist[id="countries" options="Korea,Japan,China,USA,Canada,UK,Germany,France"]
+@datalist[id="programming-languages" options="JavaScript,TypeScript,Python,Java,C#,Go,Rust"]
+```
+
+@datalist[id="countries" options="Korea,Japan,China,USA,Canada,UK,Germany,France"]
+@datalist[id="programming-languages" options="JavaScript,TypeScript,Python,Java,C#,Go,Rust"]
+
+## Using Datalist with Fields
+
+### Explicit Reference (Recommended for Reusable Lists)
+
+@country(Preferred Country): [text datalist="countries" autocomplete="country"]
+@language(Primary Language): [text datalist="programming-languages"]
+
+### Shorthand Syntax (Auto-Generated Datalist)
+
+The shorthand syntax automatically creates datalist elements:
+
+@city{Seoul,Tokyo,Beijing,New York,London,Paris}: [text autocomplete="address-level2"]
+@framework{React,Vue,Angular,Svelte,Next.js}: [text]
+@browser{Chrome,Firefox,Safari,Edge}: [text]
+
+---
+
+## Complete Registration Form Example
+
+@form[action="/register" method="POST"]
+
+### Personal Information
+
+@name(Full Name): [text required minlength=2]
+@email(Email Address): [email required]
+@country(Country): [text datalist="countries" required autocomplete="country"]
+@city{Seoul,Tokyo,Beijing,New York,London,Paris,Berlin}: [text autocomplete="address-level2"]
+
+### Professional Details
+
+@job_title{Software Engineer,Product Manager,Designer,Data Scientist,DevOps Engineer}: [text]
+@company{Google,Microsoft,Apple,Amazon,Meta,Netflix}: [text autocomplete="organization"]
+@experience(Years of Experience): [number min=0 max=50]
+@skills{JavaScript,Python,React,Node.js,AWS,Docker,Git}: [text placeholder="e.g., JavaScript, Python"]
+
+### Preferences
+
+@preferred_contact{Email,Phone,Slack,Teams}: [text]
+@timezone{UTC,PST,EST,JST,CET,KST}: [text]
+
+@[submit "Complete Registration"]
+@[reset "Clear Form"]
+
+---
+
+## Advanced Examples
+
+### Mixed Datalist Sources
+
+@explicit_country(Country from Explicit List): [text datalist="countries"]
+@shorthand_city{Los Angeles,Chicago,Houston,Phoenix}: [text]
+
+### Accessibility and Autocomplete
+
+@work_email(Work Email): [email datalist="programming-languages" autocomplete="email" aria-describedby="email-help"]
+@phone_country{+1,+82,+81,+86,+49,+33,+44}: [text autocomplete="tel-country-code"]
+
+---
+
+## HTML Output Examples
+
+The datalist declarations generate clean HTML:
+
+```html
+<!-- Explicit datalist -->
+<datalist id="countries">
+    <option value="Korea">Korea</option>
+    <option value="Japan">Japan</option>
+    <option value="China">China</option>
+    <!-- ... more options -->
+</datalist>
+
+<!-- Auto-generated datalist -->
+<datalist id="datalist-123456">
+    <option value="Seoul">Seoul</option>
+    <option value="Tokyo">Tokyo</option>
+    <!-- ... more options -->
+</datalist>
+
+<!-- Connected input field -->
+<input type="text" 
+       name="country" 
+       list="countries" 
+       autocomplete="country" 
+       form="formdown-form-1">
+```
+
+---
+
+## Technical Features
+
+### ✨ **Dual Syntax Support**
+- **Explicit**: `@datalist[id="name" options="..."]` for reusable lists
+- **Shorthand**: `@field{option1,option2}: [text]` for quick autocomplete
+
+### 🔄 **Smart Deduplication**
+- Identical option lists automatically reuse the same datalist
+- Prevents duplicate datalist elements in HTML output
+
+### 🛡️ **XSS Protection**
+- All datalist options are HTML-escaped
+- Safe rendering of user-provided option values
+
+### 🎯 **Form Integration**
+- Works seamlessly with Hidden Form Architecture
+- Proper HTML5 `list` attribute association
+- Full accessibility support with ARIA attributes
+
+### 📱 **Browser Compatibility**
+- Native HTML5 datalist elements
+- Progressive enhancement - graceful fallback to regular text inputs
+- Mobile-friendly autocomplete experience
+
+This Phase 2 enhancement brings FormDown closer to 100% HTML5 form element coverage! 🚀

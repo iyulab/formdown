@@ -258,9 +258,45 @@ For single checkboxes, you can use the `content` attribute to specify the displa
 - **`layout="vertical"`**: Options are displayed vertically, each on its own line
 
 ### Actions
+
+FormDown supports two syntaxes for action elements (buttons):
+
+#### New Action Syntax (Recommended) ⭐
+```formdown
+@[submit "Send Message"]                           // Submit button
+@[reset "Clear Form"]                              // Reset button  
+@[button "Calculate" onclick="calculate()"]        // Custom button
+@[image "/submit.png" alt="Submit" src="/btn.png"] // Image button
+```
+
+#### Legacy Action Syntax (Still Supported)
 ```formdown
 @submit_btn: [submit label="Submit Form"]
 @reset_btn: [reset label="Clear Form"]
+```
+
+**Benefits of New Action Syntax:**
+- **Semantic Clarity**: Clearly distinguishes actions (`@[action]`) from input fields (`@field: [type]`)
+- **Markdown Compatibility**: Avoids confusion with Markdown link syntax `[text](url)`
+- **Concise**: More intuitive and less verbose
+- **Consistent**: Follows `@[action "label"]` pattern
+
+**Action Types:**
+- `submit` - Form submission button
+- `reset` - Form reset button  
+- `button` - Generic button for JavaScript actions
+- `image` - Image-based submit button
+
+**Advanced Examples:**
+```formdown
+// Button with CSS classes and data attributes
+@[button "Advanced Search" class="btn-primary" data-toggle="modal"]
+
+// Image button with dimensions
+@[image "Submit Order" src="/images/submit.png" width="120" height="40"]
+
+// Submit button with custom styling
+@[submit "Complete Registration" class="btn-success btn-lg"]
 ```
 
 ## Inline Fields 
@@ -342,7 +378,24 @@ Please enter ___@age and ___@email.
 
 ## Examples
 
-### Contact Form (Standard Syntax)
+### Contact Form (New Action Syntax) ⭐
+```formdown
+# Contact Us
+
+@name(Full Name): [text required]
+@email(Email Address): [email required]
+@subject: [text required maxlength=100]
+@message: [textarea required rows=5 placeholder="Your message..."]
+
+@priority: [radio options="Low,Medium,High"]
+@newsletter: [checkbox content="Subscribe to our weekly newsletter"]
+@terms: [checkbox required content="I agree to the terms and conditions"]
+
+@[submit "Send Message"]
+@[reset "Clear Form"]
+```
+
+### Contact Form (Legacy Syntax)
 ```formdown
 # Contact Us
 
@@ -384,7 +437,8 @@ Please enter ___@age and ___@email.
 
 @terms(I agree to terms and conditions): [checkbox required]
 
-@register: [submit label="Create Account"]
+@[submit "Create Account"]
+@[reset "Clear Form"]
 ```
 
 ### Order Form with Inline Fields
@@ -402,7 +456,8 @@ Payment method: ___@payment[radio options="Credit Card,PayPal,Bank Transfer"]
 
 Additional notes: ___@notes[textarea rows=3 placeholder="Special delivery instructions"]
 
-@confirm_order: [submit label="Confirm Order"]
+@[submit "Confirm Order"]
+@[button "Calculate Total" onclick="calculateTotal()"]
 ```
 
 ### Advanced Form with Custom Attributes
@@ -420,7 +475,8 @@ Additional notes: ___@notes[textarea rows=3 placeholder="Special delivery instru
 
 @privacy_level(Privacy Level): [range min=1 max=5 step=1 value=3 style="width: 200px"]
 
-@save_profile: [submit label="Save Changes" class="btn btn-primary"]
+@[submit "Save Changes" class="btn btn-primary"]
+@[button "Preview Profile" class="btn btn-secondary" onclick="previewProfile()"]
 ```
 
 ### Default Values with Value Attribute

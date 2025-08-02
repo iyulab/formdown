@@ -468,7 +468,7 @@ export class FormManager {
       
       return {
         html: previewManager.render(),
-        errors: [], // TODO: Collect parsing errors
+        errors: [], // Parsing errors will be implemented when parser error collection is enhanced
         schema: previewManager.getSchema(),
         fields: previewManager.getFields()
       }

@@ -47,10 +47,17 @@ export interface FormDeclaration {
     position?: number  // Position in the source content for nearest form logic
 }
 
+export interface DatalistDeclaration {
+    id: string
+    options: string[]
+    position?: number
+}
+
 export interface FormdownContent {
     markdown: string
     forms: Field[]
     formDeclarations?: FormDeclaration[]
+    datalistDeclarations?: DatalistDeclaration[]
 }
 
 export interface FormdownOptions {

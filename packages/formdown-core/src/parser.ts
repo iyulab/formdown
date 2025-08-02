@@ -1,11 +1,12 @@
 import { marked } from 'marked'
-import { Field, ParseError, ParseResult, FormdownContent, FormdownOptions, FormDeclaration } from './types'
+import { Field, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration } from './types'
 import { defaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 
 export class FormdownParser {
     private options: FormdownOptions
     private formDeclarations: FormDeclaration[] = []
+    private datalistDeclarations: DatalistDeclaration[] = []
     private currentFormId: string | null = null
     private formCounter = 1
     private defaultFormCreated = false
@@ -23,6 +24,7 @@ export class FormdownParser {
     parseFormdown(content: string): FormdownContent {
         // Reset state for each parse
         this.formDeclarations = []
+        this.datalistDeclarations = []
         this.currentFormId = null
         this.formCounter = 1
         this.defaultFormCreated = false
@@ -32,7 +34,8 @@ export class FormdownParser {
         return {
             markdown: this.options.preserveMarkdown ? cleanedMarkdown : '',
             forms: fields,
-            formDeclarations: this.formDeclarations
+            formDeclarations: this.formDeclarations,
+            datalistDeclarations: this.datalistDeclarations
         }
     }
 
@@ -55,6 +58,15 @@ export class FormdownParser {
                 this.formDeclarations.push(formDeclaration)
                 this.currentFormId = formDeclaration.id
                 // Remove @form declaration from markdown
+                cleanedLines.push('')
+                continue
+            }
+
+            // Check for @datalist declaration
+            const datalistDeclaration = this.parseDatalistDeclaration(line)
+            if (datalistDeclaration) {
+                this.datalistDeclarations.push(datalistDeclaration)
+                // Remove @datalist declaration from markdown
                 cleanedLines.push('')
                 continue
             }
@@ -95,6 +107,12 @@ export class FormdownParser {
         const extensionField = defaultExtensionManager.getFieldTypeRegistry().parseField(trimmedLine, context)
         if (extensionField) {
             return extensionField
+        }
+        
+        // Check for new action element syntax: @[action "label" attributes]
+        const actionField = this.parseActionElement(trimmedLine)
+        if (actionField) {
+            return actionField
         }
         
         // Check if this could be shorthand syntax (has shorthand-specific features)
@@ -147,8 +165,9 @@ export class FormdownParser {
 
         const [, name, requiredMarker, content, customLabel, typeMarker, rowsOrModifier, attributes] = shorthandMatch
         
-        // Only process as shorthand if it has shorthand features (required marker, content, custom label, type marker, or rows)
-        if (!requiredMarker && !content && !customLabel && !typeMarker && !rowsOrModifier) {
+        // Only process as shorthand if it has shorthand features (required marker, content defined, custom label, type marker, or rows)
+        // Note: content === '' (empty string) is different from content === undefined (no braces)
+        if (!requiredMarker && content === undefined && !customLabel && !typeMarker && !rowsOrModifier) {
             return null // Let standard parser handle this
         }
         
@@ -308,21 +327,64 @@ export class FormdownParser {
             return { format: content }
         }
         
-        // Text types: pattern attribute (with mask/glob conversion)
-        let pattern = content
+        // Check if content looks like a regex pattern or mask before treating as datalist
+        // Prioritize comma-separated lists as datalist unless it's clearly a regex
+        const hasComma = content.includes(',')
+        const isRegexPattern = content.match(/^\^.*\$$/) ||              // Full regex pattern: ^pattern$
+                              (content.includes('[') && content.includes(']') && !hasComma) || // Character class without comma
+                              content.includes('\\')                     // Escape sequences: \d, \w
+        const isMaskPattern = content.includes('#') ||                   // Mask pattern: ###-##-####
+                             (!hasComma && content.includes('*'))        // Glob without comma: prefix*
         
-        // Check if it's a mask pattern (contains # or simple *)
-        if (content.includes('#') || (content.includes('*') && !content.match(/^\^.*\$$/))) {
-            pattern = '^' + content
-                .replace(/[().\/]/g, '\\$&')    // Escape special characters except dash
-                .replace(/-/g, '\\-')           // Escape dash separately 
-                .replace(/#{1,}/g, (match) => `\\d{${match.length}}`)  // ### → \d{3}
-                .replace(/\*/g, '.*')           // * → .*
-                .replace(/\?/g, '.')            // ? → .
-                + '$'
+        const isPattern = isRegexPattern || isMaskPattern
+        
+        // If it looks like a pattern, treat as pattern validation
+        if (isPattern) {
+            let pattern = content
+            
+            // Check if it's a mask pattern (contains # or simple *)
+            if (content.includes('#') || (content.includes('*') && !content.match(/^\^.*\$$/))) {
+                pattern = '^' + content
+                    .replace(/[().\/]/g, '\\$&')    // Escape special characters except dash
+                    .replace(/-/g, '\\-')           // Escape dash separately 
+                    .replace(/#{1,}/g, (match) => `\\d{${match.length}}`)  // ### → \d{3}
+                    .replace(/\*/g, '.*')           // * → .*
+                    .replace(/\?/g, '.')            // ? → .
+                    + '$'
+            }
+            
+            return { pattern }
         }
         
-        return { pattern }
+        // Datalist shorthand: automatically create datalist and set list attribute
+        // Example: @country{Korea,Japan,China}: [text autocomplete]
+        if (content && !['r', 's', 'c', 'd', 't', 'dt'].includes(typeMarker)) {
+            // Parse options from content
+            const options = content.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0)
+            
+            if (options.length > 0) { // Create datalist for any valid options
+                // Generate datalist ID from content hash
+                const datalistId = this.generateDatalistId(content)
+                
+                // Create datalist declaration automatically
+                const datalistDeclaration: DatalistDeclaration = {
+                    id: datalistId,
+                    options
+                }
+                
+                // Check if this datalist already exists
+                const existingDatalist = this.datalistDeclarations.find(d => d.id === datalistId)
+                if (!existingDatalist) {
+                    this.datalistDeclarations.push(datalistDeclaration)
+                }
+                
+                // Return list attribute to connect field to datalist
+                return { list: datalistId }
+            }
+        }
+        
+        // Default: treat as pattern for single values or unrecognized formats
+        return { pattern: content }
     }
 
     private parseAttributes(attributeString: string): Record<string, any> {
@@ -336,7 +398,8 @@ export class FormdownParser {
             if (key === 'required') {
                 attributes.required = true
             } else if (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined) {
-                const value = quotedValue1 || quotedValue2 || unquotedValue
+                const value = quotedValue1 !== undefined ? quotedValue1 : 
+                             quotedValue2 !== undefined ? quotedValue2 : unquotedValue
                 attributes[key] = this.parseAttributeValue(value)
             } else {
                 attributes[key] = true
@@ -477,6 +540,9 @@ export class FormdownParser {
                     // value attribute with no value defaults to empty string
                     field.value = ''
                 }
+            } else if (key === 'datalist' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+                // Handle datalist attribute - store the datalist ID for later HTML generation
+                field.attributes!['list'] = quotedValue1 || quotedValue2 || unquotedValue
             } else if (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined) {
                 const value = quotedValue1 || quotedValue2 || unquotedValue
                 field.attributes![key] = this.parseAttributeValue(value)
@@ -523,6 +589,58 @@ export class FormdownParser {
     private capitalizeWord(word: string): string {
         if (!word) return word
         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    }
+
+    /**
+     * Parse action element syntax: @[action "label" attributes]
+     * Examples: @[submit "Send Message"], @[button "Calculate" onclick="calc()"]
+     * @param line - The line to parse
+     * @returns A Field object representing the action element, or null if not matched
+     */
+    private parseActionElement(line: string): Field | null {
+        // Pattern: @[action "label" attributes]
+        // Examples: @[submit "Send Message"], @[reset "Clear"], @[button "Calculate" onclick="calc()"]
+        const actionPattern = /^@\[(\w+)\s+"([^"]+)"([^\]]*)\]$/
+        const match = line.match(actionPattern)
+        
+        if (!match) return null
+        
+        const [, action, label, attributesStr] = match
+        
+        // Validate action type
+        const validActions = ['submit', 'reset', 'button', 'image']
+        if (!validActions.includes(action)) {
+            return null
+        }
+        
+        // Generate a unique field name for the action
+        const fieldName = `${action}_${Math.random().toString(36).substr(2, 9)}`
+        
+        // Parse additional attributes
+        const attributes: Record<string, any> = {}
+        if (attributesStr.trim()) {
+            const attributePairs = this.parseAttributes(attributesStr.trim())
+            Object.assign(attributes, attributePairs)
+        }
+        
+        // Create field object
+        const field: Field = {
+            name: fieldName,
+            type: action === 'image' ? 'image' : 'button',
+            label: label,
+            attributes: {
+                type: action,
+                ...attributes
+            }
+        }
+        
+        // Special handling for image type
+        if (action === 'image' && !attributes.src) {
+            // Image button needs src attribute
+            console.warn(`Image action element missing src attribute: ${line}`)
+        }
+        
+        return field
     }
 
     private parseAttributeValue(value: string): any {
@@ -575,6 +693,65 @@ export class FormdownParser {
 
     private generateFormId(): string {
         return `formdown-form-${this.formCounter++}`
+    }
+
+    /**
+     * Generate a datalist ID from content for automatic datalist creation
+     * @param content - The content string (comma-separated options)
+     * @returns A unique datalist ID
+     */
+    private generateDatalistId(content: string): string {
+        // Create a simple hash from content to ensure uniqueness
+        const normalized = content.toLowerCase().replace(/\s+/g, '').replace(/,/g, '-')
+        const hash = normalized.split('').reduce((a, b) => {
+            a = ((a << 5) - a) + b.charCodeAt(0)
+            return a & a
+        }, 0)
+        return `datalist-${Math.abs(hash)}`
+    }
+
+    /**
+     * Parse @datalist declaration
+     * Examples: @datalist[id="countries" options="Korea,Japan,China,USA"]
+     * @param line - The line to parse
+     * @returns DatalistDeclaration object or null if not matched
+     */
+    private parseDatalistDeclaration(line: string): DatalistDeclaration | null {
+        const trimmedLine = line.trim()
+        
+        // Match @datalist[attributes] pattern
+        const match = trimmedLine.match(/^@datalist\[([^\]]*)\]\s*$/)
+        if (!match) return null
+
+        const attributesString = match[1]
+        const attributes = this.parseAttributes(attributesString)
+        
+        // ID is required for datalist
+        if (!attributes.id) {
+            console.warn('Datalist declaration missing required id attribute:', line)
+            return null
+        }
+        
+        // Options are required for datalist
+        if (attributes.options === undefined) {
+            console.warn('Datalist declaration missing required options attribute:', line)
+            return null
+        }
+        
+        // Parse options from comma-separated string
+        const options = typeof attributes.options === 'string' 
+            ? attributes.options.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0)
+            : []
+        
+        if (options.length === 0) {
+            console.warn('Datalist declaration has empty options:', line)
+            return null
+        }
+        
+        return {
+            id: attributes.id,
+            options
+        }
     }
 
     private getDefaultFormId(): string {

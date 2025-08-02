@@ -32,7 +32,28 @@ jest.mock('@formdown/core', () => ({
     on: jest.fn(),
     off: jest.fn(),
     emit: jest.fn(),
-    reset: jest.fn()
+    reset: jest.fn(),
+    // Core module creation methods
+    createFieldProcessor: jest.fn(() => ({
+      extractFieldValue: jest.fn(),
+      getFieldType: jest.fn()
+    })),
+    createDOMBinder: jest.fn(() => ({
+      bind: jest.fn(),
+      unbind: jest.fn(),
+      syncData: jest.fn()
+    })),
+    createValidationManager: jest.fn(() => ({
+      validate: jest.fn(),
+      addRule: jest.fn()
+    })),
+    createEventOrchestrator: jest.fn(() => ({
+      emit: jest.fn(),
+      on: jest.fn(),
+      off: jest.fn()
+    })),
+    // Component bridge methods
+    setupComponentBridge: jest.fn()
   })),
   generateFormHTML: jest.fn(),
   FormdownParser: jest.fn().mockImplementation(() => ({

@@ -10,13 +10,106 @@ c:I[4911,[],"AsyncMetadataOutlet"]
 e:I[9665,[],"ViewportBoundary"]
 10:I[9665,[],"MetadataBoundary"]
 12:I[6614,[],""]
-:HL["/_next/static/css/bab744f35232d94d.css","style"]
-0:{"P":null,"b":"kMYvbW-Nh9lS73GRPX2Zy","p":"","c":["","docs","new-features",""],"i":false,"f":[[["",{"children":["docs",{"children":[["slug","new-features","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/bab744f35232d94d.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              (function() {\n                try {\n                  const savedTheme = localStorage.getItem('formdown-theme');\n                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');\n                  \n                  if (theme === 'dark') {\n                    document.documentElement.classList.add('dark');\n                    document.body.classList.add('dark');\n                  }\n                } catch (e) {\n                  // Silently fail\n                }\n              })();\n            "}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Formdown\",\"description\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Web Browser\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"creator\":{\"@type\":\"Organization\",\"name\":\"iyulab\",\"url\":\"https://github.com/iyulab\"},\"url\":\"https://formdown.dev\",\"downloadUrl\":\"https://github.com/iyulab/formdown\",\"sameAs\":[\"https://github.com/iyulab/formdown\",\"https://www.npmjs.com/package/@formdown/core\"]}"}}],["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}]]}],["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","div",null,{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center max-w-md mx-auto px-4","children":[["$","h1",null,{"className":"text-6xl font-bold text-blue-600 mb-4","children":"404"}],["$","h2",null,{"className":"text-2xl font-bold text-gray-900 mb-4","children":"Page Not Found"}],["$","p",null,{"className":"text-gray-600 mb-8","children":"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."}],["$","div",null,{"className":"space-x-4","children":[["$","$L6",null,{"href":"/","className":"bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block","children":"Go Home"}],["$","$L6",null,{"href":"/docs","className":"bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block","children":"View Docs"}]]}]]}]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}]]}],{"children":["docs",["$","$1","c",{"children":[null,["$","div",null,{"className":"docs-layout","children":[["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]]}],{"children":[["slug","new-features","d"],["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L8",null,["$","$L9",null,{"children":["$La","$Lb",["$","$Lc",null,{"promise":"$@d"}]]}]]}],{},null,false]},null,false]},null,false]},[["$","div","l",{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center","children":[["$","div",null,{"className":"inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"}],["$","p",null,{"className":"text-gray-600","children":"Loading Formdown..."}]]}]}],[],[]],false],["$","$1","h",{"children":[null,["$","$1","WVUeG_XYJ41hjLrNY9zSav",{"children":[["$","$Le",null,{"children":"$Lf"}],null]}],["$","$L10",null,{"children":"$L11"}]]}],false]],"m":"$undefined","G":["$12","$undefined"],"s":false,"S":true}
+:HL["/_next/static/css/d289824eadf10480.css","style"]
+0:{"P":null,"b":"xAbfkXAFmU5DhB0o0Gdet","p":"","c":["","docs","new-features",""],"i":false,"f":[[["",{"children":["docs",{"children":[["slug","new-features","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/d289824eadf10480.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              (function() {\n                try {\n                  const savedTheme = localStorage.getItem('formdown-theme');\n                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');\n                  \n                  if (theme === 'dark') {\n                    document.documentElement.classList.add('dark');\n                    document.body.classList.add('dark');\n                  }\n                } catch (e) {\n                  // Silently fail\n                }\n              })();\n            "}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Formdown\",\"description\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Web Browser\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"creator\":{\"@type\":\"Organization\",\"name\":\"iyulab\",\"url\":\"https://github.com/iyulab\"},\"url\":\"https://formdown.dev\",\"downloadUrl\":\"https://github.com/iyulab/formdown\",\"sameAs\":[\"https://github.com/iyulab/formdown\",\"https://www.npmjs.com/package/@formdown/core\"]}"}}],["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}]]}],["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","div",null,{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center max-w-md mx-auto px-4","children":[["$","h1",null,{"className":"text-6xl font-bold text-blue-600 mb-4","children":"404"}],["$","h2",null,{"className":"text-2xl font-bold text-gray-900 mb-4","children":"Page Not Found"}],["$","p",null,{"className":"text-gray-600 mb-8","children":"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."}],["$","div",null,{"className":"space-x-4","children":[["$","$L6",null,{"href":"/","className":"bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block","children":"Go Home"}],["$","$L6",null,{"href":"/docs","className":"bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block","children":"View Docs"}]]}]]}]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}]]}],{"children":["docs",["$","$1","c",{"children":[null,["$","div",null,{"className":"docs-layout","children":[["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]]}],{"children":[["slug","new-features","d"],["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L8",null,["$","$L9",null,{"children":["$La","$Lb",["$","$Lc",null,{"promise":"$@d"}]]}]]}],{},null,false]},null,false]},null,false]},[["$","div","l",{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center","children":[["$","div",null,{"className":"inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"}],["$","p",null,{"className":"text-gray-600","children":"Loading Formdown..."}]]}]}],[],[]],false],["$","$1","h",{"children":[null,["$","$1","A8p989UDASUlnu0t0E03fv",{"children":[["$","$Le",null,{"children":"$Lf"}],null]}],["$","$L10",null,{"children":"$L11"}]]}],false]],"m":"$undefined","G":["$12","$undefined"],"s":false,"S":true}
 13:"$Sreact.suspense"
 14:I[4911,[],"AsyncMetadata"]
 16:I[984,["874","static/chunks/874-994f48b66e83c627.js","375","static/chunks/375-811e0189f6b673fa.js","508","static/chunks/app/docs/%5Bslug%5D/page-1286a5c53c96b553.js"],"default"]
 11:["$","div",null,{"hidden":true,"children":["$","$13",null,{"fallback":null,"children":["$","$L14",null,{"promise":"$@15"}]}]}]
-17:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-218:Tf262,<h2>🎉 Core-First Architecture Phase 2 Complete (Latest)</h2>
+17:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-218:T1097a,<h2>🎯 HTML5 Datalist Support (Latest - Phase 2)</h2>
+<p><strong>Major Enhancement:</strong> Complete HTML5 datalist support for advanced autocomplete functionality with dual syntax options.</p>
+<h3>What&#39;s New</h3>
+<p>FormDown now supports HTML5 datalist elements for enhanced user experience:</p>
+<ul>
+<li><strong>Dual Syntax Support</strong>: Both explicit declarations and shorthand auto-generation</li>
+<li><strong>Autocomplete UX</strong>: Native browser autocomplete with custom option lists  </li>
+<li><strong>Smart Deduplication</strong>: Automatic reuse of identical option lists</li>
+<li><strong>XSS Protection</strong>: All datalist options are HTML-escaped for security</li>
+<li><strong>Form Integration</strong>: Seamless integration with Hidden Form Architecture</li>
+</ul>
+<h3>Quick Examples</h3>
+<p><strong>Explicit Datalist Declaration (Reusable):</strong></p>
+<pre class="language-markup"><code class="language-markup">@datalist[id="countries" options="Korea,Japan,China,USA,Canada,UK"]
+@datalist[id="languages" options="JavaScript,TypeScript,Python,Java,Go,Rust"]
+
+@country(Preferred Country): [text datalist="countries" autocomplete="country"]
+@language(Primary Language): [text datalist="languages"]</code></pre><p><strong>Shorthand Auto-Generation (Quick):</strong></p>
+<pre class="language-markup"><code class="language-markup">@city{Seoul,Tokyo,Beijing,New York,London}: [text autocomplete="address-level2"]
+@framework{React,Vue,Angular,Svelte}: [text]
+@status{Active,Inactive,Pending}: [text]</code></pre><p><strong>Complete Registration Form:</strong></p>
+<pre class="language-markup"><code class="language-markup">@form[action="/register" method="POST"]
+
+# User Registration with Autocomplete
+
+@datalist[id="countries" options="Korea,Japan,China,USA,Canada,UK,Germany,France"]
+
+@name(Full Name): [text required minlength=2]
+@email(Email Address): [email required]
+@country(Country): [text datalist="countries" autocomplete="country"]
+@city{Seoul,Tokyo,Beijing,New York,London,Paris}: [text autocomplete="address-level2"]
+
+@skills{JavaScript,Python,React,Node.js,AWS,Docker}: [text placeholder="Start typing..."]
+@timezone{UTC,PST,EST,JST,CET,KST}: [text]
+
+@[submit "Complete Registration"]</code></pre><h3>Key Benefits</h3>
+<ol>
+<li><strong>Enhanced UX</strong>: Native browser autocomplete with custom suggestions</li>
+<li><strong>Flexibility</strong>: Choose between explicit reusable lists or quick shorthand</li>
+<li><strong>Performance</strong>: Smart deduplication prevents duplicate datalist elements</li>
+<li><strong>Standards Compliant</strong>: Uses native HTML5 <code>&lt;datalist&gt;</code> and <code>list</code> attribute</li>
+<li><strong>Accessibility</strong>: Full keyboard navigation and screen reader support</li>
+</ol>
+<h3>Technical Features</h3>
+<ul>
+<li><strong>Smart ID Generation</strong>: Hash-based unique IDs for shorthand syntax</li>
+<li><strong>Validation</strong>: Proper error handling for missing/empty attributes  </li>
+<li><strong>HTML Output</strong>: Clean <code>&lt;datalist&gt;&lt;option&gt;</code> structure generation</li>
+<li><strong>Browser Fallback</strong>: Graceful degradation to regular text inputs</li>
+</ul>
+<p><a href="/demo"><strong>Try the Interactive Demo →</strong></a></p>
+<hr>
+<h2>🎯 Enhanced Action Elements (Latest - Phase 2)</h2>
+<p><strong>Major Enhancement:</strong> Improved action element syntax for better semantic clarity and Markdown compatibility.</p>
+<h3>What&#39;s New</h3>
+<p>Enhanced action element syntax that clearly distinguishes user actions from input fields:</p>
+<ul>
+<li><strong>Semantic Clarity</strong>: Actions (<code>@[action]</code>) vs. Input Fields (<code>@field: [type]</code>)</li>
+<li><strong>Markdown Compatibility</strong>: Avoids confusion with Markdown link syntax</li>
+<li><strong>Concise Syntax</strong>: More intuitive and less verbose than legacy approach</li>
+<li><strong>Full Backward Compatibility</strong>: Both syntaxes work seamlessly together</li>
+</ul>
+<h3>New Action Syntax (Recommended)</h3>
+<pre class="language-markup"><code class="language-markup">@[submit "Send Message"]                           # Submit button
+@[reset "Clear Form"]                              # Reset button  
+@[button "Calculate" onclick="calculate()"]        # Custom button
+@[image "Submit Order" src="/submit.png"]          # Image button</code></pre><p><strong>With Advanced Styling:</strong></p>
+<pre class="language-markup"><code class="language-markup">@[submit "Complete Registration" class="btn btn-success btn-lg"]
+@[button "Save Draft" class="btn btn-warning" onclick="saveDraft()"]
+@[reset "Start Over" class="btn btn-outline-secondary"]</code></pre><h3>Complete Form Example</h3>
+<pre class="language-markup"><code class="language-markup">@form[action="/contact" method="POST"]
+
+# Contact Form with Enhanced Actions
+
+@name(Full Name): [text required minlength=2]
+@email(Email Address): [email required]
+@message: [textarea required rows=4 placeholder="Your message..."]
+
+@priority{Low,Medium,High}: [radio]
+@newsletter: [checkbox content="Subscribe to our newsletter"]
+
+@[submit "Send Message" class="btn btn-primary"]
+@[reset "Clear Form" class="btn btn-outline-secondary"]
+@[button "Save Draft" class="btn btn-warning" onclick="saveDraft()"]</code></pre><h3>Benefits</h3>
+<ul>
+<li>✅ <strong>Clear Semantics</strong>: Immediate distinction between data input and user actions</li>
+<li>✅ <strong>Better Readability</strong>: Action intent is obvious at first glance</li>
+<li>✅ <strong>Markdown Safe</strong>: No conflicts with <code>[text](url)</code> link syntax</li>
+<li>✅ <strong>Framework Ready</strong>: Generated HTML works with all CSS frameworks</li>
+<li>✅ <strong>Backward Compatible</strong>: Legacy <code>@button: [submit]</code> syntax still supported</li>
+</ul>
+<p><a href="/samples/file-button-fields.fd"><strong>View Action Elements Demo →</strong></a></p>
+<hr>
+<h2>🎉 Core-First Architecture Phase 2 Complete</h2>
 <p><strong>Major Achievement:</strong> Revolutionary <strong>FormManager + 4 Core modules</strong> architecture with 100% legacy code elimination and complete UI/Editor integration.</p>
 <h3>Phase 2 Achievements</h3>
 <h4>⭐ <strong>Core Module System Complete</strong></h4>
