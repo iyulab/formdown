@@ -1,0 +1,365 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="preload" as="image" href="/logo.svg"/><link rel="stylesheet" href="/_next/static/css/d289824eadf10480.css" data-precedence="next"/><link rel="preload" as="script" fetchPriority="low" href="/_next/static/chunks/webpack-4191effa370cab95.js"/><script src="/_next/static/chunks/4bd1b696-bad3245065c73f29.js" async=""></script><script src="/_next/static/chunks/684-18ecf1610648e783.js" async=""></script><script src="/_next/static/chunks/main-app-e7651e1df35e0fb3.js" async=""></script><script src="/_next/static/chunks/app/layout-7b1c55d5b08727df.js" async=""></script><script src="/_next/static/chunks/874-994f48b66e83c627.js" async=""></script><script src="/_next/static/chunks/app/error-7fbbcffb8614ab2c.js" async=""></script><script src="/_next/static/chunks/app/not-found-b14baa73986bd718.js" async=""></script><script src="/_next/static/chunks/app/docs/layout-9c00b23166a276ed.js" async=""></script><script src="/_next/static/chunks/375-811e0189f6b673fa.js" async=""></script><script src="/_next/static/chunks/app/docs/%5Bslug%5D/page-1286a5c53c96b553.js" async=""></script><link rel="preload" href="https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js" as="script"/><link rel="preload" href="https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><script>
+              (function() {
+                try {
+                  const savedTheme = localStorage.getItem('formdown-theme');
+                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+                  
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.body.classList.add('dark');
+                  }
+                } catch (e) {
+                  // Silently fail
+                }
+              })();
+            </script><script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Formdown","description":"Create beautiful, interactive HTML forms using a simple markdown-like syntax","applicationCategory":"DeveloperApplication","operatingSystem":"Web Browser","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"creator":{"@type":"Organization","name":"iyulab","url":"https://github.com/iyulab"},"url":"https://formdown.dev","downloadUrl":"https://github.com/iyulab/formdown","sameAs":["https://github.com/iyulab/formdown","https://www.npmjs.com/package/@formdown/core"]}</script><title>Formdown - Markdown-based Form Builder</title><meta name="description" content="Create beautiful, interactive HTML forms using a simple markdown-like syntax. Build forms quickly with real-time preview, validation, and seamless integration."/><meta name="author" content="iyulab"/><link rel="manifest" href="/manifest.webmanifest"/><meta name="keywords" content="form builder,markdown forms,html forms,form generator,web forms,interactive forms,form validation,formdown,javascript forms,typescript forms"/><meta name="creator" content="iyulab"/><meta name="publisher" content="iyulab"/><meta name="robots" content="index, follow"/><meta name="googlebot" content="index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"/><link rel="canonical" href="https://formdown.dev/"/><meta property="og:title" content="Formdown - Markdown-based Form Builder"/><meta property="og:description" content="Create beautiful, interactive HTML forms using a simple markdown-like syntax. Build forms quickly with real-time preview, validation, and seamless integration."/><meta property="og:url" content="https://formdown.dev/"/><meta property="og:site_name" content="Formdown"/><meta property="og:locale" content="en_US"/><meta property="og:image" content="https://formdown.dev/logo.png"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Formdown - Markdown-based Form Builder"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Formdown - Markdown-based Form Builder"/><meta name="twitter:description" content="Create beautiful, interactive HTML forms using a simple markdown-like syntax."/><meta name="twitter:image" content="https://formdown.dev/logo.png"/><link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="256x256"/><script>document.querySelectorAll('body link[rel="icon"], body link[rel="apple-touch-icon"]').forEach(el => document.head.appendChild(el))</script><script src="/_next/static/chunks/polyfills-42372ed130431b0a.js" noModule=""></script></head><body class="__variable_5cfdac __variable_9a8899 antialiased"><div hidden=""><!--$--><!--/$--></div><!--$--><div class="docs-layout"><script>(self.__next_s=self.__next_s||[]).push(["https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js",{}])</script><script>(self.__next_s=self.__next_s||[]).push(["https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js",{}])</script><div class="min-h-screen bg-white dark:bg-gray-900"><header class="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 sticky top-0 z-50"><div class="max-w-7xl mx-auto px-6 py-4"><nav class="flex items-center justify-between"><div class="flex items-center space-x-6"><a class="flex items-center space-x-2" href="/"><img src="/logo.svg" alt="Formdown" class="w-8 h-8"/><span class="text-xl font-semibold text-gray-900 dark:text-white">Formdown</span></a><a class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400" href="/docs/">Docs</a></div><div class="flex items-center space-x-4"><button class="flex items-center space-x-2 px-3 py-1.5 text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><span class="hidden sm:inline">Search</span><span class="hidden sm:inline text-xs"><kbd class="px-1 py-0.5 bg-white dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-xs">⌘K</kbd></span></button><div class="relative p-2 w-9 h-9 rounded-md"></div><a class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400" href="/demo/">Demo</a><a class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400" href="/">Home</a></div></nav></div></header><div class="max-w-7xl mx-auto"><div class="lg:flex"><aside class="hidden lg:block w-64 flex-shrink-0 border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 fixed top-16 left-0 h-screen overflow-y-auto z-40"><div class="p-6"><button class="w-full flex items-center space-x-3 px-3 py-2 mb-4 text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg><span>Search docs</span><span class="ml-auto text-xs"><kbd class="px-1 py-0.5 bg-gray-100 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 rounded text-xs">⌘K</kbd></span></button><nav class="space-y-1"><a class="block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700" href="/docs/">Getting Started</a><a class="block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700" href="/docs/installation/">Installation</a><a class="block px-3 py-2 text-sm font-medium rounded-md transition-colors bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300" href="/docs/basics/">Basic Syntax</a><a class="block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700" href="/docs/shorthand/">Shorthand Syntax</a><a class="block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700" href="/docs/reference/">Field Reference</a><a class="block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700" href="/docs/validation/">Validation</a><a class="block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700" href="/docs/api/">JavaScript API</a><a class="block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700" href="/docs/editor/">Editor Tools</a><a class="block px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700" href="/docs/examples/">Examples</a></nav></div></aside><div class="lg:hidden mb-6 border-b border-gray-200 dark:border-gray-700"><div class="p-4"><div class="grid grid-cols-2 gap-2"><a class="px-3 py-2 text-sm font-medium rounded-md text-center transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600" href="/docs/">Getting Started</a><a class="px-3 py-2 text-sm font-medium rounded-md text-center transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600" href="/docs/installation/">Installation</a><a class="px-3 py-2 text-sm font-medium rounded-md text-center transition-colors bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300" href="/docs/basics/">Basic Syntax</a><a class="px-3 py-2 text-sm font-medium rounded-md text-center transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600" href="/docs/shorthand/">Shorthand Syntax</a><a class="px-3 py-2 text-sm font-medium rounded-md text-center transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600" href="/docs/reference/">Field Reference</a><a class="px-3 py-2 text-sm font-medium rounded-md text-center transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600" href="/docs/validation/">Validation</a><a class="px-3 py-2 text-sm font-medium rounded-md text-center transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600" href="/docs/api/">JavaScript API</a><a class="px-3 py-2 text-sm font-medium rounded-md text-center transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600" href="/docs/editor/">Editor Tools</a><a class="px-3 py-2 text-sm font-medium rounded-md text-center transition-colors text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600" href="/docs/examples/">Examples</a></div></div></div><main class="flex-1 min-w-0 lg:ml-64"><div class="max-w-4xl mx-auto px-6 py-8"><div><h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">Basic Syntax</h1><article class="prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-2"><p>Learn the fundamentals of Formdown syntax to create interactive forms.</p>
+<h2>Core Concept</h2>
+<p>Formdown uses a simple pattern: <code>@field_name: [type attributes]</code></p>
+<pre class="language-markup"><code class="language-markup">@name: [text required]
+@email: [email required]
+@submit: [submit label="Send"]</code></pre><p><strong>That&#39;s it!</strong> This creates a complete form with validation.</p>
+<h2>Field Anatomy</h2>
+<p>Every Formdown field has these parts:</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Required</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@</code></td>
+<td>✅</td>
+<td>Field marker</td>
+<td><code>@</code></td>
+</tr>
+<tr>
+<td><code>field_name</code></td>
+<td>✅</td>
+<td>Unique identifier</td>
+<td><code>name</code>, <code>email_address</code></td>
+</tr>
+<tr>
+<td><code>(Label)</code></td>
+<td>❌</td>
+<td>Custom label</td>
+<td><code>(Full Name)</code></td>
+</tr>
+<tr>
+<td><code>:</code></td>
+<td>✅</td>
+<td>Separator</td>
+<td><code>:</code></td>
+</tr>
+<tr>
+<td><code>[type attributes]</code></td>
+<td>✅</td>
+<td>Field definition</td>
+<td><code>[text required]</code></td>
+</tr>
+</tbody></table>
+<p><strong>Complete example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@first_name(Full Name): [text required placeholder="Enter your name"]</code></pre><h2>Smart Labels</h2>
+<p>Formdown automatically generates readable labels from field names:</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Generated Label</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td>&quot;Name&quot;</td>
+</tr>
+<tr>
+<td><code>first_name</code></td>
+<td>&quot;First Name&quot;</td>
+</tr>
+<tr>
+<td><code>email_address</code></td>
+<td>&quot;Email Address&quot;</td>
+</tr>
+<tr>
+<td><code>phone_number</code></td>
+<td>&quot;Phone Number&quot;</td>
+</tr>
+<tr>
+<td><code>dateOfBirth</code></td>
+<td>&quot;Date Of Birth&quot;</td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@first_name: []        # Label: "First Name"
+@email_address: []     # Label: "Email Address"
+@phone_number: []      # Label: "Phone Number"</code></pre><h2>Custom Labels</h2>
+<p>Override automatic labels when needed:</p>
+<h3>Method 1: Parentheses (Recommended)</h3>
+<pre class="language-markup"><code class="language-markup">@user_name(Full Name): [text required]
+@contact_email(Email Address): [email required]
+@birth_date(Date of Birth): [date]</code></pre><h3>Method 2: Label Attribute</h3>
+<pre class="language-markup"><code class="language-markup">@user_name: [text required label="Full Name"]
+@contact_email: [email required label="Email Address"]
+@birth_date: [date label="Date of Birth"]</code></pre><p>Both methods produce identical results. Use parentheses for cleaner syntax.</p>
+<h2>Basic Field Types</h2>
+<h3>Text Input Fields</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>text</code></td>
+<td>General text input</td>
+<td><code>@name: [text]</code></td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>Email with validation</td>
+<td><code>@email: [email]</code></td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>Hidden text input</td>
+<td><code>@password: [password]</code></td>
+</tr>
+<tr>
+<td><code>tel</code></td>
+<td>Phone number input</td>
+<td><code>@phone: [tel]</code></td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>URL with validation</td>
+<td><code>@website: [url]</code></td>
+</tr>
+<tr>
+<td><code>number</code></td>
+<td>Numeric input</td>
+<td><code>@age: [number]</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@name: [text required]
+@email: [email required]
+@password: [password minlength=8]
+@phone: [tel]
+@website: [url]
+@age: [number min=18 max=100]</code></pre><h3>Date and Time Fields</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>date</code></td>
+<td>Date picker</td>
+<td><code>@birth_date: [date]</code></td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>Time selector</td>
+<td><code>@meeting_time: [time]</code></td>
+</tr>
+<tr>
+<td><code>datetime-local</code></td>
+<td>Date and time</td>
+<td><code>@appointment: [datetime-local]</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@birth_date: [date max="2010-12-31"]
+@meeting_time: [time min="09:00" max="17:00"]
+@appointment: [datetime-local required]</code></pre><h3>Text Area</h3>
+<p>For multi-line text input:</p>
+<pre class="language-markup"><code class="language-markup">@description: [textarea]
+@bio: [textarea rows=4]
+@comments: [textarea rows=6 placeholder="Your thoughts..."]</code></pre><h3>Selection Fields</h3>
+<h4>Radio Buttons (Single Choice)</h4>
+<pre class="language-markup"><code class="language-markup">@size: [radio options="Small,Medium,Large"]
+@priority: [radio options="Low,Medium,High"]</code></pre><h4>Checkboxes</h4>
+<p><strong>Single checkbox (yes/no):</strong></p>
+<pre class="language-markup"><code class="language-markup">@newsletter: [checkbox]
+@terms(I agree to terms): [checkbox required]</code></pre><p><strong>Checkbox group (multiple choice):</strong></p>
+<pre class="language-markup"><code class="language-markup">@interests: [checkbox options="Web,Mobile,AI,Design"]
+@features: [checkbox options="Feature A,Feature B,Feature C"]</code></pre><h4>Select Dropdown</h4>
+<pre class="language-markup"><code class="language-markup">@country: [select options="USA,Canada,UK,Other"]
+@department: [select options="Sales,Marketing,Engineering"]</code></pre><h3>Action Buttons</h3>
+<pre class="language-markup"><code class="language-markup">@submit_form: [submit label="Send Message"]
+@clear_form: [reset label="Clear Form"]
+@preview: [button label="Preview"]</code></pre><h2>Common Attributes</h2>
+<h3>Validation Attributes</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>required</code></td>
+<td>Field must be filled</td>
+<td><code>required</code></td>
+</tr>
+<tr>
+<td><code>minlength</code></td>
+<td>Minimum text length</td>
+<td><code>minlength=3</code></td>
+</tr>
+<tr>
+<td><code>maxlength</code></td>
+<td>Maximum text length</td>
+<td><code>maxlength=100</code></td>
+</tr>
+<tr>
+<td><code>min</code></td>
+<td>Minimum number/date</td>
+<td><code>min=18</code></td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td>Maximum number/date</td>
+<td><code>max=100</code></td>
+</tr>
+<tr>
+<td><code>pattern</code></td>
+<td>Custom validation regex</td>
+<td><code>pattern=&quot;[0-9]{3}-[0-9]{2}-[0-9]{4}&quot;</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@username: [text required minlength=3 maxlength=20]
+@age: [number required min=18 max=120]
+@phone: [tel pattern="\\(\\d{3}\\)\\d{3}-\\d{4}"]</code></pre><h3>Display Attributes</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>placeholder</code></td>
+<td>Hint text</td>
+<td><code>placeholder=&quot;Enter your name&quot;</code></td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>Default value</td>
+<td><code>value=&quot;John Doe&quot;</code></td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td>Disable field</td>
+<td><code>disabled</code></td>
+</tr>
+<tr>
+<td><code>readonly</code></td>
+<td>Read-only field</td>
+<td><code>readonly</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@name: [text placeholder="Enter your full name"]
+@country: [text value="United States"]
+@user_id: [text readonly value="12345"]</code></pre><h3>HTML Attributes</h3>
+<p>All HTML attributes are supported:</p>
+<pre class="language-markup"><code class="language-markup">@email: [email required autocomplete="email" spellcheck="false"]
+@password: [password class="form-control" data-strength="true"]
+@bio: [textarea rows=4 style="border: 2px solid #ccc"]</code></pre><h2>Minimal Syntax</h2>
+<p>For quick prototyping, use minimal syntax:</p>
+<h3>Empty Brackets</h3>
+<pre class="language-markup"><code class="language-markup">@name: []        # Defaults to text input
+@email: []       # Defaults to text input
+@age: []         # Defaults to text input</code></pre><h3>Simple Form</h3>
+<pre class="language-markup"><code class="language-markup"># Contact Form
+@name: []
+@email: []
+@message: [textarea]
+@submit: [submit]</code></pre><p>This creates a working contact form with smart labels and basic validation.</p>
+<h2>Required Fields</h2>
+<p>Mark fields as required using the <code>required</code> attribute:</p>
+<pre class="language-markup"><code class="language-markup">@name: [text required]
+@email: [email required]
+@age: [number required min=18]
+@terms: [checkbox required]</code></pre><p><strong>Required fields show with asterisk (*) in labels.</strong></p>
+<h2>Complete Examples</h2>
+<h3>Contact Form</h3>
+<pre class="language-markup"><code class="language-markup"># Contact Us
+
+@name(Full Name): [text required]
+@email(Email Address): [email required]
+@subject: [text required maxlength=100]
+@message: [textarea required rows=5 placeholder="Your message..."]
+@priority: [radio options="Low,Medium,High"]
+@newsletter(Subscribe to newsletter): [checkbox]
+
+@submit_form: [submit label="Send Message"]</code></pre><h3>Registration Form</h3>
+<pre class="language-markup"><code class="language-markup"># User Registration
+
+@username: [text required minlength=4 pattern="[a-zA-Z0-9_]+"]
+@email: [email required]
+@password: [password required minlength=8]
+@confirm_password(Confirm Password): [password required]
+@birth_date(Date of Birth): [date required max="2010-12-31"]
+@gender: [radio options="Male,Female,Other"]
+@interests: [checkbox options="Technology,Sports,Music,Travel"]
+@terms(I agree to the terms and conditions): [checkbox required]
+
+@register: [submit label="Create Account"]
+@reset: [reset label="Clear Form"]</code></pre><h3>Survey Form</h3>
+<pre class="language-markup"><code class="language-markup"># Customer Satisfaction Survey
+
+@customer_name(Your Name): [text required]
+@email: [email required]
+@service_date(Service Date): [date required]
+@rating(Overall Rating): [radio options="1 - Poor,2 - Fair,3 - Good,4 - Very Good,5 - Excellent"]
+@satisfaction: [select options="Very Dissatisfied,Dissatisfied,Neutral,Satisfied,Very Satisfied"]
+@improvements: [checkbox options="Faster Service,Better Communication,Lower Prices,More Options"]
+@comments: [textarea rows=4 placeholder="Additional comments..."]
+@recommend(Would you recommend us?): [radio options="Yes,No,Maybe"]
+
+@submit_survey: [submit label="Submit Survey"]</code></pre><h2>Next Steps</h2>
+<ol>
+<li><strong><a href="./shorthand">Shorthand Syntax</a></strong> - Learn faster form creation</li>
+<li><strong><a href="./reference">Field Reference</a></strong> - Complete field type reference</li>
+<li><strong><a href="./validation">Validation</a></strong> - Advanced validation rules</li>
+<li><strong><a href="./examples">Examples</a></strong> - More real-world examples</li>
+</ol>
+<h2>Tips</h2>
+<h3>Field Naming</h3>
+<ul>
+<li>Use descriptive names: <code>email_address</code> not <code>email</code></li>
+<li>Use snake_case for consistency: <code>first_name</code> not <code>firstname</code></li>
+<li>Avoid starting with numbers: <code>user_1</code> not <code>1st_user</code></li>
+</ul>
+<h3>Organization</h3>
+<ul>
+<li>Group related fields together</li>
+<li>Use headers (<code>#</code>, <code>##</code>) to organize sections</li>
+<li>Add descriptive text between field groups</li>
+</ul>
+<h3>Validation</h3>
+<ul>
+<li>Always mark required fields</li>
+<li>Use appropriate input types (<code>email</code>, <code>tel</code>, <code>number</code>)</li>
+<li>Add reasonable constraints (<code>min</code>, <code>max</code>, <code>maxlength</code>)</li>
+</ul>
+<h3>Labels</h3>
+<ul>
+<li>Let smart generation handle simple cases</li>
+<li>Use custom labels for clarity when needed</li>
+<li>Keep labels concise but descriptive</li>
+</ul>
+</article></div><div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700 flex justify-between"><div><a class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400" href="/docs/installation/"><svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>Installation</a></div><div><a class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400" href="/docs/shorthand/">Shorthand Syntax<svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg></a></div></div></div></main></div></div></div><!--$--><!--/$--></div><!--/$--><script src="/_next/static/chunks/webpack-4191effa370cab95.js" async=""></script><script>(self.__next_f=self.__next_f||[]).push([0])</script><script>self.__next_f.push([1,"1:\"$Sreact.fragment\"\n2:I[7740,[\"177\",\"static/chunks/app/layout-7b1c55d5b08727df.js\"],\"ThemeProvider\"]\n3:I[7555,[],\"\"]\n4:I[1901,[\"874\",\"static/chunks/874-994f48b66e83c627.js\",\"39\",\"static/chunks/app/error-7fbbcffb8614ab2c.js\"],\"default\"]\n5:I[1295,[],\"\"]\n6:I[6874,[\"874\",\"static/chunks/874-994f48b66e83c627.js\",\"345\",\"static/chunks/app/not-found-b14baa73986bd718.js\"],\"\"]\n7:I[9243,[\"499\",\"static/chunks/app/docs/layout-9c00b23166a276ed.js\"],\"\"]\n9:I[9665,[],\"OutletBoundary\"]\nc:I[4911,[],\"AsyncMetadataOutlet\"]\ne:I[9665,[],\"ViewportBoundary\"]\n10:I[9665,[],\"MetadataBoundary\"]\n12:I[6614,[],\"\"]\n:HL[\"/_next/static/css/d289824eadf10480.css\",\"style\"]\n"])</script><script>self.__next_f.push([1,"0:{\"P\":null,\"b\":\"d-ZwJ1JItdDl4SfSpJZb4\",\"p\":\"\",\"c\":[\"\",\"docs\",\"basics\",\"\"],\"i\":false,\"f\":[[[\"\",{\"children\":[\"docs\",{\"children\":[[\"slug\",\"basics\",\"d\"],{\"children\":[\"__PAGE__\",{}]}]}]},\"$undefined\",\"$undefined\",true],[\"\",[\"$\",\"$1\",\"c\",{\"children\":[[[\"$\",\"link\",\"0\",{\"rel\":\"stylesheet\",\"href\":\"/_next/static/css/d289824eadf10480.css\",\"precedence\":\"next\",\"crossOrigin\":\"$undefined\",\"nonce\":\"$undefined\"}]],[\"$\",\"html\",null,{\"lang\":\"en\",\"suppressHydrationWarning\":true,\"children\":[[\"$\",\"head\",null,{\"children\":[[\"$\",\"script\",null,{\"dangerouslySetInnerHTML\":{\"__html\":\"\\n              (function() {\\n                try {\\n                  const savedTheme = localStorage.getItem('formdown-theme');\\n                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\\n                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');\\n                  \\n                  if (theme === 'dark') {\\n                    document.documentElement.classList.add('dark');\\n                    document.body.classList.add('dark');\\n                  }\\n                } catch (e) {\\n                  // Silently fail\\n                }\\n              })();\\n            \"}}],[\"$\",\"script\",null,{\"type\":\"application/ld+json\",\"dangerouslySetInnerHTML\":{\"__html\":\"{\\\"@context\\\":\\\"https://schema.org\\\",\\\"@type\\\":\\\"SoftwareApplication\\\",\\\"name\\\":\\\"Formdown\\\",\\\"description\\\":\\\"Create beautiful, interactive HTML forms using a simple markdown-like syntax\\\",\\\"applicationCategory\\\":\\\"DeveloperApplication\\\",\\\"operatingSystem\\\":\\\"Web Browser\\\",\\\"offers\\\":{\\\"@type\\\":\\\"Offer\\\",\\\"price\\\":\\\"0\\\",\\\"priceCurrency\\\":\\\"USD\\\"},\\\"creator\\\":{\\\"@type\\\":\\\"Organization\\\",\\\"name\\\":\\\"iyulab\\\",\\\"url\\\":\\\"https://github.com/iyulab\\\"},\\\"url\\\":\\\"https://formdown.dev\\\",\\\"downloadUrl\\\":\\\"https://github.com/iyulab/formdown\\\",\\\"sameAs\\\":[\\\"https://github.com/iyulab/formdown\\\",\\\"https://www.npmjs.com/package/@formdown/core\\\"]}\"}}],[\"$\",\"link\",null,{\"rel\":\"preconnect\",\"href\":\"https://fonts.googleapis.com\"}],[\"$\",\"link\",null,{\"rel\":\"preconnect\",\"href\":\"https://fonts.gstatic.com\",\"crossOrigin\":\"anonymous\"}]]}],[\"$\",\"body\",null,{\"className\":\"__variable_5cfdac __variable_9a8899 antialiased\",\"children\":[\"$\",\"$L2\",null,{\"children\":[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$4\",\"errorStyles\":[],\"errorScripts\":[],\"template\":[\"$\",\"$L5\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":[[\"$\",\"div\",null,{\"className\":\"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100\",\"children\":[\"$\",\"div\",null,{\"className\":\"text-center max-w-md mx-auto px-4\",\"children\":[[\"$\",\"h1\",null,{\"className\":\"text-6xl font-bold text-blue-600 mb-4\",\"children\":\"404\"}],[\"$\",\"h2\",null,{\"className\":\"text-2xl font-bold text-gray-900 mb-4\",\"children\":\"Page Not Found\"}],[\"$\",\"p\",null,{\"className\":\"text-gray-600 mb-8\",\"children\":\"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.\"}],[\"$\",\"div\",null,{\"className\":\"space-x-4\",\"children\":[[\"$\",\"$L6\",null,{\"href\":\"/\",\"className\":\"bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block\",\"children\":\"Go Home\"}],[\"$\",\"$L6\",null,{\"href\":\"/docs\",\"className\":\"bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block\",\"children\":\"View Docs\"}]]}]]}]}],[]],\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]}]}]]}]]}],{\"children\":[\"docs\",[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"div\",null,{\"className\":\"docs-layout\",\"children\":[[\"$\",\"$L7\",null,{\"src\":\"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js\",\"strategy\":\"beforeInteractive\"}],[\"$\",\"$L7\",null,{\"src\":\"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js\",\"strategy\":\"beforeInteractive\"}],[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L5\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}]]}],{\"children\":[[\"slug\",\"basics\",\"d\"],[\"$\",\"$1\",\"c\",{\"children\":[null,[\"$\",\"$L3\",null,{\"parallelRouterKey\":\"children\",\"error\":\"$undefined\",\"errorStyles\":\"$undefined\",\"errorScripts\":\"$undefined\",\"template\":[\"$\",\"$L5\",null,{}],\"templateStyles\":\"$undefined\",\"templateScripts\":\"$undefined\",\"notFound\":\"$undefined\",\"forbidden\":\"$undefined\",\"unauthorized\":\"$undefined\"}]]}],{\"children\":[\"__PAGE__\",[\"$\",\"$1\",\"c\",{\"children\":[\"$L8\",null,[\"$\",\"$L9\",null,{\"children\":[\"$La\",\"$Lb\",[\"$\",\"$Lc\",null,{\"promise\":\"$@d\"}]]}]]}],{},null,false]},null,false]},null,false]},[[\"$\",\"div\",\"l\",{\"className\":\"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100\",\"children\":[\"$\",\"div\",null,{\"className\":\"text-center\",\"children\":[[\"$\",\"div\",null,{\"className\":\"inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4\"}],[\"$\",\"p\",null,{\"className\":\"text-gray-600\",\"children\":\"Loading Formdown...\"}]]}]}],[],[]],false],[\"$\",\"$1\",\"h\",{\"children\":[null,[\"$\",\"$1\",\"M5cqYuOCBbHMM87C2XXw0v\",{\"children\":[[\"$\",\"$Le\",null,{\"children\":\"$Lf\"}],null]}],[\"$\",\"$L10\",null,{\"children\":\"$L11\"}]]}],false]],\"m\":\"$undefined\",\"G\":[\"$12\",\"$undefined\"],\"s\":false,\"S\":true}\n"])</script><script>self.__next_f.push([1,"13:\"$Sreact.suspense\"\n14:I[4911,[],\"AsyncMetadata\"]\n16:I[984,[\"874\",\"static/chunks/874-994f48b66e83c627.js\",\"375\",\"static/chunks/375-811e0189f6b673fa.js\",\"508\",\"static/chunks/app/docs/%5Bslug%5D/page-1286a5c53c96b553.js\"],\"default\"]\n11:[\"$\",\"div\",null,{\"hidden\":true,\"children\":[\"$\",\"$13\",null,{\"fallback\":null,\"children\":[\"$\",\"$L14\",null,{\"promise\":\"$@15\"}]}]}]\n17:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-218:T2f63,"])</script><script>self.__next_f.push([1,"\u003cp\u003eLearn the fundamentals of Formdown syntax to create interactive forms.\u003c/p\u003e\n\u003ch2\u003eCore Concept\u003c/h2\u003e\n\u003cp\u003eFormdown uses a simple pattern: \u003ccode\u003e@field_name: [type attributes]\u003c/code\u003e\u003c/p\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@name: [text required]\n@email: [email required]\n@submit: [submit label=\"Send\"]\u003c/code\u003e\u003c/pre\u003e\u003cp\u003e\u003cstrong\u003eThat\u0026#39;s it!\u003c/strong\u003e This creates a complete form with validation.\u003c/p\u003e\n\u003ch2\u003eField Anatomy\u003c/h2\u003e\n\u003cp\u003eEvery Formdown field has these parts:\u003c/p\u003e\n\u003ctable\u003e\n\u003cthead\u003e\n\u003ctr\u003e\n\u003cth\u003ePart\u003c/th\u003e\n\u003cth\u003eRequired\u003c/th\u003e\n\u003cth\u003eDescription\u003c/th\u003e\n\u003cth\u003eExample\u003c/th\u003e\n\u003c/tr\u003e\n\u003c/thead\u003e\n\u003ctbody\u003e\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003e@\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003e✅\u003c/td\u003e\n\u003ctd\u003eField marker\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e@\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003efield_name\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003e✅\u003c/td\u003e\n\u003ctd\u003eUnique identifier\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003ename\u003c/code\u003e, \u003ccode\u003eemail_address\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003e(Label)\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003e❌\u003c/td\u003e\n\u003ctd\u003eCustom label\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e(Full Name)\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003e:\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003e✅\u003c/td\u003e\n\u003ctd\u003eSeparator\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e:\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003e[type attributes]\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003e✅\u003c/td\u003e\n\u003ctd\u003eField definition\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e[text required]\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003c/tbody\u003e\u003c/table\u003e\n\u003cp\u003e\u003cstrong\u003eComplete example:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@first_name(Full Name): [text required placeholder=\"Enter your name\"]\u003c/code\u003e\u003c/pre\u003e\u003ch2\u003eSmart Labels\u003c/h2\u003e\n\u003cp\u003eFormdown automatically generates readable labels from field names:\u003c/p\u003e\n\u003ctable\u003e\n\u003cthead\u003e\n\u003ctr\u003e\n\u003cth\u003eField Name\u003c/th\u003e\n\u003cth\u003eGenerated Label\u003c/th\u003e\n\u003c/tr\u003e\n\u003c/thead\u003e\n\u003ctbody\u003e\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003ename\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003e\u0026quot;Name\u0026quot;\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003efirst_name\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003e\u0026quot;First Name\u0026quot;\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003eemail_address\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003e\u0026quot;Email Address\u0026quot;\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003ephone_number\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003e\u0026quot;Phone Number\u0026quot;\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003edateOfBirth\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003e\u0026quot;Date Of Birth\u0026quot;\u003c/td\u003e\n\u003c/tr\u003e\n\u003c/tbody\u003e\u003c/table\u003e\n\u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@first_name: []        # Label: \"First Name\"\n@email_address: []     # Label: \"Email Address\"\n@phone_number: []      # Label: \"Phone Number\"\u003c/code\u003e\u003c/pre\u003e\u003ch2\u003eCustom Labels\u003c/h2\u003e\n\u003cp\u003eOverride automatic labels when needed:\u003c/p\u003e\n\u003ch3\u003eMethod 1: Parentheses (Recommended)\u003c/h3\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@user_name(Full Name): [text required]\n@contact_email(Email Address): [email required]\n@birth_date(Date of Birth): [date]\u003c/code\u003e\u003c/pre\u003e\u003ch3\u003eMethod 2: Label Attribute\u003c/h3\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@user_name: [text required label=\"Full Name\"]\n@contact_email: [email required label=\"Email Address\"]\n@birth_date: [date label=\"Date of Birth\"]\u003c/code\u003e\u003c/pre\u003e\u003cp\u003eBoth methods produce identical results. Use parentheses for cleaner syntax.\u003c/p\u003e\n\u003ch2\u003eBasic Field Types\u003c/h2\u003e\n\u003ch3\u003eText Input Fields\u003c/h3\u003e\n\u003ctable\u003e\n\u003cthead\u003e\n\u003ctr\u003e\n\u003cth\u003eType\u003c/th\u003e\n\u003cth\u003eDescription\u003c/th\u003e\n\u003cth\u003eExample\u003c/th\u003e\n\u003c/tr\u003e\n\u003c/thead\u003e\n\u003ctbody\u003e\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003etext\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eGeneral text input\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e@name: [text]\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003eemail\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eEmail with validation\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e@email: [email]\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003epassword\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eHidden text input\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e@password: [password]\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003etel\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003ePhone number input\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e@phone: [tel]\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003eurl\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eURL with validation\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e@website: [url]\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003enumber\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eNumeric input\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e@age: [number]\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003c/tbody\u003e\u003c/table\u003e\n\u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@name: [text required]\n@email: [email required]\n@password: [password minlength=8]\n@phone: [tel]\n@website: [url]\n@age: [number min=18 max=100]\u003c/code\u003e\u003c/pre\u003e\u003ch3\u003eDate and Time Fields\u003c/h3\u003e\n\u003ctable\u003e\n\u003cthead\u003e\n\u003ctr\u003e\n\u003cth\u003eType\u003c/th\u003e\n\u003cth\u003eDescription\u003c/th\u003e\n\u003cth\u003eExample\u003c/th\u003e\n\u003c/tr\u003e\n\u003c/thead\u003e\n\u003ctbody\u003e\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003edate\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eDate picker\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e@birth_date: [date]\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003etime\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eTime selector\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e@meeting_time: [time]\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003edatetime-local\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eDate and time\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003e@appointment: [datetime-local]\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003c/tbody\u003e\u003c/table\u003e\n\u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@birth_date: [date max=\"2010-12-31\"]\n@meeting_time: [time min=\"09:00\" max=\"17:00\"]\n@appointment: [datetime-local required]\u003c/code\u003e\u003c/pre\u003e\u003ch3\u003eText Area\u003c/h3\u003e\n\u003cp\u003eFor multi-line text input:\u003c/p\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@description: [textarea]\n@bio: [textarea rows=4]\n@comments: [textarea rows=6 placeholder=\"Your thoughts...\"]\u003c/code\u003e\u003c/pre\u003e\u003ch3\u003eSelection Fields\u003c/h3\u003e\n\u003ch4\u003eRadio Buttons (Single Choice)\u003c/h4\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@size: [radio options=\"Small,Medium,Large\"]\n@priority: [radio options=\"Low,Medium,High\"]\u003c/code\u003e\u003c/pre\u003e\u003ch4\u003eCheckboxes\u003c/h4\u003e\n\u003cp\u003e\u003cstrong\u003eSingle checkbox (yes/no):\u003c/strong\u003e\u003c/p\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@newsletter: [checkbox]\n@terms(I agree to terms): [checkbox required]\u003c/code\u003e\u003c/pre\u003e\u003cp\u003e\u003cstrong\u003eCheckbox group (multiple choice):\u003c/strong\u003e\u003c/p\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@interests: [checkbox options=\"Web,Mobile,AI,Design\"]\n@features: [checkbox options=\"Feature A,Feature B,Feature C\"]\u003c/code\u003e\u003c/pre\u003e\u003ch4\u003eSelect Dropdown\u003c/h4\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@country: [select options=\"USA,Canada,UK,Other\"]\n@department: [select options=\"Sales,Marketing,Engineering\"]\u003c/code\u003e\u003c/pre\u003e\u003ch3\u003eAction Buttons\u003c/h3\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@submit_form: [submit label=\"Send Message\"]\n@clear_form: [reset label=\"Clear Form\"]\n@preview: [button label=\"Preview\"]\u003c/code\u003e\u003c/pre\u003e\u003ch2\u003eCommon Attributes\u003c/h2\u003e\n\u003ch3\u003eValidation Attributes\u003c/h3\u003e\n\u003ctable\u003e\n\u003cthead\u003e\n\u003ctr\u003e\n\u003cth\u003eAttribute\u003c/th\u003e\n\u003cth\u003eDescription\u003c/th\u003e\n\u003cth\u003eExample\u003c/th\u003e\n\u003c/tr\u003e\n\u003c/thead\u003e\n\u003ctbody\u003e\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003erequired\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eField must be filled\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003erequired\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003eminlength\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eMinimum text length\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003eminlength=3\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003emaxlength\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eMaximum text length\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003emaxlength=100\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003emin\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eMinimum number/date\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003emin=18\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003emax\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eMaximum number/date\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003emax=100\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003epattern\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eCustom validation regex\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003epattern=\u0026quot;[0-9]{3}-[0-9]{2}-[0-9]{4}\u0026quot;\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003c/tbody\u003e\u003c/table\u003e\n\u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@username: [text required minlength=3 maxlength=20]\n@age: [number required min=18 max=120]\n@phone: [tel pattern=\"\\\\(\\\\d{3}\\\\)\\\\d{3}-\\\\d{4}\"]\u003c/code\u003e\u003c/pre\u003e\u003ch3\u003eDisplay Attributes\u003c/h3\u003e\n\u003ctable\u003e\n\u003cthead\u003e\n\u003ctr\u003e\n\u003cth\u003eAttribute\u003c/th\u003e\n\u003cth\u003eDescription\u003c/th\u003e\n\u003cth\u003eExample\u003c/th\u003e\n\u003c/tr\u003e\n\u003c/thead\u003e\n\u003ctbody\u003e\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003eplaceholder\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eHint text\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003eplaceholder=\u0026quot;Enter your name\u0026quot;\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003evalue\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eDefault value\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003evalue=\u0026quot;John Doe\u0026quot;\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003edisabled\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eDisable field\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003edisabled\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003ctr\u003e\n\u003ctd\u003e\u003ccode\u003ereadonly\u003c/code\u003e\u003c/td\u003e\n\u003ctd\u003eRead-only field\u003c/td\u003e\n\u003ctd\u003e\u003ccode\u003ereadonly\u003c/code\u003e\u003c/td\u003e\n\u003c/tr\u003e\n\u003c/tbody\u003e\u003c/table\u003e\n\u003cp\u003e\u003cstrong\u003eExample:\u003c/strong\u003e\u003c/p\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@name: [text placeholder=\"Enter your full name\"]\n@country: [text value=\"United States\"]\n@user_id: [text readonly value=\"12345\"]\u003c/code\u003e\u003c/pre\u003e\u003ch3\u003eHTML Attributes\u003c/h3\u003e\n\u003cp\u003eAll HTML attributes are supported:\u003c/p\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@email: [email required autocomplete=\"email\" spellcheck=\"false\"]\n@password: [password class=\"form-control\" data-strength=\"true\"]\n@bio: [textarea rows=4 style=\"border: 2px solid #ccc\"]\u003c/code\u003e\u003c/pre\u003e\u003ch2\u003eMinimal Syntax\u003c/h2\u003e\n\u003cp\u003eFor quick prototyping, use minimal syntax:\u003c/p\u003e\n\u003ch3\u003eEmpty Brackets\u003c/h3\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@name: []        # Defaults to text input\n@email: []       # Defaults to text input\n@age: []         # Defaults to text input\u003c/code\u003e\u003c/pre\u003e\u003ch3\u003eSimple Form\u003c/h3\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e# Contact Form\n@name: []\n@email: []\n@message: [textarea]\n@submit: [submit]\u003c/code\u003e\u003c/pre\u003e\u003cp\u003eThis creates a working contact form with smart labels and basic validation.\u003c/p\u003e\n\u003ch2\u003eRequired Fields\u003c/h2\u003e\n\u003cp\u003eMark fields as required using the \u003ccode\u003erequired\u003c/code\u003e attribute:\u003c/p\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e@name: [text required]\n@email: [email required]\n@age: [number required min=18]\n@terms: [checkbox required]\u003c/code\u003e\u003c/pre\u003e\u003cp\u003e\u003cstrong\u003eRequired fields show with asterisk (*) in labels.\u003c/strong\u003e\u003c/p\u003e\n\u003ch2\u003eComplete Examples\u003c/h2\u003e\n\u003ch3\u003eContact Form\u003c/h3\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e# Contact Us\n\n@name(Full Name): [text required]\n@email(Email Address): [email required]\n@subject: [text required maxlength=100]\n@message: [textarea required rows=5 placeholder=\"Your message...\"]\n@priority: [radio options=\"Low,Medium,High\"]\n@newsletter(Subscribe to newsletter): [checkbox]\n\n@submit_form: [submit label=\"Send Message\"]\u003c/code\u003e\u003c/pre\u003e\u003ch3\u003eRegistration Form\u003c/h3\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e# User Registration\n\n@username: [text required minlength=4 pattern=\"[a-zA-Z0-9_]+\"]\n@email: [email required]\n@password: [password required minlength=8]\n@confirm_password(Confirm Password): [password required]\n@birth_date(Date of Birth): [date required max=\"2010-12-31\"]\n@gender: [radio options=\"Male,Female,Other\"]\n@interests: [checkbox options=\"Technology,Sports,Music,Travel\"]\n@terms(I agree to the terms and conditions): [checkbox required]\n\n@register: [submit label=\"Create Account\"]\n@reset: [reset label=\"Clear Form\"]\u003c/code\u003e\u003c/pre\u003e\u003ch3\u003eSurvey Form\u003c/h3\u003e\n\u003cpre class=\"language-markup\"\u003e\u003ccode class=\"language-markup\"\u003e# Customer Satisfaction Survey\n\n@customer_name(Your Name): [text required]\n@email: [email required]\n@service_date(Service Date): [date required]\n@rating(Overall Rating): [radio options=\"1 - Poor,2 - Fair,3 - Good,4 - Very Good,5 - Excellent\"]\n@satisfaction: [select options=\"Very Dissatisfied,Dissatisfied,Neutral,Satisfied,Very Satisfied\"]\n@improvements: [checkbox options=\"Faster Service,Better Communication,Lower Prices,More Options\"]\n@comments: [textarea rows=4 placeholder=\"Additional comments...\"]\n@recommend(Would you recommend us?): [radio options=\"Yes,No,Maybe\"]\n\n@submit_survey: [submit label=\"Submit Survey\"]\u003c/code\u003e\u003c/pre\u003e\u003ch2\u003eNext Steps\u003c/h2\u003e\n\u003col\u003e\n\u003cli\u003e\u003cstrong\u003e\u003ca href=\"./shorthand\"\u003eShorthand Syntax\u003c/a\u003e\u003c/strong\u003e - Learn faster form creation\u003c/li\u003e\n\u003cli\u003e\u003cstrong\u003e\u003ca href=\"./reference\"\u003eField Reference\u003c/a\u003e\u003c/strong\u003e - Complete field type reference\u003c/li\u003e\n\u003cli\u003e\u003cstrong\u003e\u003ca href=\"./validation\"\u003eValidation\u003c/a\u003e\u003c/strong\u003e - Advanced validation rules\u003c/li\u003e\n\u003cli\u003e\u003cstrong\u003e\u003ca href=\"./examples\"\u003eExamples\u003c/a\u003e\u003c/strong\u003e - More real-world examples\u003c/li\u003e\n\u003c/ol\u003e\n\u003ch2\u003eTips\u003c/h2\u003e\n\u003ch3\u003eField Naming\u003c/h3\u003e\n\u003cul\u003e\n\u003cli\u003eUse descriptive names: \u003ccode\u003eemail_address\u003c/code\u003e not \u003ccode\u003eemail\u003c/code\u003e\u003c/li\u003e\n\u003cli\u003eUse snake_case for consistency: \u003ccode\u003efirst_name\u003c/code\u003e not \u003ccode\u003efirstname\u003c/code\u003e\u003c/li\u003e\n\u003cli\u003eAvoid starting with numbers: \u003ccode\u003euser_1\u003c/code\u003e not \u003ccode\u003e1st_user\u003c/code\u003e\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eOrganization\u003c/h3\u003e\n\u003cul\u003e\n\u003cli\u003eGroup related fields together\u003c/li\u003e\n\u003cli\u003eUse headers (\u003ccode\u003e#\u003c/code\u003e, \u003ccode\u003e##\u003c/code\u003e) to organize sections\u003c/li\u003e\n\u003cli\u003eAdd descriptive text between field groups\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eValidation\u003c/h3\u003e\n\u003cul\u003e\n\u003cli\u003eAlways mark required fields\u003c/li\u003e\n\u003cli\u003eUse appropriate input types (\u003ccode\u003eemail\u003c/code\u003e, \u003ccode\u003etel\u003c/code\u003e, \u003ccode\u003enumber\u003c/code\u003e)\u003c/li\u003e\n\u003cli\u003eAdd reasonable constraints (\u003ccode\u003emin\u003c/code\u003e, \u003ccode\u003emax\u003c/code\u003e, \u003ccode\u003emaxlength\u003c/code\u003e)\u003c/li\u003e\n\u003c/ul\u003e\n\u003ch3\u003eLabels\u003c/h3\u003e\n\u003cul\u003e\n\u003cli\u003eLet smart generation handle simple cases\u003c/li\u003e\n\u003cli\u003eUse custom labels for clarity when needed\u003c/li\u003e\n\u003cli\u003eKeep labels concise but descriptive\u003c/li\u003e\n\u003c/ul\u003e\n"])</script><script>self.__next_f.push([1,"8:[\"$\",\"$L16\",null,{\"currentSlug\":\"basics\",\"children\":[\"$\",\"div\",null,{\"children\":[[\"$\",\"h1\",null,{\"className\":\"text-3xl font-bold text-gray-900 dark:text-white mb-6\",\"children\":\"Basic Syntax\"}],[\"$\",\"article\",null,{\"className\":\"$17\",\"dangerouslySetInnerHTML\":{\"__html\":\"$18\"}}]]}]}]\nb:null\n"])</script><script>self.__next_f.push([1,"f:[[\"$\",\"meta\",\"0\",{\"charSet\":\"utf-8\"}],[\"$\",\"meta\",\"1\",{\"name\":\"viewport\",\"content\":\"width=device-width, initial-scale=1\"}]]\na:null\n"])</script><script>self.__next_f.push([1,"d:{\"metadata\":[[\"$\",\"title\",\"0\",{\"children\":\"Formdown - Markdown-based Form Builder\"}],[\"$\",\"meta\",\"1\",{\"name\":\"description\",\"content\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax. Build forms quickly with real-time preview, validation, and seamless integration.\"}],[\"$\",\"meta\",\"2\",{\"name\":\"author\",\"content\":\"iyulab\"}],[\"$\",\"link\",\"3\",{\"rel\":\"manifest\",\"href\":\"/manifest.webmanifest\",\"crossOrigin\":\"$undefined\"}],[\"$\",\"meta\",\"4\",{\"name\":\"keywords\",\"content\":\"form builder,markdown forms,html forms,form generator,web forms,interactive forms,form validation,formdown,javascript forms,typescript forms\"}],[\"$\",\"meta\",\"5\",{\"name\":\"creator\",\"content\":\"iyulab\"}],[\"$\",\"meta\",\"6\",{\"name\":\"publisher\",\"content\":\"iyulab\"}],[\"$\",\"meta\",\"7\",{\"name\":\"robots\",\"content\":\"index, follow\"}],[\"$\",\"meta\",\"8\",{\"name\":\"googlebot\",\"content\":\"index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1\"}],[\"$\",\"link\",\"9\",{\"rel\":\"canonical\",\"href\":\"https://formdown.dev/\"}],[\"$\",\"meta\",\"10\",{\"property\":\"og:title\",\"content\":\"Formdown - Markdown-based Form Builder\"}],[\"$\",\"meta\",\"11\",{\"property\":\"og:description\",\"content\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax. Build forms quickly with real-time preview, validation, and seamless integration.\"}],[\"$\",\"meta\",\"12\",{\"property\":\"og:url\",\"content\":\"https://formdown.dev/\"}],[\"$\",\"meta\",\"13\",{\"property\":\"og:site_name\",\"content\":\"Formdown\"}],[\"$\",\"meta\",\"14\",{\"property\":\"og:locale\",\"content\":\"en_US\"}],[\"$\",\"meta\",\"15\",{\"property\":\"og:image\",\"content\":\"https://formdown.dev/logo.png\"}],[\"$\",\"meta\",\"16\",{\"property\":\"og:image:width\",\"content\":\"1200\"}],[\"$\",\"meta\",\"17\",{\"property\":\"og:image:height\",\"content\":\"630\"}],[\"$\",\"meta\",\"18\",{\"property\":\"og:image:alt\",\"content\":\"Formdown - Markdown-based Form Builder\"}],[\"$\",\"meta\",\"19\",{\"property\":\"og:type\",\"content\":\"website\"}],[\"$\",\"meta\",\"20\",{\"name\":\"twitter:card\",\"content\":\"summary_large_image\"}],[\"$\",\"meta\",\"21\",{\"name\":\"twitter:title\",\"content\":\"Formdown - Markdown-based Form Builder\"}],[\"$\",\"meta\",\"22\",{\"name\":\"twitter:description\",\"content\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax.\"}],[\"$\",\"meta\",\"23\",{\"name\":\"twitter:image\",\"content\":\"https://formdown.dev/logo.png\"}],[\"$\",\"link\",\"24\",{\"rel\":\"icon\",\"href\":\"/favicon.ico\",\"type\":\"image/x-icon\",\"sizes\":\"256x256\"}]],\"error\":null,\"digest\":\"$undefined\"}\n"])</script><script>self.__next_f.push([1,"15:{\"metadata\":\"$d:metadata\",\"error\":null,\"digest\":\"$undefined\"}\n"])</script></body></html>

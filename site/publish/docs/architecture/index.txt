@@ -1,0 +1,247 @@
+1:"$Sreact.fragment"
+2:I[7740,["177","static/chunks/app/layout-7b1c55d5b08727df.js"],"ThemeProvider"]
+3:I[7555,[],""]
+4:I[1901,["874","static/chunks/874-994f48b66e83c627.js","39","static/chunks/app/error-7fbbcffb8614ab2c.js"],"default"]
+5:I[1295,[],""]
+6:I[6874,["874","static/chunks/874-994f48b66e83c627.js","345","static/chunks/app/not-found-b14baa73986bd718.js"],""]
+7:I[9243,["499","static/chunks/app/docs/layout-9c00b23166a276ed.js"],""]
+9:I[9665,[],"OutletBoundary"]
+c:I[4911,[],"AsyncMetadataOutlet"]
+e:I[9665,[],"ViewportBoundary"]
+10:I[9665,[],"MetadataBoundary"]
+12:I[6614,[],""]
+:HL["/_next/static/css/d289824eadf10480.css","style"]
+0:{"P":null,"b":"d-ZwJ1JItdDl4SfSpJZb4","p":"","c":["","docs","architecture",""],"i":false,"f":[[["",{"children":["docs",{"children":[["slug","architecture","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/d289824eadf10480.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n              (function() {\n                try {\n                  const savedTheme = localStorage.getItem('formdown-theme');\n                  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;\n                  const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');\n                  \n                  if (theme === 'dark') {\n                    document.documentElement.classList.add('dark');\n                    document.body.classList.add('dark');\n                  }\n                } catch (e) {\n                  // Silently fail\n                }\n              })();\n            "}}],["$","script",null,{"type":"application/ld+json","dangerouslySetInnerHTML":{"__html":"{\"@context\":\"https://schema.org\",\"@type\":\"SoftwareApplication\",\"name\":\"Formdown\",\"description\":\"Create beautiful, interactive HTML forms using a simple markdown-like syntax\",\"applicationCategory\":\"DeveloperApplication\",\"operatingSystem\":\"Web Browser\",\"offers\":{\"@type\":\"Offer\",\"price\":\"0\",\"priceCurrency\":\"USD\"},\"creator\":{\"@type\":\"Organization\",\"name\":\"iyulab\",\"url\":\"https://github.com/iyulab\"},\"url\":\"https://formdown.dev\",\"downloadUrl\":\"https://github.com/iyulab/formdown\",\"sameAs\":[\"https://github.com/iyulab/formdown\",\"https://www.npmjs.com/package/@formdown/core\"]}"}}],["$","link",null,{"rel":"preconnect","href":"https://fonts.googleapis.com"}],["$","link",null,{"rel":"preconnect","href":"https://fonts.gstatic.com","crossOrigin":"anonymous"}]]}],["$","body",null,{"className":"__variable_5cfdac __variable_9a8899 antialiased","children":["$","$L2",null,{"children":["$","$L3",null,{"parallelRouterKey":"children","error":"$4","errorStyles":[],"errorScripts":[],"template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","div",null,{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center max-w-md mx-auto px-4","children":[["$","h1",null,{"className":"text-6xl font-bold text-blue-600 mb-4","children":"404"}],["$","h2",null,{"className":"text-2xl font-bold text-gray-900 mb-4","children":"Page Not Found"}],["$","p",null,{"className":"text-gray-600 mb-8","children":"The page you are looking for might have been removed, had its name changed, or is temporarily unavailable."}],["$","div",null,{"className":"space-x-4","children":[["$","$L6",null,{"href":"/","className":"bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-block","children":"Go Home"}],["$","$L6",null,{"href":"/docs","className":"bg-gray-100 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors inline-block","children":"View Docs"}]]}]]}]}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}]]}]]}],{"children":["docs",["$","$1","c",{"children":[null,["$","div",null,{"className":"docs-layout","children":[["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L7",null,{"src":"https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js","strategy":"beforeInteractive"}],["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}]]}],{"children":[["slug","architecture","d"],["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L5",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":["$L8",null,["$","$L9",null,{"children":["$La","$Lb",["$","$Lc",null,{"promise":"$@d"}]]}]]}],{},null,false]},null,false]},null,false]},[["$","div","l",{"className":"min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100","children":["$","div",null,{"className":"text-center","children":[["$","div",null,{"className":"inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"}],["$","p",null,{"className":"text-gray-600","children":"Loading Formdown..."}]]}]}],[],[]],false],["$","$1","h",{"children":[null,["$","$1","ADnK6d4tpuLN3Fef5h3pcv",{"children":[["$","$Le",null,{"children":"$Lf"}],null]}],["$","$L10",null,{"children":"$L11"}]]}],false]],"m":"$undefined","G":["$12","$undefined"],"s":false,"S":true}
+13:"$Sreact.suspense"
+14:I[4911,[],"AsyncMetadata"]
+16:I[984,["874","static/chunks/874-994f48b66e83c627.js","375","static/chunks/375-811e0189f6b673fa.js","508","static/chunks/app/docs/%5Bslug%5D/page-1286a5c53c96b553.js"],"default"]
+11:["$","div",null,{"hidden":true,"children":["$","$13",null,{"fallback":null,"children":["$","$L14",null,{"promise":"$@15"}]}]}]
+17:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-218:T504d,<h2>Core-First Architecture (Phase 2 Complete)</h2>
+<p>Formdown features a revolutionary <strong>Core-First architecture</strong> where the <code>@formdown/core</code> package provides comprehensive form management capabilities through the <strong>FormManager</strong> and <strong>4 Core modules</strong>. The UI and Editor packages are thin presentation layers that delegate 100% of their operations to these core APIs.</p>
+<p><strong>Phase 2 Achievement</strong>: Complete legacy code elimination with 100% Core module integration across all packages.</p>
+<h3>Package Structure</h3>
+<p>Formdown is organized as a monorepo with three main packages:</p>
+<ul>
+<li><strong>@formdown/core</strong> ⭐ - Complete form lifecycle engine with 4 Core modules (depends only on <code>marked</code>)</li>
+<li><strong>@formdown/ui</strong> 🎨 - Web component renderer with 100% Core delegation (1186 lines, 9.3% optimized)</li>
+<li><strong>@formdown/editor</strong> ✏️ - Development editor with Core-powered real-time preview (505 lines + template consolidation)</li>
+</ul>
+<h3>Package Dependencies and Relationships</h3>
+<ul>
+<li><p><strong>formdown-core</strong>: Core-First architecture hub (depends only on <code>marked</code> for markdown processing)</p>
+<ul>
+<li><strong>FormManager</strong>: Central API with 12+ methods for complete form lifecycle management</li>
+<li><strong>4 Core Modules</strong>: FieldProcessor, DOMBinder, ValidationManager, EventOrchestrator</li>
+<li>Entry point: <code>packages/formdown-core/src/index.ts</code></li>
+<li>Main parser: <code>packages/formdown-core/src/parser.ts</code> </li>
+<li>HTML generator: <code>packages/formdown-core/src/generator.ts</code></li>
+<li>Extensions system: <code>packages/formdown-core/src/extensions/</code></li>
+</ul>
+</li>
+<li><p><strong>formdown-ui</strong>: Rendering layer with 100% Core integration (depends on formdown-core + Lit)</p>
+<ul>
+<li><strong>Phase 2.1 Complete</strong>: Full FormManager delegation, DOMBinder integration</li>
+<li>Entry point: <code>packages/formdown-ui/src/index.ts</code></li>
+<li>Main component: <code>packages/formdown-ui/src/formdown-ui.ts</code> (1186 lines)</li>
+<li>Standalone build: <code>packages/formdown-ui/src/standalone.ts</code></li>
+</ul>
+</li>
+<li><p><strong>formdown-editor</strong>: Development layer with 100% Core integration (depends on formdown-core + formdown-ui + Lit)</p>
+<ul>
+<li><strong>Phase 2.2 Complete</strong>: Full EventOrchestrator integration, legacy elimination</li>
+<li>Entry point: <code>packages/formdown-editor/src/index.ts</code> </li>
+<li>Editor component: <code>packages/formdown-editor/src/formdown-editor.ts</code> (505 lines)</li>
+<li>Standalone build: <code>packages/formdown-editor/src/standalone.ts</code></li>
+</ul>
+</li>
+</ul>
+<h3>Build System Architecture</h3>
+<p>Each package uses different build configurations:</p>
+<ul>
+<li><strong>Core</strong>: TypeScript compilation only (<code>tsc</code>)</li>
+<li><strong>UI/Editor</strong>: Vite with multiple output formats:<ul>
+<li>ES modules for bundlers (<code>dist/index.es.js</code>)</li>
+<li>UMD for direct usage (<code>dist/index.umd.js</code>) </li>
+<li>Standalone builds for CDN (<code>dist/standalone.js</code>)</li>
+<li>TypeScript definitions (<code>dist/index.d.ts</code>)</li>
+</ul>
+</li>
+</ul>
+<h2>Core-First Design Pattern (Phase 2 Implementation)</h2>
+<p>The Core-First architecture ensures complete business logic centralization through 4 specialized Core modules:</p>
+<ol>
+<li><strong>Business Logic Centralization</strong>: 100% of form operations handled by Core modules</li>
+<li><strong>Framework Independence</strong>: Core functionality works without any UI framework</li>
+<li><strong>Consistent Behavior</strong>: All UI layers share identical Core-powered behavior</li>
+<li><strong>Modular Architecture</strong>: 4 specialized modules for different concerns</li>
+<li><strong>Better Performance</strong>: Optimized Core with thin presentation layers</li>
+</ol>
+<h3>FormManager + 4 Core Modules Architecture</h3>
+<p><strong>FormManager</strong> serves as the central coordinator for:</p>
+<ul>
+<li><strong>FieldProcessor</strong>: Field type processing, validation, and value extraction</li>
+<li><strong>DOMBinder</strong>: DOM manipulation, event handling, and data synchronization</li>
+<li><strong>ValidationManager</strong>: Async validation pipelines with caching and debouncing</li>
+<li><strong>EventOrchestrator</strong>: Component-to-component event coordination and bridging</li>
+</ul>
+<h3>Enhanced Data Flow (Phase 2)</h3>
+<pre class="language-markup"><code class="language-markup">User Input → UI Component → FormManager
+    ↓              ↓              ↓
+EventOrchestrator → FieldProcessor → DOMBinder
+    ↓              ↓              ↓
+Event Coordination → Validation → DOM Updates
+    ↓              ↓              ↓
+Component Bridge → ValidationManager → Data Persistence</code></pre><h3>Core Module Responsibilities</h3>
+<ul>
+<li><strong>FieldProcessor</strong>: <code>extractFieldValue()</code>, <code>setFieldValue()</code>, <code>processCheckboxGroup()</code></li>
+<li><strong>DOMBinder</strong>: <code>setupElementEventHandlers()</code>, <code>syncFormData()</code>, <code>clearAllBindings()</code></li>
+<li><strong>ValidationManager</strong>: <code>validateAsync()</code>, <code>registerValidator()</code>, <code>dispose()</code></li>
+<li><strong>EventOrchestrator</strong>: <code>createCoreUIBridge()</code>, <code>bridgeComponentEvents()</code>, <code>dispose()</code></li>
+</ul>
+<h2>Hidden Form Architecture</h2>
+<p>Formdown uses a hidden form architecture to ensure maximum compatibility and progressive enhancement.</p>
+<h3>How It Works</h3>
+<ol>
+<li><p><strong>Dual Rendering</strong>: Each field is rendered twice:</p>
+<ul>
+<li>Once in a hidden <code>&lt;form&gt;</code> element with standard HTML inputs</li>
+<li>Once in the visible UI with enhanced styling and interactions</li>
+</ul>
+</li>
+<li><p><strong>Value Synchronization</strong>: JavaScript keeps both representations in sync:</p>
+<ul>
+<li>User interactions with the visible UI update the hidden form fields</li>
+<li>Form submissions use the hidden form&#39;s data</li>
+</ul>
+</li>
+<li><p><strong>Progressive Enhancement</strong>: If JavaScript fails:</p>
+<ul>
+<li>The hidden form can be made visible via CSS</li>
+<li>Forms remain fully functional with standard HTML behavior</li>
+</ul>
+</li>
+</ol>
+<h3>Benefits</h3>
+<ul>
+<li><strong>Accessibility</strong>: Screen readers work with standard form elements</li>
+<li><strong>Browser Compatibility</strong>: Works with all form-related browser features</li>
+<li><strong>Framework Integration</strong>: Easy to integrate with any form library</li>
+<li><strong>SEO Friendly</strong>: Search engines can understand the form structure</li>
+<li><strong>Graceful Degradation</strong>: Forms work even without JavaScript</li>
+</ul>
+<h3>Implementation Example</h3>
+<pre class="language-html"><code class="language-html"><span class="token comment">&lt;!-- Hidden form (actual form data) --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-form-1<span class="token punctuation">"</span></span> <span class="token special-attr"><span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span><span class="token value css language-css"><span class="token property">display</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span></span><span class="token punctuation">"</span></span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span>
+
+<span class="token comment">&lt;!-- Visible UI (enhanced presentation) --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-field<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span> <span class="token attr-name">for</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Username<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-input<span class="token punctuation">"</span></span> <span class="token attr-name">required</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></code></pre><h2>Extension System Architecture</h2>
+<p>The extension system allows developers to extend Formdown&#39;s functionality through plugins and hooks.</p>
+<h3>Extension Manager</h3>
+<p>The ExtensionManager orchestrates all extensions:</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">interface</span> <span class="token class-name">ExtensionManager</span> <span class="token punctuation">{</span>
+  <span class="token function">registerPlugin</span><span class="token punctuation">(</span>plugin<span class="token operator">:</span> Plugin<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Promise</span><span class="token operator">&lt;</span><span class="token keyword">void</span><span class="token operator">></span>
+  <span class="token function">executeHooks</span><span class="token punctuation">(</span>hookType<span class="token operator">:</span> HookType<span class="token punctuation">,</span> context<span class="token operator">:</span> HookContext<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Promise</span><span class="token operator">&lt;</span>HookContext<span class="token operator">></span>
+  <span class="token function">getPluginInfo</span><span class="token punctuation">(</span>pluginName<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span><span class="token operator">:</span> PluginInfo <span class="token operator">|</span> <span class="token keyword">null</span>
+  <span class="token function">listPlugins</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> PluginInfo<span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre><h3>Plugin Structure</h3>
+<p>Plugins can provide:</p>
+<ul>
+<li><strong>Field Types</strong>: Custom field type definitions</li>
+<li><strong>Validators</strong>: Custom validation logic</li>
+<li><strong>Renderers</strong>: Custom HTML generation</li>
+<li><strong>Hooks</strong>: Intercept and modify processing at various stages</li>
+</ul>
+<h3>Hook System</h3>
+<p>Hooks allow fine-grained control over the parsing and generation pipeline:</p>
+<ul>
+<li><code>pre-parse</code>: Modify content before parsing</li>
+<li><code>post-parse</code>: Modify parse results</li>
+<li><code>field-parse</code>: Custom field parsing logic</li>
+<li><code>field-validate</code>: Custom validation rules</li>
+<li><code>pre-generate</code>: Modify data before HTML generation</li>
+<li><code>post-generate</code>: Modify generated HTML</li>
+<li><code>css-class</code>: Add custom CSS classes</li>
+<li><code>attribute-inject</code>: Add custom HTML attributes</li>
+</ul>
+<h3>Event System</h3>
+<p>The extension system is event-driven:</p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">interface</span> <span class="token class-name">EventEmitter</span> <span class="token punctuation">{</span>
+  <span class="token function">on</span><span class="token punctuation">(</span>event<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">,</span> handler<span class="token operator">:</span> <span class="token builtin">Function</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span>
+  <span class="token function">off</span><span class="token punctuation">(</span>event<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">,</span> handler<span class="token operator">:</span> <span class="token builtin">Function</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span>
+  <span class="token function">emit</span><span class="token punctuation">(</span>event<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">,</span> data<span class="token operator">:</span> <span class="token builtin">any</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span>
+<span class="token punctuation">}</span></code></pre><h2>Testing Architecture</h2>
+<h3>Test Structure</h3>
+<ul>
+<li><strong>Unit Tests</strong>: Each package has comprehensive unit tests</li>
+<li><strong>Integration Tests</strong>: Test interactions between packages</li>
+<li><strong>E2E Tests</strong>: Test complete user workflows</li>
+</ul>
+<h3>Test Configuration</h3>
+<ul>
+<li><strong>Jest</strong>: Unit testing framework</li>
+<li><strong>@testing-library/dom</strong>: DOM testing utilities</li>
+<li><strong>JSDOM</strong>: Browser environment simulation</li>
+<li><strong>Mock Files</strong>: Located in <code>__tests__/mocks/</code></li>
+</ul>
+<h3>Test Patterns</h3>
+<pre class="language-typescript"><code class="language-typescript"><span class="token comment">// Example test pattern</span>
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'FormManager'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> manager<span class="token operator">:</span> FormManager
+  
+  <span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    manager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  
+  <span class="token function">test</span><span class="token punctuation">(</span><span class="token string">'should parse formdown content'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> result <span class="token operator">=</span> manager<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token string">'@name: [text required]'</span><span class="token punctuation">)</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>forms<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toHaveLength</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>result<span class="token punctuation">.</span>forms<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre><h2>Performance Considerations</h2>
+<h3>Optimization Strategies</h3>
+<ol>
+<li><strong>Lazy Loading</strong>: UI components load only when needed</li>
+<li><strong>Tree Shaking</strong>: Unused code is eliminated during build</li>
+<li><strong>Code Splitting</strong>: Separate bundles for different features</li>
+<li><strong>Memoization</strong>: Cache expensive computations</li>
+<li><strong>Virtual DOM</strong>: Efficient UI updates with Lit</li>
+</ol>
+<h3>Bundle Sizes</h3>
+<ul>
+<li>Core package: ~15KB minified + gzipped</li>
+<li>UI package: ~25KB minified + gzipped (includes Lit)</li>
+<li>Editor package: ~35KB minified + gzipped</li>
+</ul>
+<h2>Security Architecture</h2>
+<h3>Input Sanitization</h3>
+<p>All user input is sanitized to prevent XSS attacks:</p>
+<ul>
+<li>Field names are validated against allowed characters</li>
+<li>HTML attributes are filtered through an allowlist</li>
+<li>Generated HTML is escaped by default</li>
+</ul>
+<h3>Content Security Policy</h3>
+<p>Formdown is designed to work with strict CSP:</p>
+<ul>
+<li>No inline scripts</li>
+<li>No eval() usage</li>
+<li>Event handlers use addEventListener</li>
+</ul>
+<h3>Data Privacy</h3>
+<ul>
+<li>No data is sent to external servers</li>
+<li>All processing happens client-side</li>
+<li>Form data is only accessible to the host application</li>
+</ul>
+8:["$","$L16",null,{"currentSlug":"architecture","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Architecture"}],["$","article",null,{"className":"$17","dangerouslySetInnerHTML":{"__html":"$18"}}]]}]}]
+b:null
+f:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+a:null
+d:{"metadata":[["$","title","0",{"children":"Formdown - Markdown-based Form Builder"}],["$","meta","1",{"name":"description","content":"Create beautiful, interactive HTML forms using a simple markdown-like syntax. Build forms quickly with real-time preview, validation, and seamless integration."}],["$","meta","2",{"name":"author","content":"iyulab"}],["$","link","3",{"rel":"manifest","href":"/manifest.webmanifest","crossOrigin":"$undefined"}],["$","meta","4",{"name":"keywords","content":"form builder,markdown forms,html forms,form generator,web forms,interactive forms,form validation,formdown,javascript forms,typescript forms"}],["$","meta","5",{"name":"creator","content":"iyulab"}],["$","meta","6",{"name":"publisher","content":"iyulab"}],["$","meta","7",{"name":"robots","content":"index, follow"}],["$","meta","8",{"name":"googlebot","content":"index, follow, max-video-preview:-1, max-image-preview:large, max-snippet:-1"}],["$","link","9",{"rel":"canonical","href":"https://formdown.dev/"}],["$","meta","10",{"property":"og:title","content":"Formdown - Markdown-based Form Builder"}],["$","meta","11",{"property":"og:description","content":"Create beautiful, interactive HTML forms using a simple markdown-like syntax. Build forms quickly with real-time preview, validation, and seamless integration."}],["$","meta","12",{"property":"og:url","content":"https://formdown.dev/"}],["$","meta","13",{"property":"og:site_name","content":"Formdown"}],["$","meta","14",{"property":"og:locale","content":"en_US"}],["$","meta","15",{"property":"og:image","content":"https://formdown.dev/logo.png"}],["$","meta","16",{"property":"og:image:width","content":"1200"}],["$","meta","17",{"property":"og:image:height","content":"630"}],["$","meta","18",{"property":"og:image:alt","content":"Formdown - Markdown-based Form Builder"}],["$","meta","19",{"property":"og:type","content":"website"}],["$","meta","20",{"name":"twitter:card","content":"summary_large_image"}],["$","meta","21",{"name":"twitter:title","content":"Formdown - Markdown-based Form Builder"}],["$","meta","22",{"name":"twitter:description","content":"Create beautiful, interactive HTML forms using a simple markdown-like syntax."}],["$","meta","23",{"name":"twitter:image","content":"https://formdown.dev/logo.png"}],["$","link","24",{"rel":"icon","href":"/favicon.ico","type":"image/x-icon","sizes":"256x256"}]],"error":null,"digest":"$undefined"}
+15:{"metadata":"$d:metadata","error":null,"digest":"$undefined"}

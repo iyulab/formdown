@@ -1,0 +1,18 @@
+# Smart Label Examples
+
+This form demonstrates FormDown's smart label generation feature. Notice how field names are automatically converted to readable labels:
+
+@first_name: [text required]
+@last_name: [text required]
+@email_address: [email required]
+@phone_number: [tel]
+@birth_date: [date]
+@home_address: [textarea rows=3]
+@preferred_contact_method: [radio options="Email, Phone, Text"]
+@newsletter_subscription: [checkbox]
+@privacy_policy_agreement: [checkbox required]
+
+You can also mix smart labels with custom labels:
+
+@user_id(User ID): [text readonly]
+@special_instructions: [textarea label="Special Instructions" rows=4]

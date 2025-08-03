@@ -1,0 +1,44 @@
+# Selection Fields Test
+
+This sample demonstrates radio buttons, checkboxes, and select dropdowns.
+
+## Radio Button Groups
+
+### Gender Selection
+@gender{Male,Female,Non-binary,*(Please specify)}: r[required]
+
+### Preferred Contact Method  
+@contact_method{Email,Phone,SMS,*(Other method)}: r[]
+
+### Experience Level
+@experience{Beginner,Intermediate,Advanced,Expert,*(Custom level)}: r[]
+
+## Checkbox Groups
+
+### Programming Languages
+@languages{JavaScript,Python,Java,C++,Go,Rust,PHP,*(Other language)}: c[]
+
+### Interests and Hobbies
+@interests{Web Development,Mobile Apps,AI/ML,Design,Gaming,Music,Sports,Reading,*(Other interest)}: c[]
+
+### Newsletter Subscriptions
+@subscriptions{Weekly Newsletter,Product Updates,Special Offers,Developer Blog,*(Custom subscription)}: c[]
+
+## Select Dropdowns
+
+### Country Selection
+@country{United States,Canada,United Kingdom,Germany,France,Japan,Australia,*(Other country)}: s[required]
+
+### Education Level
+@education{High School,Associate Degree,Bachelor's Degree,Master's Degree,PhD,*(Other education)}: s[]
+
+### Company Size
+@company_size{1-10 employees,11-50 employees,51-200 employees,201-1000 employees,1000+ employees,*(Custom size)}: s[]
+
+### Industry
+@industry{Technology,Healthcare,Finance,Education,Retail,Manufacturing,Government,Non-profit,*(Other industry)}: s[]
+
+### Timezone
+@timezone{UTC-12,UTC-11,UTC-10,UTC-9,UTC-8,UTC-7,UTC-6,UTC-5,UTC-4,UTC-3,UTC-2,UTC-1,UTC+0,UTC+1,UTC+2,UTC+3,UTC+4,UTC+5,UTC+6,UTC+7,UTC+8,UTC+9,UTC+10,UTC+11,UTC+12,*(Custom timezone)}: s[]
+
+@submit_btn: [submit label="Test Selection Fields"]

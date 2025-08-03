@@ -1,0 +1,48 @@
+{
+  "name": "@formdown/core",
+  "version": "0.1.21",
+  "description": "Core parsing and generation engine for Formdown",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "core",
+    "parser",
+    "generator"
+  ],
+  "author": {
+    "name": "iyulab",
+    "url": "https://www.iyulab.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iyulab/formdown.git",
+    "directory": "packages/formdown-core"
+  },
+  "homepage": "https://formdown.dev",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "marked": "^15.0.12"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/marked": "^5.0.2",
+    "jest": "^30.0.2",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.8.3"
+  }
+}

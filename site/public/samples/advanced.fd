@@ -1,0 +1,62 @@
+# Advanced FormDown Features
+
+## Custom HTML Attributes
+
+FormDown supports **all HTML attributes** including custom data and aria attributes:
+
+@username: [text required autocomplete="username" spellcheck="false" class="form-control"]
+@email: [email required autocomplete="email" aria-describedby="email-help"]
+@password: [password required minlength=8 data-strength="true" aria-required="true"]
+
+## CSS Classes and Styling
+
+@theme_color: [color value="#3498db" class="color-picker" style="width: 100px"]
+@volume: [range min=0 max=100 step=5 class="custom-slider" data-unit="%"]
+@profile_pic: [file accept="image/*" class="file-upload" data-max-size="5MB"]
+
+## Accessibility Features
+
+@bio(Biography): [textarea rows=4 aria-required="true" aria-describedby="bio-hint"]
+@terms(Terms and Conditions): [checkbox required aria-label="Accept terms and conditions"]
+
+## Mixed Label Methods
+
+Mixing both label definition methods in the same form:
+
+### Using Parentheses
+@first_name(First Name): [text required]
+@last_name(Last Name): [text required]
+
+### Using Label Attribute  
+@middle_name: [text label="Middle Name (Optional)"]
+@suffix: [text label="Suffix (Jr., Sr., etc.)"]
+
+## Inline Field Combinations
+
+Welcome, ___@username[text required class="inline-input"]! 
+
+Your account balance is $___@balance[number min=0 step=0.01 data-currency="USD"].
+
+Security level: ___@security[range min=1 max=5 class="security-slider"] out of 5.
+
+## Advanced Input Types with Custom Attributes
+
+@appointment: [datetime-local required class="datetime-picker" data-min-date="today"]
+@website: [url placeholder="https://example.com" pattern="https://.*" data-validate="url"]
+@phone_intl: [tel pattern="\\+[1-9]\\d{1,14}" placeholder="+1 (555) 123-4567" data-format="international"]
+
+## Complex Selection with Custom Attributes
+
+@skills: [checkbox options="JavaScript,Python,React,Node.js,TypeScript" class="skill-checkbox" data-max-select="3"]
+@experience: [radio options="Beginner,Intermediate,Advanced,Expert" class="experience-radio" data-required="true"]
+@timezone: [select options="UTC-8,UTC-7,UTC-6,UTC-5,UTC-4,UTC-3,UTC,UTC+1,UTC+2" class="timezone-select" data-default="UTC"]
+
+## Form Actions
+
+@save_draft: [submit label="Save as Draft" class="btn btn-secondary"]
+@submit_form: [submit label="Submit Application" class="btn btn-primary"]
+@reset_form: [reset label="Clear Form" class="btn btn-outline"]
+@appointment_range: [week]
+@meeting_month: [month]
+
+Payment amount: $___@amount[number step=0.01 min=0 required]

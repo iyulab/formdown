@@ -1,0 +1,60 @@
+{
+    "name": "formdown",
+    "version": "0.1.18",
+    "description": "A declarative form builder using markdown-like syntax",
+    "private": true,
+    "workspaces": [
+        "packages/*",
+        "site"
+    ],
+    "keywords": [
+        "form",
+        "parser",
+        "generator",
+        "markdown",
+        "formdown",
+        "web-component",
+        "lit",
+        "typescript"
+    ],
+    "author": {
+        "name": "iyulab",
+        "url": "https://www.iyulab.com"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/iyulab/formdown.git"
+    },
+    "homepage": "https://formdown.dev",
+    "bugs": {
+        "url": "https://github.com/iyulab/formdown/issues"
+    },
+    "scripts": {
+        "test": "npm run test --workspaces --if-present",
+        "test:core": "cd packages/formdown-core && npm test",
+        "test:ui": "cd packages/formdown-ui && npm test",
+        "test:editor": "cd packages/formdown-editor && npm test",
+        "build": "npm run build --workspaces --if-present",
+        "build:packages": "npm run build -w packages/formdown-core -w packages/formdown-ui -w packages/formdown-editor",
+        "dev": "npm run dev --workspaces --if-present",
+        "lint": "echo 'Linting all packages...'",
+        "clean": "rm -rf */node_modules */dist",
+        "version:patch": "npm run version:update -- patch",
+        "version:minor": "npm run version:update -- minor",
+        "version:major": "npm run version:update -- major",
+        "version:update": "node scripts/update-versions.js",
+        "publish:check": "node scripts/publish-check.js",
+        "publish:packages": "npm run build:packages && npm run publish:check && node scripts/publish-packages.js",
+        "release:patch": "npm run version:patch && npm run publish:packages",
+        "release:minor": "npm run version:minor && npm run publish:packages",
+        "release:major": "npm run version:major && npm run publish:packages"
+    },
+    "devDependencies": {
+        "@types/node": "^20.0.0"
+    },
+    "engines": {
+        "node": ">=16.0.0",
+        "npm": ">=8.0.0"
+    }
+}

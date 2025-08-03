@@ -1,0 +1,51 @@
+# Inline Fields Test
+
+This sample demonstrates inline field usage within text content.
+
+## Introduction
+
+Welcome to our service, ___@user_name[text required placeholder="Your name"]! 
+
+We're excited to have you join us. Please provide some basic information to get started.
+
+## Personal Information
+
+Your full name is ___@full_name[text required] and you can be reached at ___@email[email required]. 
+
+You are ___@age[number min=18 max=120] years old and live in ___@city[text placeholder="City name"].
+
+## Contact Preferences
+
+You prefer to be contacted via ___@contact_method[radio options="Email,Phone,SMS"] and your phone number is ___@phone[tel placeholder="(555) 123-4567"].
+
+## Service Selection
+
+You are interested in our ___@service_type[select options="Basic Plan,Premium Plan,Enterprise Plan"] which costs $___@budget[number min=0 step=0.01] per month.
+
+## Additional Information
+
+Please rate your technical expertise from ___@tech_level[range min=1 max=10 value=5] (1=Beginner, 10=Expert).
+
+Any special requirements? ___@special_needs[textarea rows=2 placeholder="Describe any special requirements"]
+
+## Newsletter Subscription
+
+Would you like to subscribe to our newsletter? ___@newsletter[checkbox options="Yes, keep me updated"]
+
+## Project Timeline
+
+Your project should start on ___@start_date[date] and you expect it to be completed by ___@end_date[date].
+
+## File Upload
+
+Please upload your project requirements: ___@requirements[file accept=".pdf,.doc,.docx"]
+
+## Final Notes
+
+Additional comments: ___@comments[textarea rows=3 placeholder="Any additional comments or questions"]
+
+---
+
+Thank you for providing this information. We'll review your details and get back to you soon!
+
+@submit_inline: [submit label="Submit Information"]

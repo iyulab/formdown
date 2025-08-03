@@ -1,0 +1,44 @@
+# User Registration
+
+Welcome! Please create your account below.
+
+## Personal Information
+
+### Using Parentheses Syntax (Clean & Readable)
+@first_name(First Name): [text required placeholder="Enter your first name"]
+@last_name(Last Name): [text required placeholder="Enter your last name"]
+@birth_date(Date of Birth): [date required max="2010-12-31"]
+
+### Using Label Attribute (Flexible)
+@email: [email required label="Email Address" autocomplete="email"]
+@password: [password required label="Password" minlength=8 placeholder="Create a secure password"]
+@confirm_password: [password required label="Confirm Password" placeholder="Re-enter your password"]
+
+## Profile Details
+
+@username(Username): [text required minlength=3 pattern="[a-zA-Z0-9_]+" placeholder="Choose a unique username"]
+@display_name: [text label="Display Name (Optional)" placeholder="How others will see you"]
+
+@gender(Gender): [radio options="Male,Female,Other,Prefer not to say"]
+@bio(About Yourself): [textarea rows=4 maxlength=500 placeholder="Tell us about yourself (optional)"]
+
+## Preferences & Interests
+
+@interests(Interests): [checkbox options="Technology,Sports,Music,Travel,Food,Art,Gaming,Reading"]
+@country(Country): [select options="USA,Canada,UK,Germany,France,Japan,Australia,Other"]
+@language(Preferred Language): [select options="English,Spanish,French,German,Chinese,Japanese"]
+
+## Privacy Settings
+
+@profile_visibility: [radio options="Public,Friends Only,Private" label="Profile Visibility"]
+@email_notifications: [checkbox options="Product Updates,Marketing Emails,Security Alerts" label="Email Notifications"]
+
+## Terms and Conditions
+
+@terms: [checkbox required content="I agree to the Terms of Service and Privacy Policy"]
+@age_confirm: [checkbox required content="I confirm that I am at least 13 years old"]
+@marketing: [checkbox content="I would like to receive marketing emails and product updates"]
+
+Welcome message for ___@display_name: ___@welcome_msg[text placeholder="Custom welcome message"]
+
+@create_account: [submit label="Create Account"]

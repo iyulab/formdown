@@ -1,0 +1,858 @@
+@import "tailwindcss";
+
+/* Enhanced Prism.js syntax highlighting styles */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #6272a4;
+  font-style: italic;
+}
+
+.token.punctuation {
+  color: #f8f8f2;
+}
+
+.token.property,
+.token.tag,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #ff79c6;
+}
+
+.token.boolean,
+.token.number {
+  color: #bd93f9;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #50fa7b;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string,
+.token.variable {
+  color: #ff79c6;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.function,
+.token.class-name {
+  color: #f1fa8c;
+}
+
+.token.keyword {
+  color: #8be9fd;
+}
+
+.token.regex,
+.token.important {
+  color: #ffb86c;
+}
+
+.token.important,
+.token.bold {
+  font-weight: bold;
+}
+
+.token.italic {
+  font-style: italic;
+}
+
+.token.entity {
+  cursor: help;
+}
+
+/* Custom code block styling */
+pre[class*="language-"] {
+  border-radius: 0.75rem;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  padding: 1.5rem !important;
+  margin: 1.5rem 0 !important;
+  background: #282a36 !important;
+  border: 1px solid #44475a;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Dark mode code blocks */
+.dark pre[class*="language-"] {
+  background: #1e1e2e !important;
+  border-color: #313244;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+code[class*="language-"] {
+  font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #f8f8f2;
+}
+
+/* Inline code styling */
+:not(pre)>code[class*="language-"] {
+  background-color: #fdf2f8;
+  color: #db2777;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  border: none !important;
+  font-weight: 500;
+}
+
+/* Dark mode inline code */
+.dark :not(pre)>code[class*="language-"] {
+  background-color: #374151;
+  color: #f472b6;
+}
+
+/* Code block language label */
+pre[class*="language-"]:before {
+  content: attr(class);
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  font-size: 0.75rem;
+  color: #6272a4;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+:root {
+  /* Light theme variables */
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  /* Theme-aware color variables for components */
+  --theme-bg-primary: #ffffff;
+  --theme-bg-secondary: #f8fafc;
+  --theme-text-primary: #1f2937;
+  --theme-text-secondary: #6b7280;
+  --theme-border: #e5e7eb;
+  --theme-accent: #3b82f6;
+  --theme-error: #dc2626;
+  --theme-error-bg: #fef2f2;
+}
+
+/* Dark theme variables when .dark class is applied */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  /* Dark theme color variables for components */
+  --theme-bg-primary: #111827;
+  --theme-bg-secondary: #1f2937;
+  --theme-text-primary: #f9fafb;
+  --theme-text-secondary: #d1d5db;
+  --theme-error: #ef4444;
+  --theme-error-bg: #1f1f1f;
+  --theme-border: #374151;
+  --theme-accent: #60a5fa;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Comprehensive Markdown Styling following Google's Markdown Style Guide */
+.prose {
+  /* Base typography optimized for readability */
+  line-height: 1.6;
+  color: #374151;
+  max-width: none;
+  font-size: 1rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Headings following ATX-style best practices */
+.prose h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+  color: #111827;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+  /* Single H1 per document principle */
+}
+
+.prose h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+  color: #111827;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 0.25rem;
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+  color: #111827;
+}
+
+.prose h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+  color: #111827;
+}
+
+.prose h5,
+.prose h6 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+  color: #111827;
+}
+
+/* Paragraph styling optimized for readability */
+.prose p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.prose p:first-child {
+  margin-top: 0;
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
+
+/* List styling following 4-space indent convention */
+.prose ul,
+.prose ol {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-left: 0;
+}
+
+/* Unordered lists with consistent bullet styling */
+.prose ul {
+  list-style: none;
+  margin-left: 0;
+}
+
+.prose ul>li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.prose ul>li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #6366f1;
+  font-weight: bold;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Nested lists with 4-space indent */
+.prose ul ul,
+.prose ol ol,
+.prose ul ol,
+.prose ol ul {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  padding-left: 1.5rem;
+}
+
+.prose ul ul>li::before {
+  content: '◦';
+  color: #8b5cf6;
+}
+
+.prose ul ul ul>li::before {
+  content: '▪';
+  color: #06b6d4;
+}
+
+/* Ordered lists with decimal numbering */
+.prose ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+
+.prose ol>li {
+  padding-left: 0.25rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.prose ol>li::marker {
+  color: #6366f1;
+  font-weight: 600;
+}
+
+.prose ol ol {
+  list-style-type: lower-alpha;
+}
+
+.prose ol ol ol {
+  list-style-type: lower-roman;
+}
+
+/* Nested content in lists */
+.prose li>p {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose li>ul,
+.prose li>ol {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Definition lists for technical documentation */
+.prose dl {
+  margin: 1.5rem 0;
+}
+
+.prose dt {
+  font-weight: 600;
+  color: #111827;
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+  font-size: 1.05rem;
+}
+
+.prose dd {
+  margin: 0 0 1rem 1.5rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* Blockquote styling for emphasis */
+.prose blockquote {
+  margin: 1.5rem 0;
+  padding: 1rem 1.5rem;
+  border-left: 4px solid #6366f1;
+  background: #f8fafc;
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-style: italic;
+  position: relative;
+}
+
+.prose blockquote p {
+  margin: 0;
+  color: #475569;
+}
+
+.prose blockquote p:first-of-type::before {
+  content: '';
+}
+
+.prose blockquote p:last-of-type::after {
+  content: '';
+}
+
+/* Table styling optimized for readability */
+.prose table {
+  width: 100%;
+  table-layout: auto;
+  text-align: left;
+  margin: 2rem 0;
+  border-collapse: collapse;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  font-size: 0.9rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+}
+
+.prose thead {
+  background-color: #f9fafb;
+  border-bottom: 2px solid #d1d5db;
+}
+
+.prose thead th {
+  color: #374151;
+  font-weight: 600;
+  vertical-align: bottom;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.prose tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.prose tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.prose tbody tr:hover {
+  background-color: #f3f4f6;
+}
+
+.prose tbody tr:last-child {
+  border-bottom: none;
+}
+
+.prose tbody td {
+  padding: 0.75rem 1rem;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.prose table code {
+  font-size: 0.8rem;
+  white-space: nowrap;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  border: 1px solid #e2e8f0;
+}
+
+/* Horizontal rule with clean minimal style */
+.prose hr {
+  border: none;
+  margin: 2.5rem 0;
+  text-align: center;
+  border-top: 1px solid #d1d5db;
+  position: relative;
+}
+
+.prose hr::before {
+  content: '* * *';
+  color: #9ca3af;
+  font-weight: 400;
+  font-size: 1rem;
+  letter-spacing: 0.5em;
+  position: absolute;
+  top: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 0 1rem;
+}
+
+/* Strong and emphasis with proper hierarchy */
+.prose strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+.prose em {
+  color: #374151;
+  font-style: italic;
+}
+
+/* Links with informative styling */
+.prose a {
+  color: #2563eb;
+  text-decoration: underline;
+  font-weight: 500;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+  transition: all 0.2s ease;
+}
+
+.prose a:hover {
+  color: #1d4ed8;
+  text-decoration-thickness: 2px;
+}
+
+.prose a:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Inline code styling */
+.prose :not(pre)>code {
+  background-color: #f1f5f9;
+  color: #475569;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+  white-space: nowrap;
+  word-break: keep-all;
+}
+
+/* Images with subtle enhancement */
+.prose img {
+  margin: 1.5rem 0;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  height: auto;
+}
+
+/* Code blocks with language support */
+.prose pre {
+  position: relative;
+  background: #1e1e2e !important;
+  border: 1px solid #313244;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.prose pre code {
+  background: transparent !important;
+  color: #f8f8f2 !important;
+  padding: 0 !important;
+  border: none !important;
+  font-weight: normal !important;
+  white-space: pre;
+  word-break: normal;
+}
+
+/* Language labels for code blocks */
+.prose pre[data-language]::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0.5rem;
+  right: 0.75rem;
+  font-size: 0.75rem;
+  color: #6c7086;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  background: #313244;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  z-index: 1;
+}
+
+/* Details and summary for collapsible content */
+.prose details {
+  margin: 1.5rem 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.prose summary {
+  background-color: #f9fafb;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+  user-select: none;
+}
+
+.prose summary:hover {
+  background-color: #f3f4f6;
+}
+
+.prose summary:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.prose details[open] summary {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  border-bottom-color: #bfdbfe;
+}
+
+.prose details>*:not(summary) {
+  padding: 1rem;
+}
+
+/* Special formatting for API documentation */
+.prose h4 code,
+.prose h3 code,
+.prose h2 code {
+  background: #ede9fe;
+  color: #7c3aed;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.9em;
+  font-weight: 600;
+  border: 1px solid #c4b5fd;
+}
+
+/* Enhanced dark mode support */
+.dark .prose {
+  color: #d1d5db;
+}
+
+.dark .prose h1,
+.dark .prose h2,
+.dark .prose h3,
+.dark .prose h4,
+.dark .prose h5,
+.dark .prose h6 {
+  color: #f9fafb;
+}
+
+.dark .prose h1 {
+  border-bottom-color: #374151;
+}
+
+.dark .prose h2 {
+  border-bottom-color: #4b5563;
+}
+
+.dark .prose strong {
+  color: #f9fafb;
+}
+
+.dark .prose a {
+  color: #60a5fa;
+}
+
+.dark .prose a:hover {
+  color: #3b82f6;
+}
+
+.dark .prose :not(pre)>code {
+  background-color: #374151;
+  color: #e5e7eb;
+  border-color: #4b5563;
+}
+
+.dark .prose blockquote {
+  background: #1f2937;
+  border-left-color: #8b5cf6;
+  color: #d1d5db;
+}
+
+.dark .prose blockquote p {
+  color: #d1d5db;
+}
+
+.dark .prose table {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+.dark .prose thead {
+  background-color: #111827;
+  border-bottom-color: #374151;
+}
+
+.dark .prose thead th {
+  color: #f9fafb;
+}
+
+.dark .prose tbody tr {
+  border-bottom-color: #374151;
+}
+
+.dark .prose tbody tr:nth-child(even) {
+  background-color: #1f2937;
+}
+
+.dark .prose tbody tr:hover {
+  background-color: #374151;
+}
+
+.dark .prose tbody td {
+  color: #d1d5db;
+}
+
+.dark .prose hr {
+  border-top-color: #374151;
+}
+
+.dark .prose hr::before {
+  background: var(--theme-bg-primary, #111827);
+  color: #6b7280;
+}
+
+.dark .prose details {
+  border-color: #374151;
+  background: #1f2937;
+}
+
+.dark .prose summary {
+  background-color: #111827;
+  color: #d1d5db;
+  border-bottom-color: #374151;
+}
+
+.dark .prose summary:hover {
+  background-color: #1f2937;
+}
+
+.dark .prose details[open] summary {
+  background-color: #1e3a8a;
+  color: #bfdbfe;
+}
+
+.dark .prose dl dt {
+  color: #f9fafb;
+}
+
+.dark .prose dl dd {
+  color: #9ca3af;
+}
+
+.dark .prose table code {
+  background: #1f2937;
+  color: #e5e7eb;
+  border-color: #374151;
+}
+
+.dark .prose li {
+  color: #d1d5db;
+}
+
+.dark .prose p {
+  color: #d1d5db;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+  .prose {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .prose h1 {
+    font-size: 1.875rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prose h3 {
+    font-size: 1.25rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prose ul>li,
+  .prose ol>li {
+    padding-left: 1rem;
+  }
+
+  .prose ul ul,
+  .prose ol ol,
+  .prose ul ol,
+  .prose ol ul {
+    padding-left: 1rem;
+  }
+
+  .prose pre {
+    font-size: 0.8rem;
+    margin: 1rem 0;
+    border-radius: 0.375rem;
+  }
+
+  .prose blockquote {
+    padding: 0.75rem 1rem;
+    margin: 1rem 0;
+  }
+
+  .prose table {
+    font-size: 0.8rem;
+  }
+
+  .prose table th,
+  .prose table td {
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* Print optimization */
+@media print {
+  .prose {
+    color: #000;
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    color: #000;
+    page-break-after: avoid;
+  }
+
+  .prose a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  .prose pre {
+    background: #f5f5f5 !important;
+    color: #000 !important;
+    border: 1px solid #ccc;
+    page-break-inside: avoid;
+  }
+
+  .prose blockquote {
+    background: #f9f9f9;
+    border-left-color: #999;
+    page-break-inside: avoid;
+  }
+
+  .prose table {
+    border-collapse: collapse;
+    page-break-inside: avoid;
+  }
+
+  .prose img {
+    max-width: 100%;
+    page-break-inside: avoid;
+  }
+}

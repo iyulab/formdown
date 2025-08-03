@@ -1,0 +1,29 @@
+# Contact Form (Shorthand Syntax)
+
+Same contact form using Formdown's shorthand syntax for faster writing.
+
+## Contact Information
+
+@name*: []
+@email*: @[]
+@phone{(###)###-####}: %[]
+@company: []
+
+## Message
+
+@subject*: [maxlength=100]
+@message*: T5[]
+
+## Contact Preferences
+
+@priority{Low,Medium,High}: r[]
+@contact_method{Email,Phone,Text}: r[]
+@newsletter(Subscribe to newsletter): c[]
+
+## Additional Information
+
+How did you hear about us? ___@referral{Google,Social Media,Friend,Ad,Other}: s[]
+
+Best contact time: ___@best_time: t[] on ___@best_day{Mon,Tue,Wed,Thu,Fri}: s[]
+
+@submit: [submit label="Send Message"]

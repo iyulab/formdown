@@ -1,0 +1,6 @@
+User-Agent: *
+Allow: /
+Disallow: /private/
+Disallow: /_next/
+
+Sitemap: https://formdown.dev/sitemap.xml

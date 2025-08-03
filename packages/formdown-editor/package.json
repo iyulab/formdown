@@ -1,0 +1,69 @@
+{
+  "name": "@formdown/editor",
+  "private": false,
+  "version": "0.1.21",
+  "description": "Development tool for Formdown syntax with advanced editing features",
+  "type": "module",
+  "main": "dist/index.es.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    },
+    "./standalone": {
+      "import": "./dist/standalone.js",
+      "require": "./dist/standalone.umd.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build && npm run build:standalone && npm run build:bundle",
+    "build:standalone": "vite build --config vite.standalone.config.ts",
+    "build:bundle": "vite build --config vite.bundle.config.ts",
+    "build:all": "npm run build && npm run build:package",
+    "build:package": "node scripts/build-package.js",
+    "preview": "vite preview",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "@formdown/core": "file:../formdown-core",
+    "@formdown/ui": "file:../formdown-ui",
+    "lit": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.0.2",
+    "ts-jest": "^29.4.0",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  },
+  "keywords": [
+    "editor",
+    "development-tool"
+  ],
+  "author": {
+    "name": "iyulab",
+    "url": "https://www.iyulab.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iyulab/formdown.git",
+    "directory": "packages/formdown-editor"
+  },
+  "homepage": "https://formdown.dev",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/iyulab/formdown/issues"
+  }
+}

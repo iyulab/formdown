@@ -1,0 +1,16 @@
+{
+    "index": "Getting Started",
+    "installation": "Installation",
+    "quick-start": "Quick Start",
+    "syntax": "Syntax Reference",
+    "shorthand": "Shorthand Syntax",
+    "reference": "Field Reference",
+    "validation": "Validation",
+    "api": "API Reference",
+    "field-helper": "Field Helper API",
+    "extensions": "Extension System",
+    "extension-examples": "Extension Examples",
+    "architecture": "Architecture",
+    "editor": "Editor Tools",
+    "examples": "Examples"
+}

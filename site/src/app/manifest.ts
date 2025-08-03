@@ -1,0 +1,28 @@
+import { MetadataRoute } from 'next'
+
+export const dynamic = 'force-static'
+export const revalidate = false
+
+export default function manifest(): MetadataRoute.Manifest {
+    return {
+        name: 'Formdown - Markdown-based Form Builder',
+        short_name: 'Formdown',
+        description: 'Create beautiful, interactive HTML forms using a simple markdown-like syntax',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#ffffff',
+        theme_color: '#2563eb',
+        icons: [
+            {
+                src: '/favicon.ico',
+                sizes: 'any',
+                type: 'image/x-icon',
+            },
+            {
+                src: '/logo.png',
+                sizes: '512x512',
+                type: 'image/png',
+            },
+        ],
+    }
+}

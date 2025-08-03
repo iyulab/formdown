@@ -1,0 +1,70 @@
+{
+  "name": "@formdown/ui",
+  "private": false,
+  "version": "0.1.21",
+  "description": "Pure HTML renderer for Formdown syntax",
+  "type": "module",
+  "main": "dist/index.es.js",
+  "module": "dist/index.es.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.umd.js"
+    },
+    "./standalone": {
+      "import": "./dist/standalone.js",
+      "require": "./dist/standalone.umd.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build && npm run build:standalone",
+    "build:standalone": "vite build --config vite.standalone.config.ts",
+    "preview": "vite preview",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "@formdown/core": "file:../formdown-core",
+    "lit": "^3.3.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@types/jest": "^30.0.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^30.0.2",
+    "jest-environment-jsdom": "^30.0.2",
+    "jsdom": "^26.1.0",
+    "ts-jest": "^29.4.0",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  },
+  "keywords": [
+    "ui",
+    "renderer",
+    "html-forms"
+  ],
+  "author": {
+    "name": "iyulab",
+    "url": "https://www.iyulab.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iyulab/formdown.git",
+    "directory": "packages/formdown-ui"
+  },
+  "homepage": "https://formdown.dev",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bugs": {
+    "url": "https://github.com/iyulab/formdown/issues"
+  }
+}

@@ -1,0 +1,67 @@
+# E-commerce Order Form
+
+## Customer Information
+
+@customer_type(Customer Type): [radio options="New Customer,Returning Customer" required data-toggle="customer-info"]
+
+### Personal Details
+@first_name(First Name): [text required autocomplete="given-name"]
+@last_name(Last Name): [text required autocomplete="family-name"]
+@email(Email Address): [email required autocomplete="email" aria-describedby="email-help"]
+@phone(Phone Number): [tel autocomplete="tel" placeholder="+1 (555) 123-4567"]
+
+## Shipping Address
+
+@shipping_address(Street Address): [text required autocomplete="shipping street-address"]
+@shipping_city(City): [text required autocomplete="shipping address-level2"]
+@shipping_state(State/Province): [text required autocomplete="shipping address-level1"]
+@shipping_zip(ZIP/Postal Code): [text required autocomplete="shipping postal-code"]
+@shipping_country(Country): [select options="United States,Canada,United Kingdom,Germany,France,Japan,Australia" required autocomplete="shipping country"]
+
+## Billing Information
+
+@same_as_shipping: [checkbox options="Billing address same as shipping" data-toggle="billing-section"]
+
+@billing_address: [text label="Billing Street Address" autocomplete="billing street-address" data-show-when="same_as_shipping=false"]
+@billing_city: [text label="Billing City" autocomplete="billing address-level2" data-show-when="same_as_shipping=false"]
+@billing_state: [text label="Billing State/Province" autocomplete="billing address-level1" data-show-when="same_as_shipping=false"]
+@billing_zip: [text label="Billing ZIP/Postal Code" autocomplete="billing postal-code" data-show-when="same_as_shipping=false"]
+
+## Order Details
+
+Your order summary:
+- Quantity: ___@quantity[number min=1 max=99 value=1 data-price-calc="true"] items
+- Product: ___@product[select options="Laptop,Smartphone,Tablet,Headphones,Camera"]
+- Color: ___@color[radio options="Black,White,Silver,Blue" data-depends="product"]
+
+@gift_wrapping: [checkbox options="Add gift wrapping (+$5.99)" data-price-modifier="5.99"]
+@express_shipping: [checkbox options="Express shipping (+$15.99)" data-price-modifier="15.99"]
+
+Special instructions: ___@special_instructions[textarea rows=2 placeholder="Any special delivery instructions"]
+
+## Payment Method
+
+@payment_method(Payment Method): [radio options="Credit Card,PayPal,Apple Pay,Google Pay" required data-toggle="payment-details"]
+
+### Credit Card Details
+@card_number: [text placeholder="1234 5678 9012 3456" autocomplete="cc-number" data-show-when="payment_method=Credit Card" data-mask="9999 9999 9999 9999"]
+@card_expiry: [text placeholder="MM/YY" autocomplete="cc-exp" data-show-when="payment_method=Credit Card" data-mask="99/99"]
+@card_cvc: [text placeholder="123" autocomplete="cc-csc" data-show-when="payment_method=Credit Card" maxlength=4]
+@card_name: [text placeholder="Name on card" autocomplete="cc-name" data-show-when="payment_method=Credit Card"]
+
+## Marketing & Preferences
+
+@email_updates: [checkbox options="Send me product updates and promotions"]
+@sms_notifications: [checkbox options="Send order updates via SMS"]
+
+@newsletter_frequency: [radio options="Weekly,Monthly,Never" label="Newsletter Frequency"]
+
+## Order Confirmation
+
+@terms_agreement: [checkbox required options="I agree to the Terms of Service and Return Policy"]
+@age_verification: [checkbox required options="I confirm I am at least 18 years old"]
+
+Estimated delivery: ___@delivery_date[date readonly data-auto-calculate="true"]
+Order total: $___@order_total[number readonly data-live-calculate="true" step=0.01]
+
+@place_order: [submit label="Place Order" class="btn btn-primary btn-lg" data-loading-text="Processing..."]

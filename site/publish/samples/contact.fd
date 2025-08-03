@@ -1,0 +1,30 @@
+# Contact Form
+
+Please fill out the form below to get in touch with us.
+
+## Contact Information
+
+@name*: [placeholder="Enter your full name"]
+@email*: @[placeholder="your@email.com"]
+@phone{(###)###-####}: %[placeholder="Your phone number"]
+@company: [placeholder="Company/Organization"]
+
+## Message
+
+@subject*: [maxlength=100]
+@message*: T5[placeholder="How can we help you?"]
+
+## Contact Preferences
+
+@priority{Low,Medium,High}: r[]
+@contact_method{Email,Phone,Text Message}: r[]
+@newsletter: c[content="Subscribe to our weekly newsletter"]
+@terms: c[required content="I agree to the terms and conditions"]
+
+## Additional Information
+
+Please tell us how you heard about us: ___@referral_source{Google,Social Media,Friend,Advertisement,Other}: s[]
+
+Best time to contact: ___@best_time: t[] on ___@best_day{Monday,Tuesday,Wednesday,Thursday,Friday}: s[]
+
+@submit: [submit label="Send Message"]

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formdown Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e9ecef;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mode-selector {
+            display: flex;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .mode-btn {
+            background: none;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+        }
+
+        .mode-btn:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .mode-btn.active {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+        }
+
+        .editor-container {
+            height: calc(100vh - 61px);
+            width: 100%;
+        }
+
+        formdown-editor {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="mode-selector">
+            <button class="mode-btn" data-mode="edit" title="Edit Mode">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="m18.5 2.5 a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+            </button>
+            <button class="mode-btn" data-mode="split" title="Split Mode">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                    <line x1="12" y1="3" x2="12" y2="21" />
+                </svg>
+            </button>
+            <button class="mode-btn" data-mode="view" title="View Mode">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="editor-container">
+        <formdown-editor id="editor"></formdown-editor>
+    </div>
+
+    <script src="formdown-editor.bundle.js"></script>
+    <script>
+        function getInitialMode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const mode = urlParams.get('mode');
+
+            // Validate mode parameter
+            if (mode && ['edit', 'split', 'view'].includes(mode)) {
+                return mode;
+            }
+
+            return 'split'; // Default mode
+        }
+
+        function shouldShowModeSelector() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return !urlParams.has('mode');
+        }
+
+        function setActiveButton(activeMode) {
+            const modeButtons = document.querySelectorAll('.mode-btn');
+            modeButtons.forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-mode') === activeMode) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function updateURL(mode) {
+            const url = new URL(window.location);
+            url.searchParams.set('mode', mode);
+            window.history.replaceState({}, '', url);
+        }
+
+        function initializeEditor() {
+            customElements.whenDefined('formdown-editor').then(() => {
+                const editor = document.getElementById('editor');
+                const initialMode = getInitialMode();
+                const showModeSelector = shouldShowModeSelector();
+
+                // Show or hide mode selector based on URL parameter
+                const modeSelectorContainer = document.querySelector('.header');
+                if (!showModeSelector) {
+                    modeSelectorContainer.style.display = 'none';
+                    // Adjust editor container height when header is hidden
+                    document.querySelector('.editor-container').style.height = '100vh';
+                }
+
+                editor.content = `# Subscription Form
+
+## Personal Information
+@name: [text required placeholder="Enter your full name"]
+@email: [email required placeholder="your@email.com"]
+
+## Subscription Settings
+@newsletter: [checkbox] Subscribe to newsletter
+@interests: [checkbox options="Technology,Business,Design,Other"]
+
+## Contact Preferences
+@contact_method: [radio required options="Email,Phone,SMS"]
+@priority: [select options="Low,Medium,High"]
+
+## Message
+@message: [textarea rows=3 placeholder="Additional comments..."]
+
+## Submit
+@submit: [submit] Subscribe`;
+
+                // Set initial mode from URL parameter
+                editor.mode = initialMode;
+
+                if (showModeSelector) {
+                    setActiveButton(initialMode);
+
+                    // Setup mode selector
+                    const modeButtons = document.querySelectorAll('.mode-btn');
+                    modeButtons.forEach(btn => {
+                        btn.addEventListener('click', () => {
+                            const mode = btn.getAttribute('data-mode');
+                            editor.mode = mode;
+
+                            setActiveButton(mode);
+                            updateURL(mode);
+                        });
+                    });
+                }
+            });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeEditor);
+        } else {
+            initializeEditor();
+        }
+    </script>
+</body>
+
+</html>
