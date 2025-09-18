@@ -370,9 +370,36 @@ export class FormdownUI extends LitElement {
       this.updateDataReactively(fieldName, value)
     }
 
+    // Focus event handler for select all functionality
+    const handleFocus = (event: Event) => {
+      const target = event.target as HTMLElement
+
+      // For contenteditable elements (inline fields)
+      if (target.hasAttribute('contenteditable')) {
+        // Select all text content on focus
+        setTimeout(() => {
+          const range = document.createRange()
+          const selection = window.getSelection()
+          if (selection && target.textContent) {
+            range.selectNodeContents(target)
+            selection.removeAllRanges()
+            selection.addRange(range)
+          }
+        }, 0)
+      }
+
+      // For regular input elements (not multiline)
+      if (target instanceof HTMLInputElement && target.type !== 'file' && target.type !== 'checkbox' && target.type !== 'radio') {
+        setTimeout(() => {
+          target.select()
+        }, 0)
+      }
+    }
+
     // Attach minimal UI event listeners
     element.addEventListener('input', handleChange)
     element.addEventListener('change', handleChange)
+    element.addEventListener('focus', handleFocus)
     if (element.hasAttribute('contenteditable')) {
       element.addEventListener('blur', handleChange)
     }
@@ -562,6 +589,84 @@ export class FormdownUI extends LitElement {
     this.formManager.reset()
     this.data = this.formManager.getData()
     this.clearValidationStates()
+  }
+
+  /**
+   * Update entire form data from external source (for two-way binding)
+   */
+  setFormData(newData: Record<string, unknown>) {
+    console.log('=== setFormData called ===')
+    console.log('newData:', newData)
+    console.log('formManager available:', !!this.formManager)
+
+    if (!this.formManager) {
+      console.error('FormManager not available')
+      return
+    }
+
+    try {
+      // Update form fields with new data
+      const container = this.shadowRoot?.querySelector('#content-container')
+      console.log('Container found:', !!container)
+      if (!container) {
+        console.error('Content container not found')
+        return
+      }
+
+      console.log('Processing', Object.keys(newData).length, 'fields')
+      // First, let's see what fields are actually available in the container
+      console.log('Available fields in container:')
+      const allFields = container.querySelectorAll('input, textarea, select, [contenteditable]')
+      allFields.forEach((field, index) => {
+        const el = field as HTMLElement
+        console.log(`Field ${index}:`, {
+          tagName: el.tagName,
+          name: el.getAttribute('name'),
+          dataFieldName: el.getAttribute('data-field-name'),
+          id: el.id,
+          type: (el as any).type || 'N/A',
+          contenteditable: el.getAttribute('contenteditable')
+        })
+      })
+
+      Object.entries(newData).forEach(([fieldName, value]) => {
+        console.log(`Processing field: ${fieldName} = ${value}`)
+
+        // Try multiple selectors to find the field
+        let field = container.querySelector(`[name="${fieldName}"]`) as HTMLElement
+        if (!field) {
+          field = container.querySelector(`[data-field-name="${fieldName}"]`) as HTMLElement
+        }
+        if (!field) {
+          field = container.querySelector(`#${fieldName}`) as HTMLElement
+        }
+
+        console.log(`Field ${fieldName} found:`, !!field, field?.tagName, (field as any)?.type || 'N/A')
+
+        if (field) {
+          if (field.hasAttribute('contenteditable')) {
+            // Inline contenteditable field
+            field.textContent = String(value || '')
+          } else if (field instanceof HTMLInputElement) {
+            if (field.type === 'checkbox' || field.type === 'radio') {
+              field.checked = Boolean(value)
+            } else {
+              field.value = String(value || '')
+            }
+          } else if (field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement) {
+            field.value = String(value || '')
+          }
+
+          // Trigger input event to update internal state
+          field.dispatchEvent(new Event('input', { bubbles: true }))
+        }
+      })
+
+      // Update internal data
+      this.data = { ...newData }
+    } catch (error) {
+      console.error('Error updating form data:', error)
+    }
   }
 }
 

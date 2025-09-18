@@ -8,6 +8,10 @@ interface CustomElement extends HTMLElement {
     setAttribute(name: string, value: string): void
     addEventListener(type: string, listener: (event: CustomEvent) => void): void
     content?: string
+    setFormData?: (data: Record<string, unknown>) => void
+    updateFormData?: (fieldName: string, value: unknown) => void
+    data?: Record<string, unknown>
+    getFormData?: () => Record<string, unknown>
 }
 
 interface Sample {
@@ -361,14 +365,119 @@ export default function DemoPage() {
                         >
                             Schema {Object.keys(formSchema).length > 0 && `(${Object.keys(formSchema).length} fields)`}
                         </button>
-                        <div className="flex-1 flex justify-end items-center px-4">
+                        <div className="flex-1 flex justify-end items-center px-4 space-x-2">
                             {activeTab === 'data' && (
-                                <button
-                                    onClick={() => setFormData({})}
-                                    className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 px-2 py-1 rounded transition-colors"
-                                >
-                                    Clear Data
-                                </button>
+                                <>
+                                    <button
+                                        onClick={() => {
+                                            console.log('=== Apply Data Button Clicked ===')
+                                            console.log('Current formData:', formData)
+
+                                            const applyDataWithRetry = (attempt = 1, maxAttempts = 5) => {
+                                                console.log(`Attempt ${attempt}/${maxAttempts}`)
+
+                                                // Apply Data: Data -> UI
+                                                const rendererContainer = document.getElementById('renderer-container')
+                                                console.log('Renderer container found:', !!rendererContainer)
+
+                                                if (rendererContainer) {
+                                                    console.log('Container innerHTML length:', rendererContainer.innerHTML.length)
+                                                    console.log('Container children:', rendererContainer.children.length)
+
+                                                    // List all elements in container
+                                                    Array.from(rendererContainer.children).forEach((child, index) => {
+                                                        console.log(`Child ${index}:`, child.tagName, child.id, child.className)
+                                                    })
+                                                }
+
+                                                const renderer = rendererContainer?.querySelector('formdown-ui') as CustomElement
+                                                console.log('Renderer element found:', !!renderer)
+
+                                                if (!renderer && attempt < maxAttempts) {
+                                                    console.log(`Renderer not found, retrying in 500ms... (attempt ${attempt}/${maxAttempts})`)
+                                                    setTimeout(() => applyDataWithRetry(attempt + 1, maxAttempts), 500)
+                                                    return
+                                                }
+
+                                                if (renderer) {
+                                                    console.log('setFormData method available:', typeof renderer?.setFormData)
+
+                                                    // Check all available methods on the renderer
+                                                    console.log('Available methods on renderer:')
+                                                    console.log('Object.getOwnPropertyNames:', Object.getOwnPropertyNames(renderer))
+                                                    console.log('Object.getOwnPropertyNames(prototype):', Object.getOwnPropertyNames(Object.getPrototypeOf(renderer)))
+
+                                                    // Check specifically for setFormData variations
+                                                    console.log('setFormData:', typeof renderer.setFormData)
+                                                    console.log('updateFormData:', typeof renderer.updateFormData)
+                                                    console.log('data property:', typeof renderer.data)
+                                                    console.log('getFormData:', typeof renderer.getFormData)
+
+                                                    // Try multiple methods to update form data
+                                                    if (renderer && typeof renderer.setFormData === 'function') {
+                                                        console.log('Using setFormData method')
+                                                        renderer.setFormData(formData)
+                                                    } else if (renderer && typeof renderer.updateFormData === 'function') {
+                                                        console.log('Using updateFormData method')
+                                                        // updateFormData expects (fieldName, value) format, so we need to call it for each field
+                                                        Object.entries(formData).forEach(([fieldName, value]) => {
+                                                            renderer.updateFormData!(fieldName, value)
+                                                        })
+                                                    } else {
+                                                        console.log('Attempting direct DOM manipulation...')
+                                                        // Direct DOM manipulation as fallback
+                                                        const shadowRoot = (renderer as HTMLElement & { shadowRoot?: ShadowRoot }).shadowRoot
+                                                        if (shadowRoot) {
+                                                            const container = shadowRoot.querySelector('#content-container')
+                                                            if (container) {
+                                                                Object.entries(formData).forEach(([fieldName, value]) => {
+                                                                    const field = container.querySelector(`[name="${fieldName}"], [data-field-name="${fieldName}"]`) as HTMLElement
+                                                                    if (field) {
+                                                                        if (field.hasAttribute('contenteditable')) {
+                                                                            field.textContent = String(value || '')
+                                                                        } else if (field instanceof HTMLInputElement) {
+                                                                            if (field.type === 'checkbox' || field.type === 'radio') {
+                                                                                field.checked = Boolean(value)
+                                                                            } else {
+                                                                                field.value = String(value || '')
+                                                                            }
+                                                                        } else if (field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement) {
+                                                                            field.value = String(value || '')
+                                                                        }
+                                                                        // Trigger input event
+                                                                        field.dispatchEvent(new Event('input', { bubbles: true }))
+                                                                    }
+                                                                })
+                                                                console.log('Direct DOM manipulation completed')
+                                                            } else {
+                                                                console.error('Container not found in shadow DOM')
+                                                            }
+                                                        } else {
+                                                            console.error('Shadow root not found')
+                                                        }
+                                                    }
+                                                } else {
+                                                    console.error('Renderer not found after all retries')
+                                                    console.log('Available elements in rendererContainer:')
+                                                    if (rendererContainer) {
+                                                        console.log('innerHTML:', rendererContainer.innerHTML.substring(0, 200) + '...')
+                                                    }
+                                                }
+                                            }
+
+                                            applyDataWithRetry()
+                                        }}
+                                        className="text-xs bg-blue-500 text-white hover:bg-blue-600 px-3 py-1 rounded transition-colors font-medium"
+                                    >
+                                        Apply Data
+                                    </button>
+                                    <button
+                                        onClick={() => setFormData({})}
+                                        className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 px-2 py-1 rounded transition-colors"
+                                    >
+                                        Clear Data
+                                    </button>
+                                </>
                             )}
                         </div>
                     </div>
@@ -381,11 +490,12 @@ export default function DemoPage() {
                                 try {
                                     const parsed = JSON.parse(e.target.value)
                                     setFormData(parsed)
+                                    // Note: UI will not be updated automatically. Use "Apply Data" button to apply changes to form.
                                 } catch {
                                     // Invalid JSON, don't update
                                 }
                             }}
-                            placeholder="Start typing in the form fields to see real-time data updates..."
+                            placeholder="Edit JSON data here, then click 'Apply Data' to update the form..."
                             className="w-full h-full resize-none border border-gray-200 dark:border-gray-600 rounded p-2 text-xs font-mono text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         />
                     ) : (

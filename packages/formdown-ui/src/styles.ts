@@ -61,6 +61,13 @@ export const formdownStyles = css`
     color: var(--theme-text-primary, #1f2937);
   }
 
+  /* Placeholder styling for all input types */
+  input::placeholder, textarea::placeholder {
+    color: var(--theme-text-secondary, #94a3b8);
+    font-style: italic;
+    opacity: 0.8;
+  }
+
   input:focus, textarea:focus, select:focus {
     outline: none;
     border-color: var(--theme-accent, #3b82f6);
@@ -126,10 +133,6 @@ export const formdownStyles = css`
     display: inline;
     min-width: 60px;
     max-width: 200px;
-    padding: 0.125rem 0.25rem;
-    border: 1px solid transparent;
-    background-color: var(--theme-bg-secondary, rgba(239, 246, 255, 0.6));
-    border-radius: 0.125rem;
     font-style: normal;
     color: inherit;
     font-size: inherit;
@@ -138,7 +141,6 @@ export const formdownStyles = css`
     font-weight: inherit;
     cursor: text;
     outline: none;
-    transition: all 0.15s ease-in-out;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -146,23 +148,48 @@ export const formdownStyles = css`
     box-decoration-break: clone;
   }
 
-  [contenteditable="true"]:not(textarea):hover {
-    background-color: var(--theme-bg-secondary, rgba(219, 234, 254, 0.8));
-    border-color: var(--theme-border, rgba(147, 197, 253, 0.5));
-  }
-
-  [contenteditable="true"]:not(textarea):focus {
-    background-color: var(--theme-bg-primary, rgba(255, 255, 255, 0.9));
-    border-color: var(--theme-accent, #3b82f6);
-    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
-    color: var(--theme-accent, #1e40af);
-  }
-
+  /* Placeholder for inline contenteditable fields */
   [contenteditable="true"]:not(textarea):empty::before {
     content: attr(data-placeholder);
     color: var(--theme-text-secondary, #94a3b8);
     font-style: italic;
+    font-weight: normal;
     opacity: 0.7;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Enhanced visual styling for inline fields */
+  [contenteditable="true"]:not(textarea) {
+    border: 1px solid var(--theme-border, rgba(209, 213, 219, 0.6));
+    background-color: var(--theme-bg-secondary, rgba(248, 250, 252, 0.8));
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    transition: all 0.2s ease-in-out;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    position: relative;
+  }
+
+  [contenteditable="true"]:not(textarea):hover {
+    background-color: var(--theme-bg-secondary, rgba(241, 245, 249, 0.9));
+    border-color: var(--theme-border, rgba(156, 163, 175, 0.8));
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+  }
+
+  [contenteditable="true"]:not(textarea):focus {
+    background-color: var(--theme-bg-primary, #ffffff);
+    border-color: var(--theme-accent, #3b82f6);
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2), 0 2px 8px rgba(0, 0, 0, 0.15);
+    color: var(--theme-text-primary, #1f2937);
+    transform: translateY(-1px);
+  }
+
+  /* Better visual distinction when field has content */
+  [contenteditable="true"]:not(textarea):not(:empty) {
+    background-color: var(--theme-bg-primary, #ffffff);
+    border-color: var(--theme-border, rgba(156, 163, 175, 0.9));
+    font-weight: normal;
   }
 
   /* Enhanced typography for markdown content */
