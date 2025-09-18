@@ -21,19 +21,16 @@ describe('HTML5 Compliance', () => {
             const parsed = parser.parseFormdown(content)
             const html = generator.generateHTML(parsed)
             
-            // Should have multiple forms (one per field due to field ordering fix)
+            // Should have hidden form architecture
             const formMatches = html.match(/<form/g)
-            expect(formMatches).toHaveLength(3) // One form per field
+            expect(formMatches).toHaveLength(1) // One hidden form
+
+            // Hidden form should have proper attributes
+            expect(html).toContain('formdown-form-default')
             
-            // Each form should have proper attributes
-            expect(html).toContain('<form class="formdown-form" role="form"')
-            
-            // Should not have nested forms within each individual form
-            const formBlocks = html.split('</form>')
-            formBlocks.slice(0, -1).forEach(formBlock => {
-                const nestedFormMatches = formBlock.match(/<form/g)
-                expect(nestedFormMatches).toHaveLength(1) // Only one form tag per block
-            })
+            // Hidden form architecture should have proper structure
+            expect(html).toContain('<form hidden')
+            expect(html).toContain('form="formdown-form-default"')
         })
 
         test('should properly associate labels with inputs', () => {

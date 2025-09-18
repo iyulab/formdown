@@ -28,24 +28,27 @@
     "@formdown/editor": "file:../packages/formdown-editor",
     "@formdown/ui": "file:../packages/formdown-ui",
     "@tailwindcss/typography": "^0.5.16",
-    "marked": "^15.0.12",
-    "next": "15.3.4",
-    "nextra": "^4.2.17",
-    "nextra-theme-docs": "^4.2.17",
+    "marked": "^16.3.0",
+    "next": "15.5.3",
+    "nextra": "^4.4.0",
+    "nextra-theme-docs": "^4.4.0",
     "prismjs": "^1.30.0",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.3.4",
+    "eslint-config-next": "15.5.3",
+    "jest": "^30.1.3",
     "rimraf": "^6.0.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "ts-jest": "^29.4.3",
+    "typescript": "^5.8.3"
   }
 }

@@ -24,14 +24,14 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && npm run build:standalone && npm run build:bundle",
-    "build:standalone": "vite build --config vite.standalone.config.ts",
-    "build:bundle": "vite build --config vite.bundle.config.ts",
+    "build": "node ../../node_modules/typescript/bin/tsc && node ../../node_modules/vite/bin/vite.js build && npm run build:standalone && npm run build:bundle",
+    "build:standalone": "node ../../node_modules/vite/bin/vite.js build --config vite.standalone.config.ts",
+    "build:bundle": "node ../../node_modules/vite/bin/vite.js build --config vite.bundle.config.ts",
     "build:all": "npm run build && npm run build:package",
     "build:package": "node scripts/build-package.js",
     "preview": "vite preview",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "node ../../node_modules/jest/bin/jest.js",
+    "test:watch": "node ../../node_modules/jest/bin/jest.js --watch"
   },
   "dependencies": {
     "@formdown/core": "file:../formdown-core",
@@ -40,8 +40,8 @@
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "jest": "^30.0.2",
-    "ts-jest": "^29.4.0",
+    "jest": "^30.1.3",
+    "ts-jest": "^29.4.3",
     "typescript": "~5.8.3",
     "vite": "^6.3.5"
   },

@@ -97,7 +97,7 @@ Please fill out your information.
             const parsed = parseFormdown(input)
             const html = generateFormHTML(parsed)
             
-            expect(html).toContain('<form class="formdown-form"')
+            expect(html).toContain('formdown-form-default')
             expect(html).toContain('type="text"')
             expect(html).toContain('type="email"')
             expect(html).toContain('required')
@@ -209,7 +209,7 @@ Please fill out your information.
             const html = generator.generateHTML(content)
             expect(html).toContain('<h1>Test Form</h1>')
             expect(html).toContain('type="text"')
-            expect(html).toContain('class="formdown-form"')
+            expect(html).toContain('formdown-form-default')
         })
 
         test('SchemaExtractor should work independently', () => {
@@ -307,8 +307,8 @@ Please fill out your information.
             const start = performance.now()
             const html = generateFormHTML(content)
             const end = performance.now()
-            
-            expect(html).toContain('class="formdown-form"')
+
+            expect(html).toContain('formdown-form-default')
             expect(html).toContain('<h1>Large Form</h1>')
             expect(end - start).toBeLessThan(500) // Should generate in under 0.5 seconds
         })

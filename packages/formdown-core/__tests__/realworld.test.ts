@@ -60,8 +60,8 @@ Welcome ___@visitor_name[text]! Please tell us about yourself.
         expect(html).toContain('<del>Strikethrough</del>')
         expect(html).toContain('<code>Inline code</code>')
 
-        // Verify HTML contains form elements  
-        expect(html).toContain('<form class="formdown-form"')
+        // Verify HTML contains hidden form elements
+        expect(html).toContain('<form hidden id="formdown-form-default"')
         expect(html).toContain('<input type="text"')
         expect(html).toContain('<input type="email"')
         expect(html).toContain('<textarea')

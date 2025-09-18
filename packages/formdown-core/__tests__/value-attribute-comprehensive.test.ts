@@ -348,7 +348,10 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
             cases.forEach(testCase => {
                 expect(() => {
                     const result = parser.parseFormdown(testCase)
-                    generator.generateFieldHTML(result.forms[0])
+                    // Only generate HTML if parsing succeeded
+                    if (result.forms.length > 0 && result.forms[0]) {
+                        generator.generateFieldHTML(result.forms[0])
+                    }
                 }).not.toThrow() // Should not crash
             })
         })

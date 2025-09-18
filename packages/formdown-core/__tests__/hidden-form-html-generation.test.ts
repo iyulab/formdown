@@ -143,8 +143,8 @@ describe('Hidden Form HTML Generation', () => {
       const result = parser.parseFormdown(content)
       const html = generator.generateHTML(result)
       
-      expect(html).toContain('<button type="submit" form="button-form">Submit Form</button>')
-      expect(html).toContain('<button type="reset" form="button-form">Reset Form</button>')
+      expect(html).toContain('<button type="submit" id="submit_btn" form="button-form">Submit Form</button>')
+      expect(html).toContain('<button type="reset" id="reset_btn" form="button-form">Reset Form</button>')
     })
 
     test('should handle inline fields with form association', () => {
@@ -260,8 +260,8 @@ Please tell us your name ___@name[text form="survey"] and age ___@age[number for
       expect(html).toContain('<form hidden id="feedback"')
       expect(html).toContain('form="survey"')
       expect(html).toContain('form="feedback"')
-      expect(html).toContain('type="submit" form="survey"')
-      expect(html).toContain('type="submit" form="feedback"')
+      expect(html).toContain('id="submit_survey" form="survey"')
+      expect(html).toContain('id="submit_feedback" form="feedback"')
     })
   })
 

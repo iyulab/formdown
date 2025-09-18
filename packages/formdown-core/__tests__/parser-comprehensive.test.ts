@@ -262,6 +262,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const content = '@username{^[a-zA-Z0-9_]{3,20}$}: []'
                 const result = parser.parseFormdown(content)
 
+                expect(result.forms).toHaveLength(1)
                 expect(result.forms[0].pattern).toBe('^[a-zA-Z0-9_]{3,20}$')
             })
 

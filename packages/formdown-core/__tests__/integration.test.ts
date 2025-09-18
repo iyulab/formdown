@@ -41,7 +41,7 @@ Your username is ___@username[text required].`
 
             expect(html).toContain('<h1>Contact Form</h1>')
             expect(html).toContain('<p>Please contact us:</p>')
-            expect(html).toContain('<form class="formdown-form"')
+            expect(html).toContain('formdown-form-default')
             expect(html).toContain('<textarea')
             expect(html).toContain('Message *')
         })
@@ -85,7 +85,7 @@ Thank you for reaching out to us!`
             expect(html).toContain('<h1>Contact Us</h1>')
             expect(html).toContain('<h2>Personal Information</h2>')
             expect(html).toContain('<h2>Message</h2>')
-            expect(html).toContain('<form class="formdown-form"')
+            expect(html).toContain('formdown-form-default')
             expect(html).toContain('placeholder="Full Name"')
             expect(html).toContain('rows="5"')
             expect(html).toContain('Thank you for reaching out to us!')

@@ -51,7 +51,7 @@
         "release:major": "npm run version:major && npm run publish:packages"
     },
     "devDependencies": {
-        "@types/node": "^20.0.0"
+        "@types/node": "^24.5.2"
     },
     "engines": {
         "node": ">=16.0.0",

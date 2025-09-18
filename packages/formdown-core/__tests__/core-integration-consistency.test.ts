@@ -42,7 +42,7 @@ describe('Core Integration Consistency Tests', () => {
       expect(html).toContain('name="age"')
       
       // Should contain submit button with form association
-      expect(html).toContain('<button type="submit" form="formdown-form-1">Submit Form</button>')
+      expect(html).toContain('<button type="submit" id="submit" form="formdown-form-1">Submit Form</button>')
     })
 
     test('getSchema should extract complete form metadata', () => {
@@ -145,8 +145,8 @@ describe('Core Integration Consistency Tests', () => {
       expect(html).toContain('form="form2"')
       
       // Should associate submit buttons
-      expect(html).toContain('<button type="submit" form="form1">Submit 1</button>')
-      expect(html).toContain('<button type="submit" form="form2">Submit 2</button>')
+      expect(html).toContain('<button type="submit" id="submit1" form="form1">Submit 1</button>')
+      expect(html).toContain('<button type="submit" id="submit2" form="form2">Submit 2</button>')
     })
 
     test('Should handle automatic form association', () => {

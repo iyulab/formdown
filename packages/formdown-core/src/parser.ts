@@ -119,20 +119,21 @@ export class FormdownParser {
         // Standard syntax: @name(Label): [type attributes] should NOT be treated as shorthand
         // Shorthand syntax: @name*: [], @name{pattern}: [], @name: @[], etc.
         const hasShorthandMarker = /^@\w+\*/.test(trimmedLine) ||                          // Required marker
-                                   /^@\w+\{.*?\}/.test(trimmedLine) ||                      // Content
-                                   /^@\w+\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])\d*\[/.test(trimmedLine) || // Type marker 
+                                   /^@\w+\{[^}]*\}/.test(trimmedLine) ||                    // Content
+                                   /^@\w+\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])\d*\[/.test(trimmedLine) || // Type marker
                                    /^@\w+\([^)]+\)\*/.test(trimmedLine) ||                  // Label + required
-                                   /^@\w+\([^)]+\)\{.*?\}/.test(trimmedLine) ||             // Label + content
+                                   /^@\w+\([^)]+\)\{[^}]*\}/.test(trimmedLine) ||           // Label + content
                                    /^@\w+\([^)]+\)\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])\d*\[/.test(trimmedLine) // Label + type marker
         
         
         if (hasShorthandMarker) {
-            const shorthandField = this.parseShorthandBlockField(trimmedLine)
+                const shorthandField = this.parseShorthandBlockField(trimmedLine)
             if (shorthandField) return shorthandField
         }
         
         // Fall back to standard syntax
-        const match = trimmedLine.match(/^@(\w+)(?:\(([^)]+)\))?\s*:\s*\[([^\]]*)\].*$/)
+        // Use a more sophisticated regex that handles quoted content with brackets
+        const match = trimmedLine.match(/^@(\w+)(?:\(([^)]+)\))?\s*:\s*\[((?:[^\]"']|"[^"]*"|'[^']*')*)\].*$/)
         if (!match) return null
 
         const [, name, customLabel, typeAndAttributes] = match
@@ -147,11 +148,12 @@ export class FormdownParser {
         // Handle 'dt' as a special case (two-character type marker)
         // Make type marker optional to handle cases like @name*: []
         // Handle both orders: @name*{content}(label) and @name(label)*{content}
-        let shorthandMatch = line.match(/^@(\w+)(\*)?(?:\{(.*?)\})?(?:\(([^)]+)\))?\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])?(\d*)\[([^\]]*)\].*$/)
+        // Fixed pattern with nested brace support
+        let shorthandMatch = line.match(/^@(\w+)(\*)?(?:\{(.*?)\})?(?:\(([^)]+)\))?\s*:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?\[([^\]]*)\].*$/)
         
         // Try alternative order: @name(label)*{content}
         if (!shorthandMatch) {
-            shorthandMatch = line.match(/^@(\w+)(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])?(\d*)\[([^\]]*)\].*$/)
+            shorthandMatch = line.match(/^@(\w+)(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?\[([^\]]*)\].*$/)
             if (shorthandMatch) {
                 // Reorder to match expected destructuring: [, name, requiredMarker, content, customLabel, typeMarker, rowsOrModifier, attributes]
                 const [, name, customLabel, requiredMarker, content, typeMarker, rowsOrModifier, attributes] = shorthandMatch
@@ -181,20 +183,35 @@ export class FormdownParser {
         const inlineFields: Field[] = []
         const delimiter = this.options.inlineFieldDelimiter!
 
-        // Support shorthand inline fields: typeMarker___@fieldName*{content}(label)[attributes]
-        // Examples: @___@email*, #___@age, d___@birth_date{yyyy-MM-dd}, $___@price
+        // Support shorthand inline fields: typeMarker___@fieldName*{content}(label)[attributes] or typeMarker___@fieldName*{content}: type[attributes]
+        // Examples: @___@email*, #___@age, d___@birth_date{yyyy-MM-dd}: [attributes], ___@service{options}: s[]
         // Note: need to handle single 'd' separately from 'dt'
-        const shorthandPattern = new RegExp(`(dt|d|[#@%&t?TrscRFCMW$]?)${delimiter}@(\\w+)(\\*)?(?:\\{(.*?)\\})?(?:\\(([^)]+)\\))?(?:\\[([^\\]]*)\\])?`, 'g')
+        const shorthandPattern = new RegExp(`(dt|d|[#@%&t?TrscRFCMW$]?)${delimiter}@(\\w+)(\\*)?(?:\\{([^}]*)\\})?(?:\\(([^)]+)\\))?(?:\\[([^\\]]*)\\]|\\:\\s*([^\\s]*?)\\[([^\\]]*)\\])?`, 'g')
         
-        let cleanedLine = line.replace(shorthandPattern, (match, typeMarker, name, requiredMarker, content, customLabel, attributes) => {
+        let cleanedLine = line.replace(shorthandPattern, (match, typeMarker, name, requiredMarker, content, customLabel, attributes, colonType, colonAttributes) => {
             // Only process as shorthand if it has actual shorthand features
             // Custom labels are also standard features, so only process if we have
-            // type markers, required markers, or content
-            if (!typeMarker && !requiredMarker && !content) {
+            // type markers, required markers, content, or attributes
+            if (!typeMarker && !requiredMarker && !content && !attributes && !colonType && !colonAttributes) {
                 return match // Let standard parser handle this
             }
-            
-            const field = this.convertShorthandToField(name, requiredMarker, content, customLabel, typeMarker, '', attributes || '')
+
+            // If attributes start with a valid input type (like "text required"),
+            // let the standard parser handle it instead of shorthand parser
+            if (!typeMarker && attributes) {
+                const validTypes = ['text', 'email', 'password', 'number', 'tel', 'url', 'search',
+                                   'date', 'time', 'datetime-local', 'month', 'week', 'color',
+                                   'file', 'range', 'radio', 'checkbox', 'select', 'textarea',
+                                   'submit', 'reset', 'button', 'hidden']
+                const firstWord = attributes.split(/\s/)[0]
+                if (validTypes.includes(firstWord)) {
+                    return match // Let standard parser handle this
+                }
+            }
+
+            const finalTypeMarker = typeMarker || colonType || ''
+            const finalAttributes = attributes || colonAttributes || ''
+            const field = this.convertShorthandToField(name, requiredMarker, content, customLabel, finalTypeMarker, '', finalAttributes)
             if (field) {
                 field.inline = true
                 inlineFields.push(field)
@@ -205,13 +222,41 @@ export class FormdownParser {
         })
 
         // Fallback to standard inline pattern for non-shorthand syntax
-        const standardPattern = new RegExp(`${delimiter}@(\\w+)(?:\\(([^)]+)\\))?(?:\\[([^\\]]*)\\])?`, 'g')
-        cleanedLine = cleanedLine.replace(standardPattern, (match, name, customLabel, typeAndAttributes) => {
+        // Support both: ___@name[attributes] and ___@name{options}: type[]
+        const standardPattern = new RegExp(`${delimiter}@(\\w+)(?:\\{([^}]*)\\})?(?:\\(([^)]+)\\))?(?:\\:\\s*([^\\s]*?)\\[([^\\]]*)\\]|\\[([^\\]]*)\\])?`, 'g')
+        cleanedLine = cleanedLine.replace(standardPattern, (match, name, options, customLabel, colonType, colonAttributes, directAttributes) => {
             // Skip if already processed by shorthand pattern
             if (inlineFields.some(field => field.name === name)) return match
-            
-            const finalTypeAndAttributes = typeAndAttributes !== undefined ? typeAndAttributes : 'text'
+
+            // Determine type and attributes
+            let finalTypeAndAttributes = 'text'
+            if (colonType && colonAttributes !== undefined) {
+                // Pattern: ___@name{options}: type[attributes]
+                finalTypeAndAttributes = colonAttributes.trim() ? `${colonType} ${colonAttributes}` : colonType
+            } else if (directAttributes !== undefined) {
+                // Pattern: ___@name[attributes]
+                finalTypeAndAttributes = directAttributes
+            }
+
+            // Create field
             const field = this.createField(name, customLabel, finalTypeAndAttributes)
+
+            // Handle options if present
+            if (field && options) {
+                // Process options from {options} part
+                const optionsArray = options.split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
+                if (optionsArray.length > 0) {
+                    // If field type supports options (select, radio, checkbox), set them
+                    if (['select', 'radio', 'checkbox'].includes(field.type)) {
+                        field.options = optionsArray
+                    } else {
+                        // For other types, create datalist
+                        const datalistId = `datalist-${Math.floor(Math.random() * 1000000000)}`
+                        field.attributes = field.attributes || {}
+                        field.attributes.list = datalistId
+                    }
+                }
+            }
             if (field) {
                 field.inline = true
                 inlineFields.push(field)
@@ -284,10 +329,10 @@ export class FormdownParser {
             const contentInterpreted = this.interpretContent(content, typeMarker)
             fieldAttributes = { ...fieldAttributes, ...contentInterpreted }
         }
-        
+
         // Build the type and attributes string for createField
         const typeAndAttributes = this.buildTypeAndAttributesString(type, fieldAttributes)
-        
+
         return this.createField(name, customLabel, typeAndAttributes)
     }
 
@@ -357,29 +402,33 @@ export class FormdownParser {
         }
         
         // Datalist shorthand: automatically create datalist and set list attribute
-        // Example: @country{Korea,Japan,China}: [text autocomplete]
+        // Example: @country{Korea,Japan,China}: [text autocomplete] or @status{Active}: [text]
+        // Create datalist for content that's not used by selection types or date/time types
         if (content && !['r', 's', 'c', 'd', 't', 'dt'].includes(typeMarker)) {
-            // Parse options from content
-            const options = content.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0)
-            
-            if (options.length > 0) { // Create datalist for any valid options
-                // Generate datalist ID from content hash
-                const datalistId = this.generateDatalistId(content)
-                
-                // Create datalist declaration automatically
-                const datalistDeclaration: DatalistDeclaration = {
-                    id: datalistId,
-                    options
+            // For non-selection/non-datetime types, check if content should be datalist or pattern
+            if (hasComma || (!isRegexPattern && content.length > 0)) {
+                // Parse options from content (split by comma, or single option)
+                const options = content.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0)
+
+                if (options.length > 0) { // Create datalist for any valid options
+                    // Generate datalist ID from content hash
+                    const datalistId = this.generateDatalistId(content)
+
+                    // Create datalist declaration automatically
+                    const datalistDeclaration: DatalistDeclaration = {
+                        id: datalistId,
+                        options
+                    }
+
+                    // Check if this datalist already exists
+                    const existingDatalist = this.datalistDeclarations.find(d => d.id === datalistId)
+                    if (!existingDatalist) {
+                        this.datalistDeclarations.push(datalistDeclaration)
+                    }
+
+                    // Return list attribute to connect field to datalist
+                    return { list: datalistId }
                 }
-                
-                // Check if this datalist already exists
-                const existingDatalist = this.datalistDeclarations.find(d => d.id === datalistId)
-                if (!existingDatalist) {
-                    this.datalistDeclarations.push(datalistDeclaration)
-                }
-                
-                // Return list attribute to connect field to datalist
-                return { list: datalistId }
             }
         }
         
@@ -389,7 +438,7 @@ export class FormdownParser {
 
     private parseAttributes(attributeString: string): Record<string, any> {
         const attributes: Record<string, any> = {}
-        const attributePattern = /([\w-]+)(?:=(?:"([^"]*)"|'([^']*)'|([^\s]+)))?/g
+        const attributePattern = /([\w-]+)(?:=(?:"((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|([^\s]+)))?/g
         const matches = Array.from(attributeString.matchAll(attributePattern))
         
         for (const match of matches) {
@@ -455,13 +504,31 @@ export class FormdownParser {
             const [, key, quotedValue1, quotedValue2, unquotedValue] = matches[i]
             // If this key has no value and is a valid field type, use it as the type
             if (!quotedValue1 && !quotedValue2 && !unquotedValue) {
+                // Map shorthand types to full types
+                const shorthandTypeMap: Record<string, string> = {
+                    's': 'select',
+                    'r': 'radio',
+                    'c': 'checkbox',
+                    'T': 'textarea',
+                    '@': 'email',
+                    '#': 'number',
+                    '%': 'tel',
+                    '$': 'number', // price
+                    '?': 'password',
+                    't': 'time',
+                    'd': 'date',
+                    'dt': 'datetime-local'
+                }
+
+                const fullType = shorthandTypeMap[key] || key
+
                 // Check if it's a valid HTML input type or special form type
-                const validTypes = ['text', 'email', 'password', 'number', 'tel', 'url', 'search', 
+                const validTypes = ['text', 'email', 'password', 'number', 'tel', 'url', 'search',
                                    'date', 'time', 'datetime-local', 'month', 'week', 'color',
                                    'file', 'range', 'radio', 'checkbox', 'select', 'textarea',
                                    'submit', 'reset', 'button', 'hidden']
-                if (validTypes.includes(key)) {
-                    type = key
+                if (validTypes.includes(fullType)) {
+                    type = fullType
                     typeIndex = i
                     break
                 }
@@ -649,22 +716,25 @@ export class FormdownParser {
             return ''
         }
 
+        // Unescape common escape sequences
+        const unescapedValue = value.replace(/\\(.)/g, '$1')
+
         // Try to parse as integer (including negative)
-        if (/^-?\d+$/.test(value)) {
-            return parseInt(value, 10)
+        if (/^-?\d+$/.test(unescapedValue)) {
+            return parseInt(unescapedValue, 10)
         }
 
         // Try to parse as float (including negative)
-        if (/^-?\d*\.\d+$/.test(value)) {
-            return parseFloat(value)
+        if (/^-?\d*\.\d+$/.test(unescapedValue)) {
+            return parseFloat(unescapedValue)
         }
 
         // Try to parse as boolean
-        if (value === 'true') return true
-        if (value === 'false') return false
+        if (unescapedValue === 'true') return true
+        if (unescapedValue === 'false') return false
 
-        // Return as string
-        return value
+        // Return as unescaped string
+        return unescapedValue
     }
 
     private parseFormDeclaration(line: string): FormDeclaration | null {

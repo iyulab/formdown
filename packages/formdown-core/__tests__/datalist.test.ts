@@ -187,14 +187,37 @@ describe('Datalist Support', () => {
         })
 
         test('should escape HTML in datalist options', () => {
-            const content = '@test{"<script>alert(\\"xss\\")</script>",option2}: [text]'
+            // Use explicit datalist syntax to test HTML escaping
+            const content = `
+@datalist[id="malicious" options="<script>alert(\\"xss\\")</script>,option2"]
+@test: [text datalist="malicious"]
+`
             const result = parser.parseFormdown(content)
             const html = generator.generateHTML(result)
-            
+
+            // Check that datalist was created
+            expect(result.datalistDeclarations).toHaveLength(1)
+            expect(result.datalistDeclarations![0].options).toEqual(['<script>alert("xss")</script>', 'option2'])
+
             // Check that script tags are escaped in the HTML output
             expect(html).toContain('&lt;script&gt;')
             expect(html).toContain('&quot;')
             expect(html).not.toContain('<script>alert')
+        })
+
+        test('should escape HTML in shorthand datalist options', () => {
+            // Test shorthand syntax with proper escaping
+            const content = '@test{option1,<b>bold</b>}: [text]'
+            const result = parser.parseFormdown(content)
+            const html = generator.generateHTML(result)
+
+            // Check that datalist was created
+            expect(result.datalistDeclarations).toHaveLength(1)
+            expect(result.datalistDeclarations![0].options).toEqual(['option1', '<b>bold</b>'])
+
+            // Check that HTML tags are escaped in the output
+            expect(html).toContain('&lt;b&gt;bold&lt;/b&gt;')
+            expect(html).not.toContain('<b>bold</b>')
         })
 
         test('should generate multiple datalist elements', () => {
