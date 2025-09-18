@@ -1,7 +1,7 @@
 {
   "name": "@formdown/editor",
   "private": false,
-  "version": "0.1.22",
+  "version": "0.2.0",
   "description": "Development tool for Formdown syntax with advanced editing features",
   "type": "module",
   "main": "dist/index.es.js",
@@ -23,19 +23,12 @@
     "README.md"
   ],
   "scripts": {
-    "dev": "vite",
-    "build": "node ../../node_modules/typescript/bin/tsc && node ../../node_modules/vite/bin/vite.js build && npm run build:standalone && npm run build:bundle",
-    "build:standalone": "node ../../node_modules/vite/bin/vite.js build --config vite.standalone.config.ts",
-    "build:bundle": "node ../../node_modules/vite/bin/vite.js build --config vite.bundle.config.ts",
-    "build:all": "npm run build && npm run build:package",
-    "build:package": "node scripts/build-package.js",
-    "preview": "vite preview",
-    "test": "node ../../node_modules/jest/bin/jest.js",
-    "test:watch": "node ../../node_modules/jest/bin/jest.js --watch"
+    "build": "node ../../node_modules/typescript/bin/tsc && node ../../node_modules/vite/bin/vite.js build && node ../../node_modules/vite/bin/vite.js build --config vite.standalone.config.ts && node ../../node_modules/vite/bin/vite.js build --config vite.bundle.config.ts",
+    "test": "node ../../node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@formdown/core": "file:../formdown-core",
-    "@formdown/ui": "file:../formdown-ui",
+    "@formdown/core": "0.2.0",
+    "@formdown/ui": "0.2.0",
     "lit": "^3.3.0"
   },
   "devDependencies": {

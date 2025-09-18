@@ -1,5 +1,3 @@
-import Script from 'next/script'
-
 export default function DocsLayout({
     children,
 }: {
@@ -7,13 +5,13 @@ export default function DocsLayout({
 }) {
     return (
         <div className="docs-layout">
-            <Script
+            <script
                 src="https://cdn.jsdelivr.net/npm/@formdown/editor@latest/dist/standalone.js"
-                strategy="beforeInteractive"
+                async
             />
-            <Script
+            <script
                 src="https://cdn.jsdelivr.net/npm/@formdown/ui@latest/dist/standalone.js"
-                strategy="beforeInteractive"
+                async
             />
             {children}
         </div>

@@ -25,8 +25,6 @@ export const createFormdownUI = (container: HTMLElement, options: {
 }
 
 export const registerFormdownUI = () => {
-    // Force registration if not already done
-    if (!customElements.get('formdown-ui')) {
-        import('./formdown-ui')
-    }
+    // Component is already registered via static import above
+    // This function is kept for API compatibility
 }

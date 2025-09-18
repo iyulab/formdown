@@ -6,7 +6,7 @@ import {
 } from '@formdown/core'
 import { editorExtensionSupport } from './extension-support'
 import styles from './styles.css?inline'
-// P1-2: 중복 템플릿 함수 제거 - 인라인으로 간소화
+// Template functions inlined for better performance
 
 var defaultContent = `# Contact Form
 
@@ -23,7 +23,7 @@ Fill out the form below to get in touch:
 export class FormdownEditor extends LitElement {
     static styles = css`${unsafeCSS(styles)}`
 
-    // Phase 2.2: FormManager 도입 - Core-First 아키텍처 적용
+    // FormManager integration for Core-First architecture
     private formManager!: FormManager
 
     @property()
@@ -44,7 +44,7 @@ export class FormdownEditor extends LitElement {
     @state()
     private _data: Record<string, any> = {}
 
-    // Phase 2.2: FormManager와 연동된 데이터 관리 - FormdownUI와 일관성
+    // Data management via FormManager for consistency
     get data(): Record<string, any> {
         // FormManager에서 데이터 가져오기 시도, 없으면 내부 데이터 사용
         if (this.formManager) {
@@ -66,12 +66,9 @@ export class FormdownEditor extends LitElement {
             } else {
                 cleanedValue = { ...value }
             }
-
-            // Process checkbox fields to ensure they are arrays
-            cleanedValue = this.processCheckboxFields(cleanedValue)
         }
 
-        // Phase 2.2: FormManager와 내부 상태 동시 업데이트
+        // Sync FormManager with internal state
         this._data = cleanedValue
         if (this.formManager) {
             this.formManager.updateData(cleanedValue)
@@ -88,10 +85,8 @@ export class FormdownEditor extends LitElement {
     async connectedCallback() {
         super.connectedCallback()
 
-        // Phase 2.2: FormManager 초기화 - Core 모듈 활용 준비
+        // Initialize FormManager and EventOrchestrator bridge
         this.formManager = new FormManager()
-        
-        // P1-1: EventOrchestrator 브리지 설정 - Editor-Core 이벤트 통합
         this.formManager.setupComponentBridge({
             id: 'formdown-editor',
             type: 'editor',
@@ -107,15 +102,15 @@ export class FormdownEditor extends LitElement {
             }
         })
 
-        // FormManager 이벤트 구독 - 데이터 변경 시 Editor 상태 동기화
+        // FormManager event subscription for data synchronization
         this.formManager.on('data-change', ({ formData }) => {
-            const processedData = this.processCheckboxFields(formData)
-            this._data = processedData
+            // FormManager already handles field type processing
+            this._data = formData
             this.requestUpdate('data')
-            
-            // 외부 이벤트로 전달
+
+            // Dispatch external event
             this.dispatchEvent(new CustomEvent('formdown-data-update', {
-                detail: processedData, bubbles: true, composed: true
+                detail: formData, bubbles: true, composed: true
             }))
         })
         
@@ -153,7 +148,7 @@ export class FormdownEditor extends LitElement {
             }
         }
     } render() {
-        // P1-2: 인라인 템플릿으로 간소화 (renderEditorPanel, renderPreviewPanel 제거)
+        // Inline template rendering
         return html`
             <div class="editor-container mode-${this.mode}">
                 ${this.mode !== 'view' ? html`
@@ -241,7 +236,7 @@ export class FormdownEditor extends LitElement {
         if (!container) return
 
         try {
-            // Phase 2.2: FormManager의 createPreviewTemplate 활용 (60+ 라인 → 15 라인)
+            // Preview template via FormManager
             
             // Check if formdown-ui is registered
             const isRegistered = customElements.get('formdown-ui')
@@ -258,7 +253,7 @@ export class FormdownEditor extends LitElement {
                 formdownUI.style.width = '100%'
                 formdownUI.style.height = '100%'
 
-                // P1-1: Core EventOrchestrator를 통한 이벤트 처리 - 간소화
+                // Event handling via Core EventOrchestrator
                 formdownUI.addEventListener('formdown-data-update', (e: Event) => {
                     const customEvent = e as CustomEvent
                     let newData = customEvent.detail?.formData || customEvent.detail
@@ -335,7 +330,7 @@ export class FormdownEditor extends LitElement {
 
     private async updateParseResult() {
         try {
-            // Phase 2.2: FormManager 사용으로 대폭 간소화 (20+ 라인 → 5 라인)
+            // Simplified via FormManager
             this.formManager.parse(this.content)
             
             // Use extension system for enhanced validation
@@ -356,7 +351,7 @@ export class FormdownEditor extends LitElement {
     }
 
     private dispatchContentChange() {
-        // P1-1: Core EventOrchestrator를 통한 통합 이벤트 처리
+        // Unified event handling via Core EventOrchestrator
         this.dispatchEvent(new CustomEvent('contentChange', {
             detail: { content: this.content },
             bubbles: true,
@@ -364,7 +359,7 @@ export class FormdownEditor extends LitElement {
         }))
     }
 
-    // P1-2: 간소화된 툴바 렌더링 - Core 메타데이터 활용
+    // Simplified toolbar rendering
     private renderToolbar() {
         if (!this.toolbar) return ''
         
@@ -388,7 +383,7 @@ export class FormdownEditor extends LitElement {
         `
     }
 
-    // P1-2: 간소화된 에러 렌더링
+    // Error rendering
     private renderErrors() {
         if (this.parseResult.errors.length === 0) return ''
         
@@ -402,72 +397,6 @@ export class FormdownEditor extends LitElement {
         `
     }
 
-    private processCheckboxFields(data: Record<string, any>): Record<string, any> {
-        if (!data || typeof data !== 'object') {
-            return data
-        }
-
-        const processedData = { ...data }
-
-        // Parse content to find checkbox fields and their types
-        const checkboxFieldInfo = this.getCheckboxFieldsFromContent()
-
-        // Process each checkbox field based on its type
-        checkboxFieldInfo.forEach(({ fieldName, isGroup }) => {
-            if (fieldName in processedData) {
-                const value = processedData[fieldName]
-
-                if (isGroup) {
-                    // Checkbox group - should be an array
-                    if (Array.isArray(value)) {
-                        // Already an array, keep it as is
-                        processedData[fieldName] = value
-                    } else if (typeof value === 'string' && value.trim() !== '') {
-                        // Convert comma-separated string to array
-                        processedData[fieldName] = value.split(',').map(v => v.trim()).filter(v => v)
-                    } else {
-                        // Ensure it's always an array for checkbox groups
-                        processedData[fieldName] = value ? [value] : []
-                    }
-                } else {
-                    // Single checkbox - should be boolean
-                    if (typeof value === 'boolean') {
-                        // Already boolean, keep it as is
-                        processedData[fieldName] = value
-                    } else if (Array.isArray(value)) {
-                        // Convert array to boolean (true if has items)
-                        processedData[fieldName] = value.length > 0
-                    } else {
-                        // Convert other types to boolean
-                        processedData[fieldName] = Boolean(value)
-                    }
-                }
-            }
-        })
-
-        return processedData
-    }
-
-    private getCheckboxFieldsFromContent(): { fieldName: string, isGroup: boolean }[] {
-        const checkboxFields: { fieldName: string, isGroup: boolean }[] = []
-        const lines = this.content.split('\n')
-
-        lines.forEach(line => {
-            // Match @fieldname: [checkbox ...]
-            const match = line.match(/@(\w+):\s*\[([^\]]*checkbox[^\]]*)\]/i)
-            if (match) {
-                const fieldName = match[1]
-                const checkboxConfig = match[2]
-
-                // Check if it has options (checkbox group) or not (single checkbox)
-                const isGroup = checkboxConfig.includes('options=')
-
-                checkboxFields.push({ fieldName, isGroup })
-            }
-        })
-
-        return checkboxFields
-    }
 
     // Validation methods - delegate to FormdownUI component
     validate() {

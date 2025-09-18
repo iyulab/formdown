@@ -25,8 +25,6 @@ export const createFormdownEditor = (container: HTMLElement, options: {
 }
 
 export const registerFormdownEditor = () => {
-    // Force registration if not already done
-    if (!customElements.get('formdown-editor')) {
-        import('./formdown-editor.js')
-    }
+    // Component is already registered via static import above
+    // This function is kept for API compatibility
 }
