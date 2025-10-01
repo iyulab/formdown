@@ -71,6 +71,21 @@ export class FormdownParser {
                 continue
             }
 
+            // Check for table block (markdown table with inline fields)
+            if (line.trim().startsWith('|')) {
+                const tableResult = this.parseTableBlock(lines, i)
+                if (tableResult) {
+                    // Associate table fields with current form
+                    tableResult.fields.forEach(field => this.associateFieldWithForm(field))
+                    fields.push(...tableResult.fields)
+                    // Add table HTML or placeholder
+                    cleanedLines.push(tableResult.tableHtml)
+                    // Skip processed lines
+                    i = tableResult.endIndex
+                    continue
+                }
+            }
+
             // Extract block fields
             const blockField = this.parseBlockField(line)
             if (blockField) {
@@ -846,7 +861,7 @@ export class FormdownParser {
             }
             return
         }
-        
+
         // Auto-associate with current form or create default
         if (this.currentFormId) {
             if (!field.attributes) field.attributes = {}
@@ -855,5 +870,92 @@ export class FormdownParser {
             if (!field.attributes) field.attributes = {}
             field.attributes.form = this.getDefaultFormId()
         }
+    }
+
+    private parseTableBlock(lines: string[], startIndex: number): { fields: Field[], tableHtml: string, endIndex: number } | null {
+        const tableLines: string[] = []
+        let currentIndex = startIndex
+
+        // Collect all consecutive table lines
+        while (currentIndex < lines.length && lines[currentIndex].trim().startsWith('|')) {
+            tableLines.push(lines[currentIndex])
+            currentIndex++
+        }
+
+        // Need at least 3 lines for a valid table (header | separator | data)
+        if (tableLines.length < 3) {
+            return null
+        }
+
+        // Validate table structure
+        const headerLine = tableLines[0]
+        const separatorLine = tableLines[1]
+
+        // Check if second line is separator (contains only |, -, and spaces)
+        if (!/^\|[\s\-|:]+\|$/.test(separatorLine.trim())) {
+            return null
+        }
+
+        // Parse table structure
+        const fields: Field[] = []
+        const headers = this.parseTableRow(headerLine)
+        const dataRows: string[][] = []
+
+        // Parse data rows and extract inline fields
+        for (let i = 2; i < tableLines.length; i++) {
+            const row = this.parseTableRow(tableLines[i])
+            const processedRow: string[] = []
+
+            for (const cell of row) {
+                const { cleanedLine, inlineFields } = this.parseInlineFields(cell)
+                fields.push(...inlineFields)
+                processedRow.push(cleanedLine)
+            }
+
+            dataRows.push(processedRow)
+        }
+
+        // Generate table HTML
+        const tableHtml = this.generateTableHtml(headers, dataRows)
+
+        return {
+            fields,
+            tableHtml,
+            endIndex: currentIndex - 1
+        }
+    }
+
+    private parseTableRow(line: string): string[] {
+        // Remove leading/trailing pipes and split by pipe
+        const trimmed = line.trim().replace(/^\||\|$/g, '')
+        return trimmed.split('|').map(cell => cell.trim())
+    }
+
+    private generateTableHtml(headers: string[], dataRows: string[][]): string {
+        const headerCells = headers.map(h => `<th>${this.escapeHtml(h)}</th>`).join('')
+        const bodyRows = dataRows.map(row => {
+            const cells = row.map(cell => `<td>${cell}</td>`).join('')
+            return `<tr>${cells}</tr>`
+        }).join('\n')
+
+        return `<table class="formdown-table">
+<thead>
+<tr>${headerCells}</tr>
+</thead>
+<tbody>
+${bodyRows}
+</tbody>
+</table>`
+    }
+
+    private escapeHtml(text: string): string {
+        const escapeMap: Record<string, string> = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }
+        return text.replace(/[&<>"']/g, char => escapeMap[char] || char)
     }
 }

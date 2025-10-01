@@ -23,6 +23,7 @@ interface Sample {
 // Static samples list - this would be generated at build time
 const SAMPLES: Sample[] = [
     { name: 'New Features Demo', filename: 'new-features.fd', description: '🆕 Latest features: custom "other" options, field ordering, and enhanced data handling' },
+    { name: 'Table Demo', filename: 'table-demo.fd', description: '📊 Table forms with inline fields in markdown tables' },
     { name: 'Minimal', filename: 'minimal.fd', description: 'Basic form with essential fields' },
     { name: 'Contact', filename: 'contact.fd', description: 'Contact form with validation' },
     { name: 'Contact (Shorthand)', filename: 'contact-shorthand.fd', description: 'Contact form using shorthand syntax' },

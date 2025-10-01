@@ -370,4 +370,78 @@ export const formdownStyles = css`
   .formdown-form > * + * {
     margin-top: 1rem;
   }
+
+  /* Table styles - GitHub Flavored Markdown standard */
+  .formdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--formdown-table-margin, 1rem 0);
+    background-color: var(--formdown-table-bg, var(--theme-bg-primary, #ffffff));
+    border: var(--formdown-table-border-width, 1px) solid var(--formdown-table-border-color, var(--theme-border, #d0d7de));
+    border-radius: var(--formdown-table-border-radius, 6px);
+    overflow: hidden;
+    font-size: var(--formdown-table-font-size, 0.875rem);
+  }
+
+  .formdown-table thead {
+    background-color: var(--formdown-table-header-bg, var(--theme-bg-secondary, #f6f8fa));
+    border-bottom: var(--formdown-table-header-border-width, 1px) solid var(--formdown-table-border-color, var(--theme-border, #d0d7de));
+  }
+
+  .formdown-table th {
+    padding: var(--formdown-table-cell-padding, 0.5rem 1rem);
+    text-align: var(--formdown-table-header-align, left);
+    font-weight: var(--formdown-table-header-weight, 600);
+    font-size: var(--formdown-table-header-font-size, inherit);
+    color: var(--formdown-table-header-color, var(--theme-text-primary, #1f2328));
+    border-right: var(--formdown-table-cell-border-width, 1px) solid var(--formdown-table-border-color, var(--theme-border, #d0d7de));
+  }
+
+  .formdown-table th:last-child {
+    border-right: none;
+  }
+
+  .formdown-table td {
+    padding: var(--formdown-table-cell-padding, 0.5rem 1rem);
+    border-top: var(--formdown-table-cell-border-width, 1px) solid var(--formdown-table-border-color, var(--theme-border, #d0d7de));
+    border-right: var(--formdown-table-cell-border-width, 1px) solid var(--formdown-table-border-color, var(--theme-border, #d0d7de));
+    color: var(--formdown-table-cell-color, var(--theme-text-secondary, #656d76));
+    line-height: 1.5;
+  }
+
+  .formdown-table td:last-child {
+    border-right: none;
+  }
+
+  .formdown-table tbody tr {
+    transition: background-color var(--formdown-table-transition, 0.1s ease);
+  }
+
+  .formdown-table tbody tr:hover {
+    background-color: var(--formdown-table-row-hover-bg, var(--theme-bg-secondary, #f6f8fa));
+  }
+
+  .formdown-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* Inline fields within table cells */
+  .formdown-table td [contenteditable="true"] {
+    min-width: var(--formdown-table-inline-field-min-width, 80px);
+    max-width: 100%;
+    display: inline-block;
+  }
+
+  /* Responsive table on mobile */
+  @media (max-width: 768px) {
+    .formdown-table {
+      font-size: var(--formdown-table-font-size-mobile, 0.8125rem);
+      border-radius: var(--formdown-table-border-radius-mobile, 4px);
+    }
+
+    .formdown-table th,
+    .formdown-table td {
+      padding: var(--formdown-table-cell-padding-mobile, 0.375rem 0.75rem);
+    }
+  }
 `

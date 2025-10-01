@@ -451,7 +451,15 @@ export class FormdownUI extends LitElement {
   private getFieldValueFromElement(element: HTMLElement): string | string[] | boolean {
     if (element instanceof HTMLInputElement) {
       if (element.type === 'checkbox') {
-        return element.checked
+        // For checkbox groups, use FieldProcessor to get all selected values
+        const fieldName = element.name
+        const container = {
+          querySelector: (selector: string) => this.shadowRoot?.querySelector(selector) as any,
+          querySelectorAll: (selector: string) => Array.from(this.shadowRoot?.querySelectorAll(selector) || []) as any[]
+        }
+        const processor = this.formManager.createFieldProcessor()
+        const result = processor.processCheckboxGroup(fieldName, container)
+        return result.success ? result.value : element.checked
       } else if (element.type === 'radio') {
         return element.value
       }

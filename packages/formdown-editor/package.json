@@ -1,7 +1,7 @@
 {
   "name": "@formdown/editor",
   "private": false,
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Development tool for Formdown syntax with advanced editing features",
   "type": "module",
   "main": "dist/index.es.js",
@@ -27,8 +27,8 @@
     "test": "node ../../node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@formdown/core": "0.2.1",
-    "@formdown/ui": "0.2.1",
+    "@formdown/core": "0.2.3",
+    "@formdown/ui": "0.2.3",
     "lit": "^3.3.0"
   },
   "devDependencies": {
