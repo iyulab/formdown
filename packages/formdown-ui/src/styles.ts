@@ -130,13 +130,13 @@ export const formdownStyles = css`
   /* Enhanced inline formdown-field elements with contentEditable */
   formdown-field,
   [contenteditable="true"]:not(textarea) {
-    display: inline;
+    display: inline-block;
     min-width: 60px;
     max-width: 200px;
     font-style: normal;
     color: inherit;
     font-size: inherit;
-    line-height: inherit;
+    line-height: 1.5;
     font-family: inherit;
     font-weight: inherit;
     cursor: text;
@@ -144,7 +144,7 @@ export const formdownStyles = css`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    vertical-align: baseline;
+    vertical-align: middle;
     box-decoration-break: clone;
   }
 
@@ -164,10 +164,11 @@ export const formdownStyles = css`
     border: 1px solid var(--theme-border, rgba(209, 213, 219, 0.6));
     background-color: var(--theme-bg-secondary, rgba(248, 250, 252, 0.8));
     border-radius: 0.25rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.125rem 0.5rem;
     transition: all 0.2s ease-in-out;
     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
     position: relative;
+    min-height: 1.5em;
   }
 
   [contenteditable="true"]:not(textarea):hover {
@@ -232,6 +233,45 @@ export const formdownStyles = css`
     color: var(--theme-text-secondary, #4b5563);
   }
 
+  /* Code blocks */
+  pre {
+    background-color: var(--theme-bg-secondary, #f6f8fa);
+    border: 1px solid var(--theme-border, #d0d7de);
+    border-radius: 0.375rem;
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  code {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.875em;
+    background-color: var(--theme-bg-secondary, rgba(175, 184, 193, 0.2));
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    color: var(--theme-text-primary, #1f2937);
+  }
+
+  pre code {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+    font-size: 0.875rem;
+    color: var(--theme-text-primary, #24292f);
+  }
+
+  /* Syntax highlighting support (basic) */
+  .language-javascript, .language-js,
+  .language-typescript, .language-ts,
+  .language-python, .language-py,
+  .language-html, .language-css,
+  .language-json, .language-bash {
+    display: block;
+  }
+
   /* Responsive design */
   @media (max-width: 768px) {
     :host {
@@ -280,36 +320,151 @@ export const formdownStyles = css`
     box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.1) !important;
   }
 
-  .submit-button {
-    background-color: #3b82f6;
+  /* Base button styles - all buttons */
+  .submit-button,
+  button,
+  input[type="submit"],
+  input[type="button"],
+  input[type="reset"] {
     color: white;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem 1.75rem;
     border: none;
     border-radius: 0.5rem;
     font-size: 1rem;
-    font-weight: 500;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.15s ease-in-out;
+    transition: all 0.2s ease-in-out;
     margin-top: 1.5rem;
     width: auto;
     max-width: 100%;
+    letter-spacing: 0.025em;
+    position: relative;
+    overflow: hidden;
+    font-family: inherit;
   }
 
-  .submit-button:hover {
-    background-color: #2563eb;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  /* Shine effect for all buttons */
+  .submit-button::before,
+  button::before,
+  input[type="submit"]::before,
+  input[type="button"]::before,
+  input[type="reset"]::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease-in-out;
   }
 
-  .submit-button:disabled {
-    background-color: #9ca3af;
+  /* Hover shine effect */
+  .submit-button:hover::before,
+  button:hover::before,
+  input[type="submit"]:hover::before,
+  input[type="button"]:hover::before,
+  input[type="reset"]:hover::before {
+    left: 100%;
+  }
+
+  /* Common hover state */
+  .submit-button:hover,
+  button:hover,
+  input[type="submit"]:hover,
+  input[type="button"]:hover,
+  input[type="reset"]:hover {
+    transform: translateY(-2px);
+  }
+
+  /* Common active state */
+  .submit-button:active,
+  button:active,
+  input[type="submit"]:active,
+  input[type="button"]:active,
+  input[type="reset"]:active {
+    transform: translateY(0);
+  }
+
+  /* Common disabled state */
+  .submit-button:disabled,
+  button:disabled,
+  input[type="submit"]:disabled,
+  input[type="button"]:disabled,
+  input[type="reset"]:disabled {
+    background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
+    opacity: 0.6;
   }
 
-  .submit-button:active {
-    transform: translateY(0);
+  .submit-button:disabled::before,
+  button:disabled::before,
+  input[type="submit"]:disabled::before,
+  input[type="button"]:disabled::before,
+  input[type="reset"]:disabled::before {
+    display: none;
+  }
+
+  /* Primary button (submit) - Blue */
+  .submit-button,
+  button[type="submit"],
+  input[type="submit"],
+  button:not([type]) {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  .submit-button:hover,
+  button[type="submit"]:hover,
+  input[type="submit"]:hover,
+  button:not([type]):hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    box-shadow: 0 6px 12px rgba(59, 130, 246, 0.3), 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .submit-button:active,
+  button[type="submit"]:active,
+  input[type="submit"]:active,
+  button:not([type]):active {
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Secondary button - Slate */
+  button[type="button"],
+  input[type="button"] {
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    box-shadow: 0 2px 4px rgba(100, 116, 139, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  button[type="button"]:hover,
+  input[type="button"]:hover {
+    background: linear-gradient(135deg, #475569 0%, #334155 100%);
+    box-shadow: 0 6px 12px rgba(100, 116, 139, 0.3), 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  button[type="button"]:active,
+  input[type="button"]:active {
+    box-shadow: 0 2px 4px rgba(100, 116, 139, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Danger button (reset) - Red */
+  button[type="reset"],
+  input[type="reset"] {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+
+  button[type="reset"]:hover,
+  input[type="reset"]:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3), 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  button[type="reset"]:active,
+  input[type="reset"]:active {
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
   }
 
   /* Ensure content doesn't overflow */
