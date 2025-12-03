@@ -184,13 +184,13 @@ describe('Range Field Plugin', () => {
             expect(html).not.toContain('50%')
         })
 
-        it('should include interactive script for value updates', () => {
+        it('should include data attributes for CSP-compliant value updates', () => {
             const context: HookContext = { field }
-            
+
             const html = rangeFieldPlugin.generator!(field, context)
-            
-            expect(html).toContain('oninput=')
-            expect(html).toContain('textContent = this.value')
+
+            expect(html).toContain('data-formdown-range-output=')
+            expect(html).toContain('data-formdown-range-unit=')
         })
     })
 

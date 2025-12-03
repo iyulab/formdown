@@ -1,17 +1,25 @@
 /**
- * FieldProcessor - Core field processing logic
- * 
- * This class centralizes all field value processing logic that was previously 
- * scattered in the UI components. It handles:
+ * FieldProcessor - Core field processing algorithms
+ *
+ * ARCHITECTURE NOTE: FieldProcessor provides pure algorithms for field value processing.
+ * It does NOT directly manipulate the DOM - that responsibility belongs to the UI layer.
+ *
+ * This separation enables:
+ * - Core package to remain DOM-agnostic (works in Node.js for SSR)
+ * - UI components to use platform-specific DOM APIs
+ * - Clean testability without JSDOM dependencies in Core
+ *
+ * This class handles:
  * - Checkbox group processing (single/multiple values)
  * - Radio button "other" option handling
- * - Field value extraction and setting
- * - Type-specific value processing
+ * - Field value extraction algorithms
+ * - Type-specific value processing and conversion
+ * - Field validation logic
  */
 
-export interface ProcessResult {
+export interface ProcessResult<T = unknown> {
   success: boolean
-  value: any
+  value: T
   errors?: string[]
 }
 
@@ -19,6 +27,31 @@ export interface OtherResult {
   hasOtherValue: boolean
   otherValue?: string
   regularValues: string[]
+}
+
+/**
+ * Value setting result for UI layer to apply
+ * UI applies this to actual DOM elements
+ */
+export interface ValueSetting {
+  success: boolean
+  elementId: string
+  settingType: 'value' | 'checked' | 'textContent'
+  value: string | boolean
+  error?: string
+}
+
+/**
+ * Field validation constraints
+ */
+export interface FieldConstraints {
+  required?: boolean
+  min?: number
+  max?: number
+  minLength?: number
+  maxLength?: number
+  pattern?: string
+  patternMessage?: string
 }
 
 export type FieldType = 
@@ -157,7 +190,7 @@ export class FieldProcessor {
    * Extract field value from any HTML element
    * Universal value extractor that handles all field types
    */
-  extractFieldValue(element: FieldElement, type: FieldType): any {
+  extractFieldValue(element: FieldElement, type: FieldType): string | number | boolean {
     // Handle contenteditable elements
     if (element.hasAttribute('contenteditable')) {
       return element.textContent?.trim() || ''
@@ -195,98 +228,126 @@ export class FieldProcessor {
   }
 
   /**
-   * Set field value to any HTML element
-   * Universal value setter that handles all field types
+   * Compute the value to set for a field element
+   * Returns a ValueSetting that UI layer should apply to the DOM
+   *
+   * ARCHITECTURE NOTE: This method computes what value should be set,
+   * but does NOT perform actual DOM manipulation. UI layer is responsible
+   * for applying the returned ValueSetting to the actual DOM element.
    */
-  setFieldValue(element: FieldElement, value: any, type: FieldType, container?: ElementContainer): boolean {
+  computeValueSetting(element: FieldElement, value: unknown, type: FieldType): ValueSetting {
     try {
       // Handle contenteditable elements
       if (element.hasAttribute('contenteditable')) {
-        const stringValue = Array.isArray(value) ? value.join(', ') : String(value)
-        if (element.textContent !== stringValue) {
-          // Note: In real DOM manipulation, this would set textContent
-          // For this interface, we can't directly modify - return success status
-          return true
+        const stringValue = Array.isArray(value) ? value.join(', ') : String(value ?? '')
+        return {
+          success: true,
+          elementId: element.id,
+          settingType: 'textContent',
+          value: stringValue
         }
-        return true
       }
 
       switch (type) {
         case 'checkbox':
           if (Array.isArray(value)) {
             // Checkbox group - check if this element's value is in the array
-            const isMatch = value.includes(element.value)
-            // Note: In real implementation, would set element.checked = isMatch
-            
-            // Handle "other" option for checkbox groups
-            if (!isMatch && element.id.includes('_other_checkbox') && element.value === '' && container) {
-              const fieldName = element.name
-              const allCheckboxes = container.querySelectorAll(`input[type="checkbox"][name="${fieldName}"]:not([id*="_other_checkbox"])`)
-              const regularValues = allCheckboxes.map(cb => cb.value).filter(v => v !== '')
-              
-              const otherValues = value.filter(v => !regularValues.includes(v) && v !== '')
-              if (otherValues.length > 0) {
-                // Would set element.checked = true and update other input
-                return true
-              }
+            const isChecked = value.includes(element.value)
+            return {
+              success: true,
+              elementId: element.id,
+              settingType: 'checked',
+              value: isChecked
             }
-            return true
           } else if (typeof value === 'boolean') {
             // Single checkbox - use boolean value directly
-            // Note: In real implementation, would set element.checked = value
-            return true
+            return {
+              success: true,
+              elementId: element.id,
+              settingType: 'checked',
+              value: value
+            }
           } else {
             // Fallback for string values
-            // Note: In real implementation, would set element.checked appropriately
-            return true
+            return {
+              success: true,
+              elementId: element.id,
+              settingType: 'checked',
+              value: Boolean(value)
+            }
           }
 
         case 'radio':
-          const stringValue = String(value)
-          const isMatch = element.value === stringValue
-          // Note: In real implementation, would set element.checked = isMatch
-          
-          // Handle "other" option for radio buttons
-          if (!isMatch && element.id.includes('_other_radio') && element.value === '' && container) {
-            const fieldName = element.name
-            const allRadios = container.querySelectorAll(`input[type="radio"][name="${fieldName}"]:not([id*="_other_radio"])`)
-            const regularValues = allRadios.map(r => r.value).filter(v => v !== '')
-            
-            if (stringValue && !regularValues.includes(stringValue)) {
-              // Would select "other" option and set text input
-              return true
-            }
+          const stringValue = String(value ?? '')
+          const isChecked = element.value === stringValue
+          return {
+            success: true,
+            elementId: element.id,
+            settingType: 'checked',
+            value: isChecked
           }
-          return true
 
         case 'select':
-          const selectValue = Array.isArray(value) ? value.join(', ') : String(value)
-          // Note: In real implementation, would handle option selection and "other" options
-          return true
+          const selectValue = Array.isArray(value) ? value.join(', ') : String(value ?? '')
+          return {
+            success: true,
+            elementId: element.id,
+            settingType: 'value',
+            value: selectValue
+          }
 
         case 'number':
         case 'range':
           const numVal = typeof value === 'number' ? value : parseFloat(String(value))
           if (!isNaN(numVal)) {
-            // Note: In real implementation, would set element.value = String(numVal)
-            return true
+            return {
+              success: true,
+              elementId: element.id,
+              settingType: 'value',
+              value: String(numVal)
+            }
           }
-          return false
+          return {
+            success: false,
+            elementId: element.id,
+            settingType: 'value',
+            value: '',
+            error: 'Invalid number value'
+          }
 
         default:
-          const defaultValue = Array.isArray(value) ? value.join(', ') : String(value)
-          // Note: In real implementation, would set element.value = defaultValue
-          return true
+          const defaultValue = Array.isArray(value) ? value.join(', ') : String(value ?? '')
+          return {
+            success: true,
+            elementId: element.id,
+            settingType: 'value',
+            value: defaultValue
+          }
       }
     } catch (error) {
-      return false
+      return {
+        success: false,
+        elementId: element.id,
+        settingType: 'value',
+        value: '',
+        error: `Value computation error: ${error}`
+      }
     }
+  }
+
+  /**
+   * @deprecated Use computeValueSetting instead. This method will be removed in v0.4.0.
+   * Set field value to any HTML element - kept for backward compatibility
+   */
+  setFieldValue(element: FieldElement, value: unknown, type: FieldType, _container?: ElementContainer): boolean {
+    const setting = this.computeValueSetting(element, value, type)
+    return setting.success
   }
 
   /**
    * Validate field value based on type and constraints
    */
-  validateFieldValue(value: any, type: FieldType, constraints?: Record<string, any>): ProcessResult {
+  validateFieldValue(value: unknown, type: FieldType, constraints?: FieldConstraints): ProcessResult<unknown> {
     const errors: string[] = []
 
     // Required validation

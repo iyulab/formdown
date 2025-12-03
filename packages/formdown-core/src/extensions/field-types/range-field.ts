@@ -61,8 +61,8 @@ export const rangeFieldPlugin: FieldTypePlugin = {
                     message: `${field.label} must be a number`
                 })
             } else {
-                const min = field.attributes?.min || 0
-                const max = field.attributes?.max || 100
+                const min = Number(field.attributes?.min) || 0
+                const max = Number(field.attributes?.max) || 100
 
                 if (numValue < min) {
                     rules.push({
@@ -80,7 +80,7 @@ export const rangeFieldPlugin: FieldTypePlugin = {
                     })
                 }
 
-                const step = field.attributes?.step || 1
+                const step = Number(field.attributes?.step) || 1
                 if (step > 0 && (numValue - min) % step !== 0) {
                     rules.push({
                         type: 'step' as const,
@@ -96,14 +96,12 @@ export const rangeFieldPlugin: FieldTypePlugin = {
 
     generator: (field: Field, context: HookContext) => {
         const { name, label, required, attributes = {} } = field
-        const {
-            min = 0,
-            max = 100,
-            step = 1,
-            value = Math.floor((min + max) / 2),
-            showValue = true,
-            unit = ''
-        } = attributes
+        const min = Number(attributes.min) || 0
+        const max = Number(attributes.max) || 100
+        const step = Number(attributes.step) || 1
+        const value = attributes.value !== undefined ? Number(attributes.value) : Math.floor((min + max) / 2)
+        const showValue = attributes.showValue !== false
+        const unit = String(attributes.unit ?? '')
 
         const fieldId = name
         const outputId = `${name}-output`
@@ -144,7 +142,7 @@ export const rangeFieldPlugin: FieldTypePlugin = {
 <div class="formdown-field formdown-range-field">
     <label for="${fieldId}">${label}${required ? ' *' : ''}</label>
     <div class="formdown-range-container">
-        <input ${attrString} oninput="document.getElementById('${outputId}').textContent = this.value + '${unit}'">
+        <input ${attrString} data-formdown-range-output="${outputId}" data-formdown-range-unit="${unit}">
         ${valueDisplay}
     </div>
 </div>`

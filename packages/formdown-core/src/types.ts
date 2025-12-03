@@ -10,12 +10,13 @@ export interface Field {
     format?: string
     pattern?: string
     content?: string  // For checkbox display text with priority: content > label > name
-    value?: any      // Default value for the field
-    attributes?: Record<string, any>
+    value?: unknown   // Default value for the field
+    attributes?: Record<string, unknown>
     description?: string
     errorMessage?: string
     inline?: boolean
     position?: number  // Position in the source content for form association
+    [key: string]: unknown  // Index signature for compatibility with FieldSchema
 }
 
 export interface ValidationRule {

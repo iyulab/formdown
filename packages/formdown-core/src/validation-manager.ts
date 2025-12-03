@@ -1,13 +1,27 @@
 /**
  * ValidationManager - Advanced validation system
- * 
- * This class provides a comprehensive validation system that extends beyond
- * the basic validation in FieldProcessor. It supports:
+ *
+ * ARCHITECTURE NOTE: ValidationManager provides validation algorithms and state.
+ * It does NOT directly interact with DOM - validation results are returned to the
+ * UI layer for display and error handling.
+ *
+ * This separation enables:
+ * - Core package to remain DOM-agnostic (works in Node.js for SSR)
+ * - UI components to use platform-specific error display mechanisms
+ * - Clean testability without JSDOM dependencies in Core
+ *
+ * Features:
  * - Async validation (server-side checks)
  * - Custom validation rules
- * - Validation pipelines
+ * - Validation pipelines with multiple execution strategies
  * - Cross-field validation
  * - Conditional validation
+ * - Validation result caching with automatic invalidation
+ *
+ * UI INTEGRATION CONTRACT:
+ * 1. UI calls `validateAsync()` to validate field values
+ * 2. UI displays errors/warnings from `ValidationResult`
+ * 3. UI manages debouncing and user feedback timing
  */
 
 import type { FieldType } from './field-processor.js'
@@ -45,17 +59,55 @@ export interface ValidationPipeline {
   skipOnError?: boolean
 }
 
+/**
+ * Validator function signature
+ * Returns ValidationResult, Promise<ValidationResult>, boolean, or error message string
+ */
 export type ValidatorFunction = (
-  value: any,
+  value: unknown,
   field: FieldValidationContext,
-  formData: Record<string, any>
+  formData: FormData
 ) => ValidationResult | Promise<ValidationResult> | boolean | string
 
+/**
+ * Form data type for validation
+ */
+export type FormData = Record<string, unknown>
+
+/**
+ * Field constraints for validation
+ */
+export interface FieldValidationConstraints {
+  required?: boolean
+  requiredMessage?: string
+  min?: number | string
+  max?: number | string
+  minLength?: number
+  maxLength?: number
+  pattern?: string
+  patternMessage?: string
+  customValidator?: string
+  serverValidation?: AsyncValidationConfig
+}
+
+/**
+ * Context for field validation
+ */
 export interface FieldValidationContext {
   fieldName: string
   fieldType: FieldType
-  constraints: Record<string, any>
-  schema: Record<string, any>
+  constraints: FieldValidationConstraints
+  schema: FieldSchema
+}
+
+/**
+ * Field schema information
+ */
+export interface FieldSchema {
+  name?: string
+  type?: string
+  label?: string
+  [key: string]: unknown
 }
 
 export interface AsyncValidationConfig {
@@ -92,7 +144,7 @@ export class ValidationManager {
   /**
    * Validate a field with async support
    */
-  async validateAsync(field: FieldValidationContext, value: any, formData: Record<string, any>): Promise<ValidationResult> {
+  async validateAsync(field: FieldValidationContext, value: unknown, formData: FormData): Promise<ValidationResult> {
     const cacheKey = this.getCacheKey(field.fieldName, value)
     
     // Check cache first
@@ -119,8 +171,8 @@ export class ValidationManager {
   async executeValidationPipeline(
     pipeline: ValidationPipeline,
     field: FieldValidationContext,
-    value: any,
-    formData: Record<string, any>
+    value: unknown,
+    formData: FormData
   ): Promise<ValidationResult> {
     const errors: ValidationError[] = []
     const warnings: ValidationWarning[] = []
@@ -179,8 +231,8 @@ export class ValidationManager {
   private async executeValidationRule(
     rule: ValidationRule,
     field: FieldValidationContext,
-    value: any,
-    formData: Record<string, any>
+    value: unknown,
+    formData: FormData
   ): Promise<ValidationResult> {
     try {
       const result = await rule.validator(value, field, formData)
@@ -247,13 +299,15 @@ export class ValidationManager {
 
     // Pattern validation
     if (field.constraints.pattern) {
+      const pattern = field.constraints.pattern
+      const patternMessage = field.constraints.patternMessage
       rules.push({
         name: 'pattern',
         validator: (value) => {
           if (!value) return true // Skip pattern validation for empty values
-          const regex = new RegExp(field.constraints.pattern)
-          return regex.test(String(value)) || 
-            (field.constraints.patternMessage || 'Value does not match required format')
+          const regex = new RegExp(pattern)
+          return regex.test(String(value)) ||
+            (patternMessage || 'Value does not match required format')
         }
       })
     }
@@ -341,11 +395,13 @@ export class ValidationManager {
             if (isNaN(numValue)) {
               return 'Please enter a valid number'
             }
-            if (field.constraints.min !== undefined && numValue < field.constraints.min) {
-              return `Value must be at least ${field.constraints.min}`
+            const minVal = field.constraints.min !== undefined ? Number(field.constraints.min) : undefined
+            const maxVal = field.constraints.max !== undefined ? Number(field.constraints.max) : undefined
+            if (minVal !== undefined && numValue < minVal) {
+              return `Value must be at least ${minVal}`
             }
-            if (field.constraints.max !== undefined && numValue > field.constraints.max) {
-              return `Value must be at most ${field.constraints.max}`
+            if (maxVal !== undefined && numValue > maxVal) {
+              return `Value must be at most ${maxVal}`
             }
             return true
           }
@@ -398,9 +454,9 @@ export class ValidationManager {
    * Validate against server with debouncing
    */
   private async validateOnServer(
-    value: any,
+    value: unknown,
     field: FieldValidationContext,
-    formData: Record<string, any>
+    formData: FormData
   ): Promise<ValidationResult> {
     const config = field.constraints.serverValidation as AsyncValidationConfig
     
@@ -437,9 +493,9 @@ export class ValidationManager {
    * Make server validation request
    */
   private async makeValidationRequest(
-    value: any,
+    value: unknown,
     field: FieldValidationContext,
-    formData: Record<string, any>,
+    formData: FormData,
     config: AsyncValidationConfig
   ): Promise<ValidationResult> {
     const requestData = {
@@ -463,7 +519,7 @@ export class ValidationManager {
   /**
    * Cross-field validation
    */
-  validateCrossFields(formData: Record<string, any>, rules: CrossFieldRule[]): ValidationResult {
+  validateCrossFields(formData: FormData, rules: CrossFieldRule[]): ValidationResult {
     const errors: ValidationError[] = []
 
     rules.forEach(rule => {
@@ -515,7 +571,7 @@ export class ValidationManager {
   /**
    * Generate cache key
    */
-  private getCacheKey(fieldName: string, value: any): string {
+  private getCacheKey(fieldName: string, value: unknown): string {
     return `${fieldName}:${JSON.stringify(value)}`
   }
 
@@ -535,7 +591,7 @@ export class ValidationManager {
 export interface CrossFieldRule {
   name: string
   fields: string[]
-  validator: (formData: Record<string, any>) => boolean | string | ValidationResult
+  validator: (formData: FormData) => boolean | string | ValidationResult
   message?: string
 }
 

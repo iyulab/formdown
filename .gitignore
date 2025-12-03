@@ -128,8 +128,9 @@ dist
 !.yarn/sdks
 !.yarn/versions
 
-# my project
+# local
 copilot-instructions.md
 CLAUDE.md
 .claude/
 TASKS.md
+.playwright-mcp/

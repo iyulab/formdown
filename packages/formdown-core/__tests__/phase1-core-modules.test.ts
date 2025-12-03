@@ -141,9 +141,94 @@ describe('Phase 1 Core Modules', () => {
 
     test('should validate email format', () => {
       const result = processor.validateFieldValue('invalid-email', 'email')
-      
+
       expect(result.success).toBe(false)
       expect(result.errors).toContain('Please enter a valid email address')
+    })
+
+    test('should compute value setting for text input', () => {
+      const mockElement = {
+        id: 'name-field',
+        name: 'name',
+        value: '',
+        type: 'text',
+        hasAttribute: () => false,
+        getAttribute: () => null
+      }
+
+      const setting = processor.computeValueSetting(mockElement, 'John Doe', 'text')
+
+      expect(setting.success).toBe(true)
+      expect(setting.elementId).toBe('name-field')
+      expect(setting.settingType).toBe('value')
+      expect(setting.value).toBe('John Doe')
+    })
+
+    test('should compute value setting for checkbox', () => {
+      const mockElement = {
+        id: 'newsletter-field',
+        name: 'newsletter',
+        value: 'true',
+        type: 'checkbox',
+        hasAttribute: () => false,
+        getAttribute: () => null
+      }
+
+      const setting = processor.computeValueSetting(mockElement, true, 'checkbox')
+
+      expect(setting.success).toBe(true)
+      expect(setting.settingType).toBe('checked')
+      expect(setting.value).toBe(true)
+    })
+
+    test('should compute value setting for checkbox group', () => {
+      const mockElement = {
+        id: 'interests-sports',
+        name: 'interests',
+        value: 'sports',
+        type: 'checkbox',
+        hasAttribute: () => false,
+        getAttribute: () => null
+      }
+
+      const setting = processor.computeValueSetting(mockElement, ['sports', 'music'], 'checkbox')
+
+      expect(setting.success).toBe(true)
+      expect(setting.settingType).toBe('checked')
+      expect(setting.value).toBe(true) // 'sports' is in the array
+    })
+
+    test('should compute value setting for number', () => {
+      const mockElement = {
+        id: 'age-field',
+        name: 'age',
+        value: '',
+        type: 'number',
+        hasAttribute: () => false,
+        getAttribute: () => null
+      }
+
+      const setting = processor.computeValueSetting(mockElement, 25, 'number')
+
+      expect(setting.success).toBe(true)
+      expect(setting.settingType).toBe('value')
+      expect(setting.value).toBe('25')
+    })
+
+    test('should handle invalid number value', () => {
+      const mockElement = {
+        id: 'age-field',
+        name: 'age',
+        value: '',
+        type: 'number',
+        hasAttribute: () => false,
+        getAttribute: () => null
+      }
+
+      const setting = processor.computeValueSetting(mockElement, 'not-a-number', 'number')
+
+      expect(setting.success).toBe(false)
+      expect(setting.error).toBeDefined()
     })
   })
 
@@ -164,29 +249,57 @@ describe('Phase 1 Core Modules', () => {
         getAttribute: () => null
       }
 
-      const mockContainer = {
-        querySelector: () => null,
-        querySelectorAll: () => []
-      }
+      // DOMBinder now takes only 2 arguments (fieldName, element)
+      const binding = binder.bindFieldToElement('test', mockElement)
 
-      const binding = binder.bindFieldToElement('test', mockElement, mockContainer)
-      
       expect(binding.fieldName).toBe('test')
       expect(binding.elements.has(mockElement)).toBe(true)
     })
 
-    test('should sync form data', () => {
-      const mockContainer = {
-        querySelector: () => null,
-        querySelectorAll: () => []
+    test('should compute value assignments for syncing', () => {
+      const mockElement = {
+        id: 'name-field',
+        name: 'name',
+        value: '',
+        type: 'text',
+        hasAttribute: () => false,
+        getAttribute: () => null
       }
 
+      // Bind the element first
+      binder.bindFieldToElement('name', mockElement)
+
       const formData = { name: 'John', email: 'john@example.com' }
-      
-      // Should not throw an error
-      expect(() => {
-        binder.syncFormData(formData, mockContainer)
-      }).not.toThrow()
+
+      // getValueAssignments returns value assignments for UI to apply
+      const assignments = binder.getValueAssignments(formData)
+
+      expect(assignments).toBeInstanceOf(Array)
+      expect(assignments.length).toBeGreaterThan(0)
+
+      const nameAssignment = assignments.find(a => a.fieldName === 'name')
+      expect(nameAssignment).toBeDefined()
+      expect(nameAssignment?.value).toBe('John')
+      expect(nameAssignment?.element).toBe(mockElement)
+    })
+
+    test('should manage sync lock correctly', () => {
+      // Initially not syncing
+      expect(binder.isSyncing()).toBe(false)
+
+      // Acquire lock should succeed
+      expect(binder.acquireSyncLock()).toBe(true)
+      expect(binder.isSyncing()).toBe(true)
+
+      // Second acquire should fail
+      expect(binder.acquireSyncLock()).toBe(false)
+
+      // Release lock
+      binder.releaseSyncLock()
+      expect(binder.isSyncing()).toBe(false)
+
+      // Now can acquire again
+      expect(binder.acquireSyncLock()).toBe(true)
     })
 
     test('should get registered fields', () => {
@@ -199,15 +312,64 @@ describe('Phase 1 Core Modules', () => {
         getAttribute: () => null
       }
 
-      const mockContainer = {
-        querySelector: () => null,
-        querySelectorAll: () => []
-      }
+      // DOMBinder now takes only 2 arguments
+      binder.bindFieldToElement('test', mockElement)
 
-      binder.bindFieldToElement('test', mockElement, mockContainer)
-      
       const fields = binder.getRegisteredFields()
       expect(fields).toContain('test')
+    })
+
+    test('should create field change events', () => {
+      const mockElement = {
+        id: 'test-field',
+        name: 'test',
+        value: 'new-value',
+        type: 'text',
+        hasAttribute: () => false,
+        getAttribute: () => null
+      }
+
+      const event = binder.createFieldChangeEvent('test', 'new-value', mockElement)
+
+      expect(event.type).toBe('field-change')
+      expect(event.detail.fieldName).toBe('test')
+      expect(event.detail.value).toBe('new-value')
+      expect(event.detail.sourceElement).toBe(mockElement)
+    })
+
+    test('should clear all bindings', () => {
+      const mockElement1 = {
+        id: 'field1',
+        name: 'field1',
+        type: 'text',
+        value: '',
+        hasAttribute: () => false,
+        getAttribute: () => null
+      }
+      const mockElement2 = {
+        id: 'field2',
+        name: 'field2',
+        type: 'text',
+        value: '',
+        hasAttribute: () => false,
+        getAttribute: () => null
+      }
+
+      binder.bindFieldToElement('field1', mockElement1)
+      binder.bindFieldToElement('field2', mockElement2)
+
+      expect(binder.getRegisteredFields()).toHaveLength(2)
+
+      binder.clearAllBindings()
+
+      expect(binder.getRegisteredFields()).toHaveLength(0)
+    })
+
+    test('should provide FieldProcessor access', () => {
+      const processor = binder.getFieldProcessor()
+
+      expect(processor).toBeDefined()
+      expect(typeof processor.getFieldType).toBe('function')
     })
   })
 

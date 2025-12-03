@@ -373,11 +373,11 @@ export class FormManager {
     const fieldContext = {
       fieldName,
       fieldType,
-      constraints: field.attributes || {},
-      schema: field
+      constraints: (field.attributes || {}) as import('./validation-manager.js').FieldValidationConstraints,
+      schema: field as import('./validation-manager.js').FieldSchema
     }
 
-    return await validationManager.validateAsync(fieldContext, value, this.getData())
+    return await validationManager.validateAsync(fieldContext, value, this.getData() as import('./validation-manager.js').FormData)
   }
 
   /**

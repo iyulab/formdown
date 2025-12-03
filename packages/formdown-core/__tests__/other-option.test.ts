@@ -113,7 +113,9 @@ describe('Other Option (*) Functionality', () => {
             expect(html).toContain('type="text"')
             expect(html).not.toContain('name="country_other"')  // Text input doesn't have name attribute
             expect(html).toContain('class="formdown-other-input"')
-            expect(html).toContain('style="display: none;')
+            // CSP-compliant: Should have data attributes instead of inline handlers
+            expect(html).toContain('data-formdown-has-other="true"')
+            expect(html).toContain('data-formdown-other-target="country_other"')
         })
 
         test('should generate radio field with other option', () => {

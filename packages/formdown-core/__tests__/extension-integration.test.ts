@@ -50,7 +50,7 @@ describe('Extension System Integration', () => {
                         }
                     },
                     generator: (field: Field): string => {
-                        const max = field.attributes?.max || 5
+                        const max = Number(field.attributes?.max) || 5
                         const stars = Array.from({ length: max }, (_, i) =>
                             `<span class="star" data-value="${i + 1}">☆</span>`
                         ).join('')

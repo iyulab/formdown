@@ -11,6 +11,16 @@ describe('FormdownGenerator', () => {
         parser = new FormdownParser()
     })
 
+    // Helper function to generate HTML using Hidden Form Architecture
+    const generateFieldsHTML = (fields: Field[]): string => {
+        const content: FormdownContent = {
+            markdown: fields.map((_, i) => `<!--FORMDOWN_FIELD_${i}-->`).join('\n'),
+            forms: fields.map(f => ({ ...f, attributes: { ...f.attributes, form: 'formdown-form-default' } })),
+            formDeclarations: []
+        }
+        return generator.generateHTML(content)
+    }
+
     describe('Markdown Integration', () => {
         test('should generate HTML from markdown content', () => {
             const content: FormdownContent = {
@@ -47,10 +57,16 @@ describe('FormdownGenerator', () => {
         })
     })
 
-    describe('Form Generation', () => {
-        test('should generate empty string for no fields', () => {
-            const html = generator.generateFormHTML([])
-            expect(html).toBe('')
+    describe('Form Generation with Hidden Form Architecture', () => {
+        test('should generate empty form for no fields', () => {
+            const content: FormdownContent = {
+                markdown: '',
+                forms: [],
+                formDeclarations: []
+            }
+            const html = generator.generateHTML(content)
+            // No hidden form when no fields
+            expect(html).not.toContain('<form hidden')
         })
 
         test('should generate basic text input', () => {
@@ -62,10 +78,9 @@ describe('FormdownGenerator', () => {
                 attributes: {}
             }]
 
-            const html = generator.generateFormHTML(fields)
+            const html = generateFieldsHTML(fields)
 
-            // Legacy method should create wrapper forms (deprecated warning expected)
-            expect(html).toContain('<form class="formdown-form"')
+            expect(html).toContain('<form hidden id="formdown-form-default"')
             expect(html).toContain('<div class="formdown-field">')
             expect(html).toContain('<label for="username">Username *</label>')
             expect(html).toContain('<input type="text" id="username" name="username" required form=')
@@ -81,7 +96,7 @@ describe('FormdownGenerator', () => {
                 attributes: {}
             }]
 
-            const html = generator.generateFormHTML(fields)
+            const html = generateFieldsHTML(fields)
 
             expect(html).toContain('<input type="email"')
             expect(html).toContain('id="email"')
@@ -101,7 +116,7 @@ describe('FormdownGenerator', () => {
                 }
             }]
 
-            const html = generator.generateFormHTML(fields)
+            const html = generateFieldsHTML(fields)
 
             expect(html).toContain('<input type="number"')
             expect(html).toContain('min="18"')
@@ -121,7 +136,7 @@ describe('FormdownGenerator', () => {
                 }
             }]
 
-            const html = generator.generateFormHTML(fields)
+            const html = generateFieldsHTML(fields)
 
             expect(html).toContain('<textarea')
             expect(html).toContain('rows="4"')
@@ -141,7 +156,7 @@ describe('FormdownGenerator', () => {
                 attributes: {}
             }]
 
-            const html = generator.generateFormHTML(fields)
+            const html = generateFieldsHTML(fields)
 
             expect(html).toContain('<select')
             expect(html).toContain('<option value="USA">USA</option>')
@@ -161,7 +176,7 @@ describe('FormdownGenerator', () => {
                 attributes: {}
             }]
 
-            const html = generator.generateFormHTML(fields)
+            const html = generateFieldsHTML(fields)
 
             expect(html).toContain('<fieldset')
             expect(html).toContain('<legend>Gender *</legend>')
@@ -182,7 +197,7 @@ describe('FormdownGenerator', () => {
                 attributes: {}
             }]
 
-            const html = generator.generateFormHTML(fields)
+            const html = generateFieldsHTML(fields)
 
             expect(html).toContain('<input type="text"')
             expect(html).toContain('name="invalid_radio"')
@@ -233,7 +248,7 @@ describe('FormdownGenerator', () => {
                 attributes: {}
             }]
 
-            const html = generator.generateFormHTML(fields)
+            const html = generateFieldsHTML(fields)
 
             expect(html).toContain('<input type="checkbox"')
             expect(html).toContain('name="agree_terms"')
@@ -253,7 +268,7 @@ describe('FormdownGenerator', () => {
                 attributes: {}
             }]
 
-            const html = generator.generateFormHTML(fields)
+            const html = generateFieldsHTML(fields)
 
             expect(html).toContain('<fieldset')
             expect(html).toContain('<legend>Interests</legend>')
@@ -323,7 +338,7 @@ describe('FormdownGenerator', () => {
                 }
             ]
 
-            const html = generator.generateFormHTML(fields)
+            const html = generateFieldsHTML(fields)
 
             expect(html).toContain('Full Name *')
             expect(html).toContain('Email *')
@@ -342,7 +357,7 @@ describe('FormdownGenerator', () => {
                 attributes: {}
             }]
 
-            const html = generator.generateFormHTML(fields)
+            const html = generateFieldsHTML(fields)
             expect(html).toContain('<label for="test">Test</label>')
         })
 
@@ -358,7 +373,7 @@ describe('FormdownGenerator', () => {
                 }
             }]
 
-            const html = generator.generateFormHTML(fields)
+            const html = generateFieldsHTML(fields)
             expect(html).toContain('disabled')
             expect(html).not.toContain('readonly')
             expect(html).toContain('autocomplete="off"')
@@ -447,6 +462,42 @@ Thank you for registering!`
             expect(html).toContain('name="name"')
             expect(html).toContain('name="email"')
             expect(html).toContain('type="submit"')
+        })
+    })
+
+    describe('generateFieldHTML', () => {
+        test('should generate standalone field HTML with form attribute', () => {
+            const field: Field = {
+                name: 'standalone',
+                type: 'text',
+                label: 'Standalone Field',
+                required: true,
+                attributes: {}
+            }
+
+            const html = generator.generateFieldHTML(field, 'my-form')
+
+            expect(html).toContain('name="standalone"')
+            expect(html).toContain('form="my-form"')
+            expect(html).toContain('Standalone Field *')
+        })
+    })
+
+    describe('generateStandaloneFieldHTML', () => {
+        test('should generate field without wrapper form', () => {
+            const field: Field = {
+                name: 'test_field',
+                type: 'email',
+                label: 'Test Email',
+                attributes: {}
+            }
+
+            const html = generator.generateStandaloneFieldHTML(field, 'target-form')
+
+            expect(html).toContain('type="email"')
+            expect(html).toContain('name="test_field"')
+            expect(html).toContain('form="target-form"')
+            expect(html).not.toContain('<form ')
         })
     })
 })

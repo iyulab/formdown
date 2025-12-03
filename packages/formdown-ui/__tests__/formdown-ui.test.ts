@@ -154,8 +154,7 @@ describe('Universal Field Synchronization', () => {
 
     it('should have universal field helper methods', () => {
         expect(typeof (component as any).getFieldName).toBe('function');
-        expect(typeof (component as any).getFieldValue).toBe('function');
-        expect(typeof (component as any).setElementValue).toBe('function');
+        expect(typeof (component as any).getFieldValueFromElement).toBe('function');
         expect(typeof (component as any).registerField).toBe('function');
     });
 

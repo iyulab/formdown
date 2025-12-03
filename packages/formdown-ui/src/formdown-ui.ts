@@ -355,13 +355,8 @@ export class FormdownUI extends LitElement {
   }
 
   private setupFieldEventHandlers(element: HTMLElement, fieldName: string) {
-    const container = {
-      querySelector: (selector: string) => this.shadowRoot?.querySelector(selector) as any,
-      querySelectorAll: (selector: string) => Array.from(this.shadowRoot?.querySelectorAll(selector) || []) as any[]
-    }
-
-    // Delegate all event handling to DOMBinder
-    this.domBinder.bindFieldToElement(fieldName, element as any, container)
+    // Register field-element binding with DOMBinder
+    this.domBinder.bindFieldToElement(fieldName, element as any)
 
     // Simple UI event handler for real-time updates
     const handleChange = (event: Event) => {
@@ -423,18 +418,39 @@ export class FormdownUI extends LitElement {
 
     this._isUpdatingUI = true
     try {
-      const container = {
-        querySelector: (selector: string) => this.shadowRoot?.querySelector(selector) as any,
-        querySelectorAll: (selector: string) => Array.from(this.shadowRoot?.querySelectorAll(selector) || []) as any[]
-      }
-
-      // Delegate to DOMBinder
-      this.domBinder.syncFormData(this.data, container)
+      // Get value assignments from DOMBinder and apply them
+      const assignments = this.domBinder.getValueAssignments(this.data)
+      assignments.forEach(({ element, value, fieldType }) => {
+        this.applyValueToElement(element as unknown as HTMLElement, value, fieldType)
+      })
     } finally {
       this._isUpdatingUI = false
+      this.domBinder.releaseSyncLock()
     }
   }
-  // Element value setting delegated to FieldProcessor via DOMBinder
+
+  /**
+   * Apply a value to a DOM element based on field type
+   */
+  private applyValueToElement(element: HTMLElement, value: unknown, fieldType: string): void {
+    if (element instanceof HTMLInputElement) {
+      if (fieldType === 'checkbox') {
+        if (typeof value === 'boolean') {
+          element.checked = value
+        } else if (Array.isArray(value)) {
+          element.checked = value.includes(element.value)
+        }
+      } else if (fieldType === 'radio') {
+        element.checked = element.value === String(value)
+      } else {
+        element.value = String(value ?? '')
+      }
+    } else if (element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
+      element.value = String(value ?? '')
+    } else if (element.hasAttribute('contenteditable')) {
+      element.textContent = String(value ?? '')
+    }
+  }
 
   // Universal field name extractor
   private getFieldName(element: HTMLElement): string | null {
@@ -459,7 +475,7 @@ export class FormdownUI extends LitElement {
         }
         const processor = this.formManager.createFieldProcessor()
         const result = processor.processCheckboxGroup(fieldName, container)
-        return result.success ? result.value : element.checked
+        return result.success ? (result.value as string[] | boolean) : element.checked
       } else if (element.type === 'radio') {
         return element.value
       }
@@ -470,63 +486,6 @@ export class FormdownUI extends LitElement {
       return element.textContent?.trim() || ''
     }
     return ''
-  }
-
-  // Test compatibility methods - minimal implementations
-  // @ts-ignore - Test compatibility method
-  private getElementInitialValue(element: HTMLElement): string | boolean | string[] | null {
-    // Test compatibility version - handles both real DOM and mocked elements
-    const el = element as any // Allow access to mocked properties
-
-    if (el.tagName === 'INPUT' || element instanceof HTMLInputElement) {
-      if (el.type === 'checkbox') {
-        return (el.hasAttribute && el.hasAttribute('checked')) || el.checked ? true : null
-      }
-      if (el.type === 'radio') {
-        const hasChecked = (el.hasAttribute && el.hasAttribute('checked')) || el.checked
-        return hasChecked ? el.value : null
-      }
-      // Check for value attribute - handle both getAttribute and direct property
-      if (el.hasAttribute && el.hasAttribute('value')) {
-        return el.getAttribute('value')
-      }
-      if (el.value !== undefined && el.value !== '') {
-        return el.value
-      }
-      return null
-    } else if (el.tagName === 'TEXTAREA' || element instanceof HTMLTextAreaElement) {
-      const text = el.textContent?.trim() || el.value?.trim()
-      return text ? text : null
-    } else if (el.tagName === 'SELECT' || element instanceof HTMLSelectElement) {
-      if (el.querySelector) {
-        const selected = el.querySelector('option[selected]') as HTMLOptionElement
-        return selected ? selected.value : null
-      }
-      return null
-    }
-    return null
-  }
-
-  // Test compatibility method for field value extraction
-  // @ts-ignore - Test compatibility method
-  private getFieldValue(element: HTMLElement): string | string[] | boolean {
-    return this.getFieldValueFromElement(element)
-  }
-
-  // Test compatibility method for element value setting
-  // @ts-ignore - Test compatibility method
-  private setElementValue(element: HTMLElement, value: any): void {
-    if (element instanceof HTMLInputElement) {
-      if (element.type === 'checkbox') {
-        element.checked = Boolean(value)
-      } else {
-        element.value = String(value)
-      }
-    } else if (element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
-      element.value = String(value)
-    } else if (element.hasAttribute('contenteditable')) {
-      element.textContent = String(value)
-    }
   }
 
   // Register field in the universal registry
@@ -603,78 +562,45 @@ export class FormdownUI extends LitElement {
    * Update entire form data from external source (for two-way binding)
    */
   setFormData(newData: Record<string, unknown>) {
-    console.log('=== setFormData called ===')
-    console.log('newData:', newData)
-    console.log('formManager available:', !!this.formManager)
-
     if (!this.formManager) {
-      console.error('FormManager not available')
       return
     }
 
-    try {
-      // Update form fields with new data
-      const container = this.shadowRoot?.querySelector('#content-container')
-      console.log('Container found:', !!container)
-      if (!container) {
-        console.error('Content container not found')
-        return
+    const container = this.shadowRoot?.querySelector('#content-container')
+    if (!container) {
+      return
+    }
+
+    Object.entries(newData).forEach(([fieldName, value]) => {
+      // Try multiple selectors to find the field
+      let field = container.querySelector(`[name="${fieldName}"]`) as HTMLElement
+      if (!field) {
+        field = container.querySelector(`[data-field-name="${fieldName}"]`) as HTMLElement
+      }
+      if (!field) {
+        field = container.querySelector(`#${fieldName}`) as HTMLElement
       }
 
-      console.log('Processing', Object.keys(newData).length, 'fields')
-      // First, let's see what fields are actually available in the container
-      console.log('Available fields in container:')
-      const allFields = container.querySelectorAll('input, textarea, select, [contenteditable]')
-      allFields.forEach((field, index) => {
-        const el = field as HTMLElement
-        console.log(`Field ${index}:`, {
-          tagName: el.tagName,
-          name: el.getAttribute('name'),
-          dataFieldName: el.getAttribute('data-field-name'),
-          id: el.id,
-          type: (el as any).type || 'N/A',
-          contenteditable: el.getAttribute('contenteditable')
-        })
-      })
-
-      Object.entries(newData).forEach(([fieldName, value]) => {
-        console.log(`Processing field: ${fieldName} = ${value}`)
-
-        // Try multiple selectors to find the field
-        let field = container.querySelector(`[name="${fieldName}"]`) as HTMLElement
-        if (!field) {
-          field = container.querySelector(`[data-field-name="${fieldName}"]`) as HTMLElement
-        }
-        if (!field) {
-          field = container.querySelector(`#${fieldName}`) as HTMLElement
-        }
-
-        console.log(`Field ${fieldName} found:`, !!field, field?.tagName, (field as any)?.type || 'N/A')
-
-        if (field) {
-          if (field.hasAttribute('contenteditable')) {
-            // Inline contenteditable field
-            field.textContent = String(value || '')
-          } else if (field instanceof HTMLInputElement) {
-            if (field.type === 'checkbox' || field.type === 'radio') {
-              field.checked = Boolean(value)
-            } else {
-              field.value = String(value || '')
-            }
-          } else if (field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement) {
+      if (field) {
+        if (field.hasAttribute('contenteditable')) {
+          field.textContent = String(value || '')
+        } else if (field instanceof HTMLInputElement) {
+          if (field.type === 'checkbox' || field.type === 'radio') {
+            field.checked = Boolean(value)
+          } else {
             field.value = String(value || '')
           }
-
-          // Trigger input event to update internal state
-          field.dispatchEvent(new Event('input', { bubbles: true }))
+        } else if (field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement) {
+          field.value = String(value || '')
         }
-      })
 
-      // Update internal data
-      this.data = { ...newData }
-    } catch (error) {
-      console.error('Error updating form data:', error)
-    }
+        // Trigger input event to update internal state
+        field.dispatchEvent(new Event('input', { bubbles: true }))
+      }
+    })
+
+    // Update internal data
+    this.data = { ...newData }
   }
 }
 

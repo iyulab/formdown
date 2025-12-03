@@ -107,18 +107,22 @@ describe('Custom Other Label', () => {
       const content = '@priority{Low,Medium,High,*(Priority Level)}: r[required]'
       const parsed = parseFormdown(content)
       const html = generateFormHTML(parsed)
-      
+
       // Should have custom label
       expect(html).toContain('<span>Priority Level:</span>')
-      
+
       // Should have simplified data handling (no complex scripts needed)
       expect(html).not.toContain('handleFormdownSubmit')
       expect(html).toContain('name="priority"')
       expect(html).not.toContain('name="priority_other"')  // Text input doesn't have name attribute
-      
-      // Radio value should change when other text is entered
-      expect(html).toContain('this.value = otherInput.value')
-      expect(html).toContain('otherRadio.value = this.value')
+
+      // CSP-compliant: Should have data attributes instead of inline handlers
+      expect(html).toContain('data-formdown-other-radio="true"')
+      expect(html).toContain('data-formdown-other-for="priority"')
+
+      // CSP-compliant: Should not have inline event handlers
+      expect(html).not.toContain('oninput=')
+      expect(html).not.toContain('onchange=')
     })
   })
 })

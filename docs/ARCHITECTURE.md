@@ -6,7 +6,12 @@ Formdown is a comprehensive form building solution that transforms markdown-like
 
 Formdown bridges the gap between content creation and form functionality by allowing developers to write forms using familiar markdown syntax while maintaining the power and flexibility of modern web components.
 
-**Phase 2 Achievement**: Complete Core-First Architecture implementation with 100% legacy code elimination and unified Core module utilization across all packages.
+**v0.3.0 Achievements**:
+- Complete Core-First Architecture with 100% legacy code elimination
+- CSP-compliant HTML generation (no inline event handlers)
+- XSS protection with comprehensive HTML escaping
+- 713+ automated tests across all packages
+- TypeScript strict mode compliance
 
 ## Project Structure
 
@@ -193,3 +198,63 @@ Formdown supports comprehensive default value setting through the `value` attrib
 - **HTML generation**: Proper `selected`, `checked`, and `value` attribute generation
 
 This architecture enables Formdown to serve both rapid prototyping needs and enterprise-scale applications while maintaining simplicity and performance.
+
+## Security Architecture
+
+Formdown implements comprehensive security measures for production deployment:
+
+### Content Security Policy (CSP) Compliance
+
+All generated HTML is CSP-compliant with no inline event handlers:
+- **No inline scripts**: No `onclick`, `onchange`, `oninput` attributes
+- **Data attributes**: Behavior is controlled via `data-formdown-*` attributes
+- **External handlers**: Event handling is attached programmatically by formdown-ui
+
+```html
+<!-- CSP-compliant output -->
+<input type="radio" data-formdown-other-radio="true" data-formdown-other-for="fieldname">
+<select data-formdown-has-other="true" data-formdown-other-target="fieldname_other">
+```
+
+### XSS Prevention
+
+All user-provided content is HTML-escaped before insertion:
+- **Option values**: Select, radio, and checkbox options are escaped
+- **Labels**: Custom labels and display text are escaped
+- **Datalist options**: All datalist entries are escaped
+- **Special characters**: `<`, `>`, `&`, `"`, `'` are properly escaped
+
+```typescript
+// Internal escaping function
+private escapeHtml(text: string): string {
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;')
+}
+```
+
+### Safe Field Names
+
+Field names are validated to prevent injection attacks:
+- Alphanumeric characters and underscores only
+- No special characters that could break HTML attributes
+- Automatic sanitization of user-provided names
+
+## Testing Architecture
+
+Formdown maintains comprehensive test coverage:
+
+### Test Distribution
+- **formdown-core**: 634 tests (parsing, generation, validation, security)
+- **formdown-ui**: 29 tests (rendering, data binding, events)
+- **formdown-editor**: 50 tests (editor logic, integration)
+- **Cross-package**: 50 integration tests
+
+### Test Categories
+- **Unit tests**: Individual function and class testing
+- **Integration tests**: Cross-module interaction testing
+- **Security tests**: XSS prevention and CSP compliance
+- **Performance tests**: Large form handling benchmarks

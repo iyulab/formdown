@@ -287,7 +287,7 @@ export class FormdownGenerator {
         blockFields.forEach(field => {
             const fieldIndex = fields.indexOf(field)
             const placeholder = `<!--FORMDOWN_FIELD_${fieldIndex}-->`
-            const fieldHTML = this.generateSingleFieldFormHTML(field)
+            const fieldHTML = this.generateStandaloneFieldHTML(field)
             result = result.replace(new RegExp(placeholder, 'g'), fieldHTML)
         })
 
@@ -312,8 +312,14 @@ export class FormdownGenerator {
 
     private generateLegacyHTML(content: FormdownContent): string {
         const markdownHTML = content.markdown ? marked(content.markdown) as string : ''
-        const formHTML = this.generateFormHTML(content.forms)
-        return markdownHTML + formHTML
+        // Generate fields without wrapper form using Hidden Form Architecture
+        if (content.forms.length === 0) return markdownHTML
+
+        const formId = `formdown-legacy-${Math.random().toString(36).substr(2, 9)}`
+        const fieldsHTML = content.forms.map(field => this.generateFieldHTML(field, formId)).join('\n')
+        const hiddenForm = `<form hidden id="${formId}"></form>`
+
+        return hiddenForm + markdownHTML + fieldsHTML
     }
 
     generateStandaloneFieldHTML(field: Field, defaultFormId?: string): string {
@@ -355,39 +361,6 @@ ${fieldHTML}
 </div>`
     }
 
-    /**
-     * @deprecated This method is deprecated. Use processContentWithHiddenForms() for Hidden Form Architecture.
-     * Will be removed in future versions.
-     */
-    generateSingleFormHTML(fields: Field[]): string {
-        console.warn('generateSingleFormHTML() is deprecated. Use Hidden Form Architecture instead.')
-        if (fields.length === 0) return ''
-
-        const formId = `form_multi_${Math.random().toString(36).substr(2, 9)}`
-        const fieldsHTML = fields.map(field => this.generateFieldHTML(field, formId)).join('\n')
-
-        return `
-<form class="formdown-form" role="form" id="${formId}">
-${fieldsHTML}
-</form>`
-    }
-
-    /**
-     * @deprecated This method violates Hidden Form Architecture by wrapping each field in a separate form.
-     * Use generateStandaloneFieldHTML() with form attribute connection instead.
-     * Will be removed in future versions.
-     */
-    generateSingleFieldFormHTML(field: Field): string {
-        console.warn('generateSingleFieldFormHTML() is deprecated and violates Hidden Form Architecture. Use generateStandaloneFieldHTML() instead.')
-        const formId = `form_${field.name}_${Math.random().toString(36).substr(2, 9)}`
-        const fieldHTML = this.generateFieldHTML(field, formId)
-
-        return `
-<form class="formdown-form" role="form" id="${formId}">
-${fieldHTML}
-</form>`
-    }
-
     generateInlineFieldHTML(field: Field, defaultFormId?: string): string {
         const { name, type, required, placeholder, attributes } = field
         const displayLabel = field.label || this.generateSmartLabel(name)
@@ -419,24 +392,6 @@ ${fieldHTML}
             .join(' ')
 
         return `<span ${attrString}>${displayLabel}</span>`
-    }
-
-    /**
-     * @deprecated This method is part of legacy form generation. 
-     * Use Hidden Form Architecture with processContentWithHiddenForms() instead.
-     * Will be removed in future versions.
-     */
-    generateFormHTML(fields: Field[]): string {
-        console.warn('generateFormHTML() is deprecated. Use Hidden Form Architecture instead.')
-        if (fields.length === 0) return ''
-
-        const formId = `formdown-legacy-${Math.random().toString(36).substr(2, 9)}`
-        const fieldsHTML = fields.map(field => this.generateFieldHTML(field, formId)).join('\n')
-
-        return `
-<form class="formdown-form" id="${formId}">
-${fieldsHTML}
-</form>`
     }
 
     generateFieldHTML(field: Field, defaultFormId?: string): string {
@@ -547,24 +502,18 @@ ${fieldsHTML}
             case 'select':
                 const optionsHTML = options?.map(opt => {
                     const isSelected = value && String(value) === opt ? ' selected' : ''
-                    return `<option value="${opt}"${isSelected}>${opt}</option>`
+                    const escapedOpt = this.escapeHtml(opt)
+                    return `<option value="${escapedOpt}"${isSelected}>${escapedOpt}</option>`
                 }).join('\n') || ''
                 const otherOptionHTML = allowOther ? `\n        <option value="">${this.escapeHtml(field.otherLabel || 'Other')} (please specify)</option>` : ''
-                const otherInputHTML = allowOther ? `\n    <input type="text" id="${fieldId}_other" placeholder="Please specify..." style="display: none; margin-top: 8px; padding: 6px 10px; border: 1px solid #ccc; border-radius: 4px; background: #fff; width: 100%; max-width: 300px;" class="formdown-other-input">` : ''
-                
+                const otherInputHTML = allowOther ? `\n    <input type="text" id="${fieldId}_other" placeholder="Please specify..." class="formdown-other-input" data-formdown-other-for="${fieldId}">` : ''
+
                 return `
 <div class="formdown-field">
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <select ${attrString} ${allowOther ? `onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('#${fieldId}_other') : null; if(otherInput) { if(this.value === '') { otherInput.style.display = 'block'; otherInput.focus(); } else { otherInput.style.display = 'none'; } }"` : ''}>
+    <select ${attrString}${allowOther ? ` data-formdown-has-other="true" data-formdown-other-target="${fieldId}_other"` : ''}>
         ${optionsHTML}${otherOptionHTML}
-    </select>${otherInputHTML}${allowOther ? `\n    <script>
-        document.getElementById('${fieldId}_other').addEventListener('input', function() {
-            var select = document.getElementById('${fieldId}');
-            if (select && select.value === '') {
-                select.value = this.value;
-            }
-        });
-    </script>` : ''}${generateHelpText()}
+    </select>${otherInputHTML}${generateHelpText()}
 </div>`
 
             case 'radio':
@@ -581,23 +530,24 @@ ${fieldsHTML}
                     const inputId = this.generateUniqueId(`${name}_${index}`, defaultFormId)
                     const isRequired = required && index === 0
                     const isChecked = value && String(value) === opt
-                    const hideOtherOnChange = allowOther ? ` onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('.formdown-other-input') : null; if(otherInput) { otherInput.style.display = 'none'; }"` : ''
+                    const hideOtherAttr = allowOther ? ' data-formdown-hides-other="true"' : ''
                     const requiredAttr = isRequired ? ' required' : ''
                     const checkedAttr = isChecked ? ' checked' : ''
                     const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
+                    const escapedOpt = this.escapeHtml(opt)
                     return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="radio" id="${inputId}" name="${name}" value="${opt}"${requiredAttr}${checkedAttr}${ariaAttr}${hideOtherOnChange}>
-            <span>${opt}</span>
+            <input type="radio" id="${inputId}" name="${name}" value="${escapedOpt}"${requiredAttr}${checkedAttr}${ariaAttr}${hideOtherAttr}>
+            <span>${escapedOpt}</span>
         </label>`
                 }).join('\n')
-                
+
                 const otherRadioId = this.generateUniqueId(`${name}_other_radio`, defaultFormId)
                 const otherRadioHTML = allowOther ? `
         <label for="${otherRadioId}" class="formdown-option-label">
-            <input type="radio" id="${otherRadioId}" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('.formdown-other-input') : null; if(otherInput) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value || ''; }"
+            <input type="radio" id="${otherRadioId}" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} data-formdown-other-radio="true">
             <span>${this.escapeHtml(field.otherLabel || 'Other')}:</span>
-            <input type="text" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${otherRadioId}') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherRadio = container ? container.querySelector('#${otherRadioId}') : null; if(otherRadio) { otherRadio.checked = true; otherRadio.value = this.value; otherRadio.dispatchEvent(new Event('change', {bubbles: true})); }"
+            <input type="text" placeholder="Please specify..." class="formdown-other-input" data-formdown-other-for="${name}">
         </label>` : ''
 
                 const isVertical = attributes?.layout === 'vertical'
@@ -656,19 +606,20 @@ ${radioInputsHTML}${otherRadioHTML}
                         const requiredAttr = isRequired ? ' required' : ''
                         const checkedAttr = isChecked ? ' checked' : ''
                         const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
+                        const escapedOpt = this.escapeHtml(opt)
                         return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="checkbox" id="${inputId}" name="${name}" value="${opt}"${requiredAttr}${checkedAttr}${ariaAttr}>
-            <span>${opt}</span>
+            <input type="checkbox" id="${inputId}" name="${name}" value="${escapedOpt}"${requiredAttr}${checkedAttr}${ariaAttr}>
+            <span>${escapedOpt}</span>
         </label>`
                     }).join('\n')
                     
                     const otherCheckboxId = this.generateUniqueId(`${name}_other_checkbox`, defaultFormId)
                     const otherCheckboxHTML = allowOther ? `
         <label for="${otherCheckboxId}" class="formdown-option-label">
-            <input type="checkbox" id="${otherCheckboxId}" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} onchange="var container = this.closest('.formdown-field'); var otherInput = container ? container.querySelector('.formdown-other-input') : null; if(otherInput) { if(this.checked) { otherInput.style.display = 'inline-block'; otherInput.focus(); this.value = otherInput.value || ''; } else { otherInput.style.display = 'none'; this.value = ''; } }"
+            <input type="checkbox" id="${otherCheckboxId}" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} data-formdown-other-checkbox="true">
             <span>${this.escapeHtml(field.otherLabel || 'Other')}:</span>
-            <input type="text" placeholder="Please specify..." style="display: none; margin-left: 8px; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; background: #fff;" class="formdown-other-input" onclick="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${otherCheckboxId}') : null; if(otherCheckbox) { otherCheckbox.checked = true; otherCheckbox.value = this.value; }" oninput="var container = this.closest('.formdown-field'); var otherCheckbox = container ? container.querySelector('#${otherCheckboxId}') : null; if(otherCheckbox && otherCheckbox.checked) { otherCheckbox.value = this.value; otherCheckbox.dispatchEvent(new Event('change', {bubbles: true})); }">
+            <input type="text" placeholder="Please specify..." class="formdown-other-input" data-formdown-other-for="${name}">
         </label>` : ''
 
                     const isVertical = attributes?.layout === 'vertical'
@@ -687,10 +638,10 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
 
             // Extended HTML5 input types
             case 'range':
-                const min = attributes?.min || 0
-                const max = attributes?.max || 100
-                const step = attributes?.step || 1
-                const rangeValue = value !== undefined ? value : (attributes?.value || Math.floor((min + max) / 2))
+                const min = Number(attributes?.min) || 0
+                const max = Number(attributes?.max) || 100
+                const step = Number(attributes?.step) || 1
+                const rangeValue = value !== undefined ? value : (attributes?.value !== undefined ? Number(attributes.value) : Math.floor((min + max) / 2))
                 return `
 <div class="formdown-field">
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
