@@ -40,8 +40,8 @@ export class UIExtensionSupport {
       await extensionManager.initialize()
       this.setupUIHooks()
       this.initialized = true
-    } catch (error) {
-      console.debug('Extension system already initialized or error:', error)
+    } catch {
+      // Extension system already initialized, silently continue
     }
   }
 

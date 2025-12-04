@@ -46,8 +46,8 @@ export class EditorExtensionSupport {
       await extensionManager.initialize()
       this.setupEditorHooks()
       this.initialized = true
-    } catch (error) {
-      console.debug('Extension system already initialized or error:', error)
+    } catch {
+      // Extension system already initialized, silently continue
     }
   }
 

@@ -183,9 +183,8 @@ export class FormdownUI extends LitElement {
     // Initialize extension system and UI support
     try {
       await uiExtensionSupport.initialize()
-    } catch (error) {
-      // Extension system might already be initialized
-      console.debug('Extension system initialization:', error)
+    } catch {
+      // Extension system might already be initialized, silently continue
     }
 
     // Use inner text as content if content property is empty
@@ -311,11 +310,9 @@ export class FormdownUI extends LitElement {
       })
 
       // Basic extension support - delegate complex logic to Core later
-      if (fieldTypes.size > 0) {
-        console.debug('Extension types detected:', Array.from(fieldTypes))
-      }
-    } catch (error) {
-      console.debug('Extension asset injection failed:', error)
+      // Field types are collected for future extension processing
+    } catch {
+      // Extension asset injection is non-critical, silently continue
     }
   }
 
@@ -418,10 +415,20 @@ export class FormdownUI extends LitElement {
 
     this._isUpdatingUI = true
     try {
+      // Get the currently focused element to avoid disrupting user input
+      const activeElement = this.shadowRoot?.activeElement as HTMLElement | null
+
       // Get value assignments from DOMBinder and apply them
       const assignments = this.domBinder.getValueAssignments(this.data)
       assignments.forEach(({ element, value, fieldType }) => {
-        this.applyValueToElement(element as unknown as HTMLElement, value, fieldType)
+        const htmlElement = element as unknown as HTMLElement
+
+        // Skip the currently focused element to preserve cursor position
+        if (htmlElement === activeElement) {
+          return
+        }
+
+        this.applyValueToElement(htmlElement, value, fieldType)
       })
     } finally {
       this._isUpdatingUI = false

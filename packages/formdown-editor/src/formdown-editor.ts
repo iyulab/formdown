@@ -122,9 +122,8 @@ export class FormdownEditor extends LitElement {
         // Initialize extension system and editor support
         try {
             await editorExtensionSupport.initialize()
-        } catch (error) {
-            // Extension system might already be initialized
-            console.debug('Extension system initialization:', error)
+        } catch {
+            // Extension system might already be initialized, silently continue
         }
 
         // Use inner text as content if content property is default and inner text exists
