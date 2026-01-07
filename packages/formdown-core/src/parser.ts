@@ -1,5 +1,5 @@
 import { marked } from 'marked'
-import { Field, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration } from './types'
+import { Field, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration } from './types'
 import { defaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 
@@ -7,7 +7,9 @@ export class FormdownParser {
     private options: FormdownOptions
     private formDeclarations: FormDeclaration[] = []
     private datalistDeclarations: DatalistDeclaration[] = []
+    private groupDeclarations: GroupDeclaration[] = []
     private currentFormId: string | null = null
+    private currentGroupId: string | null = null
     private formCounter = 1
     private defaultFormCreated = false
 
@@ -25,7 +27,9 @@ export class FormdownParser {
         // Reset state for each parse
         this.formDeclarations = []
         this.datalistDeclarations = []
+        this.groupDeclarations = []
         this.currentFormId = null
+        this.currentGroupId = null
         this.formCounter = 1
         this.defaultFormCreated = false
 
@@ -35,7 +39,8 @@ export class FormdownParser {
             markdown: this.options.preserveMarkdown ? cleanedMarkdown : '',
             forms: fields,
             formDeclarations: this.formDeclarations,
-            datalistDeclarations: this.datalistDeclarations
+            datalistDeclarations: this.datalistDeclarations,
+            groupDeclarations: this.groupDeclarations
         }
     }
 
@@ -71,6 +76,27 @@ export class FormdownParser {
                 continue
             }
 
+            // Check for group declaration: ## [Group Label] or ## [Group Label collapsible] or ## [Group Label collapsed]
+            const groupDeclaration = this.parseGroupDeclaration(line, i)
+            if (groupDeclaration) {
+                // Close previous group if exists before starting new one
+                if (this.currentGroupId) {
+                    cleanedLines.push(`<!--FORMDOWN_GROUP_END_${this.currentGroupId}-->`)
+                }
+                this.groupDeclarations.push(groupDeclaration)
+                this.currentGroupId = groupDeclaration.id
+                // Insert placeholder for group start
+                cleanedLines.push(`<!--FORMDOWN_GROUP_START_${groupDeclaration.id}-->`)
+                continue
+            }
+
+            // Check if we're exiting a group (when encountering a non-group ## heading)
+            if (this.currentGroupId && /^##\s+[^\[]/.test(line)) {
+                // Regular ## heading ends the current group
+                cleanedLines.push(`<!--FORMDOWN_GROUP_END_${this.currentGroupId}-->`)
+                this.currentGroupId = null
+            }
+
             // Check for table block (markdown table with inline fields)
             if (line.trim().startsWith('|')) {
                 const tableResult = this.parseTableBlock(lines, i)
@@ -103,6 +129,11 @@ export class FormdownParser {
             inlineFields.forEach(field => this.associateFieldWithForm(field))
             fields.push(...inlineFields)
             cleanedLines.push(cleanedLine)
+        }
+
+        // Close any remaining open group at the end of content
+        if (this.currentGroupId) {
+            cleanedLines.push(`<!--FORMDOWN_GROUP_END_${this.currentGroupId}-->`)
         }
 
         return {
@@ -839,6 +870,49 @@ export class FormdownParser {
         }
     }
 
+    /**
+     * Parse group declaration: ## [Group Label] or ## [Group Label collapsible] or ## [Group Label collapsed]
+     * Generates a unique group ID from the label
+     */
+    private parseGroupDeclaration(line: string, position: number): GroupDeclaration | null {
+        const trimmedLine = line.trim()
+
+        // Match ## [Label] or ## [Label collapsible] or ## [Label collapsed]
+        // Note: This is distinct from regular ## headings which don't have brackets
+        const match = trimmedLine.match(/^##\s*\[([^\]]+)\]\s*$/)
+        if (!match) return null
+
+        const content = match[1].trim()
+
+        // Check for collapsible/collapsed modifiers
+        let label = content
+        let collapsible = false
+        let collapsed = false
+
+        if (content.endsWith(' collapsed')) {
+            label = content.slice(0, -' collapsed'.length).trim()
+            collapsible = true
+            collapsed = true
+        } else if (content.endsWith(' collapsible')) {
+            label = content.slice(0, -' collapsible'.length).trim()
+            collapsible = true
+        }
+
+        // Generate unique ID from label (slugified)
+        const id = 'formdown-group-' + label
+            .toLowerCase()
+            .replace(/[^a-z0-9가-힣]+/gi, '-')
+            .replace(/^-+|-+$/g, '')
+
+        return {
+            id,
+            label,
+            position,
+            collapsible: collapsible || undefined,
+            collapsed: collapsed || undefined
+        }
+    }
+
     private getDefaultFormId(): string {
         if (!this.defaultFormCreated) {
             this.defaultFormCreated = true
@@ -859,16 +933,20 @@ export class FormdownParser {
                 console.warn(`FormDown: Referenced form "${field.attributes.form}" does not exist. Using current or default form.`)
                 field.attributes.form = this.currentFormId || this.getDefaultFormId()
             }
-            return
+        } else {
+            // Auto-associate with current form or create default
+            if (this.currentFormId) {
+                if (!field.attributes) field.attributes = {}
+                field.attributes.form = this.currentFormId
+            } else {
+                if (!field.attributes) field.attributes = {}
+                field.attributes.form = this.getDefaultFormId()
+            }
         }
 
-        // Auto-associate with current form or create default
-        if (this.currentFormId) {
-            if (!field.attributes) field.attributes = {}
-            field.attributes.form = this.currentFormId
-        } else {
-            if (!field.attributes) field.attributes = {}
-            field.attributes.form = this.getDefaultFormId()
+        // Associate with current group if one is active
+        if (this.currentGroupId) {
+            field.group = this.currentGroupId
         }
     }
 

@@ -16,6 +16,7 @@ export interface Field {
     errorMessage?: string
     inline?: boolean
     position?: number  // Position in the source content for form association
+    group?: string    // Group ID for fieldset grouping
     [key: string]: unknown  // Index signature for compatibility with FieldSchema
 }
 
@@ -54,11 +55,20 @@ export interface DatalistDeclaration {
     position?: number
 }
 
+export interface GroupDeclaration {
+    id: string
+    label: string
+    position?: number
+    collapsible?: boolean
+    collapsed?: boolean
+}
+
 export interface FormdownContent {
     markdown: string
     forms: Field[]
     formDeclarations?: FormDeclaration[]
     datalistDeclarations?: DatalistDeclaration[]
+    groupDeclarations?: GroupDeclaration[]
 }
 
 export interface FormdownOptions {
@@ -75,21 +85,21 @@ export interface FieldSchema {
     required?: boolean
     defaultValue?: any
     value?: any
-    
+
     // Validation rules
     validation?: ValidationRules
-    
+
     // Selection fields
     options?: string[]
     allowOther?: boolean
-    
+
     // Layout and presentation
     layout?: 'inline' | 'vertical'
     placeholder?: string
-    
+
     // HTML attributes
     htmlAttributes?: Record<string, any>
-    
+
     // Metadata
     position?: number
     isInline?: boolean
@@ -97,6 +107,7 @@ export interface FieldSchema {
     pattern?: string
     description?: string
     errorMessage?: string
+    group?: string  // Group ID for fieldset grouping
 }
 
 export type FieldType = 

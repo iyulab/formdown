@@ -1,5 +1,5 @@
 import { marked } from 'marked'
-import { Field, FormdownContent, FormDeclaration, DatalistDeclaration } from './types'
+import { Field, FormdownContent, FormDeclaration, DatalistDeclaration, GroupDeclaration } from './types'
 import { defaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 
@@ -191,13 +191,19 @@ export class FormdownGenerator {
         // Reset ID tracking for each form generation
         this.usedIds.clear()
         this.fieldCounter = 0
-        
+
         const markdownHTML = content.markdown ? marked(content.markdown) : ''
 
         // Handle both sync and async marked results
         if (typeof markdownHTML === 'string') {
             // Use Hidden Form Architecture as the default behavior
-            return this.processContentWithHiddenForms(markdownHTML, content.forms, content.formDeclarations || [], content.datalistDeclarations || [])
+            return this.processContentWithHiddenForms(
+                markdownHTML,
+                content.forms,
+                content.formDeclarations || [],
+                content.datalistDeclarations || [],
+                content.groupDeclarations || []
+            )
         } else {
             // If marked returns a Promise, we need to handle it differently
             // For now, fallback to the old method
@@ -205,22 +211,32 @@ export class FormdownGenerator {
         }
     }
 
-    private processContentWithHiddenForms(html: string, fields: Field[], formDeclarations: FormDeclaration[], datalistDeclarations: DatalistDeclaration[]): string {
-        if (fields.length === 0 && formDeclarations.length === 0 && datalistDeclarations.length === 0) {
+    private processContentWithHiddenForms(
+        html: string,
+        fields: Field[],
+        formDeclarations: FormDeclaration[],
+        datalistDeclarations: DatalistDeclaration[],
+        groupDeclarations: GroupDeclaration[] = []
+    ): string {
+        if (fields.length === 0 && formDeclarations.length === 0 && datalistDeclarations.length === 0 && groupDeclarations.length === 0) {
             return html
         }
 
         // Ensure we have at least a default form if fields exist but no forms declared
         const effectiveFormDeclarations = this.ensureDefaultForm(formDeclarations, fields)
-        
+
         // Generate hidden forms HTML
         const hiddenFormsHTML = this.generateHiddenFormsHTML(effectiveFormDeclarations)
-        
+
         // Generate datalist elements HTML
         const datalistHTML = this.generateDatalistHTML(datalistDeclarations)
 
         // Create form context mapping for field-to-form association
         const formContext = this.createFormContext(fields, effectiveFormDeclarations)
+
+        // Create group declarations map for quick lookup
+        const groupMap = new Map<string, GroupDeclaration>()
+        groupDeclarations.forEach(group => groupMap.set(group.id, group))
 
         // Separate inline and block fields
         const inlineFields: Field[] = []
@@ -236,12 +252,26 @@ export class FormdownGenerator {
 
         let result = html
 
+        // Process group start placeholders
+        groupDeclarations.forEach(group => {
+            const placeholder = `<!--FORMDOWN_GROUP_START_${group.id}-->`
+            const groupStartHTML = this.generateGroupStartHTML(group)
+            result = result.replace(new RegExp(this.escapeRegex(placeholder), 'g'), groupStartHTML)
+        })
+
+        // Process group end placeholders
+        groupDeclarations.forEach(group => {
+            const placeholder = `<!--FORMDOWN_GROUP_END_${group.id}-->`
+            const groupEndHTML = '</fieldset>'
+            result = result.replace(new RegExp(this.escapeRegex(placeholder), 'g'), groupEndHTML)
+        })
+
         // Process inline fields first with form context
         inlineFields.forEach((field, index) => {
             const placeholder = `<!--FORMDOWN_FIELD_${fields.indexOf(field)}-->`
             const defaultFormId = formContext.get(field)
             const fieldHTML = this.generateInlineFieldHTML(field, defaultFormId)
-            result = result.replace(new RegExp(placeholder, 'g'), fieldHTML)
+            result = result.replace(new RegExp(this.escapeRegex(placeholder), 'g'), fieldHTML)
         })
 
         // Process block fields with form context
@@ -250,11 +280,39 @@ export class FormdownGenerator {
             const placeholder = `<!--FORMDOWN_FIELD_${fieldIndex}-->`
             const defaultFormId = formContext.get(field)
             const fieldHTML = this.generateStandaloneFieldHTML(field, defaultFormId)
-            result = result.replace(new RegExp(placeholder, 'g'), fieldHTML)
+            result = result.replace(new RegExp(this.escapeRegex(placeholder), 'g'), fieldHTML)
         })
 
         // Prepend hidden forms and datalist elements to the beginning of the HTML
         return hiddenFormsHTML + datalistHTML + result
+    }
+
+    /**
+     * Generate fieldset opening tag with legend for a group
+     * Following WCAG accessibility best practices for fieldset/legend
+     */
+    private generateGroupStartHTML(group: GroupDeclaration): string {
+        const escapedLabel = this.escapeHtml(group.label)
+        const attrs: string[] = [
+            `class="formdown-group"`,
+            `data-group="${this.escapeHtml(group.id)}"`
+        ]
+
+        if (group.collapsible) {
+            attrs.push('data-collapsible="true"')
+        }
+        if (group.collapsed) {
+            attrs.push('data-collapsed="true"')
+        }
+
+        return `<fieldset ${attrs.join(' ')}>\n<legend>${escapedLabel}</legend>`
+    }
+
+    /**
+     * Escape special regex characters in a string
+     */
+    private escapeRegex(str: string): string {
+        return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     }
 
     private processContent(html: string, fields: Field[]): string {

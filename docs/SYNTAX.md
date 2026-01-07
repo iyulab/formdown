@@ -53,6 +53,115 @@ FormDown generates hidden form elements that don't interfere with your document 
 - ✅ **Multiple forms**: Support multiple forms in one document
 - ✅ **HTML standards**: Uses native HTML `form` attribute for proper association
 
+## Field Grouping (Sections)
+
+FormDown supports logical grouping of form fields using the `## [Group Label]` syntax. This generates semantic HTML `<fieldset>` and `<legend>` elements following WCAG accessibility best practices.
+
+### Basic Group Syntax
+```formdown
+## [Personal Information]
+@first_name*: [text]
+@last_name*: [text]
+@email*: [email]
+
+## [Contact Details]
+@phone: [tel]
+@address: [textarea rows=2]
+
+## [Preferences]
+@newsletter: [checkbox content="Subscribe to newsletter"]
+@theme: [radio options="Light,Dark,Auto"]
+```
+
+### Generated HTML Structure
+```html
+<fieldset class="formdown-group" data-group="formdown-group-personal-information">
+  <legend>Personal Information</legend>
+  <!-- Fields within this group -->
+</fieldset>
+
+<fieldset class="formdown-group" data-group="formdown-group-contact-details">
+  <legend>Contact Details</legend>
+  <!-- Fields within this group -->
+</fieldset>
+```
+
+### Collapsible Groups
+Groups can be made collapsible or start in a collapsed state:
+
+```formdown
+## [Basic Settings]
+@name*: [text]
+@email*: [email]
+
+## [Advanced Settings collapsible]
+@api_key: [text]
+@timeout: [number min=1 max=60]
+
+## [Developer Options collapsed]
+@debug_mode: [checkbox]
+@log_level: [select options="Error,Warning,Info,Debug"]
+```
+
+**Modifiers:**
+- `collapsible` - Group can be collapsed/expanded by the user
+- `collapsed` - Group starts in a collapsed state (implies collapsible)
+
+**Generated HTML with collapsible:**
+```html
+<fieldset class="formdown-group" data-group="formdown-group-advanced-settings" data-collapsible="true">
+  <legend>Advanced Settings</legend>
+  <!-- Fields -->
+</fieldset>
+
+<fieldset class="formdown-group" data-group="formdown-group-developer-options" data-collapsible="true" data-collapsed="true">
+  <legend>Developer Options</legend>
+  <!-- Fields -->
+</fieldset>
+```
+
+### Group vs Regular Headings
+FormDown distinguishes between group declarations and regular Markdown headings:
+
+```formdown
+## Regular Heading
+This is a regular Markdown heading that renders as <h2>.
+
+## [Grouped Section]
+@field1: [text]
+@field2: [text]
+This creates a fieldset group for the fields below.
+
+## Another Regular Heading
+@ungrouped_field: [text]
+This field is NOT in any group (group closed by regular heading).
+```
+
+**Key differences:**
+- `## [Label]` → Creates a `<fieldset>` group for form fields
+- `## Label` → Standard Markdown `<h2>` heading (closes any open group)
+
+### Accessibility Benefits
+Using `<fieldset>` and `<legend>` elements provides:
+- ✅ **Screen reader support**: Groups are announced with their labels
+- ✅ **Semantic structure**: Clear relationship between fields and their group
+- ✅ **Keyboard navigation**: Improves form navigation for assistive technologies
+- ✅ **Visual organization**: Default browser styling groups related fields
+
+### Schema Integration
+Group information is included in the parsed schema:
+
+```typescript
+const parsed = parseFormdown(content)
+
+// Access group declarations
+parsed.groupDeclarations // Array of GroupDeclaration objects
+// [{ id: 'formdown-group-personal-info', label: 'Personal Info', collapsible: false }]
+
+// Fields have group reference
+parsed.forms[0].group // 'formdown-group-personal-info'
+```
+
 ## Smart Label Generation
 
 FormDown automatically generates human-readable labels from field names when no custom label is provided. This feature helps create clean, readable forms without requiring explicit labels for every field.
