@@ -81,8 +81,8 @@ describe('FormdownGenerator', () => {
             const html = generateFieldsHTML(fields)
 
             expect(html).toContain('<form hidden id="formdown-form-default"')
-            expect(html).toContain('<div class="formdown-field">')
-            expect(html).toContain('<label for="username">Username *</label>')
+            expect(html).toContain('<div class="formdown-field" part="field">')
+            expect(html).toContain('<label for="username" part="label">Username *</label>')
             expect(html).toContain('<input type="text" id="username" name="username" required form=')
         })
 
@@ -179,7 +179,7 @@ describe('FormdownGenerator', () => {
             const html = generateFieldsHTML(fields)
 
             expect(html).toContain('<fieldset')
-            expect(html).toContain('<legend>Gender *</legend>')
+            expect(html).toContain('<legend part="legend">Gender *</legend>')
             expect(html).toContain('type="radio"')
             expect(html).toContain('value="Male"')
             expect(html).toContain('value="Female"')
@@ -215,7 +215,7 @@ describe('FormdownGenerator', () => {
             expect(parsed.forms[0].options).toEqual(['Male', 'Female', 'Other'])
 
             expect(html).toContain('<fieldset')
-            expect(html).toContain('<legend>Gender</legend>')
+            expect(html).toContain('<legend part="legend">Gender</legend>')
             expect(html).toContain('type="radio"')
             expect(html).toContain('value="Male"')
             expect(html).toContain('value="Female"')
@@ -271,7 +271,7 @@ describe('FormdownGenerator', () => {
             const html = generateFieldsHTML(fields)
 
             expect(html).toContain('<fieldset')
-            expect(html).toContain('<legend>Interests</legend>')
+            expect(html).toContain('<legend part="legend">Interests</legend>')
             expect(html).toContain('type="checkbox"')
             expect(html).toContain('value="Programming"')
             expect(html).toContain('value="Design"')
@@ -305,7 +305,7 @@ describe('FormdownGenerator', () => {
             expect(parsed.forms[0].options).toEqual(['Programming', 'Design', 'Music'])
 
             expect(html).toContain('<fieldset')
-            expect(html).toContain('<legend>Interests</legend>')
+            expect(html).toContain('<legend part="legend">Interests</legend>')
             expect(html).toContain('value="Programming"')
             expect(html).toContain('value="Design"')
             expect(html).toContain('value="Music"')
@@ -358,7 +358,7 @@ describe('FormdownGenerator', () => {
             }]
 
             const html = generateFieldsHTML(fields)
-            expect(html).toContain('<label for="test">Test</label>')
+            expect(html).toContain('<label for="test" part="label">Test</label>')
         })
 
         test('should handle boolean attributes correctly', () => {

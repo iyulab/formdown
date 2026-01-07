@@ -1,0 +1,100 @@
+1:"$Sreact.fragment"
+2:I[89992,["/_next/static/chunks/e7ce311063862ceb.js","/_next/static/chunks/b364a8343c8c3a75.js"],"default"]
+7:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/7340adf74ff47ec0.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+3:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-24:T188c,<p>Formdown is a simple, human-readable format for creating web forms. It combines the simplicity of Markdown with powerful form capabilities, allowing you to create complex forms with minimal syntax.</p>
+<h2>Core Philosophy</h2>
+<ul>
+<li><strong>Human-readable</strong>: Forms should be readable and writable by humans</li>
+<li><strong>Simple syntax</strong>: Minimal learning curve with intuitive field definitions</li>
+<li><strong>Web standards</strong>: Generates clean, semantic HTML forms</li>
+<li><strong>Framework agnostic</strong>: Works with any web framework or vanilla JavaScript</li>
+</ul>
+<h2>Core-First Architecture (Phase 2 Complete)</h2>
+<p>Formdown features a revolutionary <strong>Core-First architecture</strong> with <strong>FormManager + 4 Core modules</strong> providing complete form lifecycle management:</p>
+<h3>@formdown/core ⭐ - The Complete Foundation</h3>
+<p><strong>Phase 2 Achievement</strong>: 100% business logic centralization through specialized Core modules</p>
+<h4>FormManager + 4 Core Modules</h4>
+<ul>
+<li><strong>FormManager</strong>: Central coordinator with 12+ integration APIs</li>
+<li><strong>FieldProcessor</strong>: Field type processing, validation, and value extraction</li>
+<li><strong>DOMBinder</strong>: DOM manipulation, event handling, and data synchronization  </li>
+<li><strong>ValidationManager</strong>: Async validation pipelines with caching and debouncing</li>
+<li><strong>EventOrchestrator</strong>: Component-to-component event coordination and bridging</li>
+</ul>
+<h4>Enhanced Capabilities</h4>
+<ul>
+<li><strong>Complete Form Lifecycle</strong>: Parse → Process → Render → Validate → Coordinate</li>
+<li><strong>Modular Architecture</strong>: Specialized modules for different concerns</li>
+<li><strong>100% Code Coverage</strong>: All UI/Editor operations handled by Core</li>
+<li><strong>Framework Agnostic</strong>: Works with React, Vue, Angular, vanilla JS</li>
+</ul>
+<h3>@formdown/ui 🎨 - Optimized Rendering Layer</h3>
+<p><strong>Phase 2.1 Complete</strong>: 1307 lines → 1186 lines (9.3% optimization)</p>
+<ul>
+<li><strong>100% Core Integration</strong>: All DOM operations delegated to DOMBinder</li>
+<li><strong>FormManager Coordination</strong>: Complete FormManager lifecycle integration</li>
+<li><strong>Legacy Elimination</strong>: processFormHTML removed, renderToTemplate adopted</li>
+<li><strong>Performance Optimized</strong>: Streamlined event handling via Core modules</li>
+</ul>
+<h3>@formdown/editor ✏️ - Enhanced Development Environment</h3>
+<p><strong>Phase 2.2 Complete</strong>: Core-First architecture fully implemented</p>
+<ul>
+<li><strong>100% Core Integration</strong>: EventOrchestrator bridges Editor ↔ Core events</li>
+<li><strong>Real-time Core Power</strong>: createPreviewTemplate for instant parsing</li>
+<li><strong>Template Consolidation</strong>: templates.ts eliminated, inline rendering</li>
+<li><strong>Legacy-Free</strong>: All parsing/rendering operations via FormManager</li>
+</ul>
+<h3>Key Architectural Benefits</h3>
+<ol>
+<li><strong>Framework Independence</strong>: Core can be used with any UI framework</li>
+<li><strong>Enhanced Testability</strong>: Business logic separated from presentation</li>
+<li><strong>Single Source of Truth</strong>: All form behavior centralized in Core</li>
+<li><strong>Event-Driven Reactivity</strong>: Subscribe to data changes, validation, submission</li>
+<li><strong>Better Maintainability</strong>: Clean separation of concerns</li>
+<li><strong>Backward Compatibility</strong>: Existing code continues to work unchanged</li>
+</ol>
+<h2>Key Features</h2>
+<ul>
+<li><strong>Hidden Form Architecture</strong>: Revolutionary form system with no layout interference</li>
+<li><strong>Value Attribute System</strong>: Comprehensive default values for all field types (<code>value=&quot;text&quot;</code>)</li>
+<li><strong>Shorthand syntax</strong>: Write forms faster with intuitive shortcuts (<code>@name*: []</code>, <code>@email: @[]</code>)</li>
+<li><strong>Smart label generation</strong>: Automatic conversion of field names to readable labels</li>
+<li><strong>Multiple Forms</strong>: Support multiple forms in one document with automatic association</li>
+<li><strong>Inline fields</strong>: Embed form fields directly in markdown text</li>
+<li><strong>Rich field types</strong>: Support for all HTML5 input types plus custom components via plugins</li>
+<li><strong>Extension System</strong>: Hook-based plugins for custom field types, validators, and renderers (14 hook types)</li>
+<li><strong>Schema Extraction</strong>: Get structured metadata for validation, documentation, and tooling</li>
+<li><strong>Flexible attributes</strong>: Control validation, styling, and behavior</li>
+<li><strong>Markdown integration</strong>: Mix forms with rich text content</li>
+<li><strong>Progressive complexity</strong>: Start simple, add complexity as needed with extensions</li>
+<li><strong>Type-safe extensibility</strong>: Full TypeScript support for plugin development</li>
+<li><strong>Lightweight</strong>: Minimal core with optional extension loading</li>
+</ul>
+<h2>Example</h2>
+<h3>Standard Syntax Example</h3>
+<pre class="language-markup"><code class="language-markup">### Registration Form
+Please fill out the form below to register.
+
+@name: [text required placeholder="Enter your name"]
+@email: [email required]
+@age: [number min=18 max=100]
+@bio: [textarea rows=4 placeholder="Tell us about yourself"]
+@gender: [radio options="Male, Female, Other"]
+@interests: [checkbox options="Programming, Design, Music, Sports"]
+@newsletter(Subscribe to our newsletter): [checkbox]</code></pre><h3>Shorthand Syntax (Same Result!)</h3>
+<pre class="language-markup"><code class="language-markup">### Registration Form
+Please fill out the form below to register.
+
+@name*: [placeholder="Enter your name"]
+@email*: @[]
+@age: #[min=18 max=100]
+@bio: T4[placeholder="Tell us about yourself"]
+@gender{Male,Female,Other}: r[]
+@interests{Programming,Design,Music,Sports}: c[]
+@newsletter(Subscribe to our newsletter): c[]</code></pre><p><strong>Both create identical forms</strong> - choose the style that fits your needs!</p>
+<p>This generates a complete registration form with validation, proper labels, and semantic HTML structure.</p>
+0:{"buildId":"A9JPmqOZ1bVvxrZXVAH7B","rsc":["$","$1","c",{"children":[["$","$L2",null,{"currentSlug":"overview","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Overview"}],["$","article",null,{"className":"$3","dangerouslySetInnerHTML":{"__html":"$4"}}]]}]}],["$L5"],"$L6"]}],"loading":null,"isPartial":false}
+5:["$","script","script-0",{"src":"/_next/static/chunks/b364a8343c8c3a75.js","async":true}]
+6:["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]
+9:null

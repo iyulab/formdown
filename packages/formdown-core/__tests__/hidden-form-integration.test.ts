@@ -36,7 +36,7 @@ describe('Hidden Form Architecture - Integration Tests', () => {
       expect(html).toContain('name="terms"')
       
       // Should contain submit button with form association
-      expect(html).toContain('<button type="submit" id="submit_form" form="formdown-form-1">Send Message</button>')
+      expect(html).toContain('<button type="submit" id="submit_form" form="formdown-form-1" part="button submit-button">Send Message</button>')
       
       // Should preserve markdown content
       expect(html).toContain('<h1>Contact Us</h1>')
@@ -73,12 +73,12 @@ describe('Hidden Form Architecture - Integration Tests', () => {
       // Should properly associate login fields
       expect(html).toContain('name="login_username"')
       expect(html).toContain('form="login-form"')
-      expect(html).toContain('<button type="submit" id="login_submit" form="login-form">Login</button>')
+      expect(html).toContain('<button type="submit" id="login_submit" form="login-form" part="button submit-button">Login</button>')
 
       // Should properly associate register fields
       expect(html).toContain('name="reg_username"')
       expect(html).toContain('form="register-form"')
-      expect(html).toContain('<button type="submit" id="register_submit" form="register-form">Create Account</button>')
+      expect(html).toContain('<button type="submit" id="register_submit" form="register-form" part="button submit-button">Create Account</button>')
     })
 
     test('should handle inline fields with form association', () => {
@@ -109,7 +109,7 @@ You can be reached at ___@email[email required form="survey"].
       expect(html).toContain('data-field-name="email"')
       
       // Should contain submit button
-      expect(html).toContain('<button type="submit" id="submit_survey" form="survey">Submit Survey</button>')
+      expect(html).toContain('<button type="submit" id="submit_survey" form="survey" part="button submit-button">Submit Survey</button>')
       
       // Should preserve markdown structure
       expect(html).toContain('<h1>Survey Form</h1>')
@@ -187,7 +187,7 @@ You can be reached at ___@email[email required form="survey"].
       
       // Should associate fields with default form
       expect(html).toContain('form="formdown-form-default"')
-      expect(html).toContain('<button type="submit" id="submit" form="formdown-form-default">Login</button>')
+      expect(html).toContain('<button type="submit" id="submit" form="formdown-form-default" part="button submit-button">Login</button>')
     })
   })
 
@@ -220,8 +220,8 @@ You can be reached at ___@email[email required form="survey"].
       expect(html).toContain('<form hidden id="payment" action="/payment" method="POST"></form>')
       expect(html).toContain('form="shipping"')
       expect(html).toContain('form="payment"')
-      expect(html).toContain('<button type="submit" id="save_shipping" form="shipping">Save Shipping</button>')
-      expect(html).toContain('<button type="submit" id="process_payment" form="payment">Process Payment</button>')
+      expect(html).toContain('<button type="submit" id="save_shipping" form="shipping" part="button submit-button">Save Shipping</button>')
+      expect(html).toContain('<button type="submit" id="process_payment" form="payment" part="button submit-button">Process Payment</button>')
     })
 
     test('should handle survey with mixed field types and forms', () => {

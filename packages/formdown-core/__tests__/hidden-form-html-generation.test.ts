@@ -143,8 +143,8 @@ describe('Hidden Form HTML Generation', () => {
       const result = parser.parseFormdown(content)
       const html = generator.generateHTML(result)
       
-      expect(html).toContain('<button type="submit" id="submit_btn" form="button-form">Submit Form</button>')
-      expect(html).toContain('<button type="reset" id="reset_btn" form="button-form">Reset Form</button>')
+      expect(html).toContain('<button type="submit" id="submit_btn" form="button-form" part="button submit-button">Submit Form</button>')
+      expect(html).toContain('<button type="reset" id="reset_btn" form="button-form" part="button reset-button">Reset Form</button>')
     })
 
     test('should handle inline fields with form association', () => {

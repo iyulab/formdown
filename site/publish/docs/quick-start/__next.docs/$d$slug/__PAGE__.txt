@@ -1,0 +1,149 @@
+1:"$Sreact.fragment"
+2:I[89992,["/_next/static/chunks/e7ce311063862ceb.js","/_next/static/chunks/b364a8343c8c3a75.js"],"default"]
+7:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/7340adf74ff47ec0.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+3:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-24:T3486,<p>This guide will get you up and running with Formdown in minutes.</p>
+<h2>Installation</h2>
+<h3>Core Package (Recommended)</h3>
+<p>For maximum flexibility and framework-agnostic usage:</p>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> @formdown/core</code></pre><h3>UI Components (Optional)</h3>
+<p>For ready-to-use web components:</p>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> @formdown/ui</code></pre><h3>Development Tools (Optional)</h3>
+<p>For live editing and preview:</p>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> @formdown/editor</code></pre><h2>Basic Usage</h2>
+<h3>Creating Your First Form</h3>
+<p>Create a <code>.fd</code> file with simple form fields:</p>
+<pre class="language-markup"><code class="language-markup"># Contact Form
+
+@name*: []
+@email*: @[]
+@message: [textarea]</code></pre><p><strong>That&#39;s it!</strong> FormDown automatically:</p>
+<ul>
+<li>Generates labels (&quot;Name&quot;, &quot;Email&quot;, &quot;Message&quot;)</li>
+<li>Makes fields required with <code>*</code></li>
+<li>Sets appropriate input types (<code>@</code> = email)</li>
+</ul>
+<h3>Alternative: Standard Syntax</h3>
+<p>You can also use the full syntax for more control:</p>
+<pre class="language-markup"><code class="language-markup"># Contact Form
+
+@name(Name): [text required]
+@email(Email Address): [email required]
+@message(Message): [textarea]</code></pre><h2>Modern Approach: Core-First Architecture</h2>
+<h3>Using FormManager (Recommended)</h3>
+<p>The modern way to use Formdown with maximum control and framework independence:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> FormManager <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Create form content</span>
+<span class="token keyword">const</span> formContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+# Contact Form
+
+@name*: [placeholder="Enter your name"]
+@email*: @[placeholder="your.email@example.com"]
+@message: [textarea rows=4 placeholder="Your message"]
+</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+
+<span class="token comment">// Initialize FormManager</span>
+<span class="token keyword">const</span> manager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+manager<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>formContent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Set up reactive updates</span>
+manager<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'data-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> field<span class="token punctuation">,</span> value<span class="token punctuation">,</span> formData <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> changed:</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// Update your UI here</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Render to HTML</span>
+<span class="token keyword">const</span> html <span class="token operator">=</span> manager<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'form-container'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> html<span class="token punctuation">;</span>
+
+<span class="token comment">// Interact with form data</span>
+manager<span class="token punctuation">.</span><span class="token function">setFieldValue</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'John Doe'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Current data:'</span><span class="token punctuation">,</span> manager<span class="token punctuation">.</span><span class="token function">getData</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Validate</span>
+<span class="token keyword">const</span> validation <span class="token operator">=</span> manager<span class="token punctuation">.</span><span class="token function">validate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>validation<span class="token punctuation">.</span>isValid<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Form is valid!'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h3>Using Convenience Functions</h3>
+<p>For quick one-time rendering:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> renderForm <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> html <span class="token operator">=</span> <span class="token function">renderForm</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+@name*: []
+@email*: @[]
+</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> <span class="token punctuation">{</span> 
+  <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'John Doe'</span><span class="token punctuation">,</span> 
+  <span class="token literal-property property">email</span><span class="token operator">:</span> <span class="token string">'john@example.com'</span> 
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+document<span class="token punctuation">.</span>body<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> html<span class="token punctuation">;</span></code></pre><h3>Rendering with Web Components</h3>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://unpkg.com/@formdown/ui<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>formdown-form</span><span class="token punctuation">></span></span>
+@name*: []
+@email*: @[]
+@message: [textarea]
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>formdown-form</span><span class="token punctuation">></span></span></code></pre><h3>Rendering with JavaScript</h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> renderForm <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/ui'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formdownSource <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+@name*: []
+@email*: @[]
+@message: [textarea]
+</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formElement <span class="token operator">=</span> <span class="token function">renderForm</span><span class="token punctuation">(</span>formdownSource<span class="token punctuation">)</span><span class="token punctuation">;</span>
+document<span class="token punctuation">.</span>body<span class="token punctuation">.</span><span class="token function">appendChild</span><span class="token punctuation">(</span>formElement<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h2>Shorthand vs Standard Syntax</h2>
+<p>FormDown offers two ways to write forms:</p>
+<h3>Shorthand (Recommended for Beginners)</h3>
+<pre class="language-markup"><code class="language-markup"># Quick Registration
+
+@username*: []
+@email*: @[]
+@password*: ?[]
+@age: #[min=13]
+@country{USA,Canada,UK}: s[]
+@interests{Web,Mobile,AI}: c[]
+@terms*: c[]</code></pre><p><strong>Benefits:</strong></p>
+<ul>
+<li>✅ <strong>Concise</strong> - Less typing, faster development</li>
+<li>✅ <strong>Intuitive</strong> - Common patterns use familiar symbols</li>
+<li>✅ <strong>Smart</strong> - Automatic label generation</li>
+</ul>
+<h3>Standard (Full Control)</h3>
+<pre class="language-markup"><code class="language-markup"># Detailed Registration
+
+@username: [text required minlength=4 placeholder="Username"]
+@email: [email required]
+@password: [password required minlength=8]
+@age: [number min=13 max=120]
+@country: [select options="USA,Canada,UK"]
+@interests: [checkbox options="Web,Mobile,AI"]
+@terms: [checkbox required label="I agree to terms"]</code></pre><p><strong>Benefits:</strong></p>
+<ul>
+<li>🔧 <strong>Flexible</strong> - Custom attributes and validation</li>
+<li>🎨 <strong>Styling</strong> - CSS classes and data attributes</li>
+<li>📋 <strong>Complex</strong> - Advanced form logic</li>
+</ul>
+<h3>Mixed Usage (Best Practice)</h3>
+<pre class="language-markup"><code class="language-markup"># Registration Form
+
+// Simple fields - use shorthand
+@name*: []
+@email*: @[]
+@phone{(###)###-####}: []
+
+// Complex fields - use standard
+@bio: [textarea rows=4 maxlength=500 placeholder="Tell us about yourself..."]
+@profile_pic: [file accept="image/*" class="upload-field"]</code></pre><h2>Next Steps</h2>
+<ul>
+<li>Check out the <a href="./syntax">Syntax Guide</a> for complete field types and attributes</li>
+<li>Explore the <a href="./editor">Editor Documentation</a> for development tools</li>
+<li>Browse <a href="https://github.com/iyulab/formdown/tree/main/site/public/samples">sample forms</a> for more examples</li>
+</ul>
+<h2>Live Demo</h2>
+<p>Try the <a href="../demo">interactive demo</a> to experiment with Formdown syntax in real-time.</p>
+0:{"buildId":"A9JPmqOZ1bVvxrZXVAH7B","rsc":["$","$1","c",{"children":[["$","$L2",null,{"currentSlug":"quick-start","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Quick Start"}],["$","article",null,{"className":"$3","dangerouslySetInnerHTML":{"__html":"$4"}}]]}]}],["$L5"],"$L6"]}],"loading":null,"isPartial":false}
+5:["$","script","script-0",{"src":"/_next/static/chunks/b364a8343c8c3a75.js","async":true}]
+6:["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]
+9:null

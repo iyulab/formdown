@@ -1,0 +1,265 @@
+1:"$Sreact.fragment"
+2:I[89992,["/_next/static/chunks/e7ce311063862ceb.js","/_next/static/chunks/b364a8343c8c3a75.js"],"default"]
+7:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/7340adf74ff47ec0.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+3:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-24:T5539,<p>FormDown UI (<code>formdown-ui</code>) uses Shadow DOM for style encapsulation. This guide explains how to customize the appearance using official styling APIs.</p>
+<h2>Quick Start</h2>
+<pre class="language-css"><code class="language-css"><span class="token comment">/* Simple theming with CSS Custom Properties */</span>
+<span class="token selector">formdown-ui</span> <span class="token punctuation">{</span>
+  <span class="token property">--formdown-accent-color</span><span class="token punctuation">:</span> #8b5cf6<span class="token punctuation">;</span>
+  <span class="token property">--formdown-input-border-radius</span><span class="token punctuation">:</span> 12px<span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-bg</span><span class="token punctuation">:</span> <span class="token function">linear-gradient</span><span class="token punctuation">(</span>135deg<span class="token punctuation">,</span> #8b5cf6 0%<span class="token punctuation">,</span> #7c3aed 100%<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/* Fine-grained control with ::part */</span>
+<span class="token selector">formdown-ui::part(submit-button)</span> <span class="token punctuation">{</span>
+  <span class="token property">font-weight</span><span class="token punctuation">:</span> 700<span class="token punctuation">;</span>
+  <span class="token property">text-transform</span><span class="token punctuation">:</span> uppercase<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h2>Styling Approaches</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Best For</th>
+<th>Complexity</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CSS Custom Properties</strong></td>
+<td>Global theming, design tokens</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>CSS Shadow Parts (::part)</strong></td>
+<td>Fine-grained element control</td>
+<td>Medium</td>
+</tr>
+</tbody></table>
+<h2>CSS Custom Properties</h2>
+<p>CSS variables pass through Shadow DOM, making them ideal for theming. All variables use the <code>--formdown-*</code> prefix.</p>
+<h3>Colors</h3>
+<pre class="language-css"><code class="language-css"><span class="token selector">formdown-ui</span> <span class="token punctuation">{</span>
+  <span class="token comment">/* Primary Colors */</span>
+  <span class="token property">--formdown-bg-primary</span><span class="token punctuation">:</span> #ffffff<span class="token punctuation">;</span>
+  <span class="token property">--formdown-bg-secondary</span><span class="token punctuation">:</span> #f8fafc<span class="token punctuation">;</span>
+  <span class="token property">--formdown-text-primary</span><span class="token punctuation">:</span> #1f2937<span class="token punctuation">;</span>
+  <span class="token property">--formdown-text-secondary</span><span class="token punctuation">:</span> #64748b<span class="token punctuation">;</span>
+  <span class="token property">--formdown-border-color</span><span class="token punctuation">:</span> #e2e8f0<span class="token punctuation">;</span>
+  <span class="token property">--formdown-accent-color</span><span class="token punctuation">:</span> #3b82f6<span class="token punctuation">;</span>
+
+  <span class="token comment">/* Semantic Colors */</span>
+  <span class="token property">--formdown-error-color</span><span class="token punctuation">:</span> #ef4444<span class="token punctuation">;</span>
+  <span class="token property">--formdown-success-color</span><span class="token punctuation">:</span> #10b981<span class="token punctuation">;</span>
+  <span class="token property">--formdown-warning-color</span><span class="token punctuation">:</span> #f59e0b<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h3>Typography</h3>
+<pre class="language-css"><code class="language-css"><span class="token selector">formdown-ui</span> <span class="token punctuation">{</span>
+  <span class="token property">--formdown-font-family</span><span class="token punctuation">:</span> system-ui<span class="token punctuation">,</span> sans-serif<span class="token punctuation">;</span>
+  <span class="token property">--formdown-font-size-base</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-font-size-sm</span><span class="token punctuation">:</span> 0.875rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-font-size-lg</span><span class="token punctuation">:</span> 1.125rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-line-height</span><span class="token punctuation">:</span> 1.5<span class="token punctuation">;</span>
+  <span class="token property">--formdown-font-weight-medium</span><span class="token punctuation">:</span> 500<span class="token punctuation">;</span>
+  <span class="token property">--formdown-font-weight-bold</span><span class="token punctuation">:</span> 700<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h3>Spacing</h3>
+<pre class="language-css"><code class="language-css"><span class="token selector">formdown-ui</span> <span class="token punctuation">{</span>
+  <span class="token property">--formdown-spacing-xs</span><span class="token punctuation">:</span> 0.25rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-spacing-sm</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-spacing-md</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-spacing-lg</span><span class="token punctuation">:</span> 1.5rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-spacing-xl</span><span class="token punctuation">:</span> 2rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-field-gap</span><span class="token punctuation">:</span> 1.5rem<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h3>Input Elements</h3>
+<pre class="language-css"><code class="language-css"><span class="token selector">formdown-ui</span> <span class="token punctuation">{</span>
+  <span class="token property">--formdown-input-padding</span><span class="token punctuation">:</span> 0.75rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-input-border-width</span><span class="token punctuation">:</span> 1px<span class="token punctuation">;</span>
+  <span class="token property">--formdown-input-border-radius</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-input-focus-ring-width</span><span class="token punctuation">:</span> 3px<span class="token punctuation">;</span>
+  <span class="token property">--formdown-input-focus-ring-color</span><span class="token punctuation">:</span> <span class="token function">rgba</span><span class="token punctuation">(</span>59<span class="token punctuation">,</span> 130<span class="token punctuation">,</span> 246<span class="token punctuation">,</span> 0.1<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h3>Buttons</h3>
+<pre class="language-css"><code class="language-css"><span class="token selector">formdown-ui</span> <span class="token punctuation">{</span>
+  <span class="token property">--formdown-button-bg</span><span class="token punctuation">:</span> <span class="token function">linear-gradient</span><span class="token punctuation">(</span>135deg<span class="token punctuation">,</span> #3b82f6<span class="token punctuation">,</span> #2563eb<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-bg-hover</span><span class="token punctuation">:</span> <span class="token function">linear-gradient</span><span class="token punctuation">(</span>135deg<span class="token punctuation">,</span> #2563eb<span class="token punctuation">,</span> #1d4ed8<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-text</span><span class="token punctuation">:</span> #ffffff<span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-border-radius</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-padding-x</span><span class="token punctuation">:</span> 1.75rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-padding-y</span><span class="token punctuation">:</span> 0.75rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-shadow</span><span class="token punctuation">:</span> 0 2px 4px <span class="token function">rgba</span><span class="token punctuation">(</span>59<span class="token punctuation">,</span> 130<span class="token punctuation">,</span> 246<span class="token punctuation">,</span> 0.2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h3>Sections &amp; Tables</h3>
+<pre class="language-css"><code class="language-css"><span class="token selector">formdown-ui</span> <span class="token punctuation">{</span>
+  <span class="token comment">/* Sections */</span>
+  <span class="token property">--formdown-section-bg</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--formdown-bg-primary<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">--formdown-section-border-radius</span><span class="token punctuation">:</span> 0.5rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-section-padding</span><span class="token punctuation">:</span> 1.25rem<span class="token punctuation">;</span>
+
+  <span class="token comment">/* Tables */</span>
+  <span class="token property">--formdown-table-border-radius</span><span class="token punctuation">:</span> 6px<span class="token punctuation">;</span>
+  <span class="token property">--formdown-table-cell-padding</span><span class="token punctuation">:</span> 0.5rem 1rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-table-header-bg</span><span class="token punctuation">:</span> <span class="token function">var</span><span class="token punctuation">(</span>--formdown-bg-secondary<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h2>CSS Shadow Parts (::part)</h2>
+<p>The <code>::part()</code> pseudo-element enables direct styling of internal elements.</p>
+<h3>Available Parts</h3>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Element</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>field</code></td>
+<td><code>&lt;div&gt;</code></td>
+<td>Field wrapper</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td><code>&lt;label&gt;</code></td>
+<td>Field labels</td>
+</tr>
+<tr>
+<td><code>input</code></td>
+<td><code>&lt;input&gt;</code></td>
+<td>All inputs</td>
+</tr>
+<tr>
+<td><code>text-input</code></td>
+<td><code>&lt;input type=&quot;text&quot;&gt;</code></td>
+<td>Text inputs</td>
+</tr>
+<tr>
+<td><code>textarea-input</code></td>
+<td><code>&lt;textarea&gt;</code></td>
+<td>Textareas</td>
+</tr>
+<tr>
+<td><code>select-input</code></td>
+<td><code>&lt;select&gt;</code></td>
+<td>Dropdowns</td>
+</tr>
+<tr>
+<td><code>checkbox-input</code></td>
+<td><code>&lt;input type=&quot;checkbox&quot;&gt;</code></td>
+<td>Checkboxes</td>
+</tr>
+<tr>
+<td><code>range-input</code></td>
+<td><code>&lt;input type=&quot;range&quot;&gt;</code></td>
+<td>Range sliders</td>
+</tr>
+<tr>
+<td><code>file-input</code></td>
+<td><code>&lt;input type=&quot;file&quot;&gt;</code></td>
+<td>File inputs</td>
+</tr>
+<tr>
+<td><code>fieldset</code></td>
+<td><code>&lt;fieldset&gt;</code></td>
+<td>Fieldsets</td>
+</tr>
+<tr>
+<td><code>legend</code></td>
+<td><code>&lt;legend&gt;</code></td>
+<td>Legends</td>
+</tr>
+<tr>
+<td><code>radio-group</code></td>
+<td><code>&lt;div&gt;</code></td>
+<td>Radio groups</td>
+</tr>
+<tr>
+<td><code>checkbox-group</code></td>
+<td><code>&lt;div&gt;</code></td>
+<td>Checkbox groups</td>
+</tr>
+<tr>
+<td><code>button</code></td>
+<td><code>&lt;button&gt;</code></td>
+<td>All buttons</td>
+</tr>
+<tr>
+<td><code>submit-button</code></td>
+<td><code>&lt;button type=&quot;submit&quot;&gt;</code></td>
+<td>Submit buttons</td>
+</tr>
+<tr>
+<td><code>reset-button</code></td>
+<td><code>&lt;button type=&quot;reset&quot;&gt;</code></td>
+<td>Reset buttons</td>
+</tr>
+</tbody></table>
+<h3>Usage Examples</h3>
+<pre class="language-css"><code class="language-css"><span class="token comment">/* Style all inputs */</span>
+<span class="token selector">formdown-ui::part(input)</span> <span class="token punctuation">{</span>
+  <span class="token property">border-radius</span><span class="token punctuation">:</span> 12px<span class="token punctuation">;</span>
+  <span class="token property">padding</span><span class="token punctuation">:</span> 12px 16px<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/* Style submit button */</span>
+<span class="token selector">formdown-ui::part(submit-button)</span> <span class="token punctuation">{</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">linear-gradient</span><span class="token punctuation">(</span>135deg<span class="token punctuation">,</span> #8b5cf6<span class="token punctuation">,</span> #7c3aed<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">font-weight</span><span class="token punctuation">:</span> 700<span class="token punctuation">;</span>
+  <span class="token property">text-transform</span><span class="token punctuation">:</span> uppercase<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/* Style section headers */</span>
+<span class="token selector">formdown-ui::part(legend)</span> <span class="token punctuation">{</span>
+  <span class="token property">background</span><span class="token punctuation">:</span> <span class="token function">linear-gradient</span><span class="token punctuation">(</span>135deg<span class="token punctuation">,</span> #f1f5f9<span class="token punctuation">,</span> #e2e8f0<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">padding</span><span class="token punctuation">:</span> 0.75rem 1rem<span class="token punctuation">;</span>
+  <span class="token property">border-left</span><span class="token punctuation">:</span> 4px solid #3b82f6<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/* Style labels */</span>
+<span class="token selector">formdown-ui::part(label)</span> <span class="token punctuation">{</span>
+  <span class="token property">font-weight</span><span class="token punctuation">:</span> 600<span class="token punctuation">;</span>
+  <span class="token property">text-transform</span><span class="token punctuation">:</span> uppercase<span class="token punctuation">;</span>
+  <span class="token property">font-size</span><span class="token punctuation">:</span> 0.75rem<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h2>Theme Examples</h2>
+<h3>Dark Mode</h3>
+<pre class="language-css"><code class="language-css"><span class="token selector">formdown-ui.dark</span> <span class="token punctuation">{</span>
+  <span class="token property">--formdown-bg-primary</span><span class="token punctuation">:</span> #1e293b<span class="token punctuation">;</span>
+  <span class="token property">--formdown-bg-secondary</span><span class="token punctuation">:</span> #334155<span class="token punctuation">;</span>
+  <span class="token property">--formdown-text-primary</span><span class="token punctuation">:</span> #f1f5f9<span class="token punctuation">;</span>
+  <span class="token property">--formdown-text-secondary</span><span class="token punctuation">:</span> #94a3b8<span class="token punctuation">;</span>
+  <span class="token property">--formdown-border-color</span><span class="token punctuation">:</span> #475569<span class="token punctuation">;</span>
+  <span class="token property">--formdown-accent-color</span><span class="token punctuation">:</span> #60a5fa<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h3>Purple Theme</h3>
+<pre class="language-css"><code class="language-css"><span class="token selector">formdown-ui.purple</span> <span class="token punctuation">{</span>
+  <span class="token property">--formdown-accent-color</span><span class="token punctuation">:</span> #8b5cf6<span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-bg</span><span class="token punctuation">:</span> <span class="token function">linear-gradient</span><span class="token punctuation">(</span>135deg<span class="token punctuation">,</span> #8b5cf6<span class="token punctuation">,</span> #7c3aed<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token property">--formdown-input-focus-ring-color</span><span class="token punctuation">:</span> <span class="token function">rgba</span><span class="token punctuation">(</span>139<span class="token punctuation">,</span> 92<span class="token punctuation">,</span> 246<span class="token punctuation">,</span> 0.15<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h3>Minimal/Flat Theme</h3>
+<pre class="language-css"><code class="language-css"><span class="token selector">formdown-ui.minimal</span> <span class="token punctuation">{</span>
+  <span class="token property">--formdown-input-border-radius</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-border-radius</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-bg</span><span class="token punctuation">:</span> #3b82f6<span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-shadow</span><span class="token punctuation">:</span> none<span class="token punctuation">;</span>
+  <span class="token property">--formdown-input-focus-ring</span><span class="token punctuation">:</span> 0 0 0 2px #3b82f6<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h3>Touch-Friendly Theme</h3>
+<pre class="language-css"><code class="language-css"><span class="token selector">formdown-ui.touch</span> <span class="token punctuation">{</span>
+  <span class="token property">--formdown-font-size-base</span><span class="token punctuation">:</span> 1.125rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-input-padding</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-input-border-radius</span><span class="token punctuation">:</span> 12px<span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-padding-x</span><span class="token punctuation">:</span> 2rem<span class="token punctuation">;</span>
+  <span class="token property">--formdown-button-padding-y</span><span class="token punctuation">:</span> 1rem<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h2>Per-Instance Styling</h2>
+<p>Different form instances can have different styles:</p>
+<pre class="language-css"><code class="language-css"><span class="token selector">#contact-form formdown-ui</span> <span class="token punctuation">{</span>
+  <span class="token property">--formdown-accent-color</span><span class="token punctuation">:</span> #10b981<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token selector">#login-form formdown-ui</span> <span class="token punctuation">{</span>
+  <span class="token property">--formdown-accent-color</span><span class="token punctuation">:</span> #3b82f6<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h2>Legacy Support</h2>
+<p>For backward compatibility, legacy <code>--theme-*</code> variables are still supported:</p>
+<pre class="language-css"><code class="language-css"><span class="token selector">formdown-ui</span> <span class="token punctuation">{</span>
+  <span class="token property">--theme-accent</span><span class="token punctuation">:</span> #8b5cf6<span class="token punctuation">;</span>  <span class="token comment">/* Still works */</span>
+<span class="token punctuation">}</span></code></pre><h2>Browser Support</h2>
+<ul>
+<li><strong>CSS Custom Properties</strong>: Chrome 49+, Firefox 31+, Safari 9.1+, Edge 15+</li>
+<li><strong>CSS Shadow Parts</strong>: Chrome 73+, Firefox 72+, Safari 13.1+, Edge 79+</li>
+</ul>
+<p>For complete documentation, see <a href="https://github.com/niceplugin/formdown/blob/main/docs/STYLING.md">STYLING.md</a>.</p>
+0:{"buildId":"A9JPmqOZ1bVvxrZXVAH7B","rsc":["$","$1","c",{"children":[["$","$L2",null,{"currentSlug":"styling","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Style Customization"}],["$","article",null,{"className":"$3","dangerouslySetInnerHTML":{"__html":"$4"}}]]}]}],["$L5"],"$L6"]}],"loading":null,"isPartial":false}
+5:["$","script","script-0",{"src":"/_next/static/chunks/b364a8343c8c3a75.js","async":true}]
+6:["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]
+9:null

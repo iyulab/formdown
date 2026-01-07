@@ -38,9 +38,9 @@ describe('HTML5 Compliance', () => {
             const parsed = parser.parseFormdown(content)
             const html = generator.generateHTML(parsed)
             
-            // Each label should have matching for/id attributes
-            expect(html).toMatch(/<label for="username">[\s\S]*<input[^>]*id="username"/)
-            expect(html).toMatch(/<label for="email">[\s\S]*<input[^>]*id="email"/)
+            // Each label should have matching for/id attributes (with part attribute)
+            expect(html).toMatch(/<label for="username"[^>]*>[\s\S]*<input[^>]*id="username"/)
+            expect(html).toMatch(/<label for="email"[^>]*>[\s\S]*<input[^>]*id="email"/)
         })
 
         test('should use fieldset for radio and checkbox groups', () => {
@@ -52,9 +52,9 @@ describe('HTML5 Compliance', () => {
             const parsed = parser.parseFormdown(content)
             const html = generator.generateHTML(parsed)
             
-            // Should have fieldset elements with legends
-            expect(html).toMatch(/<fieldset[^>]*>[\s\S]*<legend>Gender<\/legend>/)
-            expect(html).toMatch(/<fieldset[^>]*>[\s\S]*<legend>Interests<\/legend>/)
+            // Should have fieldset elements with legends (with part attribute)
+            expect(html).toMatch(/<fieldset[^>]*>[\s\S]*<legend[^>]*>Gender<\/legend>/)
+            expect(html).toMatch(/<fieldset[^>]*>[\s\S]*<legend[^>]*>Interests<\/legend>/)
             
             // Should have proper ARIA roles
             expect(html).toMatch(/role="radiogroup"/)

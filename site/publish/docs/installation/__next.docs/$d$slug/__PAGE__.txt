@@ -1,0 +1,232 @@
+1:"$Sreact.fragment"
+2:I[89992,["/_next/static/chunks/e7ce311063862ceb.js","/_next/static/chunks/b364a8343c8c3a75.js"],"default"]
+7:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/7340adf74ff47ec0.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+3:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-24:T4f11,<h2>Quick Start</h2>
+<p>Choose your preferred method to get started with Formdown:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Installation Command</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Core Package (Recommended)</strong></td>
+<td><code>npm install @formdown/core</code></td>
+<td>Framework-agnostic, maximum flexibility</td>
+</tr>
+<tr>
+<td><strong>UI Components</strong></td>
+<td><code>npm install @formdown/ui</code></td>
+<td>Ready-to-use web components</td>
+</tr>
+<tr>
+<td><strong>CDN</strong></td>
+<td><code>&lt;script src=&quot;https://unpkg.com/@formdown/ui@latest/dist/standalone.js&quot;&gt;&lt;/script&gt;</code></td>
+<td>Quick prototyping, static sites</td>
+</tr>
+<tr>
+<td><strong>Editor Tools</strong></td>
+<td><code>npm install @formdown/editor</code></td>
+<td>Development environment</td>
+</tr>
+</tbody></table>
+<h2>Installation Methods</h2>
+<h3>Core Package (Recommended)</h3>
+<p>For maximum flexibility and framework-agnostic usage:</p>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> @formdown/core</code></pre><p><strong>JavaScript usage:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> FormManager<span class="token punctuation">,</span> createFormManager<span class="token punctuation">,</span> renderForm <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Full control with FormManager</span>
+<span class="token keyword">const</span> manager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+manager<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token string">'@name*: [] @email*: @[]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Set up reactive events</span>
+manager<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'data-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> field<span class="token punctuation">,</span> value <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> changed to </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>value<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Render HTML</span>
+<span class="token keyword">const</span> html <span class="token operator">=</span> manager<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'container'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> html<span class="token punctuation">;</span>
+
+<span class="token comment">// Or use convenience functions</span>
+<span class="token keyword">const</span> quickHTML <span class="token operator">=</span> <span class="token function">renderForm</span><span class="token punctuation">(</span><span class="token string">'@name*: []'</span><span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'John Doe'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p><strong>Framework Integration:</strong></p>
+<ul>
+<li>✅ React, Vue, Angular, Svelte</li>
+<li>✅ Vanilla JavaScript</li>
+<li>✅ Node.js server-side rendering</li>
+<li>✅ Complete programmatic control</li>
+<li>✅ Event-driven architecture</li>
+</ul>
+<h3>CDN (Browser)</h3>
+<p>For quick setup and prototyping:</p>
+<pre class="language-html"><code class="language-html"><span class="token doctype"><span class="token punctuation">&lt;!</span><span class="token doctype-tag">DOCTYPE</span> <span class="token name">html</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>html</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>head</span><span class="token punctuation">></span></span>
+    <span class="token comment">&lt;!-- Formdown UI Components --></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://unpkg.com/@formdown/ui@latest/dist/standalone.js<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>head</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>body</span><span class="token punctuation">></span></span>
+    <span class="token comment">&lt;!-- Your Formdown content --></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>formdown-ui</span><span class="token punctuation">></span></span>
+        @name: [text required]
+        @email: [email required]
+        @submit: [submit label="Send"]
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>formdown-ui</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>body</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>html</span><span class="token punctuation">></span></span></code></pre><p><strong>Features:</strong></p>
+<ul>
+<li>✅ Zero build setup</li>
+<li>✅ Works in any HTML page</li>
+<li>✅ Automatic form rendering</li>
+<li>✅ Built-in validation</li>
+</ul>
+<h3>NPM Package</h3>
+<p>For projects using modern build tools:</p>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> @formdown/ui</code></pre><pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Import the component</span>
+<span class="token keyword">import</span> <span class="token string">'@formdown/ui'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Use in your HTML/JSX</span>
+<span class="token operator">&lt;</span>formdown<span class="token operator">-</span>ui<span class="token operator">></span>
+    @name<span class="token operator">*</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    @email<span class="token operator">*</span><span class="token operator">:</span> @<span class="token punctuation">[</span><span class="token punctuation">]</span>
+    @submit<span class="token operator">:</span> <span class="token punctuation">[</span>submit label<span class="token operator">=</span><span class="token string">"Send"</span><span class="token punctuation">]</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>formdown<span class="token operator">-</span>ui<span class="token operator">></span></code></pre><p><strong>Build Tool Support:</strong></p>
+<ul>
+<li>✅ Webpack, Vite, Rollup</li>
+<li>✅ TypeScript definitions included</li>
+<li>✅ Tree-shaking compatible</li>
+<li>✅ ES modules + CommonJS</li>
+</ul>
+<h3>Editor Tools (Development)</h3>
+<p>For enhanced development experience:</p>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> @formdown/editor</code></pre><pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>formdown-editor</span><span class="token punctuation">></span></span>
+    @name*: []
+    @email*: @[]
+    @submit: [submit label="Send"]
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>formdown-editor</span><span class="token punctuation">></span></span></code></pre><p><strong>Editor Features:</strong></p>
+<ul>
+<li>🎨 Live preview</li>
+<li>💡 Syntax highlighting</li>
+<li>🔍 Error detection</li>
+<li>📝 Auto-completion</li>
+</ul>
+<h2>Framework Integration</h2>
+<h3>React</h3>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> @formdown/ui</code></pre><pre class="language-jsx"><code class="language-jsx"><span class="token comment">// App.jsx</span>
+<span class="token keyword">import</span> <span class="token string">'@formdown/ui'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">function</span> <span class="token function">ContactForm</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>formdown-ui</span><span class="token punctuation">></span></span><span class="token plain-text">
+            </span><span class="token punctuation">{</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+            @name*: []
+            @email*: @[]
+            @message: T4[]
+            @submit: [submit label="Send Message"]
+            </span><span class="token template-punctuation string">`</span></span><span class="token punctuation">}</span><span class="token plain-text">
+        </span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>formdown-ui</span><span class="token punctuation">></span></span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre><h3>Vue</h3>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> @formdown/ui</code></pre><pre class="language-markup"><code class="language-markup"><span class="token comment">&lt;!-- App.vue --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>formdown-ui</span><span class="token punctuation">></span></span>
+        @name*: []
+        @email*: @[]
+        @submit: [submit label="Send"]
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>formdown-ui</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+<span class="token keyword">import</span> <span class="token string">'@formdown/ui'</span><span class="token punctuation">;</span>
+<span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">name</span><span class="token operator">:</span> <span class="token string">'ContactForm'</span>
+<span class="token punctuation">}</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span></code></pre><h3>Angular</h3>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> @formdown/ui</code></pre><pre class="language-typescript"><code class="language-typescript"><span class="token comment">// main.ts</span>
+<span class="token keyword">import</span> <span class="token string">'@formdown/ui'</span><span class="token punctuation">;</span></code></pre><pre class="language-html"><code class="language-html"><span class="token comment">&lt;!-- app.component.html --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>formdown-ui</span><span class="token punctuation">></span></span>
+    @name*: []
+    @email*: @[]
+    @submit: [submit label="Send"]
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>formdown-ui</span><span class="token punctuation">></span></span></code></pre><p>Add to <code>angular.json</code>:</p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"projects"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"your-app"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token property">"architect"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"build"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+          <span class="token property">"options"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token property">"allowedCommonJsDependencies"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"@formdown/ui"</span><span class="token punctuation">]</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre><h3>Svelte</h3>
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> @formdown/ui</code></pre><pre class="language-markup"><code class="language-markup"><span class="token comment">&lt;!-- App.svelte --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span><span class="token script"><span class="token language-javascript">
+    <span class="token keyword">import</span> <span class="token string">'@formdown/ui'</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>formdown-ui</span><span class="token punctuation">></span></span>
+    @name*: []
+    @email*: @[]
+    @submit: [submit label="Send"]
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>formdown-ui</span><span class="token punctuation">></span></span></code></pre><h2>Package Overview</h2>
+<table>
+<thead>
+<tr>
+<th>Package</th>
+<th>Size</th>
+<th>Description</th>
+<th>Install</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@formdown/core</code></td>
+<td>~15KB</td>
+<td>Parser engine only</td>
+<td><code>npm install @formdown/core</code></td>
+</tr>
+<tr>
+<td><code>@formdown/ui</code></td>
+<td>~45KB</td>
+<td>Web components + parser</td>
+<td><code>npm install @formdown/ui</code></td>
+</tr>
+<tr>
+<td><code>@formdown/editor</code></td>
+<td>~65KB</td>
+<td>Editor + UI + parser</td>
+<td><code>npm install @formdown/editor</code></td>
+</tr>
+</tbody></table>
+<h2>Next Steps</h2>
+<ol>
+<li><strong><a href="./basics">Basic Syntax</a></strong> - Learn core Formdown syntax</li>
+<li><strong><a href="./shorthand">Shorthand Syntax</a></strong> - Faster form creation</li>
+<li><strong><a href="./examples">Examples</a></strong> - See real-world forms</li>
+<li><strong><a href="./api">JavaScript API</a></strong> - Programmatic control</li>
+</ol>
+<h2>Troubleshooting</h2>
+<h3>Common Issues</h3>
+<p><strong>TypeScript errors:</strong></p>
+<pre class="language-bash"><code class="language-bash"><span class="token comment"># Install type definitions if missing</span>
+<span class="token function">npm</span> <span class="token function">install</span> --save-dev @types/node</code></pre><p><strong>Web component not recognized:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Ensure import is called before using component</span>
+<span class="token keyword">import</span> <span class="token string">'@formdown/ui'</span><span class="token punctuation">;</span></code></pre><p><strong>Bundler issues:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// For Webpack &lt; 5, add to webpack.config.js</span>
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">resolve</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">fallback</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+      <span class="token string-property property">"fs"</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+      <span class="token string-property property">"path"</span><span class="token operator">:</span> <span class="token boolean">false</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>0:{"buildId":"A9JPmqOZ1bVvxrZXVAH7B","rsc":["$","$1","c",{"children":[["$","$L2",null,{"currentSlug":"installation","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Installation"}],["$","article",null,{"className":"$3","dangerouslySetInnerHTML":{"__html":"$4"}}]]}]}],["$L5"],"$L6"]}],"loading":null,"isPartial":false}
+5:["$","script","script-0",{"src":"/_next/static/chunks/b364a8343c8c3a75.js","async":true}]
+6:["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]
+9:null

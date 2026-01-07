@@ -41,6 +41,7 @@ const docItems: DocNavItem[] = [
     { slug: 'shorthand', title: 'Shorthand Syntax' },
     { slug: 'reference', title: 'Field Reference' },
     { slug: 'validation', title: 'Validation' },
+    { slug: 'styling', title: 'Style Customization' },
     { slug: 'api', title: 'JavaScript API' },
     { slug: 'editor', title: 'Editor Tools' },
     { slug: 'examples', title: 'Examples' }

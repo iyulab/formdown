@@ -1,0 +1,357 @@
+1:"$Sreact.fragment"
+2:I[89992,["/_next/static/chunks/e7ce311063862ceb.js","/_next/static/chunks/b364a8343c8c3a75.js"],"default"]
+7:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/7340adf74ff47ec0.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+3:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-24:T2f63,<p>Learn the fundamentals of Formdown syntax to create interactive forms.</p>
+<h2>Core Concept</h2>
+<p>Formdown uses a simple pattern: <code>@field_name: [type attributes]</code></p>
+<pre class="language-markup"><code class="language-markup">@name: [text required]
+@email: [email required]
+@submit: [submit label="Send"]</code></pre><p><strong>That&#39;s it!</strong> This creates a complete form with validation.</p>
+<h2>Field Anatomy</h2>
+<p>Every Formdown field has these parts:</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Required</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>@</code></td>
+<td>✅</td>
+<td>Field marker</td>
+<td><code>@</code></td>
+</tr>
+<tr>
+<td><code>field_name</code></td>
+<td>✅</td>
+<td>Unique identifier</td>
+<td><code>name</code>, <code>email_address</code></td>
+</tr>
+<tr>
+<td><code>(Label)</code></td>
+<td>❌</td>
+<td>Custom label</td>
+<td><code>(Full Name)</code></td>
+</tr>
+<tr>
+<td><code>:</code></td>
+<td>✅</td>
+<td>Separator</td>
+<td><code>:</code></td>
+</tr>
+<tr>
+<td><code>[type attributes]</code></td>
+<td>✅</td>
+<td>Field definition</td>
+<td><code>[text required]</code></td>
+</tr>
+</tbody></table>
+<p><strong>Complete example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@first_name(Full Name): [text required placeholder="Enter your name"]</code></pre><h2>Smart Labels</h2>
+<p>Formdown automatically generates readable labels from field names:</p>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Generated Label</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>name</code></td>
+<td>&quot;Name&quot;</td>
+</tr>
+<tr>
+<td><code>first_name</code></td>
+<td>&quot;First Name&quot;</td>
+</tr>
+<tr>
+<td><code>email_address</code></td>
+<td>&quot;Email Address&quot;</td>
+</tr>
+<tr>
+<td><code>phone_number</code></td>
+<td>&quot;Phone Number&quot;</td>
+</tr>
+<tr>
+<td><code>dateOfBirth</code></td>
+<td>&quot;Date Of Birth&quot;</td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@first_name: []        # Label: "First Name"
+@email_address: []     # Label: "Email Address"
+@phone_number: []      # Label: "Phone Number"</code></pre><h2>Custom Labels</h2>
+<p>Override automatic labels when needed:</p>
+<h3>Method 1: Parentheses (Recommended)</h3>
+<pre class="language-markup"><code class="language-markup">@user_name(Full Name): [text required]
+@contact_email(Email Address): [email required]
+@birth_date(Date of Birth): [date]</code></pre><h3>Method 2: Label Attribute</h3>
+<pre class="language-markup"><code class="language-markup">@user_name: [text required label="Full Name"]
+@contact_email: [email required label="Email Address"]
+@birth_date: [date label="Date of Birth"]</code></pre><p>Both methods produce identical results. Use parentheses for cleaner syntax.</p>
+<h2>Basic Field Types</h2>
+<h3>Text Input Fields</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>text</code></td>
+<td>General text input</td>
+<td><code>@name: [text]</code></td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>Email with validation</td>
+<td><code>@email: [email]</code></td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>Hidden text input</td>
+<td><code>@password: [password]</code></td>
+</tr>
+<tr>
+<td><code>tel</code></td>
+<td>Phone number input</td>
+<td><code>@phone: [tel]</code></td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>URL with validation</td>
+<td><code>@website: [url]</code></td>
+</tr>
+<tr>
+<td><code>number</code></td>
+<td>Numeric input</td>
+<td><code>@age: [number]</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@name: [text required]
+@email: [email required]
+@password: [password minlength=8]
+@phone: [tel]
+@website: [url]
+@age: [number min=18 max=100]</code></pre><h3>Date and Time Fields</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>date</code></td>
+<td>Date picker</td>
+<td><code>@birth_date: [date]</code></td>
+</tr>
+<tr>
+<td><code>time</code></td>
+<td>Time selector</td>
+<td><code>@meeting_time: [time]</code></td>
+</tr>
+<tr>
+<td><code>datetime-local</code></td>
+<td>Date and time</td>
+<td><code>@appointment: [datetime-local]</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@birth_date: [date max="2010-12-31"]
+@meeting_time: [time min="09:00" max="17:00"]
+@appointment: [datetime-local required]</code></pre><h3>Text Area</h3>
+<p>For multi-line text input:</p>
+<pre class="language-markup"><code class="language-markup">@description: [textarea]
+@bio: [textarea rows=4]
+@comments: [textarea rows=6 placeholder="Your thoughts..."]</code></pre><h3>Selection Fields</h3>
+<h4>Radio Buttons (Single Choice)</h4>
+<pre class="language-markup"><code class="language-markup">@size: [radio options="Small,Medium,Large"]
+@priority: [radio options="Low,Medium,High"]</code></pre><h4>Checkboxes</h4>
+<p><strong>Single checkbox (yes/no):</strong></p>
+<pre class="language-markup"><code class="language-markup">@newsletter: [checkbox]
+@terms(I agree to terms): [checkbox required]</code></pre><p><strong>Checkbox group (multiple choice):</strong></p>
+<pre class="language-markup"><code class="language-markup">@interests: [checkbox options="Web,Mobile,AI,Design"]
+@features: [checkbox options="Feature A,Feature B,Feature C"]</code></pre><h4>Select Dropdown</h4>
+<pre class="language-markup"><code class="language-markup">@country: [select options="USA,Canada,UK,Other"]
+@department: [select options="Sales,Marketing,Engineering"]</code></pre><h3>Action Buttons</h3>
+<pre class="language-markup"><code class="language-markup">@submit_form: [submit label="Send Message"]
+@clear_form: [reset label="Clear Form"]
+@preview: [button label="Preview"]</code></pre><h2>Common Attributes</h2>
+<h3>Validation Attributes</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>required</code></td>
+<td>Field must be filled</td>
+<td><code>required</code></td>
+</tr>
+<tr>
+<td><code>minlength</code></td>
+<td>Minimum text length</td>
+<td><code>minlength=3</code></td>
+</tr>
+<tr>
+<td><code>maxlength</code></td>
+<td>Maximum text length</td>
+<td><code>maxlength=100</code></td>
+</tr>
+<tr>
+<td><code>min</code></td>
+<td>Minimum number/date</td>
+<td><code>min=18</code></td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td>Maximum number/date</td>
+<td><code>max=100</code></td>
+</tr>
+<tr>
+<td><code>pattern</code></td>
+<td>Custom validation regex</td>
+<td><code>pattern=&quot;[0-9]{3}-[0-9]{2}-[0-9]{4}&quot;</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@username: [text required minlength=3 maxlength=20]
+@age: [number required min=18 max=120]
+@phone: [tel pattern="\\(\\d{3}\\)\\d{3}-\\d{4}"]</code></pre><h3>Display Attributes</h3>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>placeholder</code></td>
+<td>Hint text</td>
+<td><code>placeholder=&quot;Enter your name&quot;</code></td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td>Default value</td>
+<td><code>value=&quot;John Doe&quot;</code></td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td>Disable field</td>
+<td><code>disabled</code></td>
+</tr>
+<tr>
+<td><code>readonly</code></td>
+<td>Read-only field</td>
+<td><code>readonly</code></td>
+</tr>
+</tbody></table>
+<p><strong>Example:</strong></p>
+<pre class="language-markup"><code class="language-markup">@name: [text placeholder="Enter your full name"]
+@country: [text value="United States"]
+@user_id: [text readonly value="12345"]</code></pre><h3>HTML Attributes</h3>
+<p>All HTML attributes are supported:</p>
+<pre class="language-markup"><code class="language-markup">@email: [email required autocomplete="email" spellcheck="false"]
+@password: [password class="form-control" data-strength="true"]
+@bio: [textarea rows=4 style="border: 2px solid #ccc"]</code></pre><h2>Minimal Syntax</h2>
+<p>For quick prototyping, use minimal syntax:</p>
+<h3>Empty Brackets</h3>
+<pre class="language-markup"><code class="language-markup">@name: []        # Defaults to text input
+@email: []       # Defaults to text input
+@age: []         # Defaults to text input</code></pre><h3>Simple Form</h3>
+<pre class="language-markup"><code class="language-markup"># Contact Form
+@name: []
+@email: []
+@message: [textarea]
+@submit: [submit]</code></pre><p>This creates a working contact form with smart labels and basic validation.</p>
+<h2>Required Fields</h2>
+<p>Mark fields as required using the <code>required</code> attribute:</p>
+<pre class="language-markup"><code class="language-markup">@name: [text required]
+@email: [email required]
+@age: [number required min=18]
+@terms: [checkbox required]</code></pre><p><strong>Required fields show with asterisk (*) in labels.</strong></p>
+<h2>Complete Examples</h2>
+<h3>Contact Form</h3>
+<pre class="language-markup"><code class="language-markup"># Contact Us
+
+@name(Full Name): [text required]
+@email(Email Address): [email required]
+@subject: [text required maxlength=100]
+@message: [textarea required rows=5 placeholder="Your message..."]
+@priority: [radio options="Low,Medium,High"]
+@newsletter(Subscribe to newsletter): [checkbox]
+
+@submit_form: [submit label="Send Message"]</code></pre><h3>Registration Form</h3>
+<pre class="language-markup"><code class="language-markup"># User Registration
+
+@username: [text required minlength=4 pattern="[a-zA-Z0-9_]+"]
+@email: [email required]
+@password: [password required minlength=8]
+@confirm_password(Confirm Password): [password required]
+@birth_date(Date of Birth): [date required max="2010-12-31"]
+@gender: [radio options="Male,Female,Other"]
+@interests: [checkbox options="Technology,Sports,Music,Travel"]
+@terms(I agree to the terms and conditions): [checkbox required]
+
+@register: [submit label="Create Account"]
+@reset: [reset label="Clear Form"]</code></pre><h3>Survey Form</h3>
+<pre class="language-markup"><code class="language-markup"># Customer Satisfaction Survey
+
+@customer_name(Your Name): [text required]
+@email: [email required]
+@service_date(Service Date): [date required]
+@rating(Overall Rating): [radio options="1 - Poor,2 - Fair,3 - Good,4 - Very Good,5 - Excellent"]
+@satisfaction: [select options="Very Dissatisfied,Dissatisfied,Neutral,Satisfied,Very Satisfied"]
+@improvements: [checkbox options="Faster Service,Better Communication,Lower Prices,More Options"]
+@comments: [textarea rows=4 placeholder="Additional comments..."]
+@recommend(Would you recommend us?): [radio options="Yes,No,Maybe"]
+
+@submit_survey: [submit label="Submit Survey"]</code></pre><h2>Next Steps</h2>
+<ol>
+<li><strong><a href="./shorthand">Shorthand Syntax</a></strong> - Learn faster form creation</li>
+<li><strong><a href="./reference">Field Reference</a></strong> - Complete field type reference</li>
+<li><strong><a href="./validation">Validation</a></strong> - Advanced validation rules</li>
+<li><strong><a href="./examples">Examples</a></strong> - More real-world examples</li>
+</ol>
+<h2>Tips</h2>
+<h3>Field Naming</h3>
+<ul>
+<li>Use descriptive names: <code>email_address</code> not <code>email</code></li>
+<li>Use snake_case for consistency: <code>first_name</code> not <code>firstname</code></li>
+<li>Avoid starting with numbers: <code>user_1</code> not <code>1st_user</code></li>
+</ul>
+<h3>Organization</h3>
+<ul>
+<li>Group related fields together</li>
+<li>Use headers (<code>#</code>, <code>##</code>) to organize sections</li>
+<li>Add descriptive text between field groups</li>
+</ul>
+<h3>Validation</h3>
+<ul>
+<li>Always mark required fields</li>
+<li>Use appropriate input types (<code>email</code>, <code>tel</code>, <code>number</code>)</li>
+<li>Add reasonable constraints (<code>min</code>, <code>max</code>, <code>maxlength</code>)</li>
+</ul>
+<h3>Labels</h3>
+<ul>
+<li>Let smart generation handle simple cases</li>
+<li>Use custom labels for clarity when needed</li>
+<li>Keep labels concise but descriptive</li>
+</ul>
+0:{"buildId":"A9JPmqOZ1bVvxrZXVAH7B","rsc":["$","$1","c",{"children":[["$","$L2",null,{"currentSlug":"basics","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Basic Syntax"}],["$","article",null,{"className":"$3","dangerouslySetInnerHTML":{"__html":"$4"}}]]}]}],["$L5"],"$L6"]}],"loading":null,"isPartial":false}
+5:["$","script","script-0",{"src":"/_next/static/chunks/b364a8343c8c3a75.js","async":true}]
+6:["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]
+9:null

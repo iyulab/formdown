@@ -1,0 +1,736 @@
+1:"$Sreact.fragment"
+2:I[89992,["/_next/static/chunks/e7ce311063862ceb.js","/_next/static/chunks/b364a8343c8c3a75.js"],"default"]
+7:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/7340adf74ff47ec0.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+3:T629,prose prose-lg max-w-none   prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-semibold   prose-h1:text-2xl prose-h1:border-b prose-h1:border-gray-200 dark:prose-h1:border-gray-700 prose-h1:pb-3 prose-h1:mb-6   prose-h2:text-xl prose-h2:mt-8 prose-h2:mb-4   prose-h3:text-lg prose-h3:mt-6 prose-h3:mb-3   prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed   prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline   prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold   prose-code:text-pink-600 dark:prose-code:text-pink-400 prose-code:bg-pink-50 dark:prose-code:bg-pink-900/30 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm   prose-pre:bg-gray-900 dark:prose-pre:bg-black prose-pre:text-gray-100 dark:prose-pre:text-gray-200 prose-pre:rounded-lg prose-pre:p-4   prose-blockquote:border-l-4 prose-blockquote:border-blue-200 dark:prose-blockquote:border-blue-700 prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:pl-4 prose-blockquote:py-2   prose-ul:my-4 prose-ol:my-4   prose-li:text-gray-700 dark:prose-li:text-gray-300   prose-table:border-collapse prose-table:border prose-table:border-gray-300 dark:prose-table:border-gray-600   prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:border prose-th:border-gray-300 dark:prose-th:border-gray-600 prose-th:px-3 prose-th:py-2 prose-th:text-left   prose-td:border prose-td:border-gray-300 dark:prose-td:border-gray-600 prose-td:px-3 prose-td:py-24:T1097a,<h2>🎯 HTML5 Datalist Support (Latest - Phase 2)</h2>
+<p><strong>Major Enhancement:</strong> Complete HTML5 datalist support for advanced autocomplete functionality with dual syntax options.</p>
+<h3>What&#39;s New</h3>
+<p>FormDown now supports HTML5 datalist elements for enhanced user experience:</p>
+<ul>
+<li><strong>Dual Syntax Support</strong>: Both explicit declarations and shorthand auto-generation</li>
+<li><strong>Autocomplete UX</strong>: Native browser autocomplete with custom option lists  </li>
+<li><strong>Smart Deduplication</strong>: Automatic reuse of identical option lists</li>
+<li><strong>XSS Protection</strong>: All datalist options are HTML-escaped for security</li>
+<li><strong>Form Integration</strong>: Seamless integration with Hidden Form Architecture</li>
+</ul>
+<h3>Quick Examples</h3>
+<p><strong>Explicit Datalist Declaration (Reusable):</strong></p>
+<pre class="language-markup"><code class="language-markup">@datalist[id="countries" options="Korea,Japan,China,USA,Canada,UK"]
+@datalist[id="languages" options="JavaScript,TypeScript,Python,Java,Go,Rust"]
+
+@country(Preferred Country): [text datalist="countries" autocomplete="country"]
+@language(Primary Language): [text datalist="languages"]</code></pre><p><strong>Shorthand Auto-Generation (Quick):</strong></p>
+<pre class="language-markup"><code class="language-markup">@city{Seoul,Tokyo,Beijing,New York,London}: [text autocomplete="address-level2"]
+@framework{React,Vue,Angular,Svelte}: [text]
+@status{Active,Inactive,Pending}: [text]</code></pre><p><strong>Complete Registration Form:</strong></p>
+<pre class="language-markup"><code class="language-markup">@form[action="/register" method="POST"]
+
+# User Registration with Autocomplete
+
+@datalist[id="countries" options="Korea,Japan,China,USA,Canada,UK,Germany,France"]
+
+@name(Full Name): [text required minlength=2]
+@email(Email Address): [email required]
+@country(Country): [text datalist="countries" autocomplete="country"]
+@city{Seoul,Tokyo,Beijing,New York,London,Paris}: [text autocomplete="address-level2"]
+
+@skills{JavaScript,Python,React,Node.js,AWS,Docker}: [text placeholder="Start typing..."]
+@timezone{UTC,PST,EST,JST,CET,KST}: [text]
+
+@[submit "Complete Registration"]</code></pre><h3>Key Benefits</h3>
+<ol>
+<li><strong>Enhanced UX</strong>: Native browser autocomplete with custom suggestions</li>
+<li><strong>Flexibility</strong>: Choose between explicit reusable lists or quick shorthand</li>
+<li><strong>Performance</strong>: Smart deduplication prevents duplicate datalist elements</li>
+<li><strong>Standards Compliant</strong>: Uses native HTML5 <code>&lt;datalist&gt;</code> and <code>list</code> attribute</li>
+<li><strong>Accessibility</strong>: Full keyboard navigation and screen reader support</li>
+</ol>
+<h3>Technical Features</h3>
+<ul>
+<li><strong>Smart ID Generation</strong>: Hash-based unique IDs for shorthand syntax</li>
+<li><strong>Validation</strong>: Proper error handling for missing/empty attributes  </li>
+<li><strong>HTML Output</strong>: Clean <code>&lt;datalist&gt;&lt;option&gt;</code> structure generation</li>
+<li><strong>Browser Fallback</strong>: Graceful degradation to regular text inputs</li>
+</ul>
+<p><a href="/demo"><strong>Try the Interactive Demo →</strong></a></p>
+<hr>
+<h2>🎯 Enhanced Action Elements (Latest - Phase 2)</h2>
+<p><strong>Major Enhancement:</strong> Improved action element syntax for better semantic clarity and Markdown compatibility.</p>
+<h3>What&#39;s New</h3>
+<p>Enhanced action element syntax that clearly distinguishes user actions from input fields:</p>
+<ul>
+<li><strong>Semantic Clarity</strong>: Actions (<code>@[action]</code>) vs. Input Fields (<code>@field: [type]</code>)</li>
+<li><strong>Markdown Compatibility</strong>: Avoids confusion with Markdown link syntax</li>
+<li><strong>Concise Syntax</strong>: More intuitive and less verbose than legacy approach</li>
+<li><strong>Full Backward Compatibility</strong>: Both syntaxes work seamlessly together</li>
+</ul>
+<h3>New Action Syntax (Recommended)</h3>
+<pre class="language-markup"><code class="language-markup">@[submit "Send Message"]                           # Submit button
+@[reset "Clear Form"]                              # Reset button  
+@[button "Calculate" onclick="calculate()"]        # Custom button
+@[image "Submit Order" src="/submit.png"]          # Image button</code></pre><p><strong>With Advanced Styling:</strong></p>
+<pre class="language-markup"><code class="language-markup">@[submit "Complete Registration" class="btn btn-success btn-lg"]
+@[button "Save Draft" class="btn btn-warning" onclick="saveDraft()"]
+@[reset "Start Over" class="btn btn-outline-secondary"]</code></pre><h3>Complete Form Example</h3>
+<pre class="language-markup"><code class="language-markup">@form[action="/contact" method="POST"]
+
+# Contact Form with Enhanced Actions
+
+@name(Full Name): [text required minlength=2]
+@email(Email Address): [email required]
+@message: [textarea required rows=4 placeholder="Your message..."]
+
+@priority{Low,Medium,High}: [radio]
+@newsletter: [checkbox content="Subscribe to our newsletter"]
+
+@[submit "Send Message" class="btn btn-primary"]
+@[reset "Clear Form" class="btn btn-outline-secondary"]
+@[button "Save Draft" class="btn btn-warning" onclick="saveDraft()"]</code></pre><h3>Benefits</h3>
+<ul>
+<li>✅ <strong>Clear Semantics</strong>: Immediate distinction between data input and user actions</li>
+<li>✅ <strong>Better Readability</strong>: Action intent is obvious at first glance</li>
+<li>✅ <strong>Markdown Safe</strong>: No conflicts with <code>[text](url)</code> link syntax</li>
+<li>✅ <strong>Framework Ready</strong>: Generated HTML works with all CSS frameworks</li>
+<li>✅ <strong>Backward Compatible</strong>: Legacy <code>@button: [submit]</code> syntax still supported</li>
+</ul>
+<p><a href="/samples/file-button-fields.fd"><strong>View Action Elements Demo →</strong></a></p>
+<hr>
+<h2>🎉 Core-First Architecture Phase 2 Complete</h2>
+<p><strong>Major Achievement:</strong> Revolutionary <strong>FormManager + 4 Core modules</strong> architecture with 100% legacy code elimination and complete UI/Editor integration.</p>
+<h3>Phase 2 Achievements</h3>
+<h4>⭐ <strong>Core Module System Complete</strong></h4>
+<ul>
+<li><strong>FormManager</strong>: Central coordinator with 12+ UI/Editor integration APIs</li>
+<li><strong>FieldProcessor</strong>: Field type processing, validation, and value extraction</li>
+<li><strong>DOMBinder</strong>: DOM manipulation, event handling, and data synchronization</li>
+<li><strong>ValidationManager</strong>: Async validation pipelines with caching and debouncing</li>
+<li><strong>EventOrchestrator</strong>: Component-to-component event coordination and bridging</li>
+</ul>
+<h4>🎨 <strong>FormdownUI Optimization (Phase 2.1)</strong></h4>
+<ul>
+<li><strong>Code Reduction</strong>: 1307 lines → 1186 lines (9.3% optimization)</li>
+<li><strong>100% Core Integration</strong>: All DOM operations delegated to DOMBinder</li>
+<li><strong>Legacy Elimination</strong>: processFormHTML removed, renderToTemplate adopted</li>
+<li><strong>Performance Boost</strong>: Streamlined event handling via Core modules</li>
+</ul>
+<h4>✏️ <strong>FormdownEditor Enhancement (Phase 2.2)</strong></h4>
+<ul>
+<li><strong>Core Integration</strong>: 100% EventOrchestrator and FormManager delegation</li>
+<li><strong>Template Consolidation</strong>: templates.ts eliminated, inline rendering</li>
+<li><strong>Real-time Power</strong>: createPreviewTemplate for instant Core-powered parsing</li>
+<li><strong>Architecture Achievement</strong>: Complete legacy code elimination</li>
+</ul>
+<h3>FormManager - The Central API</h3>
+<p>The FormManager class is the heart of the new architecture:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> FormManager<span class="token punctuation">,</span> createFormManager <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Full control approach</span>
+<span class="token keyword">const</span> manager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+manager<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span><span class="token string">'@name*: [placeholder="Enter name"]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+manager<span class="token punctuation">.</span><span class="token function">setFieldValue</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'John Doe'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> html <span class="token operator">=</span> manager<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Convenience approach  </span>
+<span class="token keyword">const</span> quickManager <span class="token operator">=</span> <span class="token function">createFormManager</span><span class="token punctuation">(</span><span class="token string">'@email*: @[]'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+quickManager<span class="token punctuation">.</span><span class="token function">updateData</span><span class="token punctuation">(</span><span class="token punctuation">{</span> <span class="token literal-property property">email</span><span class="token operator">:</span> <span class="token string">'user@example.com'</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3>Key Benefits</h3>
+<ol>
+<li><strong>Framework Independence</strong>: Use Formdown with React, Vue, Angular, or vanilla JS</li>
+<li><strong>Business Logic Separation</strong>: All form logic centralized in Core package</li>
+<li><strong>Event-Driven Reactivity</strong>: Subscribe to data changes, validation events, form submission</li>
+<li><strong>Enhanced Reusability</strong>: Same Core logic across different presentation layers</li>
+<li><strong>Easier Testing</strong>: Test business logic independently of UI components</li>
+<li><strong>Better Maintainability</strong>: Single source of truth for form behavior</li>
+</ol>
+<h3>Migration Path</h3>
+<p>Existing code continues to work unchanged. The new architecture is additive:</p>
+<p><strong>Legacy approach (still works):</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> parseFormdown<span class="token punctuation">,</span> generateFormHTML <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> parsed <span class="token operator">=</span> <span class="token function">parseFormdown</span><span class="token punctuation">(</span>content<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> html <span class="token operator">=</span> <span class="token function">generateFormHTML</span><span class="token punctuation">(</span>parsed<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p><strong>Modern approach (recommended):</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> FormManager <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> manager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+manager<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>content<span class="token punctuation">)</span><span class="token punctuation">;</span>
+manager<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'data-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> field<span class="token punctuation">,</span> value <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> changed to </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>value<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> html <span class="token operator">=</span> manager<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><h3>Complete Example</h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> FormManager <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span><span class="token punctuation">;</span>
+
+<span class="token keyword">const</span> formContent <span class="token operator">=</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+# User Registration
+
+@name(Full Name)*: [placeholder="Enter your full name"]
+@email(Email Address)*: @[placeholder="your.email@example.com"]
+@age: [number min=18 max=100 value=25]
+@interests{Web,Mobile,AI,*(Custom Interest)}: c[]
+</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">;</span>
+
+<span class="token comment">// Create and initialize form manager</span>
+<span class="token keyword">const</span> manager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">FormManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+manager<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>formContent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Set up reactive event handlers</span>
+manager<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'data-change'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> field<span class="token punctuation">,</span> value<span class="token punctuation">,</span> formData <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Field </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string"> changed:</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Full form data:'</span><span class="token punctuation">,</span> formData<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+manager<span class="token punctuation">.</span><span class="token function">on</span><span class="token punctuation">(</span><span class="token string">'validation-error'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token punctuation">{</span> field<span class="token punctuation">,</span> errors <span class="token punctuation">}</span></span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Validation error in </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">:</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">,</span> errors<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Interact with form data</span>
+manager<span class="token punctuation">.</span><span class="token function">setFieldValue</span><span class="token punctuation">(</span><span class="token string">'name'</span><span class="token punctuation">,</span> <span class="token string">'Jane Smith'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+manager<span class="token punctuation">.</span><span class="token function">updateData</span><span class="token punctuation">(</span><span class="token punctuation">{</span> 
+  <span class="token literal-property property">email</span><span class="token operator">:</span> <span class="token string">'jane@example.com'</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">interests</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">'Web'</span><span class="token punctuation">,</span> <span class="token string">'Custom Framework'</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Validate and render</span>
+<span class="token keyword">const</span> validation <span class="token operator">=</span> manager<span class="token punctuation">.</span><span class="token function">validate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>validation<span class="token punctuation">.</span>isValid<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> html <span class="token operator">=</span> manager<span class="token punctuation">.</span><span class="token function">render</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  document<span class="token punctuation">.</span>body<span class="token punctuation">.</span>innerHTML <span class="token operator">=</span> html<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// Check for changes</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Form has changes:'</span><span class="token punctuation">,</span> manager<span class="token punctuation">.</span><span class="token function">isDirty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Current data:'</span><span class="token punctuation">,</span> manager<span class="token punctuation">.</span><span class="token function">getData</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p><a href="/docs/api#formmanager-class"><strong>Learn More →</strong></a></p>
+<hr>
+<h2>🎯 Value Attribute for Default Values (Latest)</h2>
+<p><strong>Major Release:</strong> Comprehensive default value support for all field types using the intuitive <code>value</code> attribute.</p>
+<h3>What&#39;s New</h3>
+<p>The Value Attribute system provides:</p>
+<ul>
+<li><strong>Universal Support</strong>: Default values for all field types (text, select, radio, checkbox, etc.)</li>
+<li><strong>Type-Aware Processing</strong>: Automatic value conversion and validation</li>
+<li><strong>Selection Pre-selection</strong>: Pre-check radio buttons, checkboxes, and select options</li>
+<li><strong>Boolean Support</strong>: <code>value=true/false</code> for single checkboxes</li>
+<li><strong>Multiple Values</strong>: <code>value=&quot;A,B,C&quot;</code> for checkbox groups</li>
+<li><strong>Clean Syntax</strong>: Natural, HTML-like attribute syntax</li>
+</ul>
+<h3>Quick Examples</h3>
+<pre class="language-markup"><code class="language-markup"># Contact Form with Defaults
+
+@form[action="/contact" method="POST"]
+
+// Text fields with default values
+@name: [text value="John Doe" placeholder="Enter your full name"]
+@email: [email value="user@example.com" required]
+@phone: [tel value="+1-555-0123"]
+
+// Number fields with defaults
+@age: [number value=25 min=18 max=100]
+@quantity: [number value=1 min=1 max=10]
+
+// Date/time fields with defaults  
+@meeting_date: [date value="2024-12-25"]
+@appointment_time: [time value="14:30"]
+
+// Text area with default content
+@message: [textarea value="Please enter your message here..." rows=4]
+
+// Selection fields with defaults
+@country: [select value="USA" options="USA,Canada,UK,Australia"]
+@priority: [radio value="Medium" options="Low,Medium,High"]
+@features: [checkbox value="Email,SMS" options="Email,SMS,Push,Phone"]
+
+// Single checkbox (boolean)
+@newsletter: [checkbox value=true content="Subscribe to newsletter"]
+
+// Range with default value
+@satisfaction: [range value=8 min=1 max=10]</code></pre><h3>Key Benefits</h3>
+<ol>
+<li><strong>Intuitive Syntax</strong>: Uses familiar HTML <code>value</code> attribute pattern</li>
+<li><strong>Type Safety</strong>: Automatic type conversion for numbers, booleans, dates</li>
+<li><strong>Selection Logic</strong>: Smart pre-selection for radio, checkbox, and select fields</li>
+<li><strong>Edge Case Handling</strong>: Graceful handling of invalid or missing values</li>
+<li><strong>HTML Standards</strong>: Generates proper <code>selected</code>, <code>checked</code>, and <code>value</code> attributes</li>
+</ol>
+<p><a href="/docs/syntax#default-values-with-value-attribute"><strong>Learn More →</strong></a></p>
+<hr>
+<h2>🏗️ Hidden Form Architecture</h2>
+<p><strong>Major Release:</strong> Revolutionary form architecture that separates form definition from field positioning for maximum styling flexibility.</p>
+<h3>What&#39;s New</h3>
+<p>The Hidden Form Architecture provides:</p>
+<ul>
+<li><strong>Clean Styling</strong>: No form wrapper interfering with CSS layout</li>
+<li><strong>Flexible Positioning</strong>: Fields can be placed anywhere in the document  </li>
+<li><strong>Multiple Forms</strong>: Support multiple forms in one document</li>
+<li><strong>HTML Standards</strong>: Uses native HTML <code>form</code> attribute for proper association</li>
+<li><strong>Accessibility</strong>: Maintains proper form semantics and screen reader support</li>
+</ul>
+<h3>How It Works</h3>
+<p>Traditional form builders wrap fields in visible <code>&lt;form&gt;</code> elements, which can interfere with CSS layouts. Formdown&#39;s Hidden Form Architecture solves this:</p>
+<pre class="language-markup"><code class="language-markup">@form[action="/submit" method="POST"]
+
+@name: [text required]
+@email: [email required]</code></pre><p>Generates:</p>
+<pre class="language-html"><code class="language-html"><span class="token comment">&lt;!-- Hidden form - no layout impact --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">hidden</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-form-1<span class="token punctuation">"</span></span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>/submit<span class="token punctuation">"</span></span> <span class="token attr-name">method</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>POST<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span>
+
+<span class="token comment">&lt;!-- Fields with form association --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-field<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span> <span class="token attr-name">for</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Name *<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>text<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span> <span class="token attr-name">required</span> <span class="token attr-name">form</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-form-1<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-field<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>label</span> <span class="token attr-name">for</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>Email *<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>label</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span> <span class="token attr-name">required</span> <span class="token attr-name">form</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>formdown-form-1<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span></code></pre><h3>Multiple Forms Example</h3>
+<pre class="language-markup"><code class="language-markup"># Multi-Form Document
+
+@form[id="login" action="/login" method="POST"]
+
+## Login
+@username: [text required]
+@password: [password required]
+
+@form[id="register" action="/register" method="POST"]
+
+## Register  
+@new_username: [text required]
+@new_password: [password required]
+@email: [email required]
+
+// Explicit form association
+@special_field: [text form="login"]</code></pre><h3>Benefits</h3>
+<ul>
+<li>✅ <strong>Clean CSS</strong>: No form wrapper interfering with layout</li>
+<li>✅ <strong>Flexible Design</strong>: Fields positioned anywhere in content</li>
+<li>✅ <strong>Multiple Forms</strong>: Several forms in one document</li>
+<li>✅ <strong>Modern Standards</strong>: Uses HTML5 <code>form</code> attribute</li>
+<li>✅ <strong>Backward Compatible</strong>: Existing code works unchanged</li>
+</ul>
+<p><a href="/docs/syntax#hidden-form-architecture"><strong>Learn More →</strong></a></p>
+<hr>
+<h2>📋 Field Helper API</h2>
+<p><strong>Major Release:</strong> Introducing the <strong>FormdownFieldHelper</strong> API - a predictable and rational interface for programmatic form interaction with automatic &quot;other&quot; option handling.</p>
+<h3>What&#39;s New</h3>
+<p>The Field Helper API provides:</p>
+<ul>
+<li><strong>Predictable Interface</strong>: Consistent method signatures across all field types</li>
+<li><strong>Automatic Other Options</strong>: Smart detection and handling of custom options</li>
+<li><strong>Type-Specific Behavior</strong>: Optimized for single-value (radio, select) and multi-value (checkbox) fields</li>
+<li><strong>Clean Data Structure</strong>: No <code>_other</code> field suffixes in form data</li>
+<li><strong>Real-time Updates</strong>: Automatic DOM event dispatching</li>
+<li><strong>Error Handling</strong>: Safe operations with clear success/failure indicators</li>
+</ul>
+<h3>Quick Example</h3>
+<pre class="language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> FormdownFieldHelper <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Form with other options</span>
+<span class="token comment">// @priority{Low,Medium,High,*(Priority Level)}: r[]</span>
+<span class="token comment">// @skills{JavaScript,Python,Java,*(Other Skills)}: c[]</span>
+
+<span class="token comment">// Set values (automatically uses other options when needed)</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">,</span> <span class="token string">'Critical'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token comment">// → Uses "Priority Level" other option</span>
+FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">,</span> <span class="token string">'Rust'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>          <span class="token comment">// → Uses "Other Skills" other option</span>
+
+<span class="token comment">// Get clean data</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment">// → "Critical"</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token string">'skills'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>     <span class="token comment">// → ["Rust"] (or existing + new)</span>
+
+<span class="token comment">// Field information</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">getFieldType</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// → 'radio'</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>FormdownFieldHelper<span class="token punctuation">.</span><span class="token function">isOtherValue</span><span class="token punctuation">(</span><span class="token string">'priority'</span><span class="token punctuation">,</span> <span class="token string">'Critical'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// → true</span></code></pre><h3>Key Benefits</h3>
+<ol>
+<li><strong>Automatic Other Detection</strong>: Values not in predefined options automatically use other option</li>
+<li><strong>Clean Data</strong>: Form data structure remains simple: <code>{priority: &quot;Critical&quot;}</code> instead of <code>{priority: &quot;_other&quot;, priority_other: &quot;Critical&quot;}</code></li>
+<li><strong>Type Safety</strong>: Full TypeScript support with proper typing</li>
+<li><strong>Consistent API</strong>: Same methods work across radio, checkbox, select, and text fields</li>
+</ol>
+<p><a href="/docs/field-helper"><strong>Learn More →</strong></a></p>
+<hr>
+<h2>🔌 Extension System</h2>
+<p><strong>Major Release:</strong> Formdown now features a complete plugin architecture that allows developers to customize and extend every aspect of form parsing, generation, and validation.</p>
+<h3>What&#39;s New</h3>
+<p>The extension system provides:</p>
+<ul>
+<li><strong>Hook-based Architecture</strong>: 14 different hook types for maximum customization</li>
+<li><strong>Plugin System</strong>: Complete plugin lifecycle management with error handling</li>
+<li><strong>Type Safety</strong>: Full TypeScript support with compile-time validation</li>
+<li><strong>Event System</strong>: Plugin communication through events</li>
+<li><strong>Field Type Plugins</strong>: Create entirely new field types</li>
+<li><strong>Theme Integration</strong>: Complete styling and layout customization</li>
+<li><strong>Validation Extensions</strong>: Custom validation rules and logic</li>
+</ul>
+<h3>Quick Example</h3>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">import</span> <span class="token punctuation">{</span> ExtensionManager <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'@formdown/core'</span>
+
+<span class="token keyword">const</span> extensionManager <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ExtensionManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment">// Register a Bootstrap theme plugin</span>
+extensionManager<span class="token punctuation">.</span><span class="token function">registerPlugin</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  metadata<span class="token operator">:</span> <span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'bootstrap-theme'</span><span class="token punctuation">,</span>
+    version<span class="token operator">:</span> <span class="token string">'1.0.0'</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  hooks<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'css-class'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      context<span class="token punctuation">.</span>field<span class="token punctuation">.</span>attributes<span class="token punctuation">.</span>className <span class="token operator">=</span> <span class="token string">'form-control'</span>
+      <span class="token keyword">return</span> context
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token comment">// Use with existing functions</span>
+<span class="token keyword">const</span> ast <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">parseForm</span><span class="token punctuation">(</span>source<span class="token punctuation">,</span> <span class="token punctuation">{</span> extensionManager <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> html <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token function">generateHTML</span><span class="token punctuation">(</span>ast<span class="token punctuation">,</span> <span class="token punctuation">{</span> extensionManager <span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre><h3>Real-World Plugin Examples</h3>
+<p><strong>Credit Card Field Type:</strong></p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">const</span> creditCardPlugin <span class="token operator">=</span> <span class="token punctuation">{</span>
+  fieldTypes<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    type<span class="token operator">:</span> <span class="token string">'credit-card'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">parser</span><span class="token operator">:</span> <span class="token punctuation">(</span>content<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+      name<span class="token operator">:</span> <span class="token string">'cardNumber'</span><span class="token punctuation">,</span>
+      type<span class="token operator">:</span> <span class="token string">'credit-card'</span><span class="token punctuation">,</span>
+      attributes<span class="token operator">:</span> <span class="token punctuation">{</span>
+        pattern<span class="token operator">:</span> <span class="token string">'[0-9\\s]{13,19}'</span><span class="token punctuation">,</span>
+        inputmode<span class="token operator">:</span> <span class="token string">'numeric'</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">validator</span><span class="token operator">:</span> <span class="token punctuation">(</span>field<span class="token punctuation">,</span> value<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token function">isValidCreditCard</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">generator</span><span class="token operator">:</span> <span class="token punctuation">(</span>field<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">
+      &lt;input type="text" 
+             pattern="</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>field<span class="token punctuation">.</span>attributes<span class="token punctuation">.</span>pattern<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">"
+             inputmode="numeric" />
+    </span><span class="token template-punctuation string">`</span></span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre><p><strong>Internationalization Plugin:</strong></p>
+<pre class="language-typescript"><code class="language-typescript"><span class="token keyword">const</span> i18nPlugin <span class="token operator">=</span> <span class="token punctuation">{</span>
+  hooks<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">{</span>
+    name<span class="token operator">:</span> <span class="token string">'post-parse'</span><span class="token punctuation">,</span>
+    <span class="token function-variable function">handler</span><span class="token operator">:</span> <span class="token punctuation">(</span>context<span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> locale <span class="token operator">=</span> <span class="token function">getCurrentLocale</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+      context<span class="token punctuation">.</span>parseResult<span class="token punctuation">.</span>fields<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>field <span class="token operator">=></span> <span class="token punctuation">{</span>
+        field<span class="token punctuation">.</span>label <span class="token operator">=</span> <span class="token function">translate</span><span class="token punctuation">(</span>field<span class="token punctuation">.</span>label<span class="token punctuation">,</span> locale<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      <span class="token keyword">return</span> context
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span></code></pre><h3>Built-in Features</h3>
+<ul>
+<li><strong>Error Handling</strong>: Robust error isolation and recovery</li>
+<li><strong>Performance Management</strong>: Timeout controls and profiling</li>
+<li><strong>Testing Utilities</strong>: Comprehensive testing framework for plugins</li>
+<li><strong>Documentation</strong>: Complete API reference and examples</li>
+</ul>
+<h3>Migration Path</h3>
+<p>Existing code continues to work unchanged. Extensions are completely optional:</p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Existing code (still works)</span>
+<span class="token keyword">const</span> html <span class="token operator">=</span> <span class="token function">generateHTML</span><span class="token punctuation">(</span>ast<span class="token punctuation">)</span>
+
+<span class="token comment">// With extensions (new capability)  </span>
+<span class="token keyword">const</span> html <span class="token operator">=</span> <span class="token function">generateHTML</span><span class="token punctuation">(</span>ast<span class="token punctuation">,</span> <span class="token punctuation">{</span> extensionManager <span class="token punctuation">}</span><span class="token punctuation">)</span></code></pre><p><a href="./extensions.md">→ Learn more about the Extension System</a></p>
+<hr>
+<h2>Smart Field Ordering</h2>
+<p><strong>Problem Solved:</strong> Previously, all form fields were grouped together, breaking the natural flow of markdown content.</p>
+<p><strong>Now:</strong> Fields maintain their exact position in the markdown document, preserving content structure and flow.</p>
+<h3>Before vs After</h3>
+<p><strong>Before (Old Behavior):</strong></p>
+<pre class="language-markup"><code class="language-markup"># Registration
+
+## Personal Details
+@name: [text required]
+@email: [email required]
+
+We value your privacy.
+
+## Account Settings  
+@username: [text required]
+@password: [password required]</code></pre><p>Would render as:</p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">></span></span>Registration<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h2</span><span class="token punctuation">></span></span>Personal Details<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h2</span><span class="token punctuation">></span></span>
+
+<span class="token comment">&lt;!-- ALL FIELDS GROUPED HERE --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span><span class="token punctuation">></span></span> 
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span>We value your privacy.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h2</span><span class="token punctuation">></span></span>Account Settings<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h2</span><span class="token punctuation">></span></span>
+<span class="token comment">&lt;!-- No fields here! --></span></code></pre><p><strong>After (New Behavior):</strong></p>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">></span></span>Registration<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h2</span><span class="token punctuation">></span></span>Personal Details<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h2</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>email<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">></span></span>We value your privacy.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h2</span><span class="token punctuation">></span></span>Account Settings<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h2</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>username<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>input</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>form</span><span class="token punctuation">></span></span></code></pre><h3>Benefits</h3>
+<ul>
+<li>✅ <strong>Natural Flow</strong>: Content and fields stay exactly where you place them</li>
+<li>✅ <strong>Multi-Section Forms</strong>: Create complex forms with explanatory text between sections</li>
+<li>✅ <strong>Better UX</strong>: Users see relevant context for each field group</li>
+<li>✅ <strong>Markdown Integrity</strong>: Your markdown structure is preserved perfectly</li>
+</ul>
+<h3>Examples</h3>
+<p><strong>Tutorial-Style Form:</strong></p>
+<pre class="language-markup"><code class="language-markup"># Getting Started Guide
+
+Let's start with your basic information:
+
+@name: [text required]
+@email: [email required]
+
+Great! Now let's set up your preferences.
+
+@theme{Light,Dark,Auto}: r[]
+@notifications: [checkbox label="Enable notifications"]
+
+Almost done! Choose your plan:
+
+@plan{Free,Pro,Enterprise}: r[required]
+
+Thank you for signing up!</code></pre><p><strong>Survey with Sections:</strong></p>
+<pre class="language-markup"><code class="language-markup"># Customer Satisfaction Survey
+
+## About Your Experience
+
+How would you rate our service?
+
+@rating{1,2,3,4,5}: r[required]
+
+What did you like most?
+
+@liked: [textarea rows=3]
+
+## Suggestions for Improvement
+
+Any areas we could improve?
+
+@improvements: [textarea rows=3]
+
+Would you recommend us to others?
+
+@recommend{Yes,No,Maybe}: r[required]
+
+Thank you for your feedback!</code></pre><h2>Custom &quot;Other&quot; Options</h2>
+<p><strong>Problem Solved:</strong> Generic &quot;Other:&quot; labels didn&#39;t match specific contexts, and data structure was complex.</p>
+<p><strong>Now:</strong> Customize &quot;other&quot; option labels and get clean, direct data output.</p>
+<h3>Custom Labels with <code>*(Label)</code></h3>
+<p>Instead of generic &quot;Other:&quot;, use contextual labels:</p>
+<pre class="language-markup"><code class="language-markup">@source{Website,Social Media,Friend,*(Please specify)}: r[]
+@interests{Tech,Sports,Music,*(Custom Interest)}: c[]
+@experience{Beginner,Intermediate,Advanced,*(Experience Level)}: r[]
+@country{USA,Canada,UK,*(Other Country)}: s[]</code></pre><p><strong>Renders as:</strong></p>
+<ul>
+<li>&quot;Please specify:&quot; instead of &quot;Other:&quot;</li>
+<li>&quot;Custom Interest:&quot; for checkboxes</li>
+<li>&quot;Experience Level:&quot; for radio buttons</li>
+<li>&quot;Other Country (please specify)&quot; for select dropdowns</li>
+</ul>
+<h3>Simplified Data Structure</h3>
+<p><strong>Before (Complex):</strong></p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"priority"</span><span class="token operator">:</span> <span class="token string">"_other"</span><span class="token punctuation">,</span>
+  <span class="token property">"priority_other"</span><span class="token operator">:</span> <span class="token string">"Urgent"</span>
+<span class="token punctuation">}</span></code></pre><p><strong>After (Clean):</strong></p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"priority"</span><span class="token operator">:</span> <span class="token string">"Urgent"</span>
+<span class="token punctuation">}</span></code></pre><p>When users select the &quot;other&quot; option and enter text, that text becomes the field value directly.</p>
+<h3>Complete Examples</h3>
+<p><strong>Event Registration:</strong></p>
+<pre class="language-markup"><code class="language-markup"># Event Registration
+
+@role{Attendee,Speaker,Sponsor,*(Custom Role)}: r[required]
+@dietary{None,Vegetarian,Vegan,Gluten-Free,*(Special Requirement)}: c[]
+@transportation{Car,Train,Flight,*(Travel Method)}: r[]</code></pre><p><strong>Results in clean data:</strong></p>
+<pre class="language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"role"</span><span class="token operator">:</span> <span class="token string">"Volunteer"</span><span class="token punctuation">,</span>           <span class="token comment">// User typed "Volunteer"</span>
+  <span class="token property">"dietary"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"Keto"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>          <span class="token comment">// User checked "Special Requirement" and typed "Keto"  </span>
+  <span class="token property">"transportation"</span><span class="token operator">:</span> <span class="token string">"Bicycle"</span>    <span class="token comment">// User selected "Travel Method" and typed "Bicycle"</span>
+<span class="token punctuation">}</span></code></pre><p><strong>Job Application:</strong></p>
+<pre class="language-markup"><code class="language-markup"># Job Application
+
+@position{Developer,Designer,Manager,*(Desired Position)}: r[required]
+@experience{0-1,2-5,5-10,10+,*(Years Experience)}: r[]
+@skills{JavaScript,Python,Design,Marketing,*(Additional Skill)}: c[]</code></pre><h2>Enhanced Field Types</h2>
+<h3>All Field Types Support Custom Others</h3>
+<p>Every selection field type supports custom &quot;other&quot; options:</p>
+<pre class="language-markup"><code class="language-markup"># Radio Buttons
+@priority{Low,Medium,High,*(Priority Level)}: r[]
+
+# Checkboxes  
+@interests{Web,Mobile,AI,*(Custom Topic)}: c[]
+
+# Select Dropdowns
+@country{USA,Canada,UK,*(Other Country)}: s[]</code></pre><h3>Standard Syntax Support</h3>
+<p>Custom &quot;other&quot; labels work in both shorthand and standard syntax:</p>
+<pre class="language-markup"><code class="language-markup"># Shorthand syntax
+@category{Web,Mobile,*(Custom Category)}: r[]
+
+# Standard syntax  
+@category: [radio options="Web,Mobile,*(Custom Category)"]</code></pre><h2>Migration Guide</h2>
+<h3>Updating Existing Forms</h3>
+<p><strong>Simple Migration:</strong></p>
+<ol>
+<li><strong>Field Ordering</strong>: No changes needed - your forms will automatically respect field positions</li>
+<li><strong>Other Options</strong>: Replace <code>*</code> with <code>*(Custom Label)</code> where you want custom labels</li>
+</ol>
+<p><strong>Before:</strong></p>
+<pre class="language-markup"><code class="language-markup">@source{Website,Friend,*}: r[]</code></pre><p><strong>After:</strong></p>
+<pre class="language-markup"><code class="language-markup">@source{Website,Friend,*(Please specify)}: r[]</code></pre><h3>Data Handling Updates</h3>
+<p>If your application expects the old <code>_other</code> data format, you may need to update your form processing:</p>
+<p><strong>Old Format:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Handle old format</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>formData<span class="token punctuation">.</span>priority <span class="token operator">===</span> <span class="token string">"_other"</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> actualValue <span class="token operator">=</span> formData<span class="token punctuation">.</span>priority_other<span class="token punctuation">;</span>
+  <span class="token comment">// Process actualValue</span>
+<span class="token punctuation">}</span></code></pre><p><strong>New Format:</strong></p>
+<pre class="language-javascript"><code class="language-javascript"><span class="token comment">// Much simpler!</span>
+<span class="token keyword">const</span> actualValue <span class="token operator">=</span> formData<span class="token punctuation">.</span>priority<span class="token punctuation">;</span>
+<span class="token comment">// Process actualValue directly</span></code></pre><h3>Backward Compatibility</h3>
+<ul>
+<li>✅ Existing forms without custom labels work unchanged</li>
+<li>✅ Plain <code>*</code> still creates &quot;Other:&quot; labels</li>
+<li>✅ All existing field types and validation continue to work</li>
+<li>✅ Standard syntax remains fully supported</li>
+</ul>
+<h2>Best Practices</h2>
+<h3>Choose Meaningful Labels</h3>
+<p><strong>Good:</strong></p>
+<pre class="language-markup"><code class="language-markup">@contact_method{Email,Phone,SMS,*(Preferred Method)}: r[]
+@experience{Beginner,Intermediate,Advanced,*(Experience Level)}: r[]  
+@department{Sales,Engineering,Marketing,*(Your Department)}: s[]</code></pre><p><strong>Avoid:</strong></p>
+<pre class="language-markup"><code class="language-markup">@contact_method{Email,Phone,SMS,*(Other)}: r[]        # Not specific enough
+@experience{Beginner,Intermediate,Advanced,*(More)}: r[]  # Unclear</code></pre><h3>Use Field Ordering Strategically</h3>
+<p><strong>Create Flow:</strong></p>
+<pre class="language-markup"><code class="language-markup"># Registration
+
+Welcome! Let's get started.
+
+@name: [text required]
+@email: [email required]
+
+Now, tell us about your interests:
+
+@interests{Tech,Sports,Music,*(Custom Interest)}: c[]
+
+Finally, set your preferences:
+
+@notifications: [checkbox label="Email updates"]
+
+Thank you for registering!</code></pre><h3>Combine Features</h3>
+<pre class="language-markup"><code class="language-markup"># Complete Example
+
+## Personal Information  
+
+@name: [text required]
+@email: [email required]
+
+Choose your role in our community:
+
+@role{Developer,Designer,Manager,Student,*(Your Role)}: r[required]
+
+## Preferences
+
+What topics interest you?
+
+@topics{Web Dev,Mobile,AI,Data Science,*(Custom Topic)}: c[]
+
+How would you like us to contact you?
+
+@contact{Email,Phone,Newsletter,*(Contact Method)}: r[]
+
+Great! You're all set.</code></pre><h2>Technical Details</h2>
+<h3>Field Ordering Implementation</h3>
+<ul>
+<li>Each field maintains its exact markdown position</li>
+<li>Individual forms are generated for each field location</li>
+<li>Markdown content between fields is preserved</li>
+<li>No impact on validation or data binding</li>
+</ul>
+<h3>Custom Other Labels</h3>
+<ul>
+<li>Labels support any text, including special characters</li>
+<li>HTML entities are properly escaped for safety</li>
+<li>Multiple <code>*(label)</code> entries use the first label found</li>
+<li>Empty labels default to &quot;Other&quot;</li>
+</ul>
+<h3>Data Processing</h3>
+<ul>
+<li>JavaScript automatically handles name switching</li>
+<li>Text input gets the primary field name when &quot;other&quot; selected</li>
+<li>Radio/checkbox controls get temporary names to avoid conflicts</li>
+<li>Form submission produces clean, direct values</li>
+</ul>
+<h2>Examples Library</h2>
+<h3>Contact Form with Sections</h3>
+<pre class="language-markup"><code class="language-markup"># Contact Us
+
+## Your Information
+
+@name: [text required]  
+@email: [email required]
+
+## How Can We Help?
+
+What's your inquiry about?
+
+@topic{Sales,Support,Partnership,*(Specific Topic)}: r[required]
+
+How urgent is this?
+
+@priority{Low,Medium,High,*(Priority Level)}: r[]
+
+## Details
+
+Please describe your request:
+
+@message: [textarea rows=4 required]
+
+We'll get back to you soon!</code></pre><h3>Event Feedback Survey</h3>
+<pre class="language-markup"><code class="language-markup"># Event Feedback
+
+Thanks for attending! Your feedback helps us improve.
+
+## Overall Experience
+
+How would you rate the event?
+
+@rating{Excellent,Good,Average,Poor}: r[required]
+
+What did you like most?
+
+@liked: [textarea rows=2]
+
+## Specific Feedback
+
+Which sessions did you attend?
+
+@sessions{Keynote,Workshop A,Workshop B,Panel,*(Other Session)}: c[]
+
+How did you hear about this event?
+
+@source{Website,Social Media,Friend,Email,*(How You Heard)}: r[]
+
+## Future Events
+
+What topics would you like to see?
+
+@future_topics{Tech Trends,Career Development,Networking,*(Suggested Topic)}: c[]
+
+Would you attend future events?
+
+@future_attendance{Definitely,Probably,Maybe,No}: r[required]
+
+Thank you for your valuable feedback!</code></pre><p>These new features make Formdown even more powerful while maintaining its simplicity and markdown-first approach.</p>
+0:{"buildId":"A9JPmqOZ1bVvxrZXVAH7B","rsc":["$","$1","c",{"children":[["$","$L2",null,{"currentSlug":"new-features","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Latest Features"}],["$","article",null,{"className":"$3","dangerouslySetInnerHTML":{"__html":"$4"}}]]}]}],["$L5"],"$L6"]}],"loading":null,"isPartial":false}
+5:["$","script","script-0",{"src":"/_next/static/chunks/b364a8343c8c3a75.js","async":true}]
+6:["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]
+9:null

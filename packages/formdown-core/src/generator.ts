@@ -644,9 +644,9 @@ ${fieldHTML}
             case 'textarea':
                 const textareaContent = value ? this.escapeHtml(String(value)) : ''
                 return `
-<div ${fieldWrapperAttrs}>
-    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <textarea ${attrString}>${textareaContent}</textarea>${generateHelpText()}
+<div ${fieldWrapperAttrs} part="field">
+    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <textarea ${attrString} part="input textarea-input">${textareaContent}</textarea>${generateHelpText()}
 </div>`
 
             case 'select':
@@ -659,9 +659,9 @@ ${fieldHTML}
                 const otherInputHTML = allowOther ? `\n    <input type="text" id="${fieldId}_other" placeholder="Please specify..." class="formdown-other-input" data-formdown-other-for="${fieldId}">` : ''
 
                 return `
-<div ${fieldWrapperAttrs}>
-    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <select ${attrString}${allowOther ? ` data-formdown-has-other="true" data-formdown-other-target="${fieldId}_other"` : ''}>
+<div ${fieldWrapperAttrs} part="field">
+    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <select ${attrString} part="input select-input"${allowOther ? ` data-formdown-has-other="true" data-formdown-other-target="${fieldId}_other"` : ''}>
         ${optionsHTML}${otherOptionHTML}
     </select>${otherInputHTML}${generateHelpText()}
 </div>`
@@ -704,10 +704,10 @@ ${fieldHTML}
                 const groupClass = isVertical ? 'radio-group vertical' : 'radio-group inline'
 
                 return `
-<div ${fieldWrapperAttrs}>
-    <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
-        <legend>${displayLabel}${required ? ' *' : ''}</legend>
-        <div class="${groupClass}" role="radiogroup">
+<div ${fieldWrapperAttrs} part="field">
+    <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} part="fieldset">
+        <legend part="legend">${displayLabel}${required ? ' *' : ''}</legend>
+        <div class="${groupClass}" role="radiogroup" part="radio-group">
 ${radioInputsHTML}${otherRadioHTML}
         </div>
     </fieldset>${generateHelpText()}
@@ -740,9 +740,9 @@ ${radioInputsHTML}${otherRadioHTML}
                     const formAttr = formId ? ` form="${formId}"` : ''
                     
                     return `
-<div ${fieldWrapperAttrs}>
-    <label for="${fieldId}" class="formdown-checkbox-label">
-        <input type="checkbox" id="${fieldId}" name="${name}" value="true"${requiredAttr}${checkedAttr}${formAttr} ${checkboxAttrString}>
+<div ${fieldWrapperAttrs} part="field">
+    <label for="${fieldId}" class="formdown-checkbox-label" part="label checkbox-label">
+        <input type="checkbox" id="${fieldId}" name="${name}" value="true"${requiredAttr}${checkedAttr}${formAttr} ${checkboxAttrString} part="input checkbox-input">
         <span>${this.escapeHtml(checkboxDisplayText)}${required ? ' *' : ''}</span>
     </label>${generateHelpText()}
 </div>`
@@ -776,10 +776,10 @@ ${radioInputsHTML}${otherRadioHTML}
                     const groupClass = isVertical ? 'checkbox-group vertical' : 'checkbox-group inline'
 
                     return `
-<div ${fieldWrapperAttrs}>
-    <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
-        <legend>${displayLabel}${required ? ' *' : ''}</legend>
-        <div class="${groupClass}" role="group">
+<div ${fieldWrapperAttrs} part="field">
+    <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} part="fieldset">
+        <legend part="legend">${displayLabel}${required ? ' *' : ''}</legend>
+        <div class="${groupClass}" role="group" part="checkbox-group">
 ${checkboxInputsHTML}${otherCheckboxHTML}
         </div>
     </fieldset>${generateHelpText()}
@@ -793,38 +793,38 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
                 const step = Number(attributes?.step) || 1
                 const rangeValue = value !== undefined ? value : (attributes?.value !== undefined ? Number(attributes.value) : Math.floor((min + max) / 2))
                 return `
-<div ${fieldWrapperAttrs}>
-    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <input type="range" ${attrString} value="${rangeValue}">
-    <output for="${fieldId}" class="formdown-range-output">${rangeValue}</output>${generateHelpText()}
+<div ${fieldWrapperAttrs} part="field">
+    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="range" ${attrString} value="${rangeValue}" part="input range-input">
+    <output for="${fieldId}" class="formdown-range-output" part="range-output">${rangeValue}</output>${generateHelpText()}
 </div>`
 
             case 'file':
                 return `
-<div ${fieldWrapperAttrs}>
-    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <input type="file" ${attrString}>${generateHelpText()}
+<div ${fieldWrapperAttrs} part="field">
+    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="file" ${attrString} part="input file-input">${generateHelpText()}
 </div>`
 
             case 'color':
                 return `
-<div ${fieldWrapperAttrs}>
-    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <input type="color" ${attrString}>${generateHelpText()}
+<div ${fieldWrapperAttrs} part="field">
+    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="color" ${attrString} part="input color-input">${generateHelpText()}
 </div>`
 
             case 'week':
                 return `
-<div ${fieldWrapperAttrs}>
-    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <input type="week" ${attrString}>${generateHelpText()}
+<div ${fieldWrapperAttrs} part="field">
+    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="week" ${attrString} part="input week-input">${generateHelpText()}
 </div>`
 
             case 'month':
                 return `
-<div ${fieldWrapperAttrs}>
-    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <input type="month" ${attrString}>${generateHelpText()}
+<div ${fieldWrapperAttrs} part="field">
+    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="month" ${attrString} part="input month-input">${generateHelpText()}
 </div>`
 
             case 'submit':
@@ -840,7 +840,7 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
                     .filter(Boolean)
                     .join(' ')
                 const submitAttrString = submitButtonAttrs ? ` ${submitButtonAttrs}` : ''
-                return `<button type="submit" id="${fieldId}"${submitFormAttr}${submitAttrString}>${field.label || 'Submit'}</button>`
+                return `<button type="submit" id="${fieldId}"${submitFormAttr}${submitAttrString} part="button submit-button">${field.label || 'Submit'}</button>`
 
             case 'reset':
                 const resetFormAttr = formId ? ` form="${formId}"` : ''
@@ -855,7 +855,7 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
                     .filter(Boolean)
                     .join(' ')
                 const resetAttrString = resetButtonAttrs ? ` ${resetButtonAttrs}` : ''
-                return `<button type="reset" id="${fieldId}"${resetFormAttr}${resetAttrString}>${field.label || 'Reset'}</button>`
+                return `<button type="reset" id="${fieldId}"${resetFormAttr}${resetAttrString} part="button reset-button">${field.label || 'Reset'}</button>`
 
             case 'button':
                 // Handle action elements created with @[button "Label"] syntax
@@ -872,7 +872,7 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
                     .filter(Boolean)
                     .join(' ')
                 const buttonAttrString = buttonAttrs ? ` ${buttonAttrs}` : ''
-                return `<button type="${buttonType}" id="${fieldId}"${buttonFormAttr}${buttonAttrString}>${field.label || 'Button'}</button>`
+                return `<button type="${buttonType}" id="${fieldId}"${buttonFormAttr}${buttonAttrString} part="button">${field.label || 'Button'}</button>`
 
             case 'image':
                 // Handle image input type @[image "alt text" src="/path"]
@@ -894,9 +894,9 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
 
             default:
                 return `
-<div ${fieldWrapperAttrs}>
-    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
-    <input type="${type}" ${attrString}>${generateHelpText()}
+<div ${fieldWrapperAttrs} part="field">
+    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <input type="${type}" ${attrString} part="input text-input">${generateHelpText()}
 </div>`
         }
     }
