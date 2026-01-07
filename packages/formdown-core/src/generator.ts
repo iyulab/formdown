@@ -389,7 +389,7 @@ export class FormdownGenerator {
         const fieldHTML = this.generateFieldHTML(field, defaultFormId)
         
         // If the field HTML already contains proper form structure, return as is
-        if (fieldHTML.includes('<div class="formdown-field">')) {
+        if (fieldHTML.includes('<div class="formdown-field"') || fieldHTML.includes('<div class="formdown-field formdown-conditional"')) {
             return `
 <div class="formdown-field-container">
 ${fieldHTML}
@@ -511,6 +511,14 @@ ${fieldHTML}
                                       type === 'tel' ? 'tel' : 
                                       type === 'password' ? 'current-password' : undefined)
 
+        // Filter out layout-specific attributes that shouldn't be on the input element
+        const layoutOnlyAttrs = new Set(['width', 'span'])
+        const filteredAttributes = attributes ? Object.fromEntries(
+            Object.entries(attributes).filter(([key]) =>
+                !layoutOnlyAttrs.has(key) && !key.startsWith('--')
+            )
+        ) : {}
+
         const commonAttrs = {
             id: fieldId,
             name,
@@ -523,7 +531,7 @@ ${fieldHTML}
             ...(errorMessage && { 'aria-describedby': `${descriptionId ? descriptionId + ' ' : ''}${errorId}` }),
             ...(formId && { form: formId }),
             ...(suggestedAutocomplete && !attributes?.autocomplete && { autocomplete: suggestedAutocomplete }),
-            ...attributes
+            ...filteredAttributes
         }
 
         const attrString = Object.entries(commonAttrs)
@@ -548,11 +556,95 @@ ${fieldHTML}
             return helpHTML
         }
 
+        // Helper function to generate conditional field wrapper attributes
+        const generateFieldWrapperAttrs = () => {
+            const classes = ['formdown-field']
+            const dataAttrs: string[] = []
+
+            if (field.conditions) {
+                classes.push('formdown-conditional')
+
+                if (field.conditions.visibleIf) {
+                    const cond = field.conditions.visibleIf
+                    dataAttrs.push(`data-visible-if-field="${this.escapeHtml(cond.field)}"`)
+                    dataAttrs.push(`data-visible-if-operator="${cond.operator}"`)
+                    if (cond.value !== undefined) {
+                        dataAttrs.push(`data-visible-if-value="${this.escapeHtml(cond.value)}"`)
+                    }
+                }
+
+                if (field.conditions.hiddenIf) {
+                    const cond = field.conditions.hiddenIf
+                    dataAttrs.push(`data-hidden-if-field="${this.escapeHtml(cond.field)}"`)
+                    dataAttrs.push(`data-hidden-if-operator="${cond.operator}"`)
+                    if (cond.value !== undefined) {
+                        dataAttrs.push(`data-hidden-if-value="${this.escapeHtml(cond.value)}"`)
+                    }
+                }
+
+                if (field.conditions.enabledIf) {
+                    const cond = field.conditions.enabledIf
+                    dataAttrs.push(`data-enabled-if-field="${this.escapeHtml(cond.field)}"`)
+                    dataAttrs.push(`data-enabled-if-operator="${cond.operator}"`)
+                    if (cond.value !== undefined) {
+                        dataAttrs.push(`data-enabled-if-value="${this.escapeHtml(cond.value)}"`)
+                    }
+                }
+
+                if (field.conditions.disabledIf) {
+                    const cond = field.conditions.disabledIf
+                    dataAttrs.push(`data-disabled-if-field="${this.escapeHtml(cond.field)}"`)
+                    dataAttrs.push(`data-disabled-if-operator="${cond.operator}"`)
+                    if (cond.value !== undefined) {
+                        dataAttrs.push(`data-disabled-if-value="${this.escapeHtml(cond.value)}"`)
+                    }
+                }
+
+                if (field.conditions.requiredIf) {
+                    const cond = field.conditions.requiredIf
+                    dataAttrs.push(`data-required-if-field="${this.escapeHtml(cond.field)}"`)
+                    dataAttrs.push(`data-required-if-operator="${cond.operator}"`)
+                    if (cond.value !== undefined) {
+                        dataAttrs.push(`data-required-if-value="${this.escapeHtml(cond.value)}"`)
+                    }
+                }
+            }
+
+            // Add group attribute if field belongs to a group
+            if (field.group) {
+                dataAttrs.push(`data-group="${this.escapeHtml(field.group)}"`)
+            }
+
+            // Handle field-level layout attributes (width, span, etc.)
+            const styleProps: string[] = []
+            if (field.attributes) {
+                if (field.attributes.width !== undefined) {
+                    styleProps.push(`width: ${this.escapeHtml(String(field.attributes.width))}`)
+                }
+                if (field.attributes.span !== undefined) {
+                    styleProps.push(`grid-column: span ${this.escapeHtml(String(field.attributes.span))}`)
+                }
+                // Support custom CSS properties on fields
+                Object.entries(field.attributes).forEach(([key, value]) => {
+                    if (key.startsWith('--')) {
+                        styleProps.push(`${key}: ${this.escapeHtml(String(value))}`)
+                    }
+                })
+            }
+
+            const classAttr = `class="${classes.join(' ')}"`
+            const styleAttr = styleProps.length > 0 ? ` style="${styleProps.join('; ')}"` : ''
+            const dataAttrStr = dataAttrs.length > 0 ? ` ${dataAttrs.join(' ')}` : ''
+            return `${classAttr}${styleAttr}${dataAttrStr}`
+        }
+
+        const fieldWrapperAttrs = generateFieldWrapperAttrs()
+
         switch (type) {
             case 'textarea':
                 const textareaContent = value ? this.escapeHtml(String(value)) : ''
                 return `
-<div class="formdown-field">
+<div ${fieldWrapperAttrs}>
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
     <textarea ${attrString}>${textareaContent}</textarea>${generateHelpText()}
 </div>`
@@ -567,7 +659,7 @@ ${fieldHTML}
                 const otherInputHTML = allowOther ? `\n    <input type="text" id="${fieldId}_other" placeholder="Please specify..." class="formdown-other-input" data-formdown-other-for="${fieldId}">` : ''
 
                 return `
-<div class="formdown-field">
+<div ${fieldWrapperAttrs}>
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
     <select ${attrString}${allowOther ? ` data-formdown-has-other="true" data-formdown-other-target="${fieldId}_other"` : ''}>
         ${optionsHTML}${otherOptionHTML}
@@ -578,7 +670,7 @@ ${fieldHTML}
                 if (!options || options.length === 0) {
                     // Radio needs options - fallback to text input
                     return `
-<div class="formdown-field">
+<div ${fieldWrapperAttrs}>
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
     <input type="text" ${attrString}>${generateHelpText()}
 </div>`
@@ -612,7 +704,7 @@ ${fieldHTML}
                 const groupClass = isVertical ? 'radio-group vertical' : 'radio-group inline'
 
                 return `
-<div class="formdown-field">
+<div ${fieldWrapperAttrs}>
     <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
         <legend>${displayLabel}${required ? ' *' : ''}</legend>
         <div class="${groupClass}" role="radiogroup">
@@ -648,7 +740,7 @@ ${radioInputsHTML}${otherRadioHTML}
                     const formAttr = formId ? ` form="${formId}"` : ''
                     
                     return `
-<div class="formdown-field">
+<div ${fieldWrapperAttrs}>
     <label for="${fieldId}" class="formdown-checkbox-label">
         <input type="checkbox" id="${fieldId}" name="${name}" value="true"${requiredAttr}${checkedAttr}${formAttr} ${checkboxAttrString}>
         <span>${this.escapeHtml(checkboxDisplayText)}${required ? ' *' : ''}</span>
@@ -684,7 +776,7 @@ ${radioInputsHTML}${otherRadioHTML}
                     const groupClass = isVertical ? 'checkbox-group vertical' : 'checkbox-group inline'
 
                     return `
-<div class="formdown-field">
+<div ${fieldWrapperAttrs}>
     <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''}>
         <legend>${displayLabel}${required ? ' *' : ''}</legend>
         <div class="${groupClass}" role="group">
@@ -701,7 +793,7 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
                 const step = Number(attributes?.step) || 1
                 const rangeValue = value !== undefined ? value : (attributes?.value !== undefined ? Number(attributes.value) : Math.floor((min + max) / 2))
                 return `
-<div class="formdown-field">
+<div ${fieldWrapperAttrs}>
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
     <input type="range" ${attrString} value="${rangeValue}">
     <output for="${fieldId}" class="formdown-range-output">${rangeValue}</output>${generateHelpText()}
@@ -709,28 +801,28 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
 
             case 'file':
                 return `
-<div class="formdown-field">
+<div ${fieldWrapperAttrs}>
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
     <input type="file" ${attrString}>${generateHelpText()}
 </div>`
 
             case 'color':
                 return `
-<div class="formdown-field">
+<div ${fieldWrapperAttrs}>
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
     <input type="color" ${attrString}>${generateHelpText()}
 </div>`
 
             case 'week':
                 return `
-<div class="formdown-field">
+<div ${fieldWrapperAttrs}>
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
     <input type="week" ${attrString}>${generateHelpText()}
 </div>`
 
             case 'month':
                 return `
-<div class="formdown-field">
+<div ${fieldWrapperAttrs}>
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
     <input type="month" ${attrString}>${generateHelpText()}
 </div>`
@@ -802,7 +894,7 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
 
             default:
                 return `
-<div class="formdown-field">
+<div ${fieldWrapperAttrs}>
     <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
     <input type="${type}" ${attrString}>${generateHelpText()}
 </div>`
@@ -818,16 +910,41 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
     }
 
     private generateHiddenFormHTML(form: FormDeclaration): string {
-        const attrString = Object.entries(form.attributes)
-            .map(([key, value]) => {
-                if (typeof value === 'boolean') {
-                    return value ? key : ''
-                }
-                return `${key}="${value}"`
-            })
-            .filter(Boolean)
-            .join(' ')
+        const layoutAttrs: string[] = []
+        const styleProps: string[] = []
+        const otherAttrs: string[] = []
 
+        // Process form attributes
+        Object.entries(form.attributes).forEach(([key, value]) => {
+            if (typeof value === 'boolean') {
+                if (value) otherAttrs.push(key)
+                return
+            }
+
+            // Handle layout-specific attributes
+            if (key === 'layout') {
+                layoutAttrs.push(`data-layout="${this.escapeHtml(String(value))}"`)
+            } else if (key === 'label-width') {
+                styleProps.push(`--formdown-label-width: ${this.escapeHtml(String(value))}`)
+            } else if (key === 'columns') {
+                styleProps.push(`--formdown-columns: ${this.escapeHtml(String(value))}`)
+            } else if (key === 'gap') {
+                styleProps.push(`--formdown-gap: ${this.escapeHtml(String(value))}`)
+            } else if (key.startsWith('--')) {
+                // Allow custom CSS properties
+                styleProps.push(`${key}: ${this.escapeHtml(String(value))}`)
+            } else {
+                otherAttrs.push(`${key}="${this.escapeHtml(String(value))}"`)
+            }
+        })
+
+        // Build attribute string
+        const allAttrs = [...layoutAttrs, ...otherAttrs]
+        if (styleProps.length > 0) {
+            allAttrs.push(`style="${styleProps.join('; ')}"`)
+        }
+
+        const attrString = allAttrs.filter(Boolean).join(' ')
         return `<form hidden id="${form.id}" ${attrString}></form>\n`
     }
 

@@ -84,6 +84,16 @@ export class SchemaExtractor {
         // Determine layout based on field type and inline status
         schema.layout = field.inline ? 'inline' : 'vertical'
 
+        // Add group if present
+        if (field.group) {
+            schema.group = field.group
+        }
+
+        // Add conditions if present
+        if (field.conditions) {
+            schema.conditions = field.conditions
+        }
+
         return schema
     }
 

@@ -17,6 +17,7 @@ export interface Field {
     inline?: boolean
     position?: number  // Position in the source content for form association
     group?: string    // Group ID for fieldset grouping
+    conditions?: ConditionalAttributes  // Conditional visibility/behavior
     [key: string]: unknown  // Index signature for compatibility with FieldSchema
 }
 
@@ -61,6 +62,35 @@ export interface GroupDeclaration {
     position?: number
     collapsible?: boolean
     collapsed?: boolean
+}
+
+/**
+ * Conditional field visibility/behavior rules
+ * Supports simple equality and boolean checks
+ */
+export interface FieldCondition {
+    /** The field name to check */
+    field: string
+    /** Operator for comparison */
+    operator: '=' | '!=' | 'truthy' | 'falsy'
+    /** Value to compare against (for = and != operators) */
+    value?: string
+}
+
+/**
+ * Conditional attributes for fields
+ */
+export interface ConditionalAttributes {
+    /** Show field only when condition is met */
+    visibleIf?: FieldCondition
+    /** Hide field when condition is met */
+    hiddenIf?: FieldCondition
+    /** Enable field only when condition is met */
+    enabledIf?: FieldCondition
+    /** Disable field when condition is met */
+    disabledIf?: FieldCondition
+    /** Make field required only when condition is met */
+    requiredIf?: FieldCondition
 }
 
 export interface FormdownContent {
@@ -108,6 +138,7 @@ export interface FieldSchema {
     description?: string
     errorMessage?: string
     group?: string  // Group ID for fieldset grouping
+    conditions?: ConditionalAttributes  // Conditional visibility/behavior
 }
 
 export type FieldType = 

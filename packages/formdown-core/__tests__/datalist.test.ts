@@ -133,17 +133,17 @@ describe('Datalist Support', () => {
             const content = `
 @datalist[id="explicit-countries" options="USA,Canada,UK"]
 @country{Korea,Japan,China}: [text]
-@region: [text datalist="explicit-countries"]
+@region: [text datalist="#explicit-countries"]
 `
             const result = parser.parseFormdown(content)
-            
+
             expect(result.datalistDeclarations).toHaveLength(2)
-            
+
             // Explicit datalist
             const explicitDatalist = result.datalistDeclarations!.find(d => d.id === 'explicit-countries')
             expect(explicitDatalist).toBeDefined()
             expect(explicitDatalist!.options).toEqual(['USA', 'Canada', 'UK'])
-            
+
             // Auto-generated datalist
             const autoDatalist = result.datalistDeclarations!.find(d => d.id !== 'explicit-countries')
             expect(autoDatalist).toBeDefined()
@@ -155,18 +155,18 @@ describe('Datalist Support', () => {
         test('should generate datalist HTML from explicit declaration', () => {
             const content = `
 @datalist[id="countries" options="Korea,Japan,China"]
-@country: [text datalist="countries"]
+@country: [text datalist="#countries"]
 `
             const result = parser.parseFormdown(content)
             const html = generator.generateHTML(result)
-            
+
             // Should contain datalist element
             expect(html).toContain('<datalist id="countries">')
             expect(html).toContain('<option value="Korea">Korea</option>')
             expect(html).toContain('<option value="Japan">Japan</option>')
             expect(html).toContain('<option value="China">China</option>')
             expect(html).toContain('</datalist>')
-            
+
             // Should contain input with list attribute
             expect(html).toContain('list="countries"')
         })
@@ -190,7 +190,7 @@ describe('Datalist Support', () => {
             // Use explicit datalist syntax to test HTML escaping
             const content = `
 @datalist[id="malicious" options="<script>alert(\\"xss\\")</script>,option2"]
-@test: [text datalist="malicious"]
+@test: [text datalist="#malicious"]
 `
             const result = parser.parseFormdown(content)
             const html = generator.generateHTML(result)
@@ -224,12 +224,12 @@ describe('Datalist Support', () => {
             const content = `
 @datalist[id="countries" options="Korea,Japan,China"]
 @datalist[id="cities" options="Seoul,Tokyo,Beijing"]
-@country: [text datalist="countries"]
-@city: [text datalist="cities"]
+@country: [text datalist="#countries"]
+@city: [text datalist="#cities"]
 `
             const result = parser.parseFormdown(content)
             const html = generator.generateHTML(result)
-            
+
             expect(html).toContain('<datalist id="countries">')
             expect(html).toContain('<datalist id="cities">')
             expect(html).toContain('list="countries"')
@@ -248,7 +248,7 @@ describe('Datalist Support', () => {
 
 @name(Full Name): [text required]
 @email(Email Address): [email required]
-@country(Country): [text datalist="countries" autocomplete="country"]
+@country(Country): [text datalist="#countries" autocomplete="country"]
 @city{Seoul,Tokyo,Beijing,New York}: [text autocomplete="address-level2"]
 
 @[submit "Register"]

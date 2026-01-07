@@ -1,5 +1,5 @@
 import { marked } from 'marked'
-import { Field, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration } from './types'
+import { Field, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes } from './types'
 import { defaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 
@@ -72,6 +72,15 @@ export class FormdownParser {
             if (datalistDeclaration) {
                 this.datalistDeclarations.push(datalistDeclaration)
                 // Remove @datalist declaration from markdown
+                cleanedLines.push('')
+                continue
+            }
+
+            // Check for shorthand datalist declaration: @#id: options
+            const shorthandDatalist = this.parseShorthandDatalist(line)
+            if (shorthandDatalist) {
+                this.datalistDeclarations.push(shorthandDatalist)
+                // Remove shorthand datalist declaration from markdown
                 cleanedLines.push('')
                 continue
             }
@@ -654,8 +663,68 @@ export class FormdownParser {
                     field.value = ''
                 }
             } else if (key === 'datalist' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
-                // Handle datalist attribute - store the datalist ID for later HTML generation
-                field.attributes!['list'] = quotedValue1 || quotedValue2 || unquotedValue
+                // Handle datalist attribute
+                const datalistValue = quotedValue1 || quotedValue2 || unquotedValue
+
+                if (datalistValue.startsWith('#')) {
+                    // Reference to a declared datalist: datalist="#id"
+                    field.attributes!['list'] = datalistValue.slice(1)
+                } else {
+                    // Inline options: datalist="option1,option2,option3"
+                    const options = datalistValue.split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
+                    if (options.length > 0) {
+                        const datalistId = this.generateDatalistId(datalistValue)
+                        field.attributes!['list'] = datalistId
+                        // Create datalist declaration if it doesn't exist
+                        const existingDatalist = this.datalistDeclarations.find(d => d.id === datalistId)
+                        if (!existingDatalist) {
+                            this.datalistDeclarations.push({
+                                id: datalistId,
+                                options
+                            })
+                        }
+                    }
+                }
+            } else if (key === 'visible-if' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+                // Handle conditional visibility
+                const conditionValue = quotedValue1 || quotedValue2 || unquotedValue
+                const condition = this.parseCondition(conditionValue)
+                if (condition) {
+                    if (!field.conditions) field.conditions = {}
+                    field.conditions.visibleIf = condition
+                }
+            } else if (key === 'hidden-if' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+                // Handle conditional hiding
+                const conditionValue = quotedValue1 || quotedValue2 || unquotedValue
+                const condition = this.parseCondition(conditionValue)
+                if (condition) {
+                    if (!field.conditions) field.conditions = {}
+                    field.conditions.hiddenIf = condition
+                }
+            } else if (key === 'enabled-if' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+                // Handle conditional enabling
+                const conditionValue = quotedValue1 || quotedValue2 || unquotedValue
+                const condition = this.parseCondition(conditionValue)
+                if (condition) {
+                    if (!field.conditions) field.conditions = {}
+                    field.conditions.enabledIf = condition
+                }
+            } else if (key === 'disabled-if' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+                // Handle conditional disabling
+                const conditionValue = quotedValue1 || quotedValue2 || unquotedValue
+                const condition = this.parseCondition(conditionValue)
+                if (condition) {
+                    if (!field.conditions) field.conditions = {}
+                    field.conditions.disabledIf = condition
+                }
+            } else if (key === 'required-if' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+                // Handle conditional requirement
+                const conditionValue = quotedValue1 || quotedValue2 || unquotedValue
+                const condition = this.parseCondition(conditionValue)
+                if (condition) {
+                    if (!field.conditions) field.conditions = {}
+                    field.conditions.requiredIf = condition
+                }
             } else if (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined) {
                 const value = quotedValue1 || quotedValue2 || unquotedValue
                 field.attributes![key] = this.parseAttributeValue(value)
@@ -702,6 +771,59 @@ export class FormdownParser {
     private capitalizeWord(word: string): string {
         if (!word) return word
         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+    }
+
+    /**
+     * Parse a condition string into a FieldCondition object
+     * Supports: "field=value", "field!=value", "field", "!field"
+     * @param conditionStr - The condition string to parse
+     * @returns A FieldCondition object or null if invalid
+     */
+    private parseCondition(conditionStr: string): FieldCondition | null {
+        if (!conditionStr || !conditionStr.trim()) return null
+
+        const trimmed = conditionStr.trim()
+
+        // Check for equality: field=value
+        const equalMatch = trimmed.match(/^([\w_]+)=(.+)$/)
+        if (equalMatch) {
+            return {
+                field: equalMatch[1],
+                operator: '=',
+                value: equalMatch[2]
+            }
+        }
+
+        // Check for inequality: field!=value
+        const notEqualMatch = trimmed.match(/^([\w_]+)!=(.+)$/)
+        if (notEqualMatch) {
+            return {
+                field: notEqualMatch[1],
+                operator: '!=',
+                value: notEqualMatch[2]
+            }
+        }
+
+        // Check for negation: !field (falsy check)
+        if (trimmed.startsWith('!')) {
+            const fieldName = trimmed.slice(1).trim()
+            if (fieldName && /^[\w_]+$/.test(fieldName)) {
+                return {
+                    field: fieldName,
+                    operator: 'falsy'
+                }
+            }
+        }
+
+        // Simple field name: field (truthy check)
+        if (/^[\w_]+$/.test(trimmed)) {
+            return {
+                field: trimmed,
+                operator: 'truthy'
+            }
+        }
+
+        return null
     }
 
     /**
@@ -824,6 +946,36 @@ export class FormdownParser {
             return a & a
         }, 0)
         return `datalist-${Math.abs(hash)}`
+    }
+
+    /**
+     * Parse shorthand datalist declaration
+     * Examples: @#countries: Korea,Japan,China,USA
+     * @param line - The line to parse
+     * @returns DatalistDeclaration object or null if not matched
+     */
+    private parseShorthandDatalist(line: string): DatalistDeclaration | null {
+        const trimmedLine = line.trim()
+
+        // Match @#id: options pattern
+        const match = trimmedLine.match(/^@#([a-zA-Z_][a-zA-Z0-9_-]*)\s*:\s*(.+)$/)
+        if (!match) return null
+
+        const id = match[1]
+        const optionsStr = match[2]
+
+        // Parse options from comma-separated string
+        const options = optionsStr.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0)
+
+        if (options.length === 0) {
+            console.warn('Shorthand datalist declaration has empty options:', line)
+            return null
+        }
+
+        return {
+            id,
+            options
+        }
     }
 
     /**

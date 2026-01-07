@@ -162,6 +162,248 @@ parsed.groupDeclarations // Array of GroupDeclaration objects
 parsed.forms[0].group // 'formdown-group-personal-info'
 ```
 
+## Conditional Fields
+
+FormDown supports conditional field visibility and behavior based on other field values. This enables dynamic forms that show, hide, enable, or disable fields based on user input.
+
+### Conditional Attributes
+
+| Attribute | Description | Example |
+|-----------|-------------|---------|
+| `visible-if` | Show field when condition is true | `visible-if="has_coupon"` |
+| `hidden-if` | Hide field when condition is true | `hidden-if="is_guest"` |
+| `enabled-if` | Enable field when condition is true | `enabled-if="agree_terms"` |
+| `disabled-if` | Disable field when condition is true | `disabled-if="is_locked"` |
+| `required-if` | Make field required when condition is true | `required-if="has_coupon"` |
+
+### Condition Syntax
+
+**Equality check:**
+```formdown
+@order_type{Individual,Corporate}: r[]
+@company_name: [text visible-if="order_type=Corporate"]
+```
+
+**Inequality check:**
+```formdown
+@status{Active,Inactive}: r[]
+@notes: [textarea visible-if="status!=Active"]
+```
+
+**Truthy check (checkbox/boolean):**
+```formdown
+@has_coupon: c[]
+@coupon_code: [text visible-if="has_coupon" required-if="has_coupon"]
+```
+
+**Falsy check (negation):**
+```formdown
+@newsletter: c[]
+@unsubscribe_reason: [textarea visible-if="!newsletter"]
+```
+
+### Real-World Examples
+
+**Order Form with Conditional Business Fields:**
+```formdown
+# Order Form
+
+@customer_type{Individual,Business}: r[]
+@name*: []
+@company: [visible-if="customer_type=Business"]
+@tax_id: [visible-if="customer_type=Business" required-if="customer_type=Business"]
+```
+
+**Payment Form with Conditional Card Fields:**
+```formdown
+@payment_method{Cash,Credit Card,Bank Transfer}: r[]
+
+@card_number: [text visible-if="payment_method=Credit Card"]
+@card_expiry: [text visible-if="payment_method=Credit Card"]
+@card_cvv: [text visible-if="payment_method=Credit Card"]
+
+@bank_name: [text visible-if="payment_method=Bank Transfer"]
+@account_number: [text visible-if="payment_method=Bank Transfer"]
+```
+
+**Terms Agreement with Conditional Submit:**
+```formdown
+@agree_terms: c[content="I agree to the terms and conditions"]
+@submit: [submit enabled-if="agree_terms"]
+```
+
+### Generated HTML
+
+Conditional fields generate data attributes for JavaScript runtime handling:
+
+```html
+<div class="formdown-field formdown-conditional"
+     data-visible-if-field="order_type"
+     data-visible-if-operator="="
+     data-visible-if-value="Corporate">
+    <label for="company_name">Company Name</label>
+    <input type="text" id="company_name" name="company_name">
+</div>
+```
+
+### Schema Integration
+
+Conditional information is included in the parsed schema:
+
+```typescript
+const schema = getSchema(content)
+schema.company_name.conditions // {
+//   visibleIf: { field: 'order_type', operator: '=', value: 'Corporate' }
+// }
+```
+
+## Layout Options
+
+FormDown supports declarative layout options at both form and field levels for flexible form presentation.
+
+### Form-Level Layout
+
+Declare layout options in the `@form` declaration:
+
+```formdown
+@form[id="contact" layout="horizontal" label-width="150px"]
+
+@name*: []
+@email*: @[]
+@phone: %[]
+```
+
+**Layout Attributes:**
+
+| Attribute | Description | Example |
+|-----------|-------------|---------|
+| `layout` | Form layout style | `layout="horizontal"` |
+| `label-width` | Width of labels | `label-width="120px"` |
+| `columns` | Grid columns | `columns="2"` |
+| `gap` | Grid gap | `gap="1rem"` |
+
+**Layout Styles:**
+- `vertical` (default) - Labels above fields
+- `horizontal` - Labels inline with fields
+- `inline` - All fields in one line
+
+**Custom CSS Properties:**
+```formdown
+@form[id="custom" --custom-color="blue" --custom-spacing="10px"]
+```
+
+### Field-Level Layout
+
+Individual fields can have layout attributes:
+
+```formdown
+@form[id="registration" layout="grid" columns="2" gap="16px"]
+
+@first_name*: []
+@last_name*: []
+@email*: @[span="2"]           // Span 2 columns
+@address: [span="2"]
+@city: []
+@zip: [width="120px"]          // Fixed width
+```
+
+**Field Layout Attributes:**
+
+| Attribute | Description | Example |
+|-----------|-------------|---------|
+| `width` | Field width | `width="200px"` |
+| `span` | Grid column span | `span="2"` |
+| Custom CSS | Any `--*` property | `--field-bg="gray"` |
+
+### Generated HTML
+
+Layout options generate CSS custom properties and data attributes:
+
+```html
+<form hidden id="contact"
+      data-layout="horizontal"
+      style="--formdown-label-width: 150px; --formdown-columns: 2;">
+</form>
+
+<div class="formdown-field" style="grid-column: span 2">
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email">
+</div>
+```
+
+## Datalist (Autocomplete Suggestions)
+
+FormDown supports HTML5 datalists for providing autocomplete suggestions on text inputs.
+
+### Shorthand Datalist Declaration
+
+Define reusable datalists with the `@#id: options` syntax:
+
+```formdown
+@#countries: USA,Canada,UK,Germany,France,Japan
+@#cities: Seoul,Tokyo,New York,London,Paris
+
+@country: [text datalist="#countries"]
+@city: [text datalist="#cities"]
+```
+
+### Explicit Datalist Declaration
+
+For more control, use the full `@datalist` syntax:
+
+```formdown
+@datalist[id="priorities" options="Low,Medium,High,Critical"]
+
+@task_priority: [text datalist="#priorities"]
+```
+
+### Inline Datalist Options
+
+For one-off datalists, specify options directly:
+
+```formdown
+@status: [text datalist="Open,In Progress,Resolved,Closed"]
+```
+
+### Auto-Generated Datalist (Shorthand Syntax)
+
+Use curly braces to auto-create a datalist:
+
+```formdown
+@country{USA,Canada,UK}: [text]    // Creates datalist automatically
+@priority{Low,Medium,High}: [text]
+```
+
+### Multiple Fields Sharing Datalist
+
+```formdown
+@#cities: Seoul,Tokyo,Beijing,Shanghai
+
+@origin: [text datalist="#cities"]
+@destination: [text datalist="#cities"]
+```
+
+### Generated HTML
+
+```html
+<datalist id="countries">
+    <option value="USA">USA</option>
+    <option value="Canada">Canada</option>
+    <option value="UK">UK</option>
+</datalist>
+
+<input type="text" id="country" name="country" list="countries">
+```
+
+### Combining with Conditional Fields
+
+```formdown
+@#categories: Electronics,Books,Clothing,Other
+
+@has_product: c[]
+@category: [text datalist="#categories" visible-if="has_product"]
+```
+
 ## Smart Label Generation
 
 FormDown automatically generates human-readable labels from field names when no custom label is provided. This feature helps create clean, readable forms without requiring explicit labels for every field.
