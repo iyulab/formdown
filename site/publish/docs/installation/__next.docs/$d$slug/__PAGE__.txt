@@ -226,7 +226,7 @@ module<span class="token punctuation">.</span>exports <span class="token operato
       <span class="token string-property property">"path"</span><span class="token operator">:</span> <span class="token boolean">false</span>
     <span class="token punctuation">}</span>
   <span class="token punctuation">}</span>
-<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>0:{"buildId":"A9JPmqOZ1bVvxrZXVAH7B","rsc":["$","$1","c",{"children":[["$","$L2",null,{"currentSlug":"installation","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Installation"}],["$","article",null,{"className":"$3","dangerouslySetInnerHTML":{"__html":"$4"}}]]}]}],["$L5"],"$L6"]}],"loading":null,"isPartial":false}
+<span class="token punctuation">}</span><span class="token punctuation">;</span></code></pre>0:{"buildId":"tbyODwIInToZwCMKdmxcK","rsc":["$","$1","c",{"children":[["$","$L2",null,{"currentSlug":"installation","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Installation"}],["$","article",null,{"className":"$3","dangerouslySetInnerHTML":{"__html":"$4"}}]]}]}],["$L5"],"$L6"]}],"loading":null,"isPartial":false}
 5:["$","script","script-0",{"src":"/_next/static/chunks/b364a8343c8c3a75.js","async":true}]
 6:["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]
 9:null

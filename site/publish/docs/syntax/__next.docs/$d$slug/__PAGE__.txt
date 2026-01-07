@@ -280,7 +280,7 @@ What areas need improvement?
 <p>Validate on the client side when possible:</p>
 <pre class="language-markup"><code class="language-markup">@password: ***[minlength=8 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"]
 @username{^[a-zA-Z0-9_]{3,20}$}: [required]
-@age: #[min=13 max=120 required]</code></pre>0:{"buildId":"A9JPmqOZ1bVvxrZXVAH7B","rsc":["$","$1","c",{"children":[["$","$L2",null,{"currentSlug":"syntax","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Syntax Reference"}],["$","article",null,{"className":"$3","dangerouslySetInnerHTML":{"__html":"$4"}}]]}]}],["$L5"],"$L6"]}],"loading":null,"isPartial":false}
+@age: #[min=13 max=120 required]</code></pre>0:{"buildId":"tbyODwIInToZwCMKdmxcK","rsc":["$","$1","c",{"children":[["$","$L2",null,{"currentSlug":"syntax","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Syntax Reference"}],["$","article",null,{"className":"$3","dangerouslySetInnerHTML":{"__html":"$4"}}]]}]}],["$L5"],"$L6"]}],"loading":null,"isPartial":false}
 5:["$","script","script-0",{"src":"/_next/static/chunks/b364a8343c8c3a75.js","async":true}]
 6:["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]
 9:null

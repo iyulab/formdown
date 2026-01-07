@@ -563,7 +563,7 @@ extensionManager<span class="token punctuation">.</span><span class="token funct
 <ol start="5">
 <li>Publish to npm:</li>
 </ol>
-<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> publish <span class="token parameter variable">--tag</span> formdown-plugin</code></pre>0:{"buildId":"A9JPmqOZ1bVvxrZXVAH7B","rsc":["$","$1","c",{"children":[["$","$L2",null,{"currentSlug":"extensions","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Extension System"}],["$","article",null,{"className":"$3","dangerouslySetInnerHTML":{"__html":"$4"}}]]}]}],["$L5"],"$L6"]}],"loading":null,"isPartial":false}
+<pre class="language-bash"><code class="language-bash"><span class="token function">npm</span> publish <span class="token parameter variable">--tag</span> formdown-plugin</code></pre>0:{"buildId":"tbyODwIInToZwCMKdmxcK","rsc":["$","$1","c",{"children":[["$","$L2",null,{"currentSlug":"extensions","children":["$","div",null,{"children":[["$","h1",null,{"className":"text-3xl font-bold text-gray-900 dark:text-white mb-6","children":"Extension System"}],["$","article",null,{"className":"$3","dangerouslySetInnerHTML":{"__html":"$4"}}]]}]}],["$L5"],"$L6"]}],"loading":null,"isPartial":false}
 5:["$","script","script-0",{"src":"/_next/static/chunks/b364a8343c8c3a75.js","async":true}]
 6:["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]
 9:null
