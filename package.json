@@ -34,10 +34,13 @@
         "dev": "cd site && npm run dev",
         "test": "npm run test --workspaces --if-present",
         "build": "node scripts/sync-versions.js && npm run build --workspaces --if-present",
-        "publish": "node scripts/publish-all.js"
+        "publish": "node scripts/publish-all.js",
+        "update": "npm update --workspaces --include-workspace-root",
+        "update:check": "npx npm-check-updates --workspaces --root",
+        "update:latest": "npx npm-check-updates -u --workspaces --root && npm install"
     },
     "devDependencies": {
-        "@types/node": "^24.5.2"
+        "@types/node": "^25.0.3"
     },
     "engines": {
         "node": ">=16.0.0",
