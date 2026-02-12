@@ -1,5 +1,6 @@
 import { FormdownParser } from '../src/parser'
 import { FormdownGenerator } from '../src/generator'
+import { FormManager } from '../src/form-manager'
 
 describe('Action Elements - New Syntax', () => {
     let parser: FormdownParser
@@ -217,6 +218,84 @@ describe('Action Elements - New Syntax', () => {
             expect(result.forms[3].type).toBe('button')
             expect(result.forms[3].attributes?.type).toBe('button')
             expect(result.forms[3].attributes?.onclick).toBe('calc()')
+        })
+    })
+
+    describe('FormManager.getActions()', () => {
+        test('should return action elements from new syntax', () => {
+            const manager = new FormManager()
+            manager.parse(`
+@name: [text required]
+@email: [email]
+@[submit "Send"]
+@[reset "Clear"]
+`)
+            const actions = manager.getActions()
+            expect(actions).toHaveLength(2)
+            expect(actions[0].attributes?.type).toBe('submit')
+            expect(actions[1].attributes?.type).toBe('reset')
+            manager.dispose()
+        })
+
+        test('should return action elements from old syntax', () => {
+            const manager = new FormManager()
+            manager.parse(`
+@name: [text]
+@btn: [submit]
+@reset_btn: [reset]
+`)
+            const actions = manager.getActions()
+            expect(actions).toHaveLength(2)
+            expect(actions.some(a => a.type === 'submit')).toBe(true)
+            expect(actions.some(a => a.type === 'reset')).toBe(true)
+            manager.dispose()
+        })
+
+        test('should return both old and new syntax actions', () => {
+            const manager = new FormManager()
+            manager.parse(`
+@name: [text]
+@[submit "Send"]
+@old_btn: [button]
+`)
+            const actions = manager.getActions()
+            expect(actions).toHaveLength(2)
+            manager.dispose()
+        })
+
+        test('should return empty array when no actions', () => {
+            const manager = new FormManager()
+            manager.parse('@name: [text]\n@email: [email]')
+            expect(manager.getActions()).toHaveLength(0)
+            manager.dispose()
+        })
+    })
+
+    describe('FormManager.getInputFields()', () => {
+        test('should exclude action elements', () => {
+            const manager = new FormManager()
+            manager.parse(`
+@name: [text required]
+@email: [email]
+@[submit "Send"]
+@[reset "Clear"]
+`)
+            const inputs = manager.getInputFields()
+            expect(inputs).toHaveLength(2)
+            expect(inputs[0].name).toBe('name')
+            expect(inputs[1].name).toBe('email')
+            manager.dispose()
+        })
+
+        test('should include all fields when no actions present', () => {
+            const manager = new FormManager()
+            manager.parse(`
+@name: [text]
+@age: [number]
+`)
+            const inputs = manager.getInputFields()
+            expect(inputs).toHaveLength(2)
+            manager.dispose()
         })
     })
 

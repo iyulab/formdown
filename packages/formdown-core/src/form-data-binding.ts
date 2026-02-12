@@ -74,6 +74,40 @@ export class FormDataBinding {
   }
 
   /**
+   * Apply default values to fields that don't have explicit values
+   */
+  applyDefaults(defaults: Record<string, any>, options: { override?: boolean } = {}): void {
+    if (this.isUpdating) return
+
+    this.isUpdating = true
+    try {
+      const changedFields: Array<{ field: string; value: any }> = []
+
+      Object.entries(defaults).forEach(([field, value]) => {
+        if (options.override || !this.hasExplicitValue(field)) {
+          const oldValue = this.data[field]
+          if (oldValue !== value) {
+            this.data[field] = value
+            changedFields.push({ field, value })
+          }
+        }
+      })
+
+      if (changedFields.length > 0) {
+        // Need to temporarily unset isUpdating to allow notifications
+        this.isUpdating = false
+        changedFields.forEach(({ field, value }) => {
+          this.notifyFieldChange(field, value)
+          this.validateField(field, value)
+        })
+        this.notifyChange()
+      }
+    } finally {
+      this.isUpdating = false
+    }
+  }
+
+  /**
    * Reset to schema defaults
    */
   reset(): void {

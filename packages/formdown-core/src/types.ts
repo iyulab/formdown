@@ -141,11 +141,11 @@ export interface FieldSchema {
     conditions?: ConditionalAttributes  // Conditional visibility/behavior
 }
 
-export type FieldType = 
+export type FieldType =
     | 'text' | 'email' | 'password' | 'tel' | 'url' | 'number'
     | 'date' | 'time' | 'datetime-local' | 'month' | 'week'
     | 'textarea' | 'select' | 'radio' | 'checkbox' | 'file'
-    | 'color' | 'range' | 'submit' | 'reset'
+    | 'color' | 'range' | 'toggle' | 'submit' | 'reset'
 
 export interface ValidationRules {
     min?: number | string

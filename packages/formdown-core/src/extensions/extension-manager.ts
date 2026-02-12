@@ -245,8 +245,27 @@ export class ExtensionManager {
     }
 }
 
-// Create default instance
-export const defaultExtensionManager = new ExtensionManager()
+// Lazy-initialized default instance
+let _defaultInstance: ExtensionManager | null = null
+
+export function getDefaultExtensionManager(): ExtensionManager {
+    if (!_defaultInstance) {
+        _defaultInstance = new ExtensionManager()
+    }
+    return _defaultInstance
+}
+
+// Proxy for backward compatibility — defers instantiation until first property access
+export const defaultExtensionManager: ExtensionManager = new Proxy({} as ExtensionManager, {
+    get(_target, prop) {
+        const instance = getDefaultExtensionManager()
+        const value = (instance as any)[prop]
+        if (typeof value === 'function') {
+            return value.bind(instance)
+        }
+        return value
+    }
+})
 
 // Convenience functions using default instance
 export async function initializeExtensions(options?: ExtensionOptions): Promise<void> {
@@ -255,22 +274,22 @@ export async function initializeExtensions(options?: ExtensionOptions): Promise<
         const manager = new ExtensionManager(options)
         await manager.initialize()
     } else {
-        await defaultExtensionManager.initialize()
+        await getDefaultExtensionManager().initialize()
     }
 }
 
 export async function registerPlugin(plugin: Plugin): Promise<void> {
-    return defaultExtensionManager.registerPlugin(plugin)
+    return getDefaultExtensionManager().registerPlugin(plugin)
 }
 
 export function registerHook(hook: Hook): void {
-    return defaultExtensionManager.registerHook(hook)
+    return getDefaultExtensionManager().registerHook(hook)
 }
 
 export async function executeHooks<T>(hookName: HookName, context: HookContext, ...args: any[]): Promise<T[]> {
-    return defaultExtensionManager.executeHooks<T>(hookName, context, ...args)
+    return getDefaultExtensionManager().executeHooks<T>(hookName, context, ...args)
 }
 
 export function getExtensionStats() {
-    return defaultExtensionManager.getStats()
+    return getDefaultExtensionManager().getStats()
 }

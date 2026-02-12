@@ -1,4 +1,3 @@
-import { marked } from 'marked'
 import { Field, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes } from './types'
 import { defaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'

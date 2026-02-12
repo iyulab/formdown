@@ -42,6 +42,7 @@ export class FormManager {
   private schema: FormDownSchema | null = null
   private dataBinding: FormDataBinding | null = null
   private eventListeners: Map<keyof FormManagerEvents, Set<Function>> = new Map()
+  private _pendingDefaults: { defaults: Record<string, any>; options: { override?: boolean } } | null = null
   
   // New Core modules
   private fieldProcessor: FieldProcessor | null = null
@@ -69,10 +70,16 @@ export class FormManager {
     
     // Initialize reactive data binding
     this.dataBinding = new FormDataBinding(this.schema)
-    
+
+    // Apply pending defaults if setDefaults() was called before parse()
+    if (this._pendingDefaults) {
+      this.dataBinding.applyDefaults(this._pendingDefaults.defaults, this._pendingDefaults.options)
+      this._pendingDefaults = null
+    }
+
     // Setup event forwarding from data binding
     this.setupDataBindingEvents()
-    
+
     return this.parsedContent
   }
 
@@ -120,6 +127,19 @@ export class FormManager {
   updateData(newData: Record<string, any>): void {
     if (!this.dataBinding) return
     this.dataBinding.updateAll(newData)
+  }
+
+  /**
+   * Set default values for form fields.
+   * If called before parse(), defaults are stored and applied after parse().
+   * If called after parse(), defaults are applied immediately.
+   */
+  setDefaults(defaults: Record<string, any>, options: { override?: boolean } = {}): void {
+    if (this.dataBinding) {
+      this.dataBinding.applyDefaults(defaults, options)
+    } else {
+      this._pendingDefaults = { defaults, options }
+    }
   }
 
   /**
@@ -172,6 +192,30 @@ export class FormManager {
    */
   getFields(): Field[] {
     return this.parsedContent?.forms || []
+  }
+
+  /**
+   * Get action fields (submit, reset, button, image)
+   */
+  getActions(): Field[] {
+    const actionTypes = new Set(['submit', 'reset', 'button', 'image'])
+    return this.getFields().filter(field => {
+      if (actionTypes.has(field.type)) return true
+      if (field.attributes?.type && actionTypes.has(String(field.attributes.type))) return true
+      return false
+    })
+  }
+
+  /**
+   * Get data input fields (excludes action elements)
+   */
+  getInputFields(): Field[] {
+    const actionTypes = new Set(['submit', 'reset', 'button', 'image'])
+    return this.getFields().filter(field => {
+      if (actionTypes.has(field.type)) return false
+      if (field.attributes?.type && actionTypes.has(String(field.attributes.type))) return false
+      return true
+    })
   }
 
   /**
@@ -519,7 +563,8 @@ export class FormManager {
     }
 
     this.fieldProcessor = null
-    
+    this._pendingDefaults = null
+
     // Clear existing event listeners
     this.eventListeners.clear()
     

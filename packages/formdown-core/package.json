@@ -1,11 +1,43 @@
 {
   "name": "@formdown/core",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "description": "Core parsing and generation engine for Formdown",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./parser": {
+      "types": "./dist/parser.d.ts",
+      "import": "./dist/parser.js"
+    },
+    "./generator": {
+      "types": "./dist/generator.d.ts",
+      "import": "./dist/generator.js"
+    },
+    "./schema": {
+      "types": "./dist/schema.d.ts",
+      "import": "./dist/schema.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "import": "./dist/types.js"
+    },
+    "./form-manager": {
+      "types": "./dist/form-manager.d.ts",
+      "import": "./dist/form-manager.js"
+    },
+    "./extensions": {
+      "types": "./dist/extensions/index.d.ts",
+      "import": "./dist/extensions/index.js"
+    }
+  },
   "files": [
     "dist"
   ],
