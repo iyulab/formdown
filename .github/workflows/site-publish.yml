@@ -36,7 +36,9 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm ci
+          npm install --no-save lightningcss
 
       - name: Build packages
         run: npm run build --workspace=@formdown/core --workspace=@formdown/ui --workspace=@formdown/editor
