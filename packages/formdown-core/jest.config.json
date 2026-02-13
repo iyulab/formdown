@@ -5,13 +5,16 @@
         ".ts"
     ],
     "transform": {
-        "^.+\\.ts$": [
+        "^.+\\.[jt]s$": [
             "ts-jest",
             {
                 "useESM": true
             }
         ]
     },
+    "transformIgnorePatterns": [
+        "node_modules/(?!marked/)"
+    ],
     "moduleNameMapper": {
         "^(\\.{1,2}/.*)\\.js$": "$1"
     },

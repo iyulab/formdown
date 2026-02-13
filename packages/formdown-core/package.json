@@ -65,7 +65,7 @@
     "access": "public"
   },
   "dependencies": {
-    "marked": "^15.0.12"
+    "marked": "^17.0.2"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

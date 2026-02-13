@@ -40,7 +40,7 @@
         "update:latest": "npx npm-check-updates -u --workspaces --root && npm install"
     },
     "devDependencies": {
-        "@types/node": "^25.0.3"
+        "@types/node": "^25.2.3"
     },
     "engines": {
         "node": ">=16.0.0",
