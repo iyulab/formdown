@@ -1,3 +1,13 @@
+/**
+ * Describes a relation (FK) attached to a field.
+ */
+export interface FieldRelation {
+    /** Target entity name (e.g., "Customers") */
+    target: string
+    /** Relation type: 'fk' for one-to-many (->), 'many-to-many' for (<->) */
+    type: 'fk' | 'many-to-many'
+}
+
 export interface Field {
     name: string
     type: string
@@ -18,6 +28,7 @@ export interface Field {
     position?: number  // Position in the source content for form association
     group?: string    // Group ID for fieldset grouping
     conditions?: ConditionalAttributes  // Conditional visibility/behavior
+    relation?: FieldRelation  // FK relation metadata (-> or <->)
     [key: string]: unknown  // Index signature for compatibility with FieldSchema
 }
 

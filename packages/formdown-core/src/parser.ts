@@ -1,4 +1,4 @@
-import { Field, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes } from './types'
+import { Field, FieldRelation, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes } from './types'
 import { defaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 
@@ -43,6 +43,10 @@ export class FormdownParser {
         }
     }
 
+    /**
+     * @deprecated Use parseFormdown() instead, which returns richer FormdownContent
+     * including formDeclarations, datalistDeclarations, and groupDeclarations.
+     */
     parse(content: string): ParseResult {
         const { fields } = this.extractFields(content)
         return { fields, errors: [] }
@@ -172,12 +176,14 @@ export class FormdownParser {
         // Check if this could be shorthand syntax (has shorthand-specific features)
         // Standard syntax: @name(Label): [type attributes] should NOT be treated as shorthand
         // Shorthand syntax: @name*: [], @name{pattern}: [], @name: @[], etc.
+        // FK relation syntax with type marker: @name -> Target: s[], @name* -> Target: c[]
         const hasShorthandMarker = /^@\w+\*/.test(trimmedLine) ||                          // Required marker
                                    /^@\w+\{[^}]*\}/.test(trimmedLine) ||                    // Content
                                    /^@\w+\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])\d*\[/.test(trimmedLine) || // Type marker
                                    /^@\w+\([^)]+\)\*/.test(trimmedLine) ||                  // Label + required
                                    /^@\w+\([^)]+\)\{[^}]*\}/.test(trimmedLine) ||           // Label + content
-                                   /^@\w+\([^)]+\)\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])\d*\[/.test(trimmedLine) // Label + type marker
+                                   /^@\w+\([^)]+\)\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])\d*\[/.test(trimmedLine) || // Label + type marker
+                                   /^@\w+[^:]*(?:<->|->)\s*\w+\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])\d*\[/.test(trimmedLine) // FK relation + type marker
         
         
         if (hasShorthandMarker) {
@@ -187,49 +193,67 @@ export class FormdownParser {
         
         // Fall back to standard syntax
         // Use a more sophisticated regex that handles quoted content with brackets
-        const match = trimmedLine.match(/^@(\w+)(?:\(([^)]+)\))?\s*:\s*\[((?:[^\]"']|"[^"]*"|'[^']*')*)\].*$/)
+        // Also supports FK relation syntax: @name -> Target: [...] or @name <-> Target: [...]
+        const match = trimmedLine.match(/^@(\w+)(?:\(([^)]+)\))?\s*(?:(<->|->)\s*(\w+)\s*)?:\s*\[((?:[^\]"']|"[^"]*"|'[^']*')*)\].*$/)
         if (!match) return null
 
-        const [, name, customLabel, typeAndAttributes] = match
+        const [, name, customLabel, arrow, relationTarget, typeAndAttributes] = match
         const field = this.createField(name, customLabel, typeAndAttributes)
+
+        // Attach relation metadata if FK syntax was used
+        if (field && relationTarget) {
+            field.relation = {
+                target: relationTarget,
+                type: arrow === '<->' ? 'many-to-many' : 'fk'
+            }
+        }
 
         return field
     }
 
     private parseShorthandBlockField(line: string): Field | null {
-        // Pattern: @fieldName*{content}(label): typeMarker[attributes] OR @fieldName(label)*{content}: typeMarker[attributes]
+        // Pattern: @fieldName*{content}(label) [-> Target]: typeMarker[attributes] OR @fieldName(label)*{content} [-> Target]: typeMarker[attributes]
         // Examples: @email*: @[], @name(Full Name)*{^[A-Z][a-z]+$}: [], @size{S,M,L}: r[]
+        // FK relation: @customer_id* -> Customers: s[], @tags <-> Tags: c[]
         // Handle 'dt' as a special case (two-character type marker)
         // Make type marker optional to handle cases like @name*: []
         // Handle both orders: @name*{content}(label) and @name(label)*{content}
         // Fixed pattern with nested brace support
-        let shorthandMatch = line.match(/^@(\w+)(\*)?(?:\{(.*?)\})?(?:\(([^)]+)\))?\s*:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?\[([^\]]*)\].*$/)
-        
+        let shorthandMatch = line.match(/^@(\w+)(\*)?(?:\{(.*?)\})?(?:\(([^)]+)\))?\s*(?:(<->|->)\s*(\w+)\s*)?:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?\[([^\]]*)\].*$/)
+
         // Try alternative order: @name(label)*{content}
         if (!shorthandMatch) {
-            shorthandMatch = line.match(/^@(\w+)(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?\[([^\]]*)\].*$/)
+            shorthandMatch = line.match(/^@(\w+)(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*(?:(<->|->)\s*(\w+)\s*)?:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?\[([^\]]*)\].*$/)
             if (shorthandMatch) {
-                // Reorder to match expected destructuring: [, name, requiredMarker, content, customLabel, typeMarker, rowsOrModifier, attributes]
-                const [, name, customLabel, requiredMarker, content, typeMarker, rowsOrModifier, attributes] = shorthandMatch
-                shorthandMatch = [shorthandMatch[0], name, requiredMarker, content, customLabel, typeMarker, rowsOrModifier, attributes]
+                // Reorder to match expected destructuring: [, name, requiredMarker, content, customLabel, arrow, relationTarget, typeMarker, rowsOrModifier, attributes]
+                const [, name, customLabel, requiredMarker, content, arrow, relationTarget, typeMarker, rowsOrModifier, attributes] = shorthandMatch
+                shorthandMatch = [shorthandMatch[0], name, requiredMarker, content, customLabel, arrow, relationTarget, typeMarker, rowsOrModifier, attributes]
             }
         }
-        
+
         if (!shorthandMatch) {
             return null
         }
 
-        const [, name, requiredMarker, content, customLabel, typeMarker, rowsOrModifier, attributes] = shorthandMatch
-        
-        // Only process as shorthand if it has shorthand features (required marker, content defined, custom label, type marker, or rows)
+        const [, name, requiredMarker, content, customLabel, arrow, relationTarget, typeMarker, rowsOrModifier, attributes] = shorthandMatch
+
+        // Only process as shorthand if it has shorthand features (required marker, content defined, custom label, type marker, rows, or relation)
         // Note: content === '' (empty string) is different from content === undefined (no braces)
-        if (!requiredMarker && content === undefined && !customLabel && !typeMarker && !rowsOrModifier) {
+        if (!requiredMarker && content === undefined && !customLabel && !typeMarker && !rowsOrModifier && !relationTarget) {
             return null // Let standard parser handle this
         }
-        
+
         // Convert shorthand to standard field
         const field = this.convertShorthandToField(name, requiredMarker, content, customLabel, typeMarker || '', rowsOrModifier, attributes)
-        
+
+        // Attach relation metadata if FK syntax was used
+        if (field && relationTarget) {
+            field.relation = {
+                target: relationTarget,
+                type: arrow === '<->' ? 'many-to-many' : 'fk'
+            }
+        }
+
         return field
     }
 

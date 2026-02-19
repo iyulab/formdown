@@ -64,7 +64,10 @@ export function generateFormHTML(content: string | import('./types.js').ParseRes
 }
 
 /**
- * @deprecated Use parseFormdown() instead. This is kept for backward compatibility.
+ * @deprecated Use parseFormdown() instead. parseFormFields() returns only { fields, errors }
+ * while parseFormdown() returns the full FormdownContent including formDeclarations,
+ * datalistDeclarations, groupDeclarations, and cleaned markdown.
+ * Migration: replace `parseFormFields(input).fields` with `parseFormdown(input).forms`.
  */
 export function parseFormFields(input: string) {
     const parser = new FormdownParser()
