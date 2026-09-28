@@ -3,6 +3,9 @@ import { Field, FormdownContent, FormDeclaration, DatalistDeclaration, GroupDecl
 import { defaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 
+/** Generation returns markup only, so a failing hook is reported as a console warning. */
+const warnHookError = (message: string) => console.warn(`[Formdown] ${message}`)
+
 export class FormdownGenerator {
     private formCounter = 0
     private fieldCounter = 0
@@ -197,6 +200,18 @@ export class FormdownGenerator {
     }
 
     generateHTML(content: FormdownContent): string {
+        // Extension hooks wrap generation; a failing hook is reported and skipped
+        const prepared = defaultExtensionManager.transformSync('pre-generate', {}, content, warnHookError)
+        const html = this.renderHTML(prepared)
+        return defaultExtensionManager.transformSync('post-generate', {}, html, warnHookError)
+    }
+
+    /** Pass a field's markup through the `field-render` hooks. */
+    private renderField(field: Field, html: string): string {
+        return defaultExtensionManager.transformSync('field-render', { field }, html, warnHookError)
+    }
+
+    private renderHTML(content: FormdownContent): string {
         // Reset ID tracking for each form generation
         this.usedIds.clear()
         this.fieldCounter = 0
@@ -279,7 +294,7 @@ export class FormdownGenerator {
         inlineFields.forEach((field, index) => {
             const placeholder = `<!--FORMDOWN_FIELD_${fields.indexOf(field)}-->`
             const defaultFormId = formContext.get(field)
-            const fieldHTML = this.generateInlineFieldHTML(field, defaultFormId)
+            const fieldHTML = this.renderField(field, this.generateInlineFieldHTML(field, defaultFormId))
             result = result.replace(new RegExp(this.escapeRegex(placeholder), 'g'), fieldHTML)
         })
 
@@ -288,7 +303,7 @@ export class FormdownGenerator {
             const fieldIndex = fields.indexOf(field)
             const placeholder = `<!--FORMDOWN_FIELD_${fieldIndex}-->`
             const defaultFormId = formContext.get(field)
-            const fieldHTML = this.generateStandaloneFieldHTML(field, defaultFormId)
+            const fieldHTML = this.renderField(field, this.generateStandaloneFieldHTML(field, defaultFormId))
             result = result.replace(new RegExp(this.escapeRegex(placeholder), 'g'), fieldHTML)
         })
 
@@ -346,7 +361,7 @@ export class FormdownGenerator {
         // Process inline fields first
         inlineFields.forEach((field, index) => {
             const placeholder = `<!--FORMDOWN_FIELD_${fields.indexOf(field)}-->`
-            const fieldHTML = this.generateInlineFieldHTML(field)
+            const fieldHTML = this.renderField(field, this.generateInlineFieldHTML(field))
             result = result.replace(new RegExp(placeholder, 'g'), fieldHTML)
         })
 
@@ -354,7 +369,7 @@ export class FormdownGenerator {
         blockFields.forEach(field => {
             const fieldIndex = fields.indexOf(field)
             const placeholder = `<!--FORMDOWN_FIELD_${fieldIndex}-->`
-            const fieldHTML = this.generateStandaloneFieldHTML(field)
+            const fieldHTML = this.renderField(field, this.generateStandaloneFieldHTML(field))
             result = result.replace(new RegExp(placeholder, 'g'), fieldHTML)
         })
 
@@ -367,7 +382,7 @@ export class FormdownGenerator {
         // Replace field placeholders with actual form fields
         fields.forEach((field, index) => {
             const placeholder = `<!--FORMDOWN_FIELD_${index}-->`
-            const fieldHTML = this.generateStandaloneFieldHTML(field)
+            const fieldHTML = this.renderField(field, this.generateStandaloneFieldHTML(field))
             result = result.replace(
                 new RegExp(placeholder, 'g'),
                 fieldHTML

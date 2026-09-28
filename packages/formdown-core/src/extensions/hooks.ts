@@ -135,6 +135,30 @@ export class HookManager implements IHookManager {
     }
 
     /**
+     * Pass `value` through every hook registered under `hookName`, highest priority
+     * first. Each hook receives the previous hook's result; a hook that returns
+     * undefined leaves the value unchanged. A hook that throws or returns a promise is
+     * skipped and reported through `onError`, so the pipeline always completes.
+     */
+    transformSync<T>(hookName: HookName, context: HookContext, value: T, onError?: (message: string) => void): T {
+        for (const hook of this.hooks.get(hookName) || []) {
+            try {
+                const result = hook.handler(context, value)
+                if (result instanceof Promise) {
+                    result.catch(() => undefined)
+                    throw new Error('asynchronous hooks cannot run during synchronous parsing or generation')
+                }
+                if (result !== undefined) value = result as T
+            } catch (error) {
+                const message = `Hook "${hookName}" failed: ${error instanceof Error ? error.message : String(error)}`
+                this.emit('hook-error', { hook: hookName, error: message })
+                onError?.(message)
+            }
+        }
+        return value
+    }
+
+    /**
      * Clear hooks
      */
     clear(hookName?: HookName): void {

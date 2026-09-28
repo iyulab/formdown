@@ -15,7 +15,8 @@ import type {
     Plugin,
     Hook,
     HookName,
-    HookContext
+    HookContext,
+    HookFunction
 } from './types.js'
 
 export class ExtensionManager {
@@ -148,6 +149,23 @@ export class ExtensionManager {
     async executeHooks<T>(hookName: HookName, context: HookContext, ...args: any[]): Promise<T[]> {
         this.ensureInitialized()
         return this.hookManager.execute<T>(hookName, context, ...args)
+    }
+
+    /**
+     * Remove a registered hook handler
+     */
+    unregisterHook(hookName: HookName, handler: HookFunction): void {
+        this.hookManager.unregister(hookName, handler)
+    }
+
+    /**
+     * Pass `value` through the hooks registered under `hookName` (see
+     * HookManager.transformSync). Before initialization no hooks can be registered,
+     * so the value passes through unchanged; parsing never requires initialization.
+     */
+    transformSync<T>(hookName: HookName, context: HookContext, value: T, onError?: (message: string) => void): T {
+        if (!this.initialized) return value
+        return this.hookManager.transformSync(hookName, context, value, onError)
     }
 
     /**

@@ -64,18 +64,31 @@ export class FormdownParser {
         this.defaultFormCreated = false
         this.diagnostics = []
 
-        const { fields, cleanedMarkdown, frontMatter } = this.extractFields(content)
+        // Extension hooks: a failing hook is reported, never fatal
+        const onHookError = (message: string) => {
+            this.diagnostics.push({ code: 'hook-error', message, severity: 'error' })
+        }
+        const source = defaultExtensionManager.transformSync('pre-parse', { input: content }, content, onHookError)
+
+        const extracted = this.extractFields(source)
+        const fields = extracted.fields.map(field => defaultExtensionManager.transformSync(
+            'field-parse',
+            { input: field.span ? source.slice(field.span.start, field.span.end) : undefined, field },
+            field,
+            onHookError
+        ))
         this.reportDuplicateNames(fields)
 
-        return {
-            markdown: this.options.preserveMarkdown ? cleanedMarkdown : '',
+        const result: FormdownContent = {
+            markdown: this.options.preserveMarkdown ? extracted.cleanedMarkdown : '',
             forms: fields,
-            ...(frontMatter && { frontMatter }),
+            ...(extracted.frontMatter && { frontMatter: extracted.frontMatter }),
             diagnostics: this.diagnostics,
             formDeclarations: this.formDeclarations,
             datalistDeclarations: this.datalistDeclarations,
             groupDeclarations: this.groupDeclarations
         }
+        return defaultExtensionManager.transformSync('post-parse', { input: source }, result, onHookError)
     }
 
     /**

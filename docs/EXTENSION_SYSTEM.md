@@ -95,6 +95,25 @@ type HookName =
   | 'error-handle'   // When handling errors
 ```
 
+#### When hooks run
+
+`parseFormdown()` and `generateFormHTML()` run hooks synchronously, highest priority first. Each hook receives the previous hook's result as its second argument and returns a replacement; returning `undefined` keeps the value unchanged.
+
+| Hook | Runs | Second argument / return value | Context |
+|---|---|---|---|
+| `pre-parse` | before parsing | source text | `input`: source |
+| `field-parse` | once per parsed field, in source order | `Field` | `input`: the field's source text, `field` |
+| `post-parse` | after parsing | `FormdownContent` | `input`: source after `pre-parse` |
+| `pre-generate` | before generating HTML | `FormdownContent` | — |
+| `field-render` | once per block field | the field's HTML | `field` |
+| `post-generate` | after generating HTML | the whole HTML | — |
+
+- Hooks run only after the extension system is initialized (`await initializeExtensions()`); before that, parsing and generation run without them.
+- A hook that throws, or returns a promise, is skipped. During parsing it is reported as a `hook-error` diagnostic; during generation as a console warning.
+- `field-parse` changes the parsed field data. Inline fields' markup is produced while parsing, so `field-render` applies to block fields.
+- If `pre-parse` changes the text, source spans refer to the changed text.
+- `field-validate` and `error-handle` are reserved: they are not called by parsing or generation.
+
 ### Plugins
 
 Plugins are collections of extensions that can include:
