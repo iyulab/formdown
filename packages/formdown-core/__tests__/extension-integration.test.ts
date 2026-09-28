@@ -290,13 +290,14 @@ describe('Extension System Integration', () => {
                 await extensionManager.registerPlugin(plugin)
             }
 
-            const start = performance.now()
             const results = await extensionManager.executeHooks('field-validate', {})
-            const end = performance.now()
 
+            // Every hook runs exactly once, highest priority first. Wall-clock
+            // assertions are avoided: they fail on a loaded machine.
             expect(results).toHaveLength(hookCount)
             expect(executionCount).toBe(hookCount)
-            expect(end - start).toBeLessThan(100) // Should complete in under 100ms
+            expect(results[0]).toBe(`result-${hookCount - 1}`)
+            expect(results[hookCount - 1]).toBe('result-0')
         })
     })
 })
