@@ -82,20 +82,24 @@ export class FenceTracker {
 
 const CODE_SPAN = /(`+)(?!`)([\s\S]*?[^`])\1(?!`)/g
 
+// Private-use characters that fill masked code spans; consecutive spans alternate
+const MASK = ['', '']
+const MASKED_RUN = /+|+/g
+
 /**
- * Replace inline code spans with inert placeholders so field patterns cannot match
- * inside them. `restore` puts the original text back.
+ * Blank out inline code spans so field patterns cannot match inside them. The mask
+ * has the same length as the input, so offsets into it are offsets into the line.
+ * `restore` puts the code spans back into text derived from the mask.
  */
-export function maskCodeSpans(line: string): { masked: string, blanked: string, restore: (text: string) => string } {
+export function maskCodeSpans(line: string): { masked: string, restore: (text: string) => string } {
     const spans: string[] = []
     const masked = line.replace(CODE_SPAN, span => {
         spans.push(span)
-        return `\u0000${spans.length - 1}\u0000`
+        return MASK[(spans.length - 1) % 2].repeat(span.length)
     })
+    let next = 0
     return {
         masked,
-        /** Same length as the input, code spans blanked out: columns stay valid. */
-        blanked: line.replace(CODE_SPAN, span => '\u0000'.repeat(span.length)),
-        restore: text => spans.length === 0 ? text : text.replace(/\u0000(\d+)\u0000/g, (_, i) => spans[Number(i)])
+        restore: text => spans.length === 0 ? text : text.replace(MASKED_RUN, () => spans[next++])
     }
 }

@@ -14,7 +14,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const result = parser.parseFormdown(content)
 
                 expect(result.forms).toHaveLength(1)
-                expect(result.forms[0]).toEqual({
+                expect(result.forms[0]).toMatchObject({
                     name: 'name',
                     type: 'text',
                     label: 'Name',
@@ -29,7 +29,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const content = '@user_name(Full Name): [text required]'
                 const result = parser.parseFormdown(content)
 
-                expect(result.forms[0]).toEqual({
+                expect(result.forms[0]).toMatchObject({
                     name: 'user_name',
                     type: 'text',
                     label: 'Full Name',
@@ -44,7 +44,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const content = '@email: [email required placeholder="Enter email"]'
                 const result = parser.parseFormdown(content)
 
-                expect(result.forms[0]).toEqual({
+                expect(result.forms[0]).toMatchObject({
                     name: 'email',
                     type: 'email',
                     label: 'Email',
@@ -62,7 +62,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const content = '@age: [number min=18 max=100]'
                 const result = parser.parseFormdown(content)
 
-                expect(result.forms[0]).toEqual({
+                expect(result.forms[0]).toMatchObject({
                     name: 'age',
                     type: 'number',
                     label: 'Age',
@@ -74,7 +74,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const content = '@description: [textarea rows=4 cols=50]'
                 const result = parser.parseFormdown(content)
 
-                expect(result.forms[0]).toEqual({
+                expect(result.forms[0]).toMatchObject({
                     name: 'description',
                     type: 'textarea',
                     label: 'Description',
@@ -133,7 +133,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const content = '@name*: []'
                 const result = parser.parseFormdown(content)
 
-                expect(result.forms[0]).toEqual({
+                expect(result.forms[0]).toMatchObject({
                     name: 'name',
                     type: 'text',
                     label: 'Name',
@@ -148,7 +148,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const content = '@user_name(Full Name)*: []'
                 const result = parser.parseFormdown(content)
 
-                expect(result.forms[0]).toEqual({
+                expect(result.forms[0]).toMatchObject({
                     name: 'user_name',
                     type: 'text',
                     label: 'Full Name',
@@ -286,7 +286,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const content = '@username(Username)*{^[a-zA-Z0-9_]{3,20}$}: [placeholder="Enter username"]'
                 const result = parser.parseFormdown(content)
 
-                expect(result.forms[0]).toEqual({
+                expect(result.forms[0]).toMatchObject({
                     name: 'username',
                     type: 'text',
                     label: 'Username',
@@ -303,7 +303,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const content = '@email(Email Address)*: @[placeholder="your@email.com" required]'
                 const result = parser.parseFormdown(content)
 
-                expect(result.forms[0]).toEqual({
+                expect(result.forms[0]).toMatchObject({
                     name: 'email',
                     type: 'email',
                     label: 'Email Address',
@@ -322,7 +322,7 @@ describe('FormdownParser - Comprehensive', () => {
             const content = 'Hello ___@username[text required]!'
             const result = parser.parseFormdown(content)
 
-            expect(result.forms[0]).toEqual({
+            expect(result.forms[0]).toMatchObject({
                 name: 'username',
                 type: 'text',
                 label: 'Username',
@@ -336,7 +336,7 @@ describe('FormdownParser - Comprehensive', () => {
             const content = 'Your email: @___@email*'
             const result = parser.parseFormdown(content)
 
-            expect(result.forms[0]).toEqual({
+            expect(result.forms[0]).toMatchObject({
                 name: 'email',
                 type: 'email',
                 label: 'Email',

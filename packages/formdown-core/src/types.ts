@@ -29,6 +29,7 @@ export interface Field {
     group?: string    // Group ID for fieldset grouping
     conditions?: ConditionalAttributes  // Conditional visibility/behavior
     relation?: FieldRelation  // FK relation metadata (-> or <->)
+    span?: SourceSpan  // Where the field syntax is in the original source
     [key: string]: unknown  // Index signature for compatibility with FieldSchema
 }
 

@@ -141,6 +141,31 @@ const html = generateFormHTML(parsed)
 const schema = getSchema(formdownContent)
 ```
 
+### Source Positions and Lossless Editing
+
+Every parsed field carries `span`, its location in the original text. Offsets are 0-based character offsets into the source exactly as given (CRLF included); `line` and `column` are 1-based. Diagnostics and front matter carry spans too. Fields are listed in source order.
+
+```typescript
+const source = 'Name: ___@name'
+const [field] = parseFormdown(source).forms
+source.slice(field.span.start, field.span.end) // '___@name'
+```
+
+Two functions change a document without disturbing anything else in it:
+
+```typescript
+import { applyEdits, updateFrontMatter } from '@formdown/core'
+
+// Replace ranges of the original text; edits may come in any order but must not overlap
+applyEdits(source, [{ start: field.span.start, end: field.span.end, text: '___@full_name' }])
+
+// Fill in a document: set (or with undefined, remove) front matter keys.
+// Front matter values override field values, so this records what a user entered.
+const filled = updateFrontMatter(formSource, { symptom: 'Freezes on save', code: '007' })
+```
+
+`updateFrontMatter` creates front matter when there is none, keeps other keys and comments, uses the document's line ending, keeps a byte order mark in front, and quotes strings that YAML would otherwise read as numbers or booleans. Text outside the edited range, the whole body included, is unchanged byte for byte. It throws when the existing front matter is not a valid YAML mapping rather than overwrite it.
+
 ### Class-based API (Advanced)
 
 ```typescript

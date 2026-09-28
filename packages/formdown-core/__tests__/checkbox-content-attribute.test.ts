@@ -16,7 +16,7 @@ describe('Checkbox Content Attribute', () => {
             const result = parser.parseFormdown(content)
             
             expect(result.forms).toHaveLength(1)
-            expect(result.forms[0]).toEqual({
+            expect(result.forms[0]).toMatchObject({
                 name: 'terms',
                 type: 'checkbox',
                 label: 'Terms',
@@ -33,7 +33,7 @@ describe('Checkbox Content Attribute', () => {
             const result = parser.parseFormdown(content)
             
             expect(result.forms).toHaveLength(1)
-            expect(result.forms[0]).toEqual({
+            expect(result.forms[0]).toMatchObject({
                 name: 'privacy',
                 type: 'checkbox',
                 label: 'Privacy Policy',
@@ -50,7 +50,7 @@ describe('Checkbox Content Attribute', () => {
             const result = parser.parseFormdown(content)
             
             expect(result.forms).toHaveLength(1)
-            expect(result.forms[0]).toEqual({
+            expect(result.forms[0]).toMatchObject({
                 name: 'newsletter',
                 type: 'checkbox',
                 label: 'Newsletter Subscription',
@@ -66,7 +66,7 @@ describe('Checkbox Content Attribute', () => {
             const result = parser.parseFormdown(content)
             
             expect(result.forms).toHaveLength(1)
-            expect(result.forms[0]).toEqual({
+            expect(result.forms[0]).toMatchObject({
                 name: 'terms',
                 type: 'checkbox',
                 label: 'Terms',

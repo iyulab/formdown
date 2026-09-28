@@ -15,7 +15,7 @@ describe('Other Option (*) Functionality', () => {
             const content = '@country{USA,Canada,UK,*}: s[]'
             const result = parser.parseFormdown(content)
 
-            expect(result.forms[0]).toEqual({
+            expect(result.forms[0]).toMatchObject({
                 name: 'country',
                 type: 'select',
                 label: 'Country',
@@ -31,7 +31,7 @@ describe('Other Option (*) Functionality', () => {
             const content = '@gender{Male,Female,Other,*}: r[]'
             const result = parser.parseFormdown(content)
 
-            expect(result.forms[0]).toEqual({
+            expect(result.forms[0]).toMatchObject({
                 name: 'gender',
                 type: 'radio',
                 label: 'Gender',
@@ -47,7 +47,7 @@ describe('Other Option (*) Functionality', () => {
             const content = '@interests{Programming,Design,Music,*}: c[]'
             const result = parser.parseFormdown(content)
 
-            expect(result.forms[0]).toEqual({
+            expect(result.forms[0]).toMatchObject({
                 name: 'interests',
                 type: 'checkbox',
                 label: 'Interests',

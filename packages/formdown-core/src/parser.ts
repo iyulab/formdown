@@ -1,4 +1,4 @@
-import { Field, FieldRelation, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic, FrontMatter } from './types'
+import { Field, FieldRelation, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic, FrontMatter, SourceSpan } from './types'
 import { NAME, ATTRIBUTES, isValidName, pattern, tokenizeAttributes, attributeValue, quoteAttributeValue, scanAttributes } from './grammar.js'
 import { readFrontMatter, FenceTracker, maskCodeSpans } from './source.js'
 
@@ -181,6 +181,8 @@ export class FormdownParser {
             // Extract block fields
             const blockField = this.parseBlockField(line)
             if (blockField) {
+                const trimmed = line.trim()
+                blockField.span = this.spanAt(line.indexOf(trimmed), trimmed.length)
                 // Associate field with current form
                 this.associateFieldWithForm(blockField)
                 fields.push(blockField)
@@ -318,20 +320,26 @@ export class FormdownParser {
         return field
     }
 
-    private parseInlineFields(source: string): { cleanedLine: string, inlineFields: Field[] } {
+    /**
+     * Parse inline fields in `source`, which starts at `column` (0-based) of the current line.
+     */
+    private parseInlineFields(source: string, column = 0): { cleanedLine: string, inlineFields: Field[] } {
         const inlineFields: Field[] = []
-        // Inline code is not Formdown: hide code spans from the field patterns
-        const { masked: line, blanked, restore } = maskCodeSpans(source)
+        // Inline code is not Formdown: blank out code spans (offsets are unchanged)
+        const { masked: line, restore } = maskCodeSpans(source)
+        // Shorthand replacements change the length of the line; the standard pass maps
+        // its offsets back to the source through these
+        const replacements: { at: number, delta: number }[] = []
         const delimiter = this.options.inlineFieldDelimiter!
 
         // Support shorthand inline fields: typeMarker___@fieldName*{content}(label)[attributes] or typeMarker___@fieldName*{content}: type[attributes]
         // Examples: @___@email*, #___@age, d___@birth_date{yyyy-MM-dd}: [attributes], ___@service{options}: s[]
         // Note: need to handle single 'd' separately from 'dt'
-        this.checkInlineFieldSyntax(blanked, delimiter)
+        this.checkInlineFieldSyntax(line, delimiter, column)
 
         const shorthandPattern = pattern(String.raw`(dt|d|[#@%&t?TrscRFCMW$]?)${delimiter}@(${NAME})(\*)?(?:\{([^}]*)\})?(?:\(([^)]+)\))?(?:${ATTRIBUTES}|:\s*([^\s]*?)${ATTRIBUTES})?`, 'g')
         
-        let cleanedLine = line.replace(shorthandPattern, (match, typeMarker, name, requiredMarker, content, customLabel, attributes, colonType, colonAttributes) => {
+        let cleanedLine = line.replace(shorthandPattern, (match, typeMarker, name, requiredMarker, content, customLabel, attributes, colonType, colonAttributes, offset: number) => {
             // Only process as shorthand if it has actual shorthand features
             // Custom labels are also standard features, so only process if we have
             // type markers, required markers, content, or attributes
@@ -357,9 +365,12 @@ export class FormdownParser {
             const field = this.convertShorthandToField(name, requiredMarker, content, customLabel, finalTypeMarker, '', finalAttributes)
             if (field) {
                 field.inline = true
+                field.span = this.spanAt(column + offset, match.length)
                 inlineFields.push(field)
                 const requiredAttr = field.required ? ' data-required="true"' : ''
-                return `<span contenteditable="true" data-field-name="${name}" data-field-type="${field.type}" data-placeholder="${field.label || name}" class="formdown-inline-field" role="textbox"${requiredAttr}>${field.label || name}</span>`
+                const markup = `<span contenteditable="true" data-field-name="${name}" data-field-type="${field.type}" data-placeholder="${field.label || name}" class="formdown-inline-field" role="textbox"${requiredAttr}>${field.label || name}</span>`
+                replacements.push({ at: offset, delta: markup.length - match.length })
+                return markup
             }
             return match
         })
@@ -370,7 +381,7 @@ export class FormdownParser {
         // everything this pass matches is still unprocessed source. (Comparing names here
         // used to drop a second field that happened to share a name.)
         const standardPattern = pattern(String.raw`${delimiter}@(${NAME})(?:\{([^}]*)\})?(?:\(([^)]+)\))?(?::\s*([^\s]*?)${ATTRIBUTES}|${ATTRIBUTES})?`, 'g')
-        cleanedLine = cleanedLine.replace(standardPattern, (match, name, options, customLabel, colonType, colonAttributes, directAttributes) => {
+        cleanedLine = cleanedLine.replace(standardPattern, (match, name, options, customLabel, colonType, colonAttributes, directAttributes, offset: number) => {
             // Determine type and attributes
             let finalTypeAndAttributes = 'text'
             if (colonType && colonAttributes !== undefined) {
@@ -402,6 +413,14 @@ export class FormdownParser {
             }
             if (field) {
                 field.inline = true
+                // Replacements are in source order; each one's position in this pass's text
+                // is its source position plus the growth of the replacements before it
+                let shift = 0
+                for (const { at, delta } of replacements) {
+                    if (at + shift >= offset) break
+                    shift += delta
+                }
+                field.span = this.spanAt(column + offset - shift, match.length)
                 inlineFields.push(field)
                 const requiredAttr = field.required ? ' data-required="true"' : ''
                 return `<span contenteditable="true" data-field-name="${name}" data-field-type="${field.type}" data-placeholder="${field.label || name}" class="formdown-inline-field" role="textbox"${requiredAttr}>${field.label || name}</span>`
@@ -409,6 +428,8 @@ export class FormdownParser {
             return match
         })
 
+        // The two passes find fields out of order; report them in source order
+        inlineFields.sort((a, b) => a.span!.start - b.span!.start)
         return { cleanedLine: restore(cleanedLine), inlineFields }
     }
 
@@ -806,6 +827,12 @@ export class FormdownParser {
         return field
     }
 
+    /** A span of `length` characters at `column` (0-based) of the line being parsed. */
+    private spanAt(column: number, length: number): SourceSpan {
+        const start = (this.lineStarts[this.currentLine] ?? 0) + column
+        return { start, end: start + length, line: this.currentLine + 1, column: column + 1 }
+    }
+
     /** Record a diagnostic located at `column` (0-based) of the line being parsed. */
     private report(code: string, message: string, column: number, length: number, severity: Diagnostic['severity'] = 'error'): void {
         const start = (this.lineStarts[this.currentLine] ?? 0) + column
@@ -818,14 +845,14 @@ export class FormdownParser {
     }
 
     /** Report attribute brackets starting at `open` that do not close on this line. */
-    private checkAttributeBrackets(line: string, open: number, from: number): void {
+    private checkAttributeBrackets(line: string, open: number, from: number, base = 0): void {
         const scan = scanAttributes(line, open)
         if (!('error' in scan)) return
         this.report(scan.error,
             scan.error === 'unterminated-quoted-value'
                 ? 'A quoted attribute value is never closed; attribute values cannot span lines'
                 : 'Field attributes are opened with "[" but never closed with "]"',
-            from, line.length - from)
+            base + from, line.length - from)
     }
 
     /** A line shaped like a block field that did not parse: an invalid name or unclosed brackets. */
@@ -844,17 +871,17 @@ export class FormdownParser {
     }
 
     /** Inline field markers that cannot become fields. */
-    private checkInlineFieldSyntax(line: string, delimiter: string): void {
+    private checkInlineFieldSyntax(line: string, delimiter: string, base = 0): void {
         const invalidName = pattern(String.raw`${delimiter}@(\p{N}[\p{L}\p{N}_]*)`, 'g')
         for (const match of line.matchAll(invalidName)) {
             this.report('invalid-field-name',
                 `"${match[1]}" is not a valid field name: names start with a letter or underscore`,
-                match.index!, match[0].length)
+                base + match.index!, match[0].length)
         }
 
         const opening = pattern(String.raw`${delimiter}@${NAME}(?:\{[^}]*\})?(?:\([^)]*\))?(?::\s*[^\s\[]*)?\[`, 'g')
         for (const match of line.matchAll(opening)) {
-            this.checkAttributeBrackets(line, match.index! + match[0].length - 1, match.index!)
+            this.checkAttributeBrackets(line, match.index! + match[0].length - 1, match.index!, base)
         }
     }
 
@@ -1237,18 +1264,22 @@ export class FormdownParser {
         const dataRows: string[][] = []
 
         // Parse data rows and extract inline fields
+        const tableLine = this.currentLine
         for (let i = 2; i < tableLines.length; i++) {
+            this.currentLine = startIndex + i
             const row = this.parseTableRow(tableLines[i])
+            const columns = this.tableCellColumns(tableLines[i])
             const processedRow: string[] = []
 
-            for (const cell of row) {
-                const { cleanedLine, inlineFields } = this.parseInlineFields(cell)
+            row.forEach((cell, c) => {
+                const { cleanedLine, inlineFields } = this.parseInlineFields(cell, columns[c] ?? 0)
                 fields.push(...inlineFields)
                 processedRow.push(cleanedLine)
-            }
+            })
 
             dataRows.push(processedRow)
         }
+        this.currentLine = tableLine
 
         // Generate table HTML
         const tableHtml = this.generateTableHtml(headers, dataRows)
@@ -1258,6 +1289,21 @@ export class FormdownParser {
             tableHtml,
             endIndex: currentIndex - 1
         }
+    }
+
+    /** Column (0-based) where each trimmed cell of a table row starts. */
+    private tableCellColumns(line: string): number[] {
+        const columns: number[] = []
+        const pipes: number[] = []
+        for (let i = 0; i < line.length; i++) if (line[i] === '|') pipes.push(i)
+        for (let k = 0; k + 1 < pipes.length; k++) {
+            const raw = line.slice(pipes[k] + 1, pipes[k + 1])
+            columns.push(pipes[k] + 1 + (raw.length - raw.trimStart().length))
+        }
+        // A row may omit the closing pipe
+        const rest = line.slice(pipes[pipes.length - 1] + 1)
+        if (pipes.length > 0 && rest.trim()) columns.push(pipes[pipes.length - 1] + 1 + (rest.length - rest.trimStart().length))
+        return columns
     }
 
     private parseTableRow(line: string): string[] {
