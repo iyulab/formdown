@@ -170,7 +170,8 @@ Please fill out your information.
             const schema = getSchema(input)
             
             expect(schema.phone.validation).toMatchObject({
-                pattern: '\\\\d{3}-\\\\d{4}-\\\\d{4}'
+                // "\\" in a quoted value is an escaped backslash, so the regex is \d{3}-\d{4}-\d{4}
+                pattern: '\\d{3}-\\d{4}-\\d{4}'
             })
         })
 

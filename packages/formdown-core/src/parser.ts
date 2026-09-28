@@ -1,5 +1,5 @@
 import { Field, FieldRelation, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic, FrontMatter } from './types'
-import { NAME, isValidName, pattern } from './grammar.js'
+import { NAME, ATTRIBUTES, isValidName, pattern, tokenizeAttributes, attributeValue, quoteAttributeValue, scanAttributes } from './grammar.js'
 import { readFrontMatter, FenceTracker, maskCodeSpans } from './source.js'
 
 const TYPE_MARKER = String.raw`(?:dt|d|[#@%&t?TrscRFCMW$])`
@@ -17,13 +17,13 @@ const SHORTHAND_MARKERS = [
 ]
 
 /** Standard block syntax: @name(Label) [-> Target]: [type attributes] */
-const BLOCK_FIELD = pattern(String.raw`^@(${NAME})(?:\(([^)]+)\))?\s*${RELATION}:\s*\[((?:[^\]"']|"[^"]*"|'[^']*')*)\].*$`)
+const BLOCK_FIELD = pattern(String.raw`^@(${NAME})(?:\(([^)]+)\))?\s*${RELATION}:\s*${ATTRIBUTES}.*$`)
 
 /** Shorthand block syntax: @name*{content}(Label) [-> Target]: marker[attributes] */
-const SHORTHAND_BLOCK_FIELD = pattern(String.raw`^@(${NAME})(\*)?(?:\{(.*?)\})?(?:\(([^)]+)\))?\s*${RELATION}:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?\[([^\]]*)\].*$`)
+const SHORTHAND_BLOCK_FIELD = pattern(String.raw`^@(${NAME})(\*)?(?:\{(.*?)\})?(?:\(([^)]+)\))?\s*${RELATION}:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?${ATTRIBUTES}.*$`)
 
 /** Shorthand block syntax with the label first: @name(Label)*{content} [-> Target]: marker[attributes] */
-const SHORTHAND_BLOCK_FIELD_LABEL_FIRST = pattern(String.raw`^@(${NAME})(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*${RELATION}:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?\[([^\]]*)\].*$`)
+const SHORTHAND_BLOCK_FIELD_LABEL_FIRST = pattern(String.raw`^@(${NAME})(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*${RELATION}:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?${ATTRIBUTES}.*$`)
 
 /** Something shaped like a block field whose name is not a valid name, e.g. `@1st: [text]`. */
 const BLOCK_FIELD_CANDIDATE = /^@([^\s:([{*\-<>@\]]+)[^:]*:\s*\S*\[/u
@@ -189,7 +189,7 @@ export class FormdownParser {
                 continue
             }
 
-            this.checkInvalidBlockFieldName(line)
+            this.checkBlockFieldSyntax(line)
 
             // Extract inline fields
             const { cleanedLine, inlineFields } = this.parseInlineFields(line)
@@ -329,7 +329,7 @@ export class FormdownParser {
         // Note: need to handle single 'd' separately from 'dt'
         this.checkInlineFieldSyntax(blanked, delimiter)
 
-        const shorthandPattern = pattern(String.raw`(dt|d|[#@%&t?TrscRFCMW$]?)${delimiter}@(${NAME})(\*)?(?:\{([^}]*)\})?(?:\(([^)]+)\))?(?:\[([^\]]*)\]|:\s*([^\s]*?)\[([^\]]*)\])?`, 'g')
+        const shorthandPattern = pattern(String.raw`(dt|d|[#@%&t?TrscRFCMW$]?)${delimiter}@(${NAME})(\*)?(?:\{([^}]*)\})?(?:\(([^)]+)\))?(?:${ATTRIBUTES}|:\s*([^\s]*?)${ATTRIBUTES})?`, 'g')
         
         let cleanedLine = line.replace(shorthandPattern, (match, typeMarker, name, requiredMarker, content, customLabel, attributes, colonType, colonAttributes) => {
             // Only process as shorthand if it has actual shorthand features
@@ -369,7 +369,7 @@ export class FormdownParser {
         // Occurrences the shorthand pass handled were already replaced with markup, so
         // everything this pass matches is still unprocessed source. (Comparing names here
         // used to drop a second field that happened to share a name.)
-        const standardPattern = pattern(String.raw`${delimiter}@(${NAME})(?:\{([^}]*)\})?(?:\(([^)]+)\))?(?::\s*([^\s]*?)\[([^\]]*)\]|\[([^\]]*)\])?`, 'g')
+        const standardPattern = pattern(String.raw`${delimiter}@(${NAME})(?:\{([^}]*)\})?(?:\(([^)]+)\))?(?::\s*([^\s]*?)${ATTRIBUTES}|${ATTRIBUTES})?`, 'g')
         cleanedLine = cleanedLine.replace(standardPattern, (match, name, options, customLabel, colonType, colonAttributes, directAttributes) => {
             // Determine type and attributes
             let finalTypeAndAttributes = 'text'
@@ -581,23 +581,9 @@ export class FormdownParser {
 
     private parseAttributes(attributeString: string): Record<string, any> {
         const attributes: Record<string, any> = {}
-        const attributePattern = /([\w-]+)(?:=(?:"((?:[^"\\]|\\.)*)"|'((?:[^'\\]|\\.)*)'|([^\s]+)))?/g
-        const matches = Array.from(attributeString.matchAll(attributePattern))
-        
-        for (const match of matches) {
-            const [, key, quotedValue1, quotedValue2, unquotedValue] = match
-            
-            if (key === 'required') {
-                attributes.required = true
-            } else if (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined) {
-                const value = quotedValue1 !== undefined ? quotedValue1 : 
-                             quotedValue2 !== undefined ? quotedValue2 : unquotedValue
-                attributes[key] = this.parseAttributeValue(value)
-            } else {
-                attributes[key] = true
-            }
+        for (const token of tokenizeAttributes(attributeString)) {
+            attributes[token.key] = token.key === 'required' ? true : attributeValue(token)
         }
-        
         return attributes
     }
 
@@ -608,7 +594,7 @@ export class FormdownParser {
             if (value === true) {
                 parts.push(key)
             } else if (typeof value === 'string') {
-                parts.push(`${key}="${value}"`)
+                parts.push(`${key}=${quoteAttributeValue(value)}`)
             } else {
                 parts.push(`${key}=${value}`)
             }
@@ -634,8 +620,7 @@ export class FormdownParser {
         }
 
         // Parse type and attributes more carefully using regex
-        const attributePattern = /([\w-]+)(?:=(?:"([^"]*)"|'([^']*)'|([^\s]+)))?/g
-        const matches = Array.from(typeAndAttributes.matchAll(attributePattern))
+        const matches = tokenizeAttributes(typeAndAttributes)
 
         if (matches.length === 0) return null
 
@@ -644,9 +629,12 @@ export class FormdownParser {
         let typeIndex = -1
         
         for (let i = 0; i < matches.length; i++) {
-            const [, key, quotedValue1, quotedValue2, unquotedValue] = matches[i]
+            const token = matches[i]
+            const key = token.key
+            const hasValue = token.value !== undefined
+            const text = token.value ?? ''
             // If this key has no value and is a valid field type, use it as the type
-            if (!quotedValue1 && !quotedValue2 && !unquotedValue) {
+            if (!hasValue) {
                 // Map shorthand types to full types
                 const shorthandTypeMap: Record<string, string> = {
                     's': 'select',
@@ -688,16 +676,19 @@ export class FormdownParser {
         // Process all attributes, skipping the one we used as type
         for (let i = 0; i < matches.length; i++) {
             if (i === typeIndex) continue // Skip the type match
-            const [, key, quotedValue1, quotedValue2, unquotedValue] = matches[i]
+            const token = matches[i]
+            const key = token.key
+            const hasValue = token.value !== undefined
+            const text = token.value ?? ''
 
             if (key === 'required') {
                 field.required = true
-            } else if (key === 'label' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
-                field.label = quotedValue1 || quotedValue2 || unquotedValue
-            } else if (key === 'placeholder' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
-                field.placeholder = quotedValue1 || quotedValue2 || unquotedValue
-            } else if (key === 'options' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
-                const optionsValue = quotedValue1 || quotedValue2 || unquotedValue
+            } else if (key === 'label' && hasValue) {
+                field.label = text
+            } else if (key === 'placeholder' && hasValue) {
+                field.placeholder = text
+            } else if (key === 'options' && hasValue) {
+                const optionsValue = text
                 if (['radio', 'checkbox', 'select'].includes(type)) {
                     if (optionsValue) {
                         const options = optionsValue.split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
@@ -731,28 +722,20 @@ export class FormdownParser {
                 }
             } else if (key === 'allow-other') {
                 field.allowOther = true
-            } else if (key === 'other-label' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
-                field.otherLabel = quotedValue1 || quotedValue2 || unquotedValue
-            } else if (key === 'format' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
-                field.format = quotedValue1 || quotedValue2 || unquotedValue
-            } else if (key === 'pattern' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
-                field.pattern = quotedValue1 || quotedValue2 || unquotedValue
-            } else if (key === 'content' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
-                field.content = quotedValue1 || quotedValue2 || unquotedValue
+            } else if (key === 'other-label' && hasValue) {
+                field.otherLabel = text
+            } else if (key === 'format' && hasValue) {
+                field.format = text
+            } else if (key === 'pattern' && hasValue) {
+                field.pattern = text
+            } else if (key === 'content' && hasValue) {
+                field.content = text
             } else if (key === 'value') {
-                if (quotedValue1 !== undefined || quotedValue2 !== undefined) {
-                    // For quoted values, preserve as string (don't parse as boolean/number)
-                    field.value = quotedValue1 !== undefined ? quotedValue1 : quotedValue2
-                } else if (unquotedValue !== undefined) {
-                    // For unquoted values, parse them (can become boolean/number)
-                    field.value = this.parseAttributeValue(unquotedValue)
-                } else {
-                    // value attribute with no value defaults to empty string
-                    field.value = ''
-                }
-            } else if (key === 'datalist' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+                // Quoted values stay strings; bare ones may be numbers or booleans; no value is ''
+                field.value = hasValue ? attributeValue(token) : ''
+            } else if (key === 'datalist' && hasValue) {
                 // Handle datalist attribute
-                const datalistValue = quotedValue1 || quotedValue2 || unquotedValue
+                const datalistValue = text
 
                 if (datalistValue.startsWith('#')) {
                     // Reference to a declared datalist: datalist="#id"
@@ -773,49 +756,48 @@ export class FormdownParser {
                         }
                     }
                 }
-            } else if (key === 'visible-if' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+            } else if (key === 'visible-if' && hasValue) {
                 // Handle conditional visibility
-                const conditionValue = quotedValue1 || quotedValue2 || unquotedValue
+                const conditionValue = text
                 const condition = this.parseCondition(conditionValue)
                 if (condition) {
                     if (!field.conditions) field.conditions = {}
                     field.conditions.visibleIf = condition
                 }
-            } else if (key === 'hidden-if' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+            } else if (key === 'hidden-if' && hasValue) {
                 // Handle conditional hiding
-                const conditionValue = quotedValue1 || quotedValue2 || unquotedValue
+                const conditionValue = text
                 const condition = this.parseCondition(conditionValue)
                 if (condition) {
                     if (!field.conditions) field.conditions = {}
                     field.conditions.hiddenIf = condition
                 }
-            } else if (key === 'enabled-if' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+            } else if (key === 'enabled-if' && hasValue) {
                 // Handle conditional enabling
-                const conditionValue = quotedValue1 || quotedValue2 || unquotedValue
+                const conditionValue = text
                 const condition = this.parseCondition(conditionValue)
                 if (condition) {
                     if (!field.conditions) field.conditions = {}
                     field.conditions.enabledIf = condition
                 }
-            } else if (key === 'disabled-if' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+            } else if (key === 'disabled-if' && hasValue) {
                 // Handle conditional disabling
-                const conditionValue = quotedValue1 || quotedValue2 || unquotedValue
+                const conditionValue = text
                 const condition = this.parseCondition(conditionValue)
                 if (condition) {
                     if (!field.conditions) field.conditions = {}
                     field.conditions.disabledIf = condition
                 }
-            } else if (key === 'required-if' && (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined)) {
+            } else if (key === 'required-if' && hasValue) {
                 // Handle conditional requirement
-                const conditionValue = quotedValue1 || quotedValue2 || unquotedValue
+                const conditionValue = text
                 const condition = this.parseCondition(conditionValue)
                 if (condition) {
                     if (!field.conditions) field.conditions = {}
                     field.conditions.requiredIf = condition
                 }
-            } else if (quotedValue1 !== undefined || quotedValue2 !== undefined || unquotedValue !== undefined) {
-                const value = quotedValue1 || quotedValue2 || unquotedValue
-                field.attributes![key] = this.parseAttributeValue(value)
+            } else if (hasValue) {
+                field.attributes![key] = attributeValue(token)
             } else {
                 field.attributes![key] = true
             }
@@ -824,11 +806,6 @@ export class FormdownParser {
         return field
     }
 
-    /**
-     * Generate a human-readable label from a field name
-     * @param fieldName - The field name to convert
-     * @returns A formatted label string
-     */
     /** Record a diagnostic located at `column` (0-based) of the line being parsed. */
     private report(code: string, message: string, column: number, length: number, severity: Diagnostic['severity'] = 'error'): void {
         const start = (this.lineStarts[this.currentLine] ?? 0) + column
@@ -840,15 +817,30 @@ export class FormdownParser {
         })
     }
 
-    /** A line shaped like a block field that did not parse because its name is invalid. */
-    private checkInvalidBlockFieldName(line: string): void {
+    /** Report attribute brackets starting at `open` that do not close on this line. */
+    private checkAttributeBrackets(line: string, open: number, from: number): void {
+        const scan = scanAttributes(line, open)
+        if (!('error' in scan)) return
+        this.report(scan.error,
+            scan.error === 'unterminated-quoted-value'
+                ? 'A quoted attribute value is never closed; attribute values cannot span lines'
+                : 'Field attributes are opened with "[" but never closed with "]"',
+            from, line.length - from)
+    }
+
+    /** A line shaped like a block field that did not parse: an invalid name or unclosed brackets. */
+    private checkBlockFieldSyntax(line: string): void {
         const trimmed = line.trim()
         const candidate = trimmed.match(BLOCK_FIELD_CANDIDATE)
-        if (!candidate || isValidName(candidate[1])) return
+        if (!candidate) return
         const column = line.indexOf(trimmed)
-        this.report('invalid-field-name',
-            `"${candidate[1]}" is not a valid field name: names start with a letter or underscore`,
-            column, candidate[0].length)
+        if (!isValidName(candidate[1])) {
+            this.report('invalid-field-name',
+                `"${candidate[1]}" is not a valid field name: names start with a letter or underscore`,
+                column, candidate[0].length)
+            return
+        }
+        this.checkAttributeBrackets(line, column + candidate[0].length - 1, column)
     }
 
     /** Inline field markers that cannot become fields. */
@@ -860,11 +852,9 @@ export class FormdownParser {
                 match.index!, match[0].length)
         }
 
-        const unterminated = pattern(String.raw`${delimiter}@${NAME}(?:\{[^}]*\})?(?:\([^)]*\))?(?::\s*[^\s\[]*)?\[[^\]]*$`, 'g')
-        for (const match of line.matchAll(unterminated)) {
-            this.report('unterminated-attributes',
-                'Field attributes are opened with "[" but never closed with "]"',
-                match.index!, match[0].length)
+        const opening = pattern(String.raw`${delimiter}@${NAME}(?:\{[^}]*\})?(?:\([^)]*\))?(?::\s*[^\s\[]*)?\[`, 'g')
+        for (const match of line.matchAll(opening)) {
+            this.checkAttributeBrackets(line, match.index! + match[0].length - 1, match.index!)
         }
     }
 
@@ -1018,33 +1008,6 @@ export class FormdownParser {
         }
         
         return field
-    }
-
-    private parseAttributeValue(value: string): any {
-        // Handle empty string explicitly
-        if (value === '') {
-            return ''
-        }
-
-        // Unescape common escape sequences
-        const unescapedValue = value.replace(/\\(.)/g, '$1')
-
-        // Try to parse as integer (including negative)
-        if (/^-?\d+$/.test(unescapedValue)) {
-            return parseInt(unescapedValue, 10)
-        }
-
-        // Try to parse as float (including negative)
-        if (/^-?\d*\.\d+$/.test(unescapedValue)) {
-            return parseFloat(unescapedValue)
-        }
-
-        // Try to parse as boolean
-        if (unescapedValue === 'true') return true
-        if (unescapedValue === 'false') return false
-
-        // Return as unescaped string
-        return unescapedValue
     }
 
     private parseFormDeclaration(line: string): FormDeclaration | null {

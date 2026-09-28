@@ -119,7 +119,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const result = parser.parse('@bio: [textarea aria-required="true" aria-describedby="bio-hint"]')
 
                 expect(result.fields[0].attributes).toEqual({
-                    'aria-required': true,
+                    'aria-required': 'true',
                     'aria-describedby': 'bio-hint',
                     form: "formdown-form-default"
                 })

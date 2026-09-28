@@ -879,6 +879,23 @@ Additional notes: ___@notes[textarea rows=3 placeholder="Special delivery instru
 - **Single checkbox**: `value=true` checks the box, `value=false` unchecks it
 - **Range**: Sets the initial position
 
+## Attribute Values
+
+Attributes go inside the brackets as `key="value"`, `key='value'`, `key=value` or a bare `key`.
+
+- **Quoted values are strings, exactly as written**: `data-code="007"` is `"007"`, `aria-hidden="true"` is `"true"`, and both are rendered as written.
+- **Unquoted values** that look like numbers or `true`/`false` are read as numbers and booleans: `min=0`, `rows=4`, `data-open=false`.
+- **A bare key** is `true`: `required`, `disabled`.
+- **Escapes** inside quotes: `\"` (or `\'` in single quotes) is a quote and `\\` is a backslash. Any other backslash is kept, so `pattern="\d{5}"` is the regular expression `\d{5}`.
+- A quoted value may contain `]`: `placeholder="a ] b"`.
+- A quoted value cannot span lines. Put multi-line values in [front matter](#front-matter).
+- Attribute names may contain any characters except whitespace, quotes and `=` (`data-x`, `x:note`, `data.v`). Values are HTML-escaped when rendered.
+
+| Diagnostic | Meaning |
+|---|---|
+| `unterminated-attributes` | `[` is never closed with `]` on the same line |
+| `unterminated-quoted-value` | A quoted value is never closed on the same line |
+
 ## Front Matter
 
 A document may start with YAML front matter, the metadata block used by static site generators and note-taking tools. It opens with a `---` line on the first line of the document and closes with a `---` or `...` line.
@@ -923,7 +940,8 @@ const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
 | Code | Severity | Meaning |
 |---|---|---|
 | `invalid-field-name` | error | Field syntax whose name is not a valid name, e.g. `@1st: [text]`. The field is not created |
-| `unterminated-attributes` | error | An inline field opens `[` without a closing `]` on the same line |
+| `unterminated-attributes` | error | A field opens `[` without a closing `]` on the same line |
+| `unterminated-quoted-value` | error | A quoted attribute value is not closed on the same line |
 | `duplicate-field-name` | warning | A name is used by more than one field. All occurrences are kept |
 | `front-matter-invalid-yaml` | error | The front matter is not valid YAML. `frontMatter.raw` keeps the text; `frontMatter.data` is empty |
 | `front-matter-not-mapping` | error | The front matter is valid YAML but not a mapping of keys to values |

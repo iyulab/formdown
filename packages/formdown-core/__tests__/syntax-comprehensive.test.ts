@@ -440,7 +440,7 @@ Contact preference: ___@contact_method[radio options="Email,Phone,SMS"]
             const result = parser.parseFormdown(content)
 
             expect(result.forms[0].attributes?.autocomplete).toBe('email')
-            expect(result.forms[0].attributes?.spellcheck).toBe(false)
+            expect(result.forms[0].attributes?.spellcheck).toBe('false')
 
             expect(result.forms[1].attributes?.maxlength).toBe(15)
             expect(result.forms[1].attributes?.inputmode).toBe('tel')
@@ -458,7 +458,7 @@ Contact preference: ___@contact_method[radio options="Email,Phone,SMS"]
 
             expect(result.forms[0].attributes?.class).toBe('form-control')
             expect(result.forms[0].attributes?.style).toBe('border: 2px solid blue')
-            expect(result.forms[1].attributes?.['data-strength']).toBe(true)
+            expect(result.forms[1].attributes?.['data-strength']).toBe('true')
             expect(result.forms[1].attributes?.['aria-describedby']).toBe('pwd-help')
         })
 
@@ -470,9 +470,9 @@ Contact preference: ___@contact_method[radio options="Email,Phone,SMS"]
             const result = parser.parseFormdown(content)
 
             expect(result.forms[0].attributes?.['data-unit']).toBe('%')
-            expect(result.forms[0].attributes?.['data-live-update']).toBe(true)
+            expect(result.forms[0].attributes?.['data-live-update']).toBe('true')
             expect(result.forms[1].attributes?.['data-max-size']).toBe('5MB')
-            expect(result.forms[1].attributes?.['data-preview']).toBe(true)
+            expect(result.forms[1].attributes?.['data-preview']).toBe('true')
         })
 
         test('should support accessibility attributes', () => {
@@ -482,10 +482,10 @@ Contact preference: ___@contact_method[radio options="Email,Phone,SMS"]
 `
             const result = parser.parseFormdown(content)
 
-            expect(result.forms[0].attributes?.['aria-required']).toBe(true)
+            expect(result.forms[0].attributes?.['aria-required']).toBe('true')
             expect(result.forms[0].attributes?.['aria-describedby']).toBe('bio-hint')
             expect(result.forms[1].attributes?.['aria-label']).toBe('Full Name')
-            expect(result.forms[1].attributes?.['aria-invalid']).toBe(false)
+            expect(result.forms[1].attributes?.['aria-invalid']).toBe('false')
         })
     })
 
@@ -691,7 +691,7 @@ Payment method: ___@payment[radio options="Credit Card,PayPal,Bank Transfer"]
             expect(result.forms[0].attributes?.accept).toBe('image/*')
             expect(result.forms[0].attributes?.class).toBe('file-upload')
             expect(result.forms[1].attributes?.autocomplete).toBe('username')
-            expect(result.forms[1].attributes?.spellcheck).toBe(false)
+            expect(result.forms[1].attributes?.spellcheck).toBe('false')
             expect(result.forms[5].value).toBe('Auto')
             expect(result.forms[7].attributes?.style).toBe('width: 200px')
         })
