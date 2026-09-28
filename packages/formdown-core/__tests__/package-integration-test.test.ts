@@ -143,6 +143,12 @@ ${largeFormFields}
 @submit: [submit]
 `
 
+      // Warm up first: the first call includes one-time module and JIT cost, which
+      // made this wall-clock check fail on a loaded machine
+      parseFormdown(largeContent)
+      generateFormHTML(largeContent)
+      getSchema(largeContent)
+
       const startTime = Date.now()
       
       const parseResult = parseFormdown(largeContent)
