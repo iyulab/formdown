@@ -17,6 +17,10 @@ export interface FrontMatterResult {
 /**
  * Read YAML front matter from the very start of `source`, as static site generators
  * do: an opening `---` line and a closing `---` or `...` line.
+ *
+ * This is the front matter `parseFormdown` reports, without parsing the fields: use it
+ * where only a document's front matter is needed, such as reading many documents' values.
+ * `null` when the source does not start with front matter.
  */
 export function readFrontMatter(source: string): FrontMatterResult | null {
     const match = source.match(FRONT_MATTER)

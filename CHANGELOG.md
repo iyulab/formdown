@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- `readFrontMatter(source)` is exported from `@formdown/core`: a document's front matter — the same `frontMatter` `parseFormdown` reports, with its diagnostics — without parsing the fields. Reading only the front matter of many documents is several times faster than parsing each one in full.
+
 ## 0.5.1
 
 ### Documentation

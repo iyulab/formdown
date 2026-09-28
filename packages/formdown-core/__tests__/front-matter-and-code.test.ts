@@ -1,4 +1,4 @@
-import { parseFormdown, generateFormHTML } from '../src/index'
+import { parseFormdown, generateFormHTML, readFrontMatter } from '../src/index'
 
 describe('Front matter', () => {
     const doc = [
@@ -93,6 +93,24 @@ describe('Front matter', () => {
     it('keeps source line numbers for diagnostics after the front matter', () => {
         const [diagnostic] = parseFormdown('---\na: 1\n---\n@1st: [text]').diagnostics!
         expect(diagnostic.span).toEqual(expect.objectContaining({ line: 4, column: 1 }))
+    })
+})
+
+describe('readFrontMatter', () => {
+    test('reads the front matter alone, the same as a full parse does', () => {
+        const source = ['---', 'template: intake@1', '요청: "007"', '---', '# Intake', '', '@요청: [text]', ''].join('\n')
+        const read = readFrontMatter(source)
+        expect(read?.frontMatter.data).toEqual({ template: 'intake@1', 요청: '007' })
+        expect(read?.frontMatter).toEqual(parseFormdown(source).frontMatter)
+        expect(read?.lineCount).toBe(4)
+        expect(read?.diagnostics).toEqual([])
+    })
+
+    test('is null without front matter, and reports YAML it cannot read', () => {
+        expect(readFrontMatter('# No front matter\n')).toBeNull()
+        const broken = readFrontMatter(['---', '- a list', '---', ''].join('\n'))
+        expect(broken?.frontMatter.data).toEqual({})
+        expect(broken?.diagnostics.map((d) => d.code)).toEqual(['front-matter-not-mapping'])
     })
 })
 

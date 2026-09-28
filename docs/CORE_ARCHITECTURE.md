@@ -166,6 +166,14 @@ const filled = updateFrontMatter(formSource, { symptom: 'Freezes on save', code:
 
 `updateFrontMatter` creates front matter when there is none, keeps other keys, their order and comments, uses the document's line ending, keeps a byte order mark in front, and quotes strings that YAML would otherwise read as numbers or booleans. Text outside the front matter, the whole body included, is unchanged byte for byte. Inside the front matter the YAML is written back by the `yaml` library, so spacing and quoting of untouched values may be normalized. It throws when the existing front matter is not a valid YAML mapping rather than overwrite it.
 
+To read a document's front matter without parsing its fields — for example the values of many documents at once — use `readFrontMatter`. It returns the same `frontMatter` that `parseFormdown` reports, with the diagnostics for YAML it cannot read, or `null` when the source does not start with front matter:
+
+```typescript
+import { readFrontMatter } from '@formdown/core'
+
+const values = readFrontMatter(documentSource)?.frontMatter.data ?? {}
+```
+
 ### Class-based API (Advanced)
 
 ```typescript
