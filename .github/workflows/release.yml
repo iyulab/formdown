@@ -1,0 +1,71 @@
+name: Release
+
+# Publishes @formdown/core, @formdown/ui and @formdown/editor to npm.
+# - Pushing a `v*` tag publishes that tag.
+# - Manual dispatch publishes the current branch head, but only when a
+#   `v<version>` tag exists and `packages/` is identical to it, so what
+#   reaches npm is always the tagged source.
+# Re-running is safe: versions already on npm are skipped.
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # npm provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: 'https://registry.npmjs.org'
+          cache: npm
+
+      - name: Check source matches the release tag
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+          if ! git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
+            echo "::error::Tag $TAG does not exist — tag the release commit first."
+            exit 1
+          fi
+          if [ "${GITHUB_REF_TYPE}" = "tag" ] && [ "${GITHUB_REF_NAME}" != "$TAG" ]; then
+            echo "::error::Pushed tag ${GITHUB_REF_NAME} does not match package.json version $VERSION."
+            exit 1
+          fi
+          if ! git diff --quiet "$TAG" HEAD -- packages package.json package-lock.json; then
+            echo "::error::packages/ differs from $TAG — publish from the tag."
+            exit 1
+          fi
+
+      - run: npm ci
+
+      - name: Build packages
+        run: npm run build --workspace=@formdown/core --workspace=@formdown/ui --workspace=@formdown/editor
+
+      - name: Test
+        run: npm test --workspace=@formdown/core --workspace=@formdown/ui --workspace=@formdown/editor
+
+      - name: Publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # Dependency order: ui depends on core, editor on both.
+          for PKG in core ui editor; do
+            NAME="@formdown/$PKG"
+            VERSION=$(node -p "require('./packages/formdown-$PKG/package.json').version")
+            if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+              echo "$NAME@$VERSION is already on npm — skipped."
+            else
+              npm publish --workspace="$NAME" --provenance --access public
+            fi
+          done
