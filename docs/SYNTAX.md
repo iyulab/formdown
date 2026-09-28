@@ -879,6 +879,36 @@ Additional notes: ___@notes[textarea rows=3 placeholder="Special delivery instru
 - **Single checkbox**: `value=true` checks the box, `value=false` unchecks it
 - **Range**: Sets the initial position
 
+## Front Matter
+
+A document may start with YAML front matter, the metadata block used by static site generators and note-taking tools. It opens with a `---` line on the first line of the document and closes with a `---` or `...` line.
+
+```formdown
+---
+symptom: Freezes on save
+severity: high
+notes: |
+  Happens only with files larger than 10 MB.
+  Started after the last update.
+---
+
+Symptom: ___@symptom
+
+@severity: [select options="low,medium,high"]
+
+@notes: [textarea]
+```
+
+- The block is not rendered and is not part of `markdown`. It is returned as `frontMatter`: `data` (the parsed mapping), `raw` (the YAML text unchanged) and `span`.
+- A key with the same name as a field becomes that field's `value`. It overrides a `value` written in the field itself, so one form can be filled from many documents.
+- Keys that match no field are kept in `data` unchanged.
+- YAML is the place for values with quotes, line breaks or leading zeros: `code: "007"` stays the string `"007"`.
+- Only a block at the very start counts. A `---` line elsewhere is an ordinary Markdown rule, and so is a leading `---` without a closing line.
+
+## Code
+
+Field syntax inside code is text, not a field. This covers fenced code blocks (```` ``` ```` or `~~~`, closed by a fence of the same character at least as long as the opening one) and inline code spans (`` `___@example` ``). An unclosed fence runs to the end of the document. Use code to show Formdown syntax in a document without creating fields.
+
 ## Diagnostics
 
 Parsing never fails and never drops a problem silently. `parseFormdown()` always returns a `diagnostics` array. It is empty for a clean document.
@@ -895,6 +925,8 @@ const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
 | `invalid-field-name` | error | Field syntax whose name is not a valid name, e.g. `@1st: [text]`. The field is not created |
 | `unterminated-attributes` | error | An inline field opens `[` without a closing `]` on the same line |
 | `duplicate-field-name` | warning | A name is used by more than one field. All occurrences are kept |
+| `front-matter-invalid-yaml` | error | The front matter is not valid YAML. `frontMatter.raw` keeps the text; `frontMatter.data` is empty |
+| `front-matter-not-mapping` | error | The front matter is valid YAML but not a mapping of keys to values |
 
 `span` gives the location in the original source. `start` and `end` are 0-based character offsets. `line` and `column` are 1-based.
 

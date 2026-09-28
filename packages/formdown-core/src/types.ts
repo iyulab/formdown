@@ -120,9 +120,21 @@ export interface Diagnostic {
     span?: SourceSpan
 }
 
+/** YAML front matter at the start of a document. */
+export interface FrontMatter {
+    /** Parsed mapping. Empty when the YAML is invalid (see diagnostics). */
+    data: Record<string, unknown>
+    /** The YAML text between the opening and closing lines, unchanged. */
+    raw: string
+    /** The whole block, opening and closing lines included. */
+    span: SourceSpan
+}
+
 export interface FormdownContent {
     markdown: string
     forms: Field[]
+    /** Leading YAML front matter, when the document has one. */
+    frontMatter?: FrontMatter
     /** Problems found while parsing. Always present on results from parseFormdown(). */
     diagnostics?: Diagnostic[]
     formDeclarations?: FormDeclaration[]

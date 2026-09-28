@@ -1,5 +1,6 @@
-import { Field, FieldRelation, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic } from './types'
+import { Field, FieldRelation, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic, FrontMatter } from './types'
 import { NAME, isValidName, pattern } from './grammar.js'
+import { readFrontMatter, FenceTracker, maskCodeSpans } from './source.js'
 
 const TYPE_MARKER = String.raw`(?:dt|d|[#@%&t?TrscRFCMW$])`
 const RELATION = String.raw`(?:(<->|->)\s*(${NAME})\s*)?`
@@ -63,12 +64,13 @@ export class FormdownParser {
         this.defaultFormCreated = false
         this.diagnostics = []
 
-        const { fields, cleanedMarkdown } = this.extractFields(content)
+        const { fields, cleanedMarkdown, frontMatter } = this.extractFields(content)
         this.reportDuplicateNames(fields)
 
         return {
             markdown: this.options.preserveMarkdown ? cleanedMarkdown : '',
             forms: fields,
+            ...(frontMatter && { frontMatter }),
             diagnostics: this.diagnostics,
             formDeclarations: this.formDeclarations,
             datalistDeclarations: this.datalistDeclarations,
@@ -85,7 +87,7 @@ export class FormdownParser {
         return { fields, errors: [] }
     }
 
-    private extractFields(content: string): { fields: Field[], cleanedMarkdown: string } {
+    private extractFields(content: string): { fields: Field[], cleanedMarkdown: string, frontMatter?: FrontMatter } {
         const fields: Field[] = []
         const lines = content.split('\n')
         const cleanedLines: string[] = []
@@ -97,9 +99,20 @@ export class FormdownParser {
             offset += line.length + 1
         }
 
-        for (let i = 0; i < lines.length; i++) {
+        const frontMatterResult = readFrontMatter(content)
+        if (frontMatterResult) this.diagnostics.push(...frontMatterResult.diagnostics)
+        const firstBodyLine = frontMatterResult?.lineCount ?? 0
+        const fences = new FenceTracker()
+
+        for (let i = firstBodyLine; i < lines.length; i++) {
             const line = lines[i]
             this.currentLine = i
+
+            // Code is not Formdown: fenced blocks pass through unchanged
+            if (fences.next(line)) {
+                cleanedLines.push(line)
+                continue
+            }
 
             // Check for @form declaration first
             const formDeclaration = this.parseFormDeclaration(line)
@@ -191,9 +204,21 @@ export class FormdownParser {
             cleanedLines.push(`<!--FORMDOWN_GROUP_END_${this.currentGroupId}-->`)
         }
 
+        // Values in front matter belong to the document and take precedence over
+        // defaults written in the fields themselves
+        const data = frontMatterResult?.frontMatter.data
+        if (data) {
+            for (const field of fields) {
+                if (Object.prototype.hasOwnProperty.call(data, field.name)) {
+                    field.value = data[field.name]
+                }
+            }
+        }
+
         return {
             fields,
-            cleanedMarkdown: cleanedLines.join('\n')
+            cleanedMarkdown: cleanedLines.join('\n'),
+            frontMatter: frontMatterResult?.frontMatter
         }
     }
 
@@ -293,14 +318,16 @@ export class FormdownParser {
         return field
     }
 
-    private parseInlineFields(line: string): { cleanedLine: string, inlineFields: Field[] } {
+    private parseInlineFields(source: string): { cleanedLine: string, inlineFields: Field[] } {
         const inlineFields: Field[] = []
+        // Inline code is not Formdown: hide code spans from the field patterns
+        const { masked: line, blanked, restore } = maskCodeSpans(source)
         const delimiter = this.options.inlineFieldDelimiter!
 
         // Support shorthand inline fields: typeMarker___@fieldName*{content}(label)[attributes] or typeMarker___@fieldName*{content}: type[attributes]
         // Examples: @___@email*, #___@age, d___@birth_date{yyyy-MM-dd}: [attributes], ___@service{options}: s[]
         // Note: need to handle single 'd' separately from 'dt'
-        this.checkInlineFieldSyntax(line, delimiter)
+        this.checkInlineFieldSyntax(blanked, delimiter)
 
         const shorthandPattern = pattern(String.raw`(dt|d|[#@%&t?TrscRFCMW$]?)${delimiter}@(${NAME})(\*)?(?:\{([^}]*)\})?(?:\(([^)]+)\))?(?:\[([^\]]*)\]|:\s*([^\s]*?)\[([^\]]*)\])?`, 'g')
         
@@ -382,7 +409,7 @@ export class FormdownParser {
             return match
         })
 
-        return { cleanedLine, inlineFields }
+        return { cleanedLine: restore(cleanedLine), inlineFields }
     }
 
     private convertShorthandToField(
