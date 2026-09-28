@@ -12,5 +12,18 @@
         "src/**/*.ts",
         "!src/**/*.d.ts",
         "!src/vite-env.d.ts"
-    ]
+    ],
+    "transform": {
+        "^.+\\.ts$": [
+            "ts-jest",
+            {
+                "tsconfig": {
+                    "types": [
+                        "jest",
+                        "node"
+                    ]
+                }
+            }
+        ]
+    }
 }

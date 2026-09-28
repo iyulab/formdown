@@ -8,9 +8,9 @@ export default defineConfig({
             fileName: () => 'standalone.js',
             formats: ['es']
         },
-        rollupOptions: {
+        rolldownOptions: {
             output: {
-                inlineDynamicImports: true,
+                codeSplitting: false,
                 format: 'es'
             }
         },

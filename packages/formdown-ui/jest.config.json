@@ -33,7 +33,10 @@
                 "tsconfig": {
                     "verbatimModuleSyntax": false,
                     "esModuleInterop": true,
-                    "allowSyntheticDefaultImports": true
+                    "allowSyntheticDefaultImports": true,
+                    "types": [
+                        "jest"
+                    ]
                 }
             }
         ]

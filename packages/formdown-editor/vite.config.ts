@@ -8,7 +8,7 @@ export default defineConfig({
             fileName: (format) => `index.${format}.js`,
             formats: ['es', 'umd']
         },
-        rollupOptions: {
+        rolldownOptions: {
             external: ['lit'],
             output: {
                 globals: {

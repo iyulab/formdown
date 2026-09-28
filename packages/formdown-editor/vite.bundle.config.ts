@@ -8,9 +8,9 @@ export default defineConfig({
             fileName: () => 'formdown-editor.bundle.js',
             formats: ['iife']
         },
-        rollupOptions: {
+        rolldownOptions: {
             output: {
-                inlineDynamicImports: true,
+                codeSplitting: false,
                 format: 'iife'
             },
             external: [],  // Include all dependencies in bundle
