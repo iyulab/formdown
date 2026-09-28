@@ -22,6 +22,15 @@ export class FormdownGenerator {
     }
 
     /**
+     * Render one attribute as name="value". The value is HTML-escaped; a name that is
+     * not a valid HTML attribute name is dropped rather than written into the markup.
+     */
+    private renderAttribute(key: string, value: unknown): string {
+        if (!/^[^\s"'>/=\u0000-\u001F]+$/.test(key)) return ''
+        return `${key}="${this.escapeHtml(String(value))}"`
+    }
+
+    /**
      * Generate a human-readable label from a field name
      * @param fieldName - The field name to convert
      * @returns A formatted label string
@@ -444,7 +453,7 @@ ${fieldHTML}
                 if (typeof value === 'boolean') {
                     return value ? key : ''
                 }
-                return `${key}="${value}"`
+                return this.renderAttribute(key, value)
             })
             .filter(Boolean)
             .join(' ')
@@ -539,7 +548,7 @@ ${fieldHTML}
                 if (typeof value === 'boolean') {
                     return value ? key : ''
                 }
-                return `${key}="${value}"`
+                return this.renderAttribute(key, value)
             })
             .filter(Boolean)
             .join(' ')
@@ -730,7 +739,7 @@ ${radioInputsHTML}${otherRadioHTML}
                             if (typeof value === 'boolean') {
                                 return value ? key : ''
                             }
-                            return `${key}="${value}"`
+                            return this.renderAttribute(key, value)
                         })
                         .filter(Boolean)
                         .join(' ')
@@ -835,7 +844,7 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
                         if (typeof value === 'boolean') {
                             return value ? key : ''
                         }
-                        return `${key}="${value}"`
+                        return this.renderAttribute(key, value)
                     })
                     .filter(Boolean)
                     .join(' ')
@@ -850,7 +859,7 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
                         if (typeof value === 'boolean') {
                             return value ? key : ''
                         }
-                        return `${key}="${value}"`
+                        return this.renderAttribute(key, value)
                     })
                     .filter(Boolean)
                     .join(' ')
@@ -867,7 +876,7 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
                         if (typeof value === 'boolean') {
                             return value ? key : ''
                         }
-                        return `${key}="${value}"`
+                        return this.renderAttribute(key, value)
                     })
                     .filter(Boolean)
                     .join(' ')
@@ -885,7 +894,7 @@ ${checkboxInputsHTML}${otherCheckboxHTML}
                         if (typeof value === 'boolean') {
                             return value ? key : ''
                         }
-                        return `${key}="${value}"`
+                        return this.renderAttribute(key, value)
                     })
                     .filter(Boolean)
                     .join(' ')
