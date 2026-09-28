@@ -30,6 +30,12 @@ const BLOCK_FIELD_CANDIDATE = /^@([^\s:([{*\-<>@\]]+)[^:]*:\s*\S*\[/u
 import { defaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 
+// Private-use characters delimit inline field markers; they cannot collide with
+// anything markdown or HTML gives meaning to
+const INLINE_MARKER_OPEN = '\uE000'
+const INLINE_MARKER_CLOSE = '\uE001'
+const INLINE_MARKER = /\uE000(\d+)\uE001/g
+
 export class FormdownParser {
     private options: FormdownOptions
     private formDeclarations: FormDeclaration[] = []
@@ -42,6 +48,7 @@ export class FormdownParser {
     private diagnostics: Diagnostic[] = []
     private lineStarts: number[] = []
     private currentLine = 0
+    private markedInlineFields: Field[] = []
 
     constructor(options: FormdownOptions = {}) {
         this.options = {
@@ -63,6 +70,7 @@ export class FormdownParser {
         this.formCounter = 1
         this.defaultFormCreated = false
         this.diagnostics = []
+        this.markedInlineFields = []
 
         // Extension hooks: a failing hook is reported, never fatal
         const onHookError = (message: string) => {
@@ -232,9 +240,27 @@ export class FormdownParser {
 
         return {
             fields,
-            cleanedMarkdown: cleanedLines.join('\n'),
+            cleanedMarkdown: this.placeInlineFields(cleanedLines.join('\n'), fields),
             frontMatter: frontMatterResult?.frontMatter
         }
+    }
+
+    /**
+     * A stand-in for an inline field while its line is parsed. The field's index among
+     * all fields is only known once the whole document is parsed; `placeInlineFields`
+     * then swaps the marker for the generator's field placeholder, so inline fields are
+     * rendered like block fields — from the final field, with its bound value and the
+     * render hooks.
+     */
+    private inlineMarker(field: Field): string {
+        this.markedInlineFields.push(field)
+        return `${INLINE_MARKER_OPEN}${this.markedInlineFields.length - 1}${INLINE_MARKER_CLOSE}`
+    }
+
+    private placeInlineFields(markdown: string, fields: Field[]): string {
+        const marked = this.markedInlineFields
+        this.markedInlineFields = []
+        return markdown.replace(INLINE_MARKER, (_, k: string) => `<!--FORMDOWN_FIELD_${fields.indexOf(marked[Number(k)])}-->`)
     }
 
     private parseBlockField(line: string): Field | null {
@@ -336,6 +362,10 @@ export class FormdownParser {
     /**
      * Parse inline fields in `source`, which starts at `column` (0-based) of the current line.
      */
+    /**
+     * Finds the inline fields of one line. Each field is replaced by a marker (see
+     * `inlineMarker`) instead of finished markup.
+     */
     private parseInlineFields(source: string, column = 0): { cleanedLine: string, inlineFields: Field[] } {
         const inlineFields: Field[] = []
         // Inline code is not Formdown: blank out code spans (offsets are unchanged)
@@ -380,8 +410,7 @@ export class FormdownParser {
                 field.inline = true
                 field.span = this.spanAt(column + offset, match.length)
                 inlineFields.push(field)
-                const requiredAttr = field.required ? ' data-required="true"' : ''
-                const markup = `<span contenteditable="true" data-field-name="${name}" data-field-type="${field.type}" data-placeholder="${field.label || name}" class="formdown-inline-field" role="textbox"${requiredAttr}>${field.label || name}</span>`
+                const markup = this.inlineMarker(field)
                 replacements.push({ at: offset, delta: markup.length - match.length })
                 return markup
             }
@@ -435,8 +464,7 @@ export class FormdownParser {
                 }
                 field.span = this.spanAt(column + offset - shift, match.length)
                 inlineFields.push(field)
-                const requiredAttr = field.required ? ' data-required="true"' : ''
-                return `<span contenteditable="true" data-field-name="${name}" data-field-type="${field.type}" data-placeholder="${field.label || name}" class="formdown-inline-field" role="textbox"${requiredAttr}>${field.label || name}</span>`
+                return this.inlineMarker(field)
             }
             return match
         })

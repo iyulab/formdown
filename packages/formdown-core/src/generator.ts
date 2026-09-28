@@ -452,11 +452,11 @@ ${fieldHTML}
 
         // For inline fields, use contenteditable spans
         const commonAttrs = {
+            'contenteditable': 'true',
             'data-field-name': name,
             'data-field-type': type,
             'data-placeholder': placeholder || displayLabel,
             'class': 'formdown-inline-field',
-            'contenteditable': 'true',
             'role': 'textbox',
             ...(required && { 'data-required': 'true' }),
             ...(formId && { 'data-form': formId }),
@@ -473,7 +473,10 @@ ${fieldHTML}
             .filter(Boolean)
             .join(' ')
 
-        return `<span ${attrString}>${displayLabel}</span>`
+        // The span's text is its value; without one it shows the label
+        const value = field.value ?? attributes?.value
+        const text = value === undefined || value === null || value === '' ? displayLabel : String(value)
+        return `<span ${attrString}>${this.escapeHtml(text)}</span>`
     }
 
     generateFieldHTML(field: Field, defaultFormId?: string): string {
