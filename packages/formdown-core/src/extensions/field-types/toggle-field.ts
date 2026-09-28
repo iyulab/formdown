@@ -5,6 +5,7 @@
 
 import type { FieldTypePlugin, HookContext } from '../types.js'
 import type { Field, ValidationRule } from '../../types.js'
+import { NAME, pattern as unicodePattern } from '../../grammar.js'
 
 export const toggleFieldPlugin: FieldTypePlugin = {
     type: 'toggle',
@@ -12,7 +13,7 @@ export const toggleFieldPlugin: FieldTypePlugin = {
     parser: (content: string, context: HookContext) => {
         // Match: @field: [toggle], @field(Label): [toggle checked], @field: [toggle required]
         const patterns = [
-            /@(\w+)(?:\(([^)]+)\))?\s*:\s*\[toggle\s*([^\]]*)\]/,
+            unicodePattern(String.raw`@(${NAME})(?:\(([^)]+)\))?\s*:\s*\[toggle\s*([^\]]*)\]`),
         ]
 
         for (const pattern of patterns) {

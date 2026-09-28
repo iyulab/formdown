@@ -410,9 +410,12 @@ FormDown automatically generates human-readable labels from field names when no 
 
 ### Field Naming Rules
 
-- Field names must start with a letter (a-z, A-Z)
+- Field names start with a letter or an underscore. Letters in any script count: `name`, `증상`, `名前`, `naïve`
 - Field names cannot start with a number
 - Field names can contain letters, numbers, and underscores
+- Field names must be unique within a document
+- A field that breaks these rules is not created, and the problem is reported in `diagnostics` (see [Diagnostics](#diagnostics))
+- Automatic labels apply to ASCII names (`first_name` → "First Name"). Other names are used as the label unchanged
 
 ### Automatic Label Formatting
 
@@ -875,6 +878,25 @@ Additional notes: ___@notes[textarea rows=3 placeholder="Special delivery instru
 - **Checkbox group**: Pre-checks matching options (comma-separated values)
 - **Single checkbox**: `value=true` checks the box, `value=false` unchecks it
 - **Range**: Sets the initial position
+
+## Diagnostics
+
+Parsing never fails and never drops a problem silently. `parseFormdown()` always returns a `diagnostics` array. It is empty for a clean document.
+
+```typescript
+const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
+// diagnostics:
+// [{ code: 'invalid-field-name', severity: 'error', message: '...', span: { start: 0, end: 7, line: 1, column: 1 } },
+//  { code: 'duplicate-field-name', severity: 'warning', message: '...' }]
+```
+
+| Code | Severity | Meaning |
+|---|---|---|
+| `invalid-field-name` | error | Field syntax whose name is not a valid name, e.g. `@1st: [text]`. The field is not created |
+| `unterminated-attributes` | error | An inline field opens `[` without a closing `]` on the same line |
+| `duplicate-field-name` | warning | A name is used by more than one field. All occurrences are kept |
+
+`span` gives the location in the original source. `start` and `end` are 0-based character offsets. `line` and `column` are 1-based.
 
 ## Implementation Notes
 

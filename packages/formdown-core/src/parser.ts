@@ -1,4 +1,31 @@
-import { Field, FieldRelation, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes } from './types'
+import { Field, FieldRelation, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic } from './types'
+import { NAME, isValidName, pattern } from './grammar.js'
+
+const TYPE_MARKER = String.raw`(?:dt|d|[#@%&t?TrscRFCMW$])`
+const RELATION = String.raw`(?:(<->|->)\s*(${NAME})\s*)?`
+
+/** Features that make a block line shorthand rather than standard syntax. */
+const SHORTHAND_MARKERS = [
+    pattern(String.raw`^@${NAME}\*`),                                           // Required marker
+    pattern(String.raw`^@${NAME}\{[^}]*\}`),                                    // Content
+    pattern(String.raw`^@${NAME}\s*:\s*${TYPE_MARKER}\d*\[`),                   // Type marker
+    pattern(String.raw`^@${NAME}\([^)]+\)\*`),                                  // Label + required
+    pattern(String.raw`^@${NAME}\([^)]+\)\{[^}]*\}`),                           // Label + content
+    pattern(String.raw`^@${NAME}\([^)]+\)\s*:\s*${TYPE_MARKER}\d*\[`),          // Label + type marker
+    pattern(String.raw`^@${NAME}[^:]*(?:<->|->)\s*${NAME}\s*:\s*${TYPE_MARKER}\d*\[`) // FK relation + type marker
+]
+
+/** Standard block syntax: @name(Label) [-> Target]: [type attributes] */
+const BLOCK_FIELD = pattern(String.raw`^@(${NAME})(?:\(([^)]+)\))?\s*${RELATION}:\s*\[((?:[^\]"']|"[^"]*"|'[^']*')*)\].*$`)
+
+/** Shorthand block syntax: @name*{content}(Label) [-> Target]: marker[attributes] */
+const SHORTHAND_BLOCK_FIELD = pattern(String.raw`^@(${NAME})(\*)?(?:\{(.*?)\})?(?:\(([^)]+)\))?\s*${RELATION}:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?\[([^\]]*)\].*$`)
+
+/** Shorthand block syntax with the label first: @name(Label)*{content} [-> Target]: marker[attributes] */
+const SHORTHAND_BLOCK_FIELD_LABEL_FIRST = pattern(String.raw`^@(${NAME})(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*${RELATION}:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?\[([^\]]*)\].*$`)
+
+/** Something shaped like a block field whose name is not a valid name, e.g. `@1st: [text]`. */
+const BLOCK_FIELD_CANDIDATE = /^@([^\s:([{*\-<>@\]]+)[^:]*:\s*\S*\[/u
 import { defaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 
@@ -11,6 +38,9 @@ export class FormdownParser {
     private currentGroupId: string | null = null
     private formCounter = 1
     private defaultFormCreated = false
+    private diagnostics: Diagnostic[] = []
+    private lineStarts: number[] = []
+    private currentLine = 0
 
     constructor(options: FormdownOptions = {}) {
         this.options = {
@@ -31,12 +61,15 @@ export class FormdownParser {
         this.currentGroupId = null
         this.formCounter = 1
         this.defaultFormCreated = false
+        this.diagnostics = []
 
         const { fields, cleanedMarkdown } = this.extractFields(content)
+        this.reportDuplicateNames(fields)
 
         return {
             markdown: this.options.preserveMarkdown ? cleanedMarkdown : '',
             forms: fields,
+            diagnostics: this.diagnostics,
             formDeclarations: this.formDeclarations,
             datalistDeclarations: this.datalistDeclarations,
             groupDeclarations: this.groupDeclarations
@@ -57,8 +90,16 @@ export class FormdownParser {
         const lines = content.split('\n')
         const cleanedLines: string[] = []
 
+        this.lineStarts = []
+        let offset = 0
+        for (const line of lines) {
+            this.lineStarts.push(offset)
+            offset += line.length + 1
+        }
+
         for (let i = 0; i < lines.length; i++) {
             const line = lines[i]
+            this.currentLine = i
 
             // Check for @form declaration first
             const formDeclaration = this.parseFormDeclaration(line)
@@ -135,6 +176,8 @@ export class FormdownParser {
                 continue
             }
 
+            this.checkInvalidBlockFieldName(line)
+
             // Extract inline fields
             const { cleanedLine, inlineFields } = this.parseInlineFields(line)
             // Associate inline fields with current form
@@ -177,14 +220,7 @@ export class FormdownParser {
         // Standard syntax: @name(Label): [type attributes] should NOT be treated as shorthand
         // Shorthand syntax: @name*: [], @name{pattern}: [], @name: @[], etc.
         // FK relation syntax with type marker: @name -> Target: s[], @name* -> Target: c[]
-        const hasShorthandMarker = /^@\w+\*/.test(trimmedLine) ||                          // Required marker
-                                   /^@\w+\{[^}]*\}/.test(trimmedLine) ||                    // Content
-                                   /^@\w+\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])\d*\[/.test(trimmedLine) || // Type marker
-                                   /^@\w+\([^)]+\)\*/.test(trimmedLine) ||                  // Label + required
-                                   /^@\w+\([^)]+\)\{[^}]*\}/.test(trimmedLine) ||           // Label + content
-                                   /^@\w+\([^)]+\)\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])\d*\[/.test(trimmedLine) || // Label + type marker
-                                   /^@\w+[^:]*(?:<->|->)\s*\w+\s*:\s*(dt|d|[#@%&t?TrscRFCMW$])\d*\[/.test(trimmedLine) // FK relation + type marker
-        
+        const hasShorthandMarker = SHORTHAND_MARKERS.some(marker => marker.test(trimmedLine))
         
         if (hasShorthandMarker) {
                 const shorthandField = this.parseShorthandBlockField(trimmedLine)
@@ -194,7 +230,7 @@ export class FormdownParser {
         // Fall back to standard syntax
         // Use a more sophisticated regex that handles quoted content with brackets
         // Also supports FK relation syntax: @name -> Target: [...] or @name <-> Target: [...]
-        const match = trimmedLine.match(/^@(\w+)(?:\(([^)]+)\))?\s*(?:(<->|->)\s*(\w+)\s*)?:\s*\[((?:[^\]"']|"[^"]*"|'[^']*')*)\].*$/)
+        const match = trimmedLine.match(BLOCK_FIELD)
         if (!match) return null
 
         const [, name, customLabel, arrow, relationTarget, typeAndAttributes] = match
@@ -219,11 +255,11 @@ export class FormdownParser {
         // Make type marker optional to handle cases like @name*: []
         // Handle both orders: @name*{content}(label) and @name(label)*{content}
         // Fixed pattern with nested brace support
-        let shorthandMatch = line.match(/^@(\w+)(\*)?(?:\{(.*?)\})?(?:\(([^)]+)\))?\s*(?:(<->|->)\s*(\w+)\s*)?:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?\[([^\]]*)\].*$/)
+        let shorthandMatch = line.match(SHORTHAND_BLOCK_FIELD)
 
         // Try alternative order: @name(label)*{content}
         if (!shorthandMatch) {
-            shorthandMatch = line.match(/^@(\w+)(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*(?:(<->|->)\s*(\w+)\s*)?:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?\[([^\]]*)\].*$/)
+            shorthandMatch = line.match(SHORTHAND_BLOCK_FIELD_LABEL_FIRST)
             if (shorthandMatch) {
                 // Reorder to match expected destructuring: [, name, requiredMarker, content, customLabel, arrow, relationTarget, typeMarker, rowsOrModifier, attributes]
                 const [, name, customLabel, requiredMarker, content, arrow, relationTarget, typeMarker, rowsOrModifier, attributes] = shorthandMatch
@@ -264,7 +300,9 @@ export class FormdownParser {
         // Support shorthand inline fields: typeMarker___@fieldName*{content}(label)[attributes] or typeMarker___@fieldName*{content}: type[attributes]
         // Examples: @___@email*, #___@age, d___@birth_date{yyyy-MM-dd}: [attributes], ___@service{options}: s[]
         // Note: need to handle single 'd' separately from 'dt'
-        const shorthandPattern = new RegExp(`(dt|d|[#@%&t?TrscRFCMW$]?)${delimiter}@(\\w+)(\\*)?(?:\\{([^}]*)\\})?(?:\\(([^)]+)\\))?(?:\\[([^\\]]*)\\]|\\:\\s*([^\\s]*?)\\[([^\\]]*)\\])?`, 'g')
+        this.checkInlineFieldSyntax(line, delimiter)
+
+        const shorthandPattern = pattern(String.raw`(dt|d|[#@%&t?TrscRFCMW$]?)${delimiter}@(${NAME})(\*)?(?:\{([^}]*)\})?(?:\(([^)]+)\))?(?:\[([^\]]*)\]|:\s*([^\s]*?)\[([^\]]*)\])?`, 'g')
         
         let cleanedLine = line.replace(shorthandPattern, (match, typeMarker, name, requiredMarker, content, customLabel, attributes, colonType, colonAttributes) => {
             // Only process as shorthand if it has actual shorthand features
@@ -301,11 +339,11 @@ export class FormdownParser {
 
         // Fallback to standard inline pattern for non-shorthand syntax
         // Support both: ___@name[attributes] and ___@name{options}: type[]
-        const standardPattern = new RegExp(`${delimiter}@(\\w+)(?:\\{([^}]*)\\})?(?:\\(([^)]+)\\))?(?:\\:\\s*([^\\s]*?)\\[([^\\]]*)\\]|\\[([^\\]]*)\\])?`, 'g')
+        // Occurrences the shorthand pass handled were already replaced with markup, so
+        // everything this pass matches is still unprocessed source. (Comparing names here
+        // used to drop a second field that happened to share a name.)
+        const standardPattern = pattern(String.raw`${delimiter}@(${NAME})(?:\{([^}]*)\})?(?:\(([^)]+)\))?(?::\s*([^\s]*?)\[([^\]]*)\]|\[([^\]]*)\])?`, 'g')
         cleanedLine = cleanedLine.replace(standardPattern, (match, name, options, customLabel, colonType, colonAttributes, directAttributes) => {
-            // Skip if already processed by shorthand pattern
-            if (inlineFields.some(field => field.name === name)) return match
-
             // Determine type and attributes
             let finalTypeAndAttributes = 'text'
             if (colonType && colonAttributes !== undefined) {
@@ -764,6 +802,60 @@ export class FormdownParser {
      * @param fieldName - The field name to convert
      * @returns A formatted label string
      */
+    /** Record a diagnostic located at `column` (0-based) of the line being parsed. */
+    private report(code: string, message: string, column: number, length: number, severity: Diagnostic['severity'] = 'error'): void {
+        const start = (this.lineStarts[this.currentLine] ?? 0) + column
+        this.diagnostics.push({
+            code,
+            message,
+            severity,
+            span: { start, end: start + length, line: this.currentLine + 1, column: column + 1 }
+        })
+    }
+
+    /** A line shaped like a block field that did not parse because its name is invalid. */
+    private checkInvalidBlockFieldName(line: string): void {
+        const trimmed = line.trim()
+        const candidate = trimmed.match(BLOCK_FIELD_CANDIDATE)
+        if (!candidate || isValidName(candidate[1])) return
+        const column = line.indexOf(trimmed)
+        this.report('invalid-field-name',
+            `"${candidate[1]}" is not a valid field name: names start with a letter or underscore`,
+            column, candidate[0].length)
+    }
+
+    /** Inline field markers that cannot become fields. */
+    private checkInlineFieldSyntax(line: string, delimiter: string): void {
+        const invalidName = pattern(String.raw`${delimiter}@(\p{N}[\p{L}\p{N}_]*)`, 'g')
+        for (const match of line.matchAll(invalidName)) {
+            this.report('invalid-field-name',
+                `"${match[1]}" is not a valid field name: names start with a letter or underscore`,
+                match.index!, match[0].length)
+        }
+
+        const unterminated = pattern(String.raw`${delimiter}@${NAME}(?:\{[^}]*\})?(?:\([^)]*\))?(?::\s*[^\s\[]*)?\[[^\]]*$`, 'g')
+        for (const match of line.matchAll(unterminated)) {
+            this.report('unterminated-attributes',
+                'Field attributes are opened with "[" but never closed with "]"',
+                match.index!, match[0].length)
+        }
+    }
+
+    /** Field names must be unique within a document; later occurrences are reported. */
+    private reportDuplicateNames(fields: Field[]): void {
+        const seen = new Set<string>()
+        for (const field of fields) {
+            if (seen.has(field.name)) {
+                this.diagnostics.push({
+                    code: 'duplicate-field-name',
+                    message: `Field name "${field.name}" is used more than once`,
+                    severity: 'warning'
+                })
+            }
+            seen.add(field.name)
+        }
+    }
+
     private formatLabel(fieldName: string): string {
         // Handle snake_case: convert underscores to spaces and capitalize
         if (fieldName.includes('_')) {

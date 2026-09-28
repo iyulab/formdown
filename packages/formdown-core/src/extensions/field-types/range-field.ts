@@ -5,6 +5,7 @@
 
 import type { FieldTypePlugin, HookContext } from '../types.js'
 import type { Field, ValidationRule } from '../../types.js'
+import { NAME, pattern as unicodePattern } from '../../grammar.js'
 
 export const rangeFieldPlugin: FieldTypePlugin = {
     type: 'range',
@@ -12,8 +13,8 @@ export const rangeFieldPlugin: FieldTypePlugin = {
     parser: (content: string, context: HookContext) => {
         // Match various range field patterns
         const patterns = [
-            /@(\w+)(?:\(([^)]+)\))?\s*:\s*\[range\](.*)/, // Standard: @field: [range] or @field(Label): [range]
-            /@(\w+)(?:\(([^)]+)\))?\s*:\s*\[range\s+([^\]]+)\](.*)/, // With attributes: @field: [range min=0 max=100]
+            unicodePattern(String.raw`@(${NAME})(?:\(([^)]+)\))?\s*:\s*\[range\](.*)`), // Standard: @field: [range] or @field(Label): [range]
+            unicodePattern(String.raw`@(${NAME})(?:\(([^)]+)\))?\s*:\s*\[range\s+([^\]]+)\](.*)`), // With attributes: @field: [range min=0 max=100]
         ]
 
         for (const pattern of patterns) {

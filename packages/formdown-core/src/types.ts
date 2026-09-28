@@ -104,9 +104,27 @@ export interface ConditionalAttributes {
     requiredIf?: FieldCondition
 }
 
+/** A range of the original source text. Offsets are 0-based; line and column are 1-based. */
+export interface SourceSpan {
+    start: number
+    end: number
+    line: number
+    column: number
+}
+
+/** A problem found while parsing. Parsing continues; nothing is dropped silently. */
+export interface Diagnostic {
+    code: string
+    message: string
+    severity: 'error' | 'warning'
+    span?: SourceSpan
+}
+
 export interface FormdownContent {
     markdown: string
     forms: Field[]
+    /** Problems found while parsing. Always present on results from parseFormdown(). */
+    diagnostics?: Diagnostic[]
     formDeclarations?: FormDeclaration[]
     datalistDeclarations?: DatalistDeclaration[]
     groupDeclarations?: GroupDeclaration[]

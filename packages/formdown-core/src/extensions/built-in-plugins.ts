@@ -7,6 +7,7 @@ import type { Plugin, FieldTypePlugin, ValidationPlugin } from './types.js'
 import type { Field, ValidationRule } from '../types.js'
 import { rangeFieldPlugin } from './field-types/range-field.js'
 import { toggleFieldPlugin } from './field-types/toggle-field.js'
+import { NAME, pattern as unicodePattern } from '../grammar.js'
 
 // ================================
 // Built-in Field Type Plugins
@@ -15,7 +16,7 @@ import { toggleFieldPlugin } from './field-types/toggle-field.js'
 export const textFieldPlugin: FieldTypePlugin = {
     type: 'text',
     parser: (content: string) => {
-        const match = content.match(/@(\w+):\s*\[text\](.*)/)
+        const match = content.match(unicodePattern(String.raw`@(${NAME}):\s*\[text\](.*)`))
         if (!match) return null
 
         const [, name, rest] = match
@@ -68,7 +69,7 @@ export const textFieldPlugin: FieldTypePlugin = {
 export const emailFieldPlugin: FieldTypePlugin = {
     type: 'email',
     parser: (content: string) => {
-        const match = content.match(/@(\w+):\s*\[email\](.*)/)
+        const match = content.match(unicodePattern(String.raw`@(${NAME}):\s*\[email\](.*)`))
         if (!match) return null
 
         const [, name, rest] = match
@@ -118,7 +119,7 @@ export const emailFieldPlugin: FieldTypePlugin = {
 export const selectFieldPlugin: FieldTypePlugin = {
     type: 'select',
     parser: (content: string) => {
-        const match = content.match(/@(\w+):\s*\[select\](.*)/)
+        const match = content.match(unicodePattern(String.raw`@(${NAME}):\s*\[select\](.*)`))
         if (!match) return null
 
         const [, name, rest] = match
