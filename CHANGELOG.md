@@ -8,6 +8,7 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 - **Inline fields show their value.** An inline field (`___@title`) bound to a front matter key, or written with `value="…"`, rendered its label instead of its value. Inline fields are now rendered by the generator like block fields — from the final field — so they show the bound value, HTML-escaped, and the `field-render` hook applies to them. `parseFormdown().markdown` holds a field placeholder where it used to hold finished markup.
 - An inline field's label is HTML-escaped when it is shown in place of a value; it used to be inserted as markup.
+- **Checkbox and radio values in `<formdown-ui>`.** Values given through `data` or `setFormData()` are shown the way the generator renders them: a single checkbox is checked by `true` or `"true"` and unchecked by anything else, a checkbox-group option is checked when the value (a list, or one text) names it, and only the radio whose value matches is checked. `setFormData()` used to check a checkbox for any non-empty text, `"false"` included, and to check the first radio of a group whatever the value; `data` ignored a checkbox value given as text.
 
 ## 0.5.0
 

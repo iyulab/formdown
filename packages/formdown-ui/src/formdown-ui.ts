@@ -6,6 +6,7 @@ import {
   type FormDownSchema,
   type ValidationResult
 } from '@formdown/core'
+import { applyFieldValue } from './field-value'
 import { uiExtensionSupport } from './extension-support'
 import { formdownStyles } from './styles'
 
@@ -428,34 +429,11 @@ export class FormdownUI extends LitElement {
           return
         }
 
-        this.applyValueToElement(htmlElement, value, fieldType)
+        applyFieldValue(htmlElement, value, fieldType)
       })
     } finally {
       this._isUpdatingUI = false
       this.domBinder.releaseSyncLock()
-    }
-  }
-
-  /**
-   * Apply a value to a DOM element based on field type
-   */
-  private applyValueToElement(element: HTMLElement, value: unknown, fieldType: string): void {
-    if (element instanceof HTMLInputElement) {
-      if (fieldType === 'checkbox') {
-        if (typeof value === 'boolean') {
-          element.checked = value
-        } else if (Array.isArray(value)) {
-          element.checked = value.includes(element.value)
-        }
-      } else if (fieldType === 'radio') {
-        element.checked = element.value === String(value)
-      } else {
-        element.value = String(value ?? '')
-      }
-    } else if (element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
-      element.value = String(value ?? '')
-    } else if (element.hasAttribute('contenteditable')) {
-      element.textContent = String(value ?? '')
     }
   }
 
@@ -579,28 +557,18 @@ export class FormdownUI extends LitElement {
     }
 
     Object.entries(newData).forEach(([fieldName, value]) => {
-      // Try multiple selectors to find the field
-      let field = container.querySelector(`[name="${fieldName}"]`) as HTMLElement
-      if (!field) {
-        field = container.querySelector(`[data-field-name="${fieldName}"]`) as HTMLElement
-      }
-      if (!field) {
-        field = container.querySelector(`#${fieldName}`) as HTMLElement
+      // A radio or checkbox group is several elements under one name; each shows its own part.
+      let fields = Array.from(container.querySelectorAll(`[name="${CSS.escape(fieldName)}"]`)) as HTMLElement[]
+      if (fields.length === 0) {
+        const field =
+          container.querySelector(`[data-field-name="${CSS.escape(fieldName)}"]`) ??
+          container.querySelector(`#${CSS.escape(fieldName)}`)
+        fields = field ? [field as HTMLElement] : []
       }
 
-      if (field) {
-        if (field.hasAttribute('contenteditable')) {
-          field.textContent = String(value || '')
-        } else if (field instanceof HTMLInputElement) {
-          if (field.type === 'checkbox' || field.type === 'radio') {
-            field.checked = Boolean(value)
-          } else {
-            field.value = String(value || '')
-          }
-        } else if (field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement) {
-          field.value = String(value || '')
-        }
-
+      for (const field of fields) {
+        const type = field instanceof HTMLInputElement ? field.type : field.dataset.fieldType ?? 'text'
+        applyFieldValue(field, value, type)
         // Trigger input event to update internal state
         field.dispatchEvent(new Event('input', { bubbles: true }))
       }
