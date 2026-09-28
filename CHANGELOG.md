@@ -7,6 +7,7 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 ### Fixed
 
 - **Inline fields show their value.** An inline field (`___@title`) bound to a front matter key, or written with `value="…"`, rendered its label instead of its value. Inline fields are now rendered by the generator like block fields — from the final field — so they show the bound value, HTML-escaped, and the `field-render` hook applies to them. `parseFormdown().markdown` holds a field placeholder where it used to hold finished markup.
+- An inline field's label is HTML-escaped when it is shown in place of a value; it used to be inserted as markup.
 
 ## 0.5.0
 
