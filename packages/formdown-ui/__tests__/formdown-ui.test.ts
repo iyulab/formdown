@@ -23,7 +23,7 @@ jest.mock('@formdown/core', () => ({
       validateFieldValue: jest.fn(() => ({ success: true, value: '', errors: [] })),
       getFieldType: jest.fn(() => 'text'),
       extractFieldValue: jest.fn(() => ''),
-      setFieldValue: jest.fn(() => true)
+      computeValueSetting: jest.fn(() => ({ success: true }))
     })),
     createDOMBinder: jest.fn(() => ({
       bindFieldToElement: jest.fn(() => ({ fieldName: 'test', elements: new Set(), unbind: jest.fn() })),

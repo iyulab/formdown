@@ -47,9 +47,8 @@ class FieldProcessor {
         return element.value || '';
     }
 
-    setFieldValue(element, value, type) {
-        element.value = value;
-        return true;
+    computeValueSetting(element, value, type) {
+        return { success: true, elementId: element.id, settingType: 'value', value };
     }
 }
 

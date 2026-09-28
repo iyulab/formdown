@@ -336,15 +336,6 @@ export class FieldProcessor {
   }
 
   /**
-   * @deprecated Use computeValueSetting instead. This method will be removed in v0.4.0.
-   * Set field value to any HTML element - kept for backward compatibility
-   */
-  setFieldValue(element: FieldElement, value: unknown, type: FieldType, _container?: ElementContainer): boolean {
-    const setting = this.computeValueSetting(element, value, type)
-    return setting.success
-  }
-
-  /**
    * Validate field value based on type and constraints
    */
   validateFieldValue(value: unknown, type: FieldType, constraints?: FieldConstraints): ProcessResult<unknown> {
