@@ -26,6 +26,16 @@ describe('Field names', () => {
             const [field] = parseFormdown('___@first_name').forms
             expect(field.label).toBe('First Name')
         })
+
+        it('turns underscores into spaces in any script', () => {
+            const [field] = parseFormdown('@재현_절차: [textarea]').forms
+            expect(field.label).toBe('재현 절차')
+        })
+
+        it('capitalizes letters that have case, whatever the script', () => {
+            const [field] = parseFormdown('___@naïve').forms
+            expect(field.label).toBe('Naïve')
+        })
     })
 
     describe('duplicate names', () => {

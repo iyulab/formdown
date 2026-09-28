@@ -415,7 +415,7 @@ FormDown automatically generates human-readable labels from field names when no 
 - Field names can contain letters, numbers, and underscores
 - Field names must be unique within a document
 - A field that breaks these rules is not created, and the problem is reported in `diagnostics` (see [Diagnostics](#diagnostics))
-- Automatic labels apply to ASCII names (`first_name` → "First Name"). Other names are used as the label unchanged
+- Automatic labels follow one rule for every name: underscores and camelCase boundaries become spaces, and each word starts with a capital letter (`first_name` → "First Name", `naïve` → "Naïve"). Scripts without letter case keep their characters (`증상` → "증상", `재현_절차` → "재현 절차")
 
 ### Automatic Label Formatting
 
