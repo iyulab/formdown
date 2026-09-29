@@ -7,6 +7,7 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 ### Fixed
 
 - `@formdown/ui` draws checkboxes and radio buttons in `--formdown-accent-color`, as it already did for focused inputs; they were left in the browser's default color whatever the theme.
+- `@formdown/ui` inline fields take their background, border and focus ring from the theme (`--formdown-bg-secondary`, `--formdown-border-color`, `--formdown-input-focus-ring`); they were drawn in fixed light colors, so an empty inline field stood out as a light box in a dark theme.
 
 ## 0.6.0
 

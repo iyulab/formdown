@@ -288,8 +288,8 @@ export const formdownStyles = css`
   }
 
   [contenteditable="true"]:not(textarea) {
-    border: 1px solid rgba(209, 213, 219, 0.6);
-    background-color: rgba(248, 250, 252, 0.8);
+    border: 1px solid var(--formdown-border-color);
+    background-color: var(--formdown-bg-secondary);
     border-radius: 0.25rem;
     padding: 0.125rem 0.5rem;
     transition: all var(--formdown-transition-normal);
@@ -299,8 +299,8 @@ export const formdownStyles = css`
   }
 
   [contenteditable="true"]:not(textarea):hover {
-    background-color: rgba(241, 245, 249, 0.9);
-    border-color: rgba(156, 163, 175, 0.8);
+    background-color: var(--formdown-bg-secondary);
+    border-color: var(--formdown-text-secondary);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 2px rgba(0, 0, 0, 0.05);
     transform: translateY(-1px);
   }
@@ -308,14 +308,14 @@ export const formdownStyles = css`
   [contenteditable="true"]:not(textarea):focus {
     background-color: var(--formdown-bg-primary);
     border-color: var(--formdown-accent-color);
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2), 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--formdown-input-focus-ring);
     color: var(--formdown-text-primary);
     transform: translateY(-1px);
   }
 
   [contenteditable="true"]:not(textarea):not(:empty) {
     background-color: var(--formdown-bg-primary);
-    border-color: rgba(156, 163, 175, 0.9);
+    border-color: var(--formdown-border-color);
     font-weight: var(--formdown-font-weight-normal);
   }
 
