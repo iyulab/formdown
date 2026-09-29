@@ -580,3 +580,15 @@ Your name is ___@name* and age is #___@age*.
         })
     })
 })
+
+describe('Required marker with a type named in the brackets', () => {
+    it('takes the type and its options from the brackets', () => {
+        const { forms } = new FormdownParser().parseFormdown('@status*: [select options="Open,Closed"]\n@tone(Tone)*: [radio options="Calm,Urgent"]\n@kind*{A,B}: [select]')
+        expect(forms.map(f => [f.name, f.type, f.required, f.options])).toEqual([
+            ['status', 'select', true, ['Open', 'Closed']],
+            ['tone', 'radio', true, ['Calm', 'Urgent']],
+            ['kind', 'select', true, ['A', 'B']],
+        ])
+        expect(forms[0].attributes).not.toHaveProperty('select')
+    })
+})

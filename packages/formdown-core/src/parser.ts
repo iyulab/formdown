@@ -25,6 +25,12 @@ const SHORTHAND_BLOCK_FIELD = pattern(String.raw`^@(${NAME})(\*)?(?:\{(.*?)\})?(
 /** Shorthand block syntax with the label first: @name(Label)*{content} [-> Target]: marker[attributes] */
 const SHORTHAND_BLOCK_FIELD_LABEL_FIRST = pattern(String.raw`^@(${NAME})(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*${RELATION}:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?${ATTRIBUTES}.*$`)
 
+/** The types a field can be given by name in its brackets, `[select …]`. */
+const INPUT_TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'search',
+    'date', 'time', 'datetime-local', 'month', 'week', 'color',
+    'file', 'range', 'radio', 'checkbox', 'select', 'textarea',
+    'submit', 'reset', 'button', 'hidden']
+
 /** Something shaped like a block field whose name is not a valid name, e.g. `@1st: [text]`. */
 const BLOCK_FIELD_CANDIDATE = /^@([^\s:([{*\-<>@\]]+)[^:]*:\s*\S*\[/u
 import { defaultExtensionManager } from './extensions/extension-manager.js'
@@ -393,12 +399,8 @@ export class FormdownParser {
             // If attributes start with a valid input type (like "text required"),
             // let the standard parser handle it instead of shorthand parser
             if (!typeMarker && attributes) {
-                const validTypes = ['text', 'email', 'password', 'number', 'tel', 'url', 'search',
-                                   'date', 'time', 'datetime-local', 'month', 'week', 'color',
-                                   'file', 'range', 'radio', 'checkbox', 'select', 'textarea',
-                                   'submit', 'reset', 'button', 'hidden']
                 const firstWord = attributes.split(/\s/)[0]
-                if (validTypes.includes(firstWord)) {
+                if (INPUT_TYPES.includes(firstWord)) {
                     return match // Let standard parser handle this
                 }
             }
@@ -505,10 +507,13 @@ export class FormdownParser {
             '$': 'number'  // Money input - will add currency formatting
         }
         
-        const type = typeMap[typeMarker] || 'text'
+        // Without a marker the brackets may name the type, as in standard syntax: `@status*: [select …]`
+        const namedType = typeMarker ? undefined : tokenizeAttributes(attributes ?? '').find(t => t.value === undefined && INPUT_TYPES.includes(t.key))?.key
+        const type = typeMap[typeMarker] || namedType || 'text'
         
         // Create base field attributes
         let fieldAttributes = attributes ? this.parseAttributes(attributes) : {}
+        if (namedType) delete fieldAttributes[namedType]
         
         // Add required if marked
         if (requiredMarker === '*') {
@@ -531,7 +536,8 @@ export class FormdownParser {
         
         // Interpret content based on type
         if (content) {
-            const contentInterpreted = this.interpretContent(content, typeMarker)
+            const choiceMarker: Record<string, string> = { select: 's', radio: 'r', checkbox: 'c' }
+            const contentInterpreted = this.interpretContent(content, typeMarker || choiceMarker[type] || '')
             fieldAttributes = { ...fieldAttributes, ...contentInterpreted }
         }
 
@@ -716,11 +722,7 @@ export class FormdownParser {
                 const fullType = shorthandTypeMap[key] || key
 
                 // Check if it's a valid HTML input type or special form type
-                const validTypes = ['text', 'email', 'password', 'number', 'tel', 'url', 'search',
-                                   'date', 'time', 'datetime-local', 'month', 'week', 'color',
-                                   'file', 'range', 'radio', 'checkbox', 'select', 'textarea',
-                                   'submit', 'reset', 'button', 'hidden']
-                if (validTypes.includes(fullType)) {
+                if (INPUT_TYPES.includes(fullType)) {
                     type = fullType
                     typeIndex = i
                     break
