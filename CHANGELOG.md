@@ -4,6 +4,10 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ## Unreleased
 
+### Added
+
+- `@formdown/core` `authoringCompletion(source, caret)`: what completes a field a person has just started writing in a source editor — `@` after three underscores that follow other text on the line (`Name: ___` → `Name: ___@`), `[]` with the caret inside after `@name: ` at the start of an otherwise empty line — or `null`. A line of underscores alone (a Markdown rule), front matter, fenced code blocks and inline code are left alone.
+
 ### Fixed
 
 - `@formdown/ui` and `@formdown/editor` no longer name `dist/standalone.umd.js` as the `require` entry of `./standalone`. The standalone bundle is built as an ES module only and that file never existed; `require('@formdown/ui/standalone')` failed to resolve it.

@@ -7,7 +7,7 @@
  */
 
 import { Document, parseDocument, isMap } from 'yaml'
-import { readFrontMatter } from './source.js'
+import { FenceTracker, readFrontMatter } from './source.js'
 import { FormdownParser } from './parser.js'
 import { quoteAttributeValue, scanAttributes, tokenizeAttributes } from './grammar.js'
 
@@ -139,4 +139,49 @@ export function setFieldAttribute(source: string, field: string, key: string, va
         return { start: at + from, end: at + t.end, text: '' }
     })
     return applyEdits(source, edits)
+}
+
+/** Text to insert at the caret, and where the caret goes within it. */
+export interface Completion {
+    text: string
+    caret: number
+}
+
+/**
+ * What completes a field a person has just started writing, typed up to `caret` — for a source
+ * editor to insert as they type — or `null`:
+ *
+ * - Three underscores after other text on the line start an inline field: `@` follows, for its
+ *   name (`Name: ___` → `Name: ___@`). A line of underscores alone is a Markdown rule and is left
+ *   alone, and so are underscores already followed by `@`.
+ * - A space after `@name:` at the start of a line with nothing after it starts a block field:
+ *   `[]` follows, with the caret inside for its type (`@name: ` → `@name: [|]`).
+ *
+ * Nothing is completed in front matter, in a fenced code block or in inline code.
+ */
+export function authoringCompletion(source: string, caret: number): Completion | null {
+    const lineStart = source.lastIndexOf('\n', caret - 1) + 1
+    const newline = source.indexOf('\n', caret)
+    const line = source.slice(lineStart, newline === -1 ? source.length : newline).replace(/\r$/, '')
+    const before = source.slice(lineStart, caret)
+    const after = line.slice(before.length)
+    if (inCode(source, lineStart, line) || (before.match(/`/g)?.length ?? 0) % 2 === 1) return null
+
+    if (before.endsWith('___') && !after.startsWith('@') && before.replace(/_+$/, '').trim() !== '') {
+        return { text: '@', caret: 1 }
+    }
+    if (/^ {0,3}@[^\s@:[\]{}()*]+(\{[^}]*\})?(\([^)]*\))?\*?: $/.test(before) && after.trim() === '') {
+        return { text: '[]', caret: 1 }
+    }
+    return null
+}
+
+/** Whether the line starting at `lineStart` is front matter or inside a fenced code block. */
+function inCode(source: string, lineStart: number, line: string): boolean {
+    const earlier = lineStart === 0 ? [] : source.slice(0, lineStart - 1).split('\n')
+    const frontMatter = readFrontMatter(source)
+    if (frontMatter && earlier.length < frontMatter.lineCount) return true
+    const fences = new FenceTracker()
+    for (const text of earlier.slice(frontMatter?.lineCount ?? 0)) fences.next(text.replace(/\r$/, ''))
+    return fences.next(line)
 }

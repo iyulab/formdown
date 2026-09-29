@@ -1,4 +1,4 @@
-import { parseFormdown, applyEdits, updateFrontMatter, setFieldAttribute } from '../src/index'
+import { parseFormdown, applyEdits, updateFrontMatter, setFieldAttribute, authoringCompletion } from '../src/index'
 
 const spanText = (src: string) => parseFormdown(src).forms.map(f => src.slice(f.span!.start, f.span!.end))
 
@@ -145,5 +145,40 @@ describe('setFieldAttribute', () => {
 
     it('refuses a field the source does not have', () => {
         expect(() => setFieldAttribute('@a: []', 'b', 'required', true)).toThrow('"b"')
+    })
+})
+
+describe('authoringCompletion', () => {
+    const at = (typed: string, rest = '') => authoringCompletion(typed + rest, typed.length)
+
+    it('starts an inline field after three underscores that follow other text', () => {
+        expect(at('Name: ___')).toEqual({ text: '@', caret: 1 })
+        expect(at('Email: @___')).toEqual({ text: '@', caret: 1 })
+        expect(at('intro\n이름: ___', '\nmore')).toEqual({ text: '@', caret: 1 })
+        expect(at('a\r\nName: ___', '\r\nb')).toEqual({ text: '@', caret: 1 })
+    })
+
+    it('leaves a Markdown rule, and underscores already followed by a name, alone', () => {
+        expect(at('___')).toBeNull()
+        expect(at('text\n  ___')).toBeNull()
+        expect(at('Name: ___', '@name')).toBeNull()
+        expect(at('Name: __')).toBeNull()
+    })
+
+    it('opens the brackets of a block field after its name and a space', () => {
+        expect(at('@status: ')).toEqual({ text: '[]', caret: 1 })
+        expect(at('@담당*: ')).toEqual({ text: '[]', caret: 1 })
+        expect(at('@tone{Warm,Cool}(Tone): ')).toEqual({ text: '[]', caret: 1 })
+        expect(at('@status: ', '[select]')).toBeNull()
+        expect(at('@status:')).toBeNull()
+        expect(at('see @status: ')).toBeNull()
+    })
+
+    it('completes nothing in front matter, a fenced code block or inline code', () => {
+        expect(at('---\nnote: a ___', '\n---\nbody')).toBeNull()
+        expect(at('```\nName: ___', '\n```')).toBeNull()
+        expect(at('```\ncode\n```\nName: ___')).toEqual({ text: '@', caret: 1 })
+        expect(at('Write `Name: ___')).toBeNull()
+        expect(at('---\na: 1\n---\n@status: ')).toEqual({ text: '[]', caret: 1 })
     })
 })
