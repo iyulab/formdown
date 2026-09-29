@@ -4,6 +4,10 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ## Unreleased
 
+### Added
+
+- `@formdown/ui` `fieldStates`: a host can say, per field, which values it offers and give a short note. The first offered value shows in the empty field in place of its placeholder, every offered value is listed by the field as a button, and an offered option of a radio or checkbox group is marked. Picking one fires `formdown-suggestion-pick` with `{ field, value }`; the value goes into the field only when the host sets it through `data`.
+
 ### Fixed
 
 - `@formdown/ui` draws checkboxes and radio buttons in `--formdown-accent-color`, as it already did for focused inputs; they were left in the browser's default color whatever the theme.

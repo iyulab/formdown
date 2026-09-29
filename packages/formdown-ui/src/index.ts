@@ -2,6 +2,7 @@
 export { FormdownUI } from './formdown-ui'
 export { uiExtensionSupport, UIExtensionSupport } from './extension-support'
 export type { UIPlugin } from './extension-support'
+export type { FieldState, FieldStates } from './field-states'
 
 // Auto-register the web component when this module is imported
 import './formdown-ui'

@@ -7,6 +7,7 @@ import {
   type ValidationResult
 } from '@formdown/core'
 import { applyFieldValue } from './field-value'
+import { applyFieldStates, type FieldStates } from './field-states'
 import { uiExtensionSupport } from './extension-support'
 import { formdownStyles } from './styles'
 
@@ -26,6 +27,14 @@ export class FormdownUI extends LitElement {
 
   @property({ attribute: 'submit-text' })
   submitText = 'Submit'
+
+  /**
+   * What the host says about each field, by name: values it offers and a short note (see
+   * `FieldState`). Picking an offered value fires `formdown-suggestion-pick` with `{ field, value }`;
+   * putting the value in is the host's to do, through `data`.
+   */
+  @property({ attribute: false })
+  fieldStates: FieldStates = {}
 
   // Form ID generation removed - delegated to FormManager
 
@@ -228,6 +237,7 @@ export class FormdownUI extends LitElement {
   }  // Override firstUpdated to set innerHTML after the initial render
   override firstUpdated() {
     this.updateContent()
+    this.drawFieldStates()
     // Always sync UI (includes both existing data and schema defaults)
     // Use setTimeout to ensure DOM is fully ready
     setTimeout(() => {
@@ -240,6 +250,7 @@ export class FormdownUI extends LitElement {
 
     if (changedProperties.has('content')) {
       this.updateContent()
+      this.drawFieldStates() // the new content was drawn without them
       // After updating content and schema, sync UI with new default values
       // Use setTimeout to ensure DOM is fully updated
       setTimeout(() => {
@@ -251,6 +262,18 @@ export class FormdownUI extends LitElement {
     if (changedProperties.has('data')) {
       this.syncUIFromData()
     }
+
+    if (changedProperties.has('fieldStates') && !changedProperties.has('content')) {
+      this.drawFieldStates()
+    }
+  }
+
+  private drawFieldStates() {
+    const container = this.shadowRoot?.querySelector('#content-container')
+    if (!container) return
+    applyFieldStates(container, this.fieldStates ?? {}, (field, value) => {
+      this.dispatchEvent(new CustomEvent('formdown-suggestion-pick', { detail: { field, value }, bubbles: true, composed: true }))
+    })
   }
   private updateContent() {
     if (!this.content || !this.content.trim()) {

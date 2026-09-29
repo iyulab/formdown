@@ -320,6 +320,67 @@ export const formdownStyles = css`
   }
 
   /* ========================================
+   * Field states (fieldStates): offered values and notes
+   * ======================================== */
+  .formdown-ghost::placeholder,
+  [contenteditable="true"].formdown-ghost:empty::before {
+    color: var(--formdown-ghost-color, var(--formdown-text-secondary));
+    font-style: normal;
+  }
+
+  .formdown-field-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--formdown-spacing-xs);
+    margin-top: var(--formdown-spacing-xs);
+    font-size: var(--formdown-font-size-sm);
+    color: var(--formdown-note-color, var(--formdown-text-secondary));
+  }
+
+  span.formdown-field-note {
+    display: inline-flex;
+    margin: 0 0 0 var(--formdown-spacing-sm);
+    vertical-align: middle;
+  }
+
+  /* Plain chips, clear of the form's button styling. */
+  .formdown-field-note button.formdown-suggestion {
+    margin: 0;
+    padding: 0 var(--formdown-spacing-sm);
+    border: 1px dashed var(--formdown-suggestion-border-color, var(--formdown-accent-color));
+    border-radius: var(--formdown-input-border-radius);
+    background: var(--formdown-suggestion-bg, transparent);
+    box-shadow: none;
+    color: var(--formdown-text-primary);
+    font-size: inherit;
+    font-weight: var(--formdown-font-weight-normal);
+    letter-spacing: normal;
+    line-height: var(--formdown-line-height);
+    transform: none;
+  }
+
+  .formdown-field-note button.formdown-suggestion::before {
+    display: none;
+  }
+
+  .formdown-field-note button.formdown-suggestion:hover {
+    background: var(--formdown-bg-secondary);
+    transform: none;
+  }
+
+  .formdown-field-note button.formdown-suggestion:focus-visible {
+    outline: 2px solid var(--formdown-accent-color);
+    outline-offset: 1px;
+  }
+
+  label.formdown-suggested {
+    outline: 1px dashed var(--formdown-suggestion-border-color, var(--formdown-accent-color));
+    outline-offset: 2px;
+    border-radius: var(--formdown-input-border-radius);
+  }
+
+  /* ========================================
    * Typography (Markdown Content)
    * ======================================== */
   h1, h2, h3, h4, h5, h6 {
