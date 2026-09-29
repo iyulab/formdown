@@ -203,6 +203,7 @@ export const formdownStyles = css`
   }
 
   input[type="radio"], input[type="checkbox"] {
+    accent-color: var(--formdown-accent-color);
     width: auto;
     max-width: none;
     margin-right: var(--formdown-spacing-sm);

@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- `@formdown/ui` draws checkboxes and radio buttons in `--formdown-accent-color`, as it already did for focused inputs; they were left in the browser's default color whatever the theme.
+
 ## 0.6.0
 
 ### Added
