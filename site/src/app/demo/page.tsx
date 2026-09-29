@@ -218,8 +218,8 @@ export default function DemoPage() {
 
                     console.log('Created formdown-ui element:', renderer)
 
-                    renderer.addEventListener('formSubmit', (e: CustomEvent) => {
-                        setFormData(e.detail)
+                    renderer.addEventListener('form-submit', (e: CustomEvent) => {
+                        setFormData(e.detail.formData || {})
                         console.log('Form data:', e.detail)
                     })
 

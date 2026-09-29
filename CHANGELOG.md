@@ -13,6 +13,14 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 - `@formdown/ui` draws checkboxes and radio buttons in `--formdown-accent-color`, as it already did for focused inputs; they were left in the browser's default color whatever the theme.
 - `@formdown/ui` inline fields take their background, border and focus ring from the theme (`--formdown-bg-secondary`, `--formdown-border-color`, `--formdown-input-focus-ring`); they were drawn in fixed light colors, so an empty inline field stood out as a light box in a dark theme.
 
+### Removed
+
+- `@formdown/ui` `<formdown-ui>` no longer declares `submitText` (`submit-text`), `showSubmitButton` (`show-submit-button`), `formId` (`form-id`) or `selectOnFocus` (`select-on-focus`). None of them changed what was drawn; a submit button comes from the content (`@submit: [submit label="…"]`). `createFormdownUI` in `@formdown/ui` takes only `content`, and in `@formdown/core` only `container` and `content`.
+
+### Documentation
+
+- The `@formdown/ui` README lists the element's actual properties, methods and events (`form-submit` with `detail.formData`, `formdown-change`, `formdown-data-update`, `validation-error`), and its examples use the current syntax.
+
 ## 0.6.0
 
 ### Added

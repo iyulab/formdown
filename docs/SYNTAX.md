@@ -1040,11 +1040,7 @@ import { createFormdownUI, createFormdownEditor } from '@formdown/core'
 
 // Create FormdownUI component
 const container = document.getElementById('form-container')
-const formComponent = createFormdownUI(container, formdownContent, {
-  formId: 'my-form',
-  showSubmitButton: true,
-  submitText: 'Submit Form'
-})
+const formComponent = createFormdownUI(container, formdownContent)
 
 // Create FormdownEditor component
 const editorContainer = document.getElementById('editor-container')

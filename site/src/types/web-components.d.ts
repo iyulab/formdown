@@ -11,7 +11,6 @@ declare global {
             };
             'formdown-ui': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
                 content?: string;
-                'submit-text'?: string;
             };
             'formdown-form': React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
                 content?: string;

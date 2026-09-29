@@ -27,18 +27,9 @@ export function createWebComponent<T>(
  */
 export function createFormdownUI(
     container: HTMLElement,
-    content: string,
-    options: Partial<{
-        formId: string
-        showSubmitButton: boolean
-        submitText: string
-        validateOnSubmit: boolean
-    }> = {}
+    content: string
 ) {
-    return createWebComponent('formdown-ui', container, {
-        content,
-        ...options
-    })
+    return createWebComponent('formdown-ui', container, { content })
 }
 
 /**

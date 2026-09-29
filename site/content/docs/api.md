@@ -665,10 +665,6 @@ A custom element that renders Formdown source as interactive forms with Core-pow
 #### Attributes
 
 - `content` (string): The Formdown source content
-- `form-id` (string): ID for the generated form
-- `show-submit-button` (boolean): Show/hide submit button
-- `submit-text` (string): Text for submit button
-- `select-on-focus` (boolean): Select text on focus
 
 #### Properties
 
@@ -800,9 +796,6 @@ Creates and appends a FormdownUI component to a container.
 ```typescript
 interface UIOptions {
   content?: string
-  formId?: string
-  showSubmitButton?: boolean
-  submitText?: string
 }
 ```
 
@@ -811,9 +804,7 @@ interface UIOptions {
 import { createFormdownUI } from '@formdown/ui';
 
 const form = createFormdownUI(document.getElementById('form-container'), {
-  content: '@name: [text required]',
-  showSubmitButton: true,
-  submitText: 'Submit Form'
+  content: '@name*: []'
 });
 ```
 

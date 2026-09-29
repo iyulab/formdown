@@ -16,17 +16,6 @@ export class FormdownUI extends LitElement {
   static styles = formdownStyles
   @property()
   content = ''
-  @property({ type: Boolean, attribute: 'select-on-focus' })
-  selectOnFocus = true
-
-  @property({ attribute: 'form-id' })
-  formId = ''
-
-  @property({ type: Boolean, attribute: 'show-submit-button' })
-  showSubmitButton = true
-
-  @property({ attribute: 'submit-text' })
-  submitText = 'Submit'
 
   /**
    * What the host says about each field, by name: values it offers and a short note (see
