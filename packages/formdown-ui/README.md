@@ -41,7 +41,7 @@ viewer.addEventListener('form-submit', (event) => {
 
 - `content` (string) - The Formdown content to render
 - `data` (object) - Field values by name. Setting it fills the form; it follows what the user types
-- `fieldStates` (object, property only) - What the host says about each field, by name: `{ suggestions?: string[], note?: string }`. The first suggestion shows in the empty field in place of its placeholder; every suggestion is listed by the field as a button, beside the note. Styled with `--formdown-ghost-color`, `--formdown-note-color`, `--formdown-suggestion-bg` and `--formdown-suggestion-border-color`.
+- `fieldStates` (object, property only) - What the host says about each field, by name: `{ suggestions?: string[], note?: string, decline?: string }`. The first suggestion shows in the empty field in place of its placeholder; every suggestion is listed by the field as a button, beside the note. With `decline`, a button with that label follows the suggestions (styled as the `decline` part). Styled with `--formdown-ghost-color`, `--formdown-note-color`, `--formdown-suggestion-bg` and `--formdown-suggestion-border-color`.
 
 ## Methods
 
@@ -68,6 +68,8 @@ All events bubble.
 - `formdown-suggestion-pick` - Fired when an offered value (see `fieldStates`) is picked. The value is not put in the field: set it through `data` if the host takes it
   - `detail.field` - Field name
   - `detail.value` - The value picked
+- `formdown-suggestion-decline` - Fired when the offered values are declined (see `fieldStates.decline`). Nothing in the form changes: the host decides what declining means
+  - `detail.field` - Field name
 
 ## Features
 

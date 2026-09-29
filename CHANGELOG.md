@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- `@formdown/ui` `fieldStates` takes `decline`: the label of a button, drawn after the offered values, that says none of them is wanted. Clicking it fires `formdown-suggestion-decline` with `{ field }`; the form is left as it is.
+
 ## 0.7.0
 
 ### Added

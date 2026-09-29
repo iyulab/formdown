@@ -1,8 +1,9 @@
 /**
  * What the host says about a field, drawn by the field: values it offers and a short note.
  *
- * The component only shows them. Picking an offered value is reported (`onPick`); putting it into
- * the field is the host's decision, so the host stays the one place a value comes from.
+ * The component only shows them. Picking an offered value, or declining them, is reported
+ * (`FieldStateResponses`); putting a value into the field is the host's decision, so the host stays
+ * the one place a value comes from.
  */
 export interface FieldState {
   /**
@@ -12,9 +13,22 @@ export interface FieldState {
   suggestions?: string[]
   /** A short note shown by the field — where the suggestion comes from, or why there is none. */
   note?: string
+  /**
+   * The label of a button, after the offered values, that says none of them is wanted — "Not this",
+   * in the host's language. Drawn only while there are suggestions.
+   */
+  decline?: string
 }
 
 export type FieldStates = Record<string, FieldState>
+
+/** What the person does with a field's offered values. */
+export interface FieldStateResponses {
+  /** A value was picked. */
+  onPick: (field: string, value: string) => void
+  /** The offered values were declined. */
+  onDecline: (field: string) => void
+}
 
 const NOTE = 'data-formdown-note'
 const SAVED_PLACEHOLDER = 'data-formdown-placeholder'
@@ -54,7 +68,7 @@ function showGhost(el: HTMLElement, value: string) {
   el.classList.add(GHOST)
 }
 
-function noteElement(doc: Document, name: string, state: FieldState, inline: boolean, onPick: (field: string, value: string) => void) {
+function noteElement(doc: Document, name: string, state: FieldState, inline: boolean, respond: FieldStateResponses) {
   const suggestions = state.suggestions ?? []
   if (!state.note && suggestions.length === 0) return undefined
   const note = doc.createElement(inline ? 'span' : 'div')
@@ -73,7 +87,16 @@ function noteElement(doc: Document, name: string, state: FieldState, inline: boo
     button.className = 'formdown-suggestion'
     button.setAttribute('part', 'suggestion')
     button.textContent = value
-    button.addEventListener('click', () => onPick(name, value))
+    button.addEventListener('click', () => respond.onPick(name, value))
+    note.append(button)
+  }
+  if (state.decline && suggestions.length > 0) {
+    const button = doc.createElement('button')
+    button.type = 'button'
+    button.className = 'formdown-decline'
+    button.setAttribute('part', 'decline')
+    button.textContent = state.decline
+    button.addEventListener('click', () => respond.onDecline(name))
     note.append(button)
   }
   return note
@@ -98,7 +121,7 @@ export function clearFieldStates(container: ParentNode) {
  * by it, and the offered options of a choice group marked. What was drawn before is taken away first,
  * so the states given are the whole of what shows.
  */
-export function applyFieldStates(container: ParentNode, states: FieldStates, onPick: (field: string, value: string) => void) {
+export function applyFieldStates(container: ParentNode, states: FieldStates, respond: FieldStateResponses) {
   clearFieldStates(container)
   const doc = (container as Node).ownerDocument ?? (container as unknown as Document)
   for (const [name, state] of Object.entries(states)) {
@@ -112,7 +135,7 @@ export function applyFieldStates(container: ParentNode, states: FieldStates, onP
         el.closest('label')?.classList.add(SUGGESTED)
     }
     const inline = isInline(first)
-    const note = noteElement(doc, name, state, inline, onPick)
+    const note = noteElement(doc, name, state, inline, respond)
     if (!note) continue
     if (inline) first.after(note)
     else (first.closest('.formdown-field') ?? first.parentElement ?? first).append(note)

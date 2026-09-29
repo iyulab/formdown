@@ -374,6 +374,37 @@ export const formdownStyles = css`
     outline-offset: 1px;
   }
 
+  /* A quiet text button: declining is not the offered action. */
+  .formdown-field-note button.formdown-decline {
+    margin: 0;
+    padding: 0 var(--formdown-spacing-xs);
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    color: var(--formdown-note-color, var(--formdown-text-secondary));
+    font-size: inherit;
+    font-weight: var(--formdown-font-weight-normal);
+    letter-spacing: normal;
+    line-height: var(--formdown-line-height);
+    text-decoration: underline;
+    transform: none;
+  }
+
+  .formdown-field-note button.formdown-decline::before {
+    display: none;
+  }
+
+  .formdown-field-note button.formdown-decline:hover {
+    color: var(--formdown-text-primary);
+    background: transparent;
+    transform: none;
+  }
+
+  .formdown-field-note button.formdown-decline:focus-visible {
+    outline: 2px solid var(--formdown-accent-color);
+    outline-offset: 1px;
+  }
+
   label.formdown-suggested {
     outline: 1px dashed var(--formdown-suggestion-border-color, var(--formdown-accent-color));
     outline-offset: 2px;

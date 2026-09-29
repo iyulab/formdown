@@ -20,7 +20,8 @@ export class FormdownUI extends LitElement {
   /**
    * What the host says about each field, by name: values it offers and a short note (see
    * `FieldState`). Picking an offered value fires `formdown-suggestion-pick` with `{ field, value }`;
-   * putting the value in is the host's to do, through `data`.
+   * putting the value in is the host's to do, through `data`. Declining them fires
+   * `formdown-suggestion-decline` with `{ field }`.
    */
   @property({ attribute: false })
   fieldStates: FieldStates = {}
@@ -260,8 +261,11 @@ export class FormdownUI extends LitElement {
   private drawFieldStates() {
     const container = this.shadowRoot?.querySelector('#content-container')
     if (!container) return
-    applyFieldStates(container, this.fieldStates ?? {}, (field, value) => {
-      this.dispatchEvent(new CustomEvent('formdown-suggestion-pick', { detail: { field, value }, bubbles: true, composed: true }))
+    applyFieldStates(container, this.fieldStates ?? {}, {
+      onPick: (field, value) =>
+        this.dispatchEvent(new CustomEvent('formdown-suggestion-pick', { detail: { field, value }, bubbles: true, composed: true })),
+      onDecline: (field) =>
+        this.dispatchEvent(new CustomEvent('formdown-suggestion-decline', { detail: { field }, bubbles: true, composed: true })),
     })
   }
   private updateContent() {
