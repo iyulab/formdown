@@ -52,6 +52,9 @@ jobs:
       - name: Build packages
         run: npm run build --workspace=@formdown/core --workspace=@formdown/ui --workspace=@formdown/editor
 
+      - name: Check entry points
+        run: node scripts/check-entry-points.js
+
       - name: Test
         run: npm test --workspace=@formdown/core --workspace=@formdown/ui --workspace=@formdown/editor
 

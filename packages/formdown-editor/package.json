@@ -14,8 +14,7 @@
       "require": "./dist/index.umd.js"
     },
     "./standalone": {
-      "import": "./dist/standalone.js",
-      "require": "./dist/standalone.umd.js"
+      "import": "./dist/standalone.js"
     }
   },
   "files": [

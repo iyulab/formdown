@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- `@formdown/ui` and `@formdown/editor` no longer name `dist/standalone.umd.js` as the `require` entry of `./standalone`. The standalone bundle is built as an ES module only and that file never existed; `require('@formdown/ui/standalone')` failed to resolve it.
+
 ## 0.8.1
 
 ### Fixed
