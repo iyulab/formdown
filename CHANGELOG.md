@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## 0.8.1
+
+### Fixed
+
+- `@formdown/ui` and `@formdown/editor` ship their type declarations. Both packages named `dist/index.d.ts` as their types, but the build never wrote it, so a TypeScript consumer importing from them (`import type { FieldStates } from '@formdown/ui'`) got no types.
+
 ## 0.8.0
 
 ### Added

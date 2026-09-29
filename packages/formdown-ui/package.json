@@ -23,7 +23,7 @@
     "README.md"
   ],
   "scripts": {
-    "build": "node ../../node_modules/typescript/bin/tsc && node ../../node_modules/vite/bin/vite.js build && node ../../node_modules/vite/bin/vite.js build --config vite.standalone.config.ts",
+    "build": "node ../../node_modules/vite/bin/vite.js build && node ../../node_modules/vite/bin/vite.js build --config vite.standalone.config.ts && node ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
     "test": "node ../../node_modules/jest/bin/jest.js"
   },
   "dependencies": {
