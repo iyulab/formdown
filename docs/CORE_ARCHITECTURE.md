@@ -154,7 +154,7 @@ source.slice(field.span.start, field.span.end) // '___@name'
 Two functions change a document without disturbing anything else in it:
 
 ```typescript
-import { applyEdits, updateFrontMatter } from '@formdown/core'
+import { applyEdits, updateFrontMatter, setFieldAttribute } from '@formdown/core'
 
 // Replace ranges of the original text; edits may come in any order but must not overlap
 applyEdits(source, [{ start: field.span.start, end: field.span.end, text: '___@full_name' }])
@@ -162,9 +162,14 @@ applyEdits(source, [{ start: field.span.start, end: field.span.end, text: '___@f
 // Fill in a document: set (or with undefined, remove) front matter keys.
 // Front matter values override field values, so this records what a user entered.
 const filled = updateFrontMatter(formSource, { symptom: 'Freezes on save', code: '007' })
+
+// Author a form: set one attribute of a field (true = bare flag, false/undefined = remove).
+const edited = setFieldAttribute(formSource, 'status', 'options', 'Open,In progress,Closed')
 ```
 
 `updateFrontMatter` creates front matter when there is none, keeps other keys, their order and comments, uses the document's line ending, keeps a byte order mark in front, and quotes strings that YAML would otherwise read as numbers or booleans. Text outside the front matter, the whole body included, is unchanged byte for byte. Inside the front matter the YAML is written back by the `yaml` library, so spacing and quoting of untouched values may be normalized. It throws when the existing front matter is not a valid YAML mapping rather than overwrite it.
+
+`setFieldAttribute` changes one attribute of the field with that name and nothing else: the rest of the field — its label, required marker, type and other attributes — and the rest of the source stay as they were. Options written in braces after the name (`@priority{Low,High}: r[]`) are edited in the braces; an inline field without brackets (`___@name`) is given them. It throws when the source has no field of that name.
 
 To read a document's front matter without parsing its fields — for example the values of many documents at once — use `readFrontMatter`. It returns the same `frontMatter` that `parseFormdown` reports, with the diagnostics for YAML it cannot read, or `null` when the source does not start with front matter:
 

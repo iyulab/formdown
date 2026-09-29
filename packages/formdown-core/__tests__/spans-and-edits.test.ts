@@ -1,4 +1,4 @@
-import { parseFormdown, applyEdits, updateFrontMatter } from '../src/index'
+import { parseFormdown, applyEdits, updateFrontMatter, setFieldAttribute } from '../src/index'
 
 const spanText = (src: string) => parseFormdown(src).forms.map(f => src.slice(f.span!.start, f.span!.end))
 
@@ -92,5 +92,58 @@ describe('updateFrontMatter', () => {
 
     it('refuses to rewrite front matter that is not valid YAML', () => {
         expect(() => updateFrontMatter('---\na: [unclosed\n---\n', { a: 1 })).toThrow()
+    })
+})
+
+describe('setFieldAttribute', () => {
+    const field = (src: string, name: string) => parseFormdown(src).forms.find(f => f.name === name)!
+
+    it('sets the options of a select, leaving the rest of the line and the source as they were', () => {
+        const src = '# Intake\n\n@status(Status)*: [select options="Open,Closed" class="wide"]\n@note: []\n'
+        const out = setFieldAttribute(src, 'status', 'options', 'Open,In progress,Closed')
+        expect(out).toBe('# Intake\n\n@status(Status)*: [select options="Open,In progress,Closed" class="wide"]\n@note: []\n')
+        expect(field(out, 'status').options).toEqual(['Open', 'In progress', 'Closed'])
+        expect(field(out, 'status').required).toBe(true)
+        expect(field(out, 'status').label).toBe('Status')
+    })
+
+    it('adds an attribute to empty brackets and to brackets that have some', () => {
+        expect(setFieldAttribute('@team: []', 'team', 'options', 'A,B')).toBe('@team: [options="A,B"]')
+        expect(setFieldAttribute('@team: [radio]', 'team', 'options', 'A,B')).toBe('@team: [radio options="A,B"]')
+        expect(field(setFieldAttribute('@team: [radio]', 'team', 'options', 'A,B'), 'team').options).toEqual(['A', 'B'])
+    })
+
+    it('edits options written in braces where they are', () => {
+        const out = setFieldAttribute('@priority{Low,High}: r[]', 'priority', 'options', 'Low,Mid,High')
+        expect(out).toBe('@priority{Low,Mid,High}: r[]')
+        expect(field(out, 'priority').options).toEqual(['Low', 'Mid', 'High'])
+    })
+
+    it('edits an inline field, giving brackets to one that has none', () => {
+        expect(setFieldAttribute('Pick ___@size[select options="S,M"] now', 'size', 'options', 'S,M,L')).toBe('Pick ___@size[select options="S,M,L"] now')
+        const out = setFieldAttribute('Name: ___@name.', 'name', 'placeholder', 'Full name')
+        expect(out).toBe('Name: ___@name[placeholder="Full name"].')
+        expect(field(out, 'name').placeholder).toBe('Full name')
+    })
+
+    it('writes true as a bare key and removes the attribute for false or undefined', () => {
+        expect(setFieldAttribute('@a: [text]', 'a', 'required', true)).toBe('@a: [text required]')
+        expect(setFieldAttribute('@a: [text required maxlength=5]', 'a', 'required', false)).toBe('@a: [text maxlength=5]')
+        expect(setFieldAttribute('@a: [required text]', 'a', 'required', undefined)).toBe('@a: [text]')
+        expect(setFieldAttribute('@a: [text]', 'a', 'required', undefined)).toBe('@a: [text]')
+    })
+
+    it('quotes values so they read back unchanged', () => {
+        const out = setFieldAttribute('@a: [text]', 'a', 'placeholder', 'Say "hi" ] here')
+        expect(field(out, 'a').placeholder).toBe('Say "hi" ] here')
+    })
+
+    it('keeps CRLF line endings and front matter', () => {
+        const src = '---\r\nid: t\r\n---\r\n@kind: [select options="x"]\r\n'
+        expect(setFieldAttribute(src, 'kind', 'options', 'x,y')).toBe('---\r\nid: t\r\n---\r\n@kind: [select options="x,y"]\r\n')
+    })
+
+    it('refuses a field the source does not have', () => {
+        expect(() => setFieldAttribute('@a: []', 'b', 'required', true)).toThrow('"b"')
     })
 })

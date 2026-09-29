@@ -6,7 +6,13 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ### Added
 
+- `@formdown/core` `setFieldAttribute(source, field, key, value)`: sets or removes one attribute of a field, found by name, leaving the rest of the source byte for byte — for authoring tools that edit a form's source, such as changing a select's options. Options written in braces after the name are edited there.
+
 - `@formdown/ui` `fieldStates` takes `decline`: the label of a button, drawn after the offered values, that says none of them is wanted. Clicking it fires `formdown-suggestion-decline` with `{ field }`; the form is left as it is.
+
+### Fixed
+
+- A block field with the required marker and a type named in its brackets (`@status*: [select options="Open,Closed"]`, `@tone(Tone)*: [radio …]`) is that type, with its options. It was read as a text field with a `select` attribute, and its options were lost.
 
 ## 0.7.0
 

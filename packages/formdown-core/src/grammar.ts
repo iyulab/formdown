@@ -28,6 +28,9 @@ export interface AttributeToken {
     /** The value with quotes removed and escapes resolved; undefined for a bare key. */
     value?: string
     quoted: boolean
+    /** Where the token is in the text given: from its key to the end of its value. */
+    start: number
+    end: number
 }
 
 /**
@@ -41,12 +44,13 @@ export function tokenizeAttributes(text: string): AttributeToken[] {
         while (i < text.length && /\s/.test(text[i])) i++
         if (i >= text.length) break
 
+        const start = i
         let key = ''
         while (i < text.length && !/[\s="']/.test(text[i])) key += text[i++]
         if (!key) { i++; continue }
 
         if (text[i] !== '=') {
-            tokens.push({ key, quoted: false })
+            tokens.push({ key, quoted: false, start, end: i })
             continue
         }
         i++ // '='
@@ -64,12 +68,12 @@ export function tokenizeAttributes(text: string): AttributeToken[] {
                     value += text[i++]
                 }
             }
-            i++ // closing quote
-            tokens.push({ key, value, quoted: true })
+            i = Math.min(i + 1, text.length) // closing quote
+            tokens.push({ key, value, quoted: true, start, end: i })
         } else {
             let value = ''
             while (i < text.length && !/\s/.test(text[i])) value += text[i++]
-            tokens.push({ key, value, quoted: false })
+            tokens.push({ key, value, quoted: false, start, end: i })
         }
     }
     return tokens
