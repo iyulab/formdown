@@ -1,6 +1,7 @@
 name: Release
 
 # Publishes @formdown/core, @formdown/ui and @formdown/editor to npm.
+# To release: `npm run version:set -- <version>`, commit, tag `v<version>`, push the tag.
 # - Pushing a `v*` tag publishes that tag.
 # - Manual dispatch publishes the current branch head, but only when a
 #   `v<version>` tag exists and `packages/` is identical to it, so what

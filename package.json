@@ -35,6 +35,7 @@
         "test": "npm run test --workspaces --if-present",
         "build": "node scripts/sync-versions.js && npm run build --workspaces --if-present",
         "publish": "node scripts/publish-all.js",
+        "version:set": "node scripts/set-version.js",
         "update": "npm update --workspaces --include-workspace-root",
         "update:check": "npx npm-check-updates --workspaces --root",
         "update:latest": "npx npm-check-updates -u --workspaces --root && npm install"
