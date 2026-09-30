@@ -164,7 +164,37 @@ function fieldOfFocusedNote(container: ParentNode): string | null {
 function focusField(container: ParentNode, name: string) {
   const active = focusRoot(container)?.activeElement
   if (active && (container as Node).contains(active)) return // the drawing kept focus somewhere in the form
+  controlOf(container, name)?.focus()
+}
+
+/** The element that takes focus for a field: for a choice group, its chosen option, or its first. */
+function controlOf(container: ParentNode, name: string): HTMLElement | undefined {
   const elements = fieldElements(container, name)
-  const chosen = elements.find((el) => el instanceof HTMLInputElement && el.checked) ?? elements[0]
-  chosen?.focus()
+  return elements.find((el) => el instanceof HTMLInputElement && el.checked) ?? elements[0]
+}
+
+/** Whether a person can reach the control: not hidden or turned off by a condition, not a hidden input. */
+function reachable(el: HTMLElement): boolean {
+  if (el.closest('[hidden]')) return false
+  if (el instanceof HTMLInputElement && el.type === 'hidden') return false
+  if ('disabled' in el && (el as HTMLInputElement).disabled) return false
+  return !isInline(el) || el.getAttribute('contenteditable') !== 'false'
+}
+
+/**
+ * Focuses the field named `name`, or with no name the first field a person can reach, in the order the
+ * form shows them. Answers whether a field took focus.
+ */
+export function focusFieldOf(container: ParentNode, name?: string): boolean {
+  let target: HTMLElement | undefined
+  if (name !== undefined) {
+    target = controlOf(container, name)
+    if (target && !reachable(target)) target = undefined
+  } else {
+    const first = Array.from(container.querySelectorAll<HTMLElement>('[name], [data-field-name]')).find(reachable)
+    const firstName = first?.getAttribute('name') ?? first?.dataset.fieldName
+    target = firstName !== undefined && firstName !== null ? controlOf(container, firstName) : undefined
+  }
+  target?.focus()
+  return !!target && focusRoot(container)?.activeElement === target
 }

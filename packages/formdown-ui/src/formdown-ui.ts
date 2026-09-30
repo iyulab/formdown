@@ -10,7 +10,7 @@ import { applyFieldValue, isCheckedValue } from './field-value'
 import { addUnlistedChoices } from './unlisted'
 import { applyChoices, type Choices } from './choices'
 import { applyConditions, type ConditionalField } from './conditions'
-import { applyFieldStates, type FieldStates } from './field-states'
+import { applyFieldStates, focusFieldOf, type FieldStates } from './field-states'
 import { uiExtensionSupport } from './extension-support'
 import { formdownStyles } from './styles'
 
@@ -73,6 +73,17 @@ export class FormdownUI extends LitElement {
     if (this.formManager && this._schema) {
       this.formManager.updateData(newData)
     }
+  }
+
+  /**
+   * Focuses the field named `fieldName` — for a choice group, its chosen option or its first — or with
+   * no name the first field a person can reach (not hidden or turned off by a condition). A host calls
+   * it when a new form opens, or to keep the field being worked on after it draws the form again.
+   * Answers whether a field took focus.
+   */
+  focusField(fieldName?: string): boolean {
+    const container = this.shadowRoot?.querySelector('#content-container')
+    return container ? focusFieldOf(container, fieldName) : false
   }
 
   // Public method to update single field
