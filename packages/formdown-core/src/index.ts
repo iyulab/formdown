@@ -1,7 +1,9 @@
+import { conditionState } from './conditions.js'
 export * from './types.js'
 export * from './parser.js'
 export * from './generator.js'
 export * from './schema.js'
+export { conditionHolds, conditionState, type ConditionState } from './conditions.js'
 export { applyEdits, updateFrontMatter, setFieldAttribute, authoringCompletion, type TextEdit, type Completion } from './edit.js'
 export { readFrontMatter, type FrontMatterResult } from './source.js'
 export * from './extensions/index.js'
@@ -86,6 +88,8 @@ interface BasicFieldSchema {
     label?: string
     required?: boolean
     errorMessage?: string
+    /** `required-if` makes the field required; a field its conditions hide or disable is not validated. */
+    conditions?: import('./types.js').ConditionalAttributes
 }
 
 /**
@@ -111,7 +115,14 @@ export function validateForm(data: Record<string, unknown>, schema: Record<strin
     const errors: import('./types.js').FieldError[] = []
 
     Object.entries(schema).forEach(([fieldName, fieldSchema]) => {
-        const fieldErrors = validateField(data[fieldName], { ...fieldSchema, name: fieldName })
+        const state = conditionState(fieldSchema.conditions, data)
+        // A field that cannot be filled in right now is not asked for.
+        if (!state.visible || !state.enabled) return
+        const fieldErrors = validateField(data[fieldName], {
+            ...fieldSchema,
+            name: fieldName,
+            required: fieldSchema.required || state.required,
+        })
         errors.push(...fieldErrors)
     })
 

@@ -986,8 +986,9 @@ export class FormdownParser {
 
         const trimmed = conditionStr.trim()
 
+        // A condition names a field the way a field is named — in any script, like the field itself.
         // Check for equality: field=value
-        const equalMatch = trimmed.match(/^([\w_]+)=(.+)$/)
+        const equalMatch = trimmed.match(pattern(String.raw`^(${NAME})=(.+)$`))
         if (equalMatch) {
             return {
                 field: equalMatch[1],
@@ -997,7 +998,7 @@ export class FormdownParser {
         }
 
         // Check for inequality: field!=value
-        const notEqualMatch = trimmed.match(/^([\w_]+)!=(.+)$/)
+        const notEqualMatch = trimmed.match(pattern(String.raw`^(${NAME})!=(.+)$`))
         if (notEqualMatch) {
             return {
                 field: notEqualMatch[1],
@@ -1009,7 +1010,7 @@ export class FormdownParser {
         // Check for negation: !field (falsy check)
         if (trimmed.startsWith('!')) {
             const fieldName = trimmed.slice(1).trim()
-            if (fieldName && /^[\w_]+$/.test(fieldName)) {
+            if (fieldName && isValidName(fieldName)) {
                 return {
                     field: fieldName,
                     operator: 'falsy'
@@ -1018,7 +1019,7 @@ export class FormdownParser {
         }
 
         // Simple field name: field (truthy check)
-        if (/^[\w_]+$/.test(trimmed)) {
+        if (isValidName(trimmed)) {
             return {
                 field: trimmed,
                 operator: 'truthy'

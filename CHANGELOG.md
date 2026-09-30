@@ -2,6 +2,21 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- `@formdown/ui` applies `visible-if`, `hidden-if`, `enabled-if`, `disabled-if` and `required-if` as values change. A hidden or disabled field keeps its value.
+- `@formdown/core` `conditionState(conditions, data)` and `conditionHolds(condition, data)`: what a field's conditions make of it for a form's values.
+
+### Changed
+
+- `@formdown/core` `validateForm` asks for a field its `required-if` makes required, and no longer asks for one its conditions hide or disable.
+
+### Fixed
+
+- A condition naming a field outside ASCII (`visible-if="구분=법인"`) was dropped by the parser; it names fields the way fields are named.
+
 ## 0.10.2
 
 ### Fixed

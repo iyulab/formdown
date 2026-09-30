@@ -8,6 +8,7 @@ import {
 } from '@formdown/core'
 import { applyFieldValue, isCheckedValue } from './field-value'
 import { addUnlistedChoices } from './unlisted'
+import { applyConditions, type ConditionalField } from './conditions'
 import { applyFieldStates, type FieldStates } from './field-states'
 import { uiExtensionSupport } from './extension-support'
 import { formdownStyles } from './styles'
@@ -466,6 +467,9 @@ export class FormdownUI extends LitElement {
 
         applyFieldValue(htmlElement, value, fieldType)
       })
+
+      // What the values now show, enable and require.
+      if (container && this._schema) applyConditions(container, this._schema as Record<string, ConditionalField>, this.data)
     } finally {
       this._isUpdatingUI = false
       this.domBinder.releaseSyncLock()

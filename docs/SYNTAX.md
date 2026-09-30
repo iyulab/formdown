@@ -232,9 +232,15 @@ FormDown supports conditional field visibility and behavior based on other field
 @submit: [submit enabled-if="agree_terms"]
 ```
 
+### At runtime
+
+`<formdown-ui>` applies the conditions as values change: a field whose `visible-if` does not hold (or whose `hidden-if` does) is hidden with its label; `enabled-if`/`disabled-if` enable and disable it; `required-if` makes it required while it can be filled in. **A hidden or disabled field keeps its value** — hiding is not clearing; whoever holds the data decides. `validateForm` follows the same rules: it asks for a field `required-if` makes required, and does not ask for one its conditions hide or disable. `conditionState(conditions, data)` from `@formdown/core` answers the same for any other host.
+
+A condition names a field the way a field is named, in any script: `visible-if="구분=법인"`.
+
 ### Generated HTML
 
-Conditional fields generate data attributes for JavaScript runtime handling:
+Conditional fields also carry data attributes, for hosts that render the HTML themselves:
 
 ```html
 <div class="formdown-field formdown-conditional"
