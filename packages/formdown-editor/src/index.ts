@@ -1,25 +1,16 @@
-// Export the class for SDK usage
-export { FormdownEditor } from './formdown-editor.js'
+// Importing the class registers `<formdown-editor>`.
+import { FormdownEditor } from './formdown-editor.js'
+export { FormdownEditor }
 export { editorExtensionSupport, EditorExtensionSupport } from './extension-support.js'
 export type { EditorPlugin } from './extension-support.js'
 
-// Auto-register the web component when this module is imported
-import './formdown-editor.js'
-
-// Utility functions for SDK usage
-export const createFormdownEditor = (container: HTMLElement, options: {
-    content?: string
-    showPreview?: boolean
-    showToolbar?: boolean
-    placeholder?: string
-} = {}) => {
-    const editor = document.createElement('formdown-editor') as any
-
-    if (options.content) editor.content = options.content
-    if (options.showPreview !== undefined) editor.showPreview = options.showPreview
-    if (options.showToolbar !== undefined) editor.showToolbar = options.showToolbar
-    if (options.placeholder) editor.placeholder = options.placeholder
-
+/** Makes a `<formdown-editor>` with the given properties and appends it to `container`. */
+export const createFormdownEditor = (
+    container: HTMLElement,
+    options: Partial<Pick<FormdownEditor, 'content' | 'mode' | 'placeholder' | 'header' | 'toolbar'>> = {},
+): FormdownEditor => {
+    const editor = document.createElement('formdown-editor')
+    Object.assign(editor, options)
     container.appendChild(editor)
     return editor
 }

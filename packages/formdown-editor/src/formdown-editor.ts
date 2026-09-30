@@ -1,9 +1,12 @@
 import { LitElement, html, css, unsafeCSS } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
-import { 
+import {
   FormManager,
-  type ParseResult as CoreParseResult 
+  authoringCompletion,
+  type ParseResult as CoreParseResult
 } from '@formdown/core'
+// The preview is a `<formdown-ui>`: importing the package registers it.
+import '@formdown/ui'
 import { editorExtensionSupport } from './extension-support'
 import styles from './styles.css?inline'
 // Template functions inlined for better performance
@@ -109,8 +112,9 @@ export class FormdownEditor extends LitElement {
             this.requestUpdate('data')
 
             // Dispatch external event
+            // The same shape `<formdown-ui>` reports: `detail.formData`.
             this.dispatchEvent(new CustomEvent('formdown-data-update', {
-                detail: formData, bubbles: true, composed: true
+                detail: { formData }, bubbles: true, composed: true
             }))
         })
         
@@ -237,13 +241,6 @@ export class FormdownEditor extends LitElement {
         try {
             // Preview template via FormManager
             
-            // Check if formdown-ui is registered
-            const isRegistered = customElements.get('formdown-ui')
-            if (!isRegistered) {
-                container.innerHTML = '<div style="padding: 1rem; color: #666;">Loading form preview...</div>'
-                return
-            }
-
             // Get or create formdown-ui element - 간소화된 버전
             let formdownUI = container.querySelector('formdown-ui') as any
 
@@ -280,8 +277,28 @@ export class FormdownEditor extends LitElement {
         }
     }
 
+    /** A completion is being inserted: its own input is not completed again. */
+    private completing = false
+
+    /**
+     * Takes what was typed, completing a field just started (`___` → `___@`, `@name: ` → `@name: []`,
+     * see `authoringCompletion`). The completion goes in as typing does, so one undo takes it away.
+     */
     private handleInput(e: Event) {
         const target = e.target as HTMLTextAreaElement
+        const caret = target.selectionStart
+        if ((e as InputEvent).inputType === 'insertText' && !this.completing && caret === target.selectionEnd) {
+            const completion = authoringCompletion(target.value, caret)
+            if (completion) {
+                this.completing = true
+                // Where the browser cannot insert as typing, the text still goes in, without its own undo step.
+                if (!document.execCommand?.('insertText', false, completion.text)) {
+                    target.setRangeText(completion.text, caret, caret, 'end')
+                }
+                this.completing = false
+                target.setSelectionRange(caret + completion.caret, caret + completion.caret)
+            }
+        }
         this.content = target.value
         this.updateParseResult()
         this.dispatchContentChange()

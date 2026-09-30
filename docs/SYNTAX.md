@@ -1036,15 +1036,17 @@ if (!validationResult.isValid) {
 ### Component Creation
 
 ```typescript
-import { createFormdownUI, createFormdownEditor } from '@formdown/core'
+import { createFormdownUI } from '@formdown/ui'
+import { createFormdownEditor } from '@formdown/editor'
 
 // Create FormdownUI component
 const container = document.getElementById('form-container')
-const formComponent = createFormdownUI(container, formdownContent)
+const formComponent = createFormdownUI(container, { content: formdownContent })
 
 // Create FormdownEditor component
 const editorContainer = document.getElementById('editor-container')
-const editorComponent = createFormdownEditor(editorContainer, formdownContent, {
+const editorComponent = createFormdownEditor(editorContainer, {
+  content: formdownContent,
   mode: 'split',
   toolbar: true
 })

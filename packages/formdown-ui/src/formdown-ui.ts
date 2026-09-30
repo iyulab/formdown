@@ -6,7 +6,7 @@ import {
   type FormDownSchema,
   type ValidationResult
 } from '@formdown/core'
-import { applyFieldValue } from './field-value'
+import { applyFieldValue, isCheckedValue } from './field-value'
 import { applyFieldStates, type FieldStates } from './field-states'
 import { uiExtensionSupport } from './extension-support'
 import { formdownStyles } from './styles'
@@ -374,8 +374,12 @@ export class FormdownUI extends LitElement {
 
     // Simple UI event handler for real-time updates
     const handleChange = (event: Event) => {
+      const held = this.data[fieldName]
       this.formManager.handleUIEvent(event, this.domBinder)
       const value = this.getFieldValueFromElement(element)
+      // A field that leaves as it was — a blur, or the change event after the input that already
+      // reported the value — is not an edit, and is not reported as one.
+      if (sameFieldValue(held, value)) return
       this.updateDataReactively(fieldName, value)
     }
 
@@ -599,4 +603,17 @@ declare global {
   interface HTMLElementTagNameMap {
     'formdown-ui': FormdownUI
   }
+}
+
+/**
+ * Whether a field's value is the one the form already holds. A field the data does not name holds
+ * its empty value: an untouched text field, an unchecked box, a group with nothing picked.
+ */
+function sameFieldValue(held: unknown, value: string | string[] | boolean): boolean {
+  if (Array.isArray(value)) {
+    const before = Array.isArray(held) ? held.map(String) : held === undefined || held === null ? [] : [String(held)]
+    return before.length === value.length && before.every((v, i) => v === value[i])
+  }
+  if (held === undefined || held === null) return value === '' || value === false
+  return typeof value === 'boolean' ? isCheckedValue(held) === value : String(held) === value
 }

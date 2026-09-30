@@ -9,10 +9,12 @@ export default defineConfig({
             formats: ['es', 'umd']
         },
         rolldownOptions: {
-            external: ['lit'],
+            external: ['lit', '@formdown/core', '@formdown/ui'],
             output: {
                 globals: {
-                    lit: 'Lit'
+                    lit: 'Lit',
+                    '@formdown/core': 'FormdownCore',
+                    '@formdown/ui': 'FormdownUI'
                 }
             }
         }

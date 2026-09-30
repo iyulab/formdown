@@ -907,9 +907,10 @@ Creates and appends a FormdownEditor component to a container.
 ```typescript
 interface EditorOptions {
   content?: string
-  showPreview?: boolean
-  showToolbar?: boolean
+  mode?: 'edit' | 'split' | 'view'
   placeholder?: string
+  header?: boolean
+  toolbar?: boolean
 }
 ```
 
@@ -919,8 +920,8 @@ import { createFormdownEditor } from '@formdown/editor';
 
 const editor = createFormdownEditor(document.getElementById('editor-container'), {
   content: '@name: [text required]',
-  showPreview: true,
-  showToolbar: true
+  mode: 'split',
+  toolbar: true
 });
 ```
 

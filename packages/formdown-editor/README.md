@@ -1,12 +1,14 @@
 # @formdown/editor
 
-Web component editor for Formdown syntax.
+Web component editor for Formdown: the source in a text area, the form it makes beside it.
 
 ## Installation
 
 ```bash
 npm install @formdown/editor
 ```
+
+Importing the package registers `<formdown-editor>` and the `<formdown-ui>` its preview draws.
 
 ## Usage
 
@@ -17,45 +19,52 @@ npm install @formdown/editor
   import '@formdown/editor'
 </script>
 
-<formdown-editor 
-  content="@name: [text required]"
-  show-preview="true">
-</formdown-editor>
+<formdown-editor mode="split" content="@name: [text required]"></formdown-editor>
 ```
 
 ### JavaScript
 
 ```typescript
-import '@formdown/editor'
+import { createFormdownEditor } from '@formdown/editor'
 
-const editor = document.querySelector('formdown-editor')
-editor.content = '@name: [text required]'
-editor.showPreview = true
+const editor = createFormdownEditor(document.getElementById('editor'), {
+  content: '@name: [text required]',
+  mode: 'split',
+})
 
-// Listen for content changes
 editor.addEventListener('contentChange', (event) => {
-  console.log('New content:', event.detail.content)
+  console.log('New source:', event.detail.content)
 })
 ```
 
 ## Properties
 
-- `content` (string) - The Formdown content to edit
-- `showPreview` (boolean) - Whether to show live preview
-- `readonly` (boolean) - Make editor read-only
+- `content` (string) — the Formdown source. Text inside the element is used when `content` is not set.
+- `mode` (`'edit' | 'split' | 'view'`, default `'split'`) — the source, the source and the form, or the form.
+- `placeholder` (string) — shown in the empty source.
+- `header` (boolean, default `false`) — a heading over each panel.
+- `toolbar` (boolean, default `true`) — buttons that insert a field of each common type.
+- `data` (object) — the values of the form's fields.
+
+## Methods
+
+- `validate()` — the preview form's validation result.
+- `getFormData()` — the preview form's values.
 
 ## Events
 
-- `contentChange` - Fired when content changes
-  - `detail.content` - Updated content
+- `contentChange` — the source changed; `detail.content` is the new source.
+- `formdown-data-update` — a value in the form changed; `detail.formData` holds them all.
+- `formdown-change` — one field changed, as `<formdown-ui>` reports it: `detail.fieldName`, `detail.value`, `detail.formData`.
 
-## Features
+## Writing the source
 
-- Syntax highlighting
-- Live preview
-- Error detection
-- Auto-completion hints
-- Responsive design
+As you type, a field you have just started is completed, and one undo takes the completion away:
+
+- three underscores after other text on the line get an `@` for the field's name (`Name: ___` → `Name: ___@`);
+- a space after `@name:` at the start of a line gets `[]`, with the caret inside for the field's type.
+
+Tab inserts two spaces.
 
 ## Documentation
 

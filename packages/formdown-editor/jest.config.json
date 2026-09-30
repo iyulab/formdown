@@ -1,6 +1,6 @@
 {
     "preset": "ts-jest",
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "roots": [
         "<rootDir>/src",
         "<rootDir>/__tests__"
@@ -13,17 +13,33 @@
         "!src/**/*.d.ts",
         "!src/vite-env.d.ts"
     ],
+    "moduleNameMapper": {
+        "\\.css\\?inline$": "<rootDir>/__tests__/mocks/empty.js",
+        "^lit$": "<rootDir>/__tests__/mocks/lit.js",
+        "^lit/decorators.js$": "<rootDir>/__tests__/mocks/lit-decorators.js",
+        "^@formdown/ui$": "<rootDir>/__tests__/mocks/empty.js",
+        "^@formdown/core$": "<rootDir>/../formdown-core/src/index.ts",
+        "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
     "transform": {
-        "^.+\\.ts$": [
+        "^.+\\.[jt]s$": [
             "ts-jest",
             {
                 "tsconfig": {
+                    "verbatimModuleSyntax": false,
+                    "esModuleInterop": true,
+                    "allowJs": true,
+                    "experimentalDecorators": true,
+                    "useDefineForClassFields": false,
                     "types": [
-                        "jest",
-                        "node"
+                        "jest"
                     ]
-                }
+                },
+                "diagnostics": false
             }
         ]
-    }
+    },
+    "transformIgnorePatterns": [
+        "node_modules/(?!marked/)"
+    ]
 }

@@ -223,3 +223,49 @@ describe('Form Data Collection', () => {
         expect(formData).toEqual({});
     });
 });
+
+describe('Reporting edits from fields', () => {
+    let FormdownUI: any;
+
+    beforeAll(async () => {
+        const module = await import('../src/index');
+        FormdownUI = module.FormdownUI;
+    });
+
+    /** A component watching one inline (contenteditable) field, and the data updates it reports. */
+    function watched(data: Record<string, unknown>) {
+        const component = new FormdownUI();
+        component.data = data;
+        const field = document.createElement('span');
+        field.setAttribute('contenteditable', 'true');
+        field.setAttribute('data-field-name', 'note');
+        field.textContent = String(data.note ?? '');
+        (component as any).setupFieldEventHandlers(field, 'note');
+        const reported: unknown[] = [];
+        component.dispatchEvent = (e: any) => {
+            if (e.type === 'formdown-change') reported.push(e.detail.value);
+            return true;
+        };
+        return { field, reported };
+    }
+
+    it('reports a field that changed, once', () => {
+        const { field, reported } = watched({ note: 'before' });
+        field.textContent = 'after';
+        field.dispatchEvent(new Event('input'));
+        field.dispatchEvent(new Event('change'));
+        field.dispatchEvent(new Event('blur'));
+        expect(reported).toEqual(['after']);
+    });
+
+    it('reports nothing when a field is left as it was', () => {
+        const held = watched({ note: 'same' });
+        held.field.dispatchEvent(new Event('blur'));
+        expect(held.reported).toEqual([]);
+
+        // A field the data does not name holds its empty value.
+        const empty = watched({});
+        empty.field.dispatchEvent(new Event('blur'));
+        expect(empty.reported).toEqual([]);
+    });
+});

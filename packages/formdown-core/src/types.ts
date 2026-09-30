@@ -203,8 +203,6 @@ export interface FormDownSchema {
     [fieldName: string]: FieldSchema
 }
 
-// Common component configuration types (removed duplicate from component-utils)
-
 // Common event types
 export interface FormdownEvent {
     type: 'parse' | 'render' | 'validate' | 'submit' | 'change'

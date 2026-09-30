@@ -2,6 +2,28 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- `@formdown/editor` completes a field as it is typed into the source, with `authoringCompletion` from `@formdown/core`: `@` after three underscores that follow other text on the line, `[]` after `@name: ` at the start of a line. One undo takes the completion away.
+
+### Changed
+
+- `@formdown/editor` `createFormdownEditor(container, options)` takes the element's own properties — `content`, `mode`, `placeholder`, `header`, `toolbar` — and returns a typed `FormdownEditor`. The `showPreview` and `showToolbar` options it took before set properties the element does not have, and did nothing.
+- `@formdown/editor` `formdown-data-update` carries `detail.formData`, as `<formdown-ui>`'s does. It carried the values as `detail` itself.
+- `@formdown/editor` builds `@formdown/core` and `@formdown/ui` as dependencies of its module, not into it.
+
+### Fixed
+
+- `@formdown/ui` reports a field's value only when it changed. Leaving a field as it was — a blur, or the change event after the input that already reported the value — fired `formdown-change` and `formdown-data-update` again, so a host could not tell looking at a field from editing it; a field removed while it held focus reported its blur after it was gone.
+- `@formdown/editor` registers the `<formdown-ui>` its preview draws. Imported without `@formdown/ui`, the preview stayed at "Loading form preview..." — only the standalone bundle worked.
+
+### Removed
+
+- `@formdown/core` no longer exports `createFormdownUI`, `createFormdownEditor`, `createWebComponent` or `ComponentLifecycle`. The first two made elements that `@formdown/core` does not define; use `createFormdownUI` from `@formdown/ui` and `createFormdownEditor` from `@formdown/editor`, which register them.
+- `@formdown/editor`'s hand-written `types.d.ts`, which described properties the element no longer had; its types come from the source.
+
 ## 0.9.0
 
 ### Added
