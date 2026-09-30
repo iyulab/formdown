@@ -1,7 +1,7 @@
 {
   "name": "@formdown/ui",
   "private": false,
-  "version": "0.10.2",
+  "version": "0.11.0",
   "description": "Pure HTML renderer for Formdown syntax",
   "type": "module",
   "main": "dist/index.es.js",
@@ -26,7 +26,7 @@
     "test": "node ../../node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@formdown/core": "0.10.2",
+    "@formdown/core": "0.11.0",
     "lit": "^3.3.3"
   },
   "devDependencies": {
