@@ -122,6 +122,7 @@ export function clearFieldStates(container: ParentNode) {
  * so the states given are the whole of what shows.
  */
 export function applyFieldStates(container: ParentNode, states: FieldStates, respond: FieldStateResponses) {
+  const returning = fieldOfFocusedNote(container)
   clearFieldStates(container)
   const doc = (container as Node).ownerDocument ?? (container as unknown as Document)
   for (const [name, state] of Object.entries(states)) {
@@ -140,4 +141,30 @@ export function applyFieldStates(container: ParentNode, states: FieldStates, res
     if (inline) first.after(note)
     else (first.closest('.formdown-field') ?? first.parentElement ?? first).append(note)
   }
+  if (returning !== null) focusField(container, returning)
+}
+
+/** The root that knows what has focus inside `container`: its document, or the shadow root it sits in. */
+function focusRoot(container: ParentNode): Document | ShadowRoot | null {
+  const root = (container as Node).getRootNode?.()
+  return root && 'activeElement' in root ? (root as Document | ShadowRoot) : null
+}
+
+/**
+ * The field whose note holds focus — an offered value or the decline just used. Redrawing takes that
+ * button away, and focus would drop to the page, where the keyboard no longer reaches the form.
+ */
+function fieldOfFocusedNote(container: ParentNode): string | null {
+  const active = focusRoot(container)?.activeElement
+  if (!active || !(container as Node).contains(active)) return null
+  return active.closest(`[${NOTE}]`)?.getAttribute(NOTE) ?? null
+}
+
+/** Focuses a field's control — for a choice group, its chosen option, or its first. */
+function focusField(container: ParentNode, name: string) {
+  const active = focusRoot(container)?.activeElement
+  if (active && (container as Node).contains(active)) return // the drawing kept focus somewhere in the form
+  const elements = fieldElements(container, name)
+  const chosen = elements.find((el) => el instanceof HTMLInputElement && el.checked) ?? elements[0]
+  chosen?.focus()
 }

@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- `@formdown/ui` hands focus back to a field when the offered value or the decline button that held focus is drawn away — picking or declining a suggestion no longer leaves focus on the page, where keyboard input stops reaching the form.
+
 ## 0.10.0
 
 ### Added

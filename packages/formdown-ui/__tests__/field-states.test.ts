@@ -106,6 +106,28 @@ describe('applyFieldStates', () => {
     expect(container.innerHTML).toBe(before)
   })
 
+  it('hands focus back to the field when the offered value or decline it was on is drawn away', () => {
+    const container = form()
+    applyFieldStates(container, { summary: { suggestions: ['Printer jam'], decline: 'Not this' }, urgent: { suggestions: ['yes'] } }, none)
+    container.querySelector('[name="summary"]')!.closest('.formdown-field')!.querySelector<HTMLButtonElement>('.formdown-suggestion')!.focus()
+    applyFieldStates(container, {}, none)
+    expect(document.activeElement).toBe(container.querySelector('[name="summary"]'))
+
+    applyFieldStates(container, { urgent: { suggestions: ['yes'], decline: 'Not this' } }, none)
+    container.querySelector<HTMLButtonElement>('.formdown-decline')!.focus()
+    applyFieldStates(container, {}, none)
+    expect(document.activeElement).toBe(container.querySelector('[name="urgent"][value="yes"]'))
+  })
+
+  it('leaves focus alone when it was not on what gets drawn away', () => {
+    const container = form()
+    const select = container.querySelector('select')!
+    select.focus()
+    applyFieldStates(container, { summary: { suggestions: ['Printer jam'] } }, none)
+    applyFieldStates(container, {}, none)
+    expect(document.activeElement).toBe(select)
+  })
+
   it('passes over fields the form does not have', () => {
     const container = form()
     const before = container.innerHTML
