@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- `@formdown/core` `duplicate-field-name` diagnostics carry the field's name (`field`) and the `span` of the occurrence reported, so an editor can point at it. `Diagnostic` has an optional `field` for problems about a field.
+
 ## 0.11.0
 
 ### Added

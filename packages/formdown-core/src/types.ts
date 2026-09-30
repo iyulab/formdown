@@ -119,6 +119,8 @@ export interface Diagnostic {
     message: string
     severity: 'error' | 'warning'
     span?: SourceSpan
+    /** The name of the field the problem is about, when it is about a field. */
+    field?: string
 }
 
 /** YAML front matter at the start of a document. */

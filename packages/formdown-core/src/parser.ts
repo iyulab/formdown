@@ -928,7 +928,7 @@ export class FormdownParser {
         }
     }
 
-    /** Field names must be unique within a document; later occurrences are reported. */
+    /** Field names must be unique within a document; each later occurrence is reported where it is. */
     private reportDuplicateNames(fields: Field[]): void {
         const seen = new Set<string>()
         for (const field of fields) {
@@ -936,7 +936,9 @@ export class FormdownParser {
                 this.diagnostics.push({
                     code: 'duplicate-field-name',
                     message: `Field name "${field.name}" is used more than once`,
-                    severity: 'warning'
+                    severity: 'warning',
+                    field: field.name,
+                    ...(field.span && { span: field.span })
                 })
             }
             seen.add(field.name)

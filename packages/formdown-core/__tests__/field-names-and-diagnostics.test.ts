@@ -48,6 +48,17 @@ describe('Field names', () => {
         it('reports a duplicate across block and inline fields', () => {
             expect(codes('@a: [text]\n\nsee ___@a')).toEqual(['duplicate-field-name'])
         })
+
+        it('names the field and points at each later occurrence', () => {
+            const source = '@a: [text]\n\nsee ___@a and\n@b: [text]\n@b: [select options="x,y"]'
+            const duplicates = parseFormdown(source).diagnostics!.filter(d => d.code === 'duplicate-field-name')
+            expect(duplicates.map(d => d.field)).toEqual(['a', 'b'])
+            expect(duplicates.map(d => d.span)).toEqual([
+                { start: 16, end: 21, line: 3, column: 5 },
+                { start: 37, end: 63, line: 5, column: 1 },
+            ])
+            expect(source.slice(duplicates[0].span!.start, duplicates[0].span!.end)).toBe('___@a')
+        })
     })
 })
 

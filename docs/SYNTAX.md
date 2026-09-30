@@ -943,7 +943,7 @@ Parsing never fails and never drops a problem silently. `parseFormdown()` always
 const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
 // diagnostics:
 // [{ code: 'invalid-field-name', severity: 'error', message: '...', span: { start: 0, end: 7, line: 1, column: 1 } },
-//  { code: 'duplicate-field-name', severity: 'warning', message: '...' }]
+//  { code: 'duplicate-field-name', severity: 'warning', message: '...', field: 'a', span: { start: 24, end: 29, line: 3, column: 11 } }]
 ```
 
 | Code | Severity | Meaning |
@@ -951,11 +951,11 @@ const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
 | `invalid-field-name` | error | Field syntax whose name is not a valid name, e.g. `@1st: [text]`. The field is not created |
 | `unterminated-attributes` | error | A field opens `[` without a closing `]` on the same line |
 | `unterminated-quoted-value` | error | A quoted attribute value is not closed on the same line |
-| `duplicate-field-name` | warning | A name is used by more than one field. All occurrences are kept |
+| `duplicate-field-name` | warning | A name is used by more than one field. All occurrences are kept; each one after the first is reported, with `field` and its `span` |
 | `front-matter-invalid-yaml` | error | The front matter is not valid YAML. `frontMatter.raw` keeps the text; `frontMatter.data` is empty |
 | `front-matter-not-mapping` | error | The front matter is valid YAML but not a mapping of keys to values |
 
-`span` gives the location in the original source. `start` and `end` are 0-based character offsets. `line` and `column` are 1-based.
+`span` gives the location in the original source. `start` and `end` are 0-based character offsets. `line` and `column` are 1-based. `field` names the field a problem is about, when it is about one.
 
 ## Implementation Notes
 
