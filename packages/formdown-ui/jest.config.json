@@ -1,47 +1,91 @@
 {
-    "preset": "ts-jest",
-    "testEnvironment": "jsdom",
-    "roots": [
-        "<rootDir>/src",
-        "<rootDir>/__tests__"
-    ],
-    "testMatch": [
-        "**/__tests__/**/*.test.ts"
-    ],
-    "collectCoverageFrom": [
-        "src/**/*.ts",
-        "!src/**/*.d.ts",
-        "!src/vite-env.d.ts"
-    ],
-    "setupFilesAfterEnv": [
-        "<rootDir>/__tests__/setup.ts"
-    ],
-    "moduleNameMapper": {
-        "\\.(css|less|scss)$": "identity-obj-proxy",
-        "^lit$": "<rootDir>/__tests__/mocks/lit.js",
-        "^lit/decorators.js$": "<rootDir>/__tests__/mocks/lit-decorators.js",
-        "^@formdown/core$": "<rootDir>/__tests__/mocks/formdown-core.js"
-    },
-    "extensionsToTreatAsEsm": [
-        ".ts"
-    ],
-    "transform": {
-        "^.+\\.ts$": [
-            "ts-jest",
-            {
-                "useESM": true,
-                "tsconfig": {
-                    "verbatimModuleSyntax": false,
-                    "esModuleInterop": true,
-                    "allowSyntheticDefaultImports": true,
-                    "types": [
-                        "jest"
-                    ]
-                }
-            }
-        ]
-    },
-    "transformIgnorePatterns": [
-        "node_modules/(?!(lit|@lit|lit-element|lit-html|@lit/reactive-element)/)"
+    "projects": [
+        {
+            "preset": "ts-jest",
+            "testEnvironment": "jsdom",
+            "roots": [
+                "<rootDir>/src",
+                "<rootDir>/__tests__"
+            ],
+            "testMatch": [
+                "**/__tests__/*.test.ts"
+            ],
+            "collectCoverageFrom": [
+                "src/**/*.ts",
+                "!src/**/*.d.ts",
+                "!src/vite-env.d.ts"
+            ],
+            "setupFilesAfterEnv": [
+                "<rootDir>/__tests__/setup.ts"
+            ],
+            "moduleNameMapper": {
+                "\\.(css|less|scss)$": "identity-obj-proxy",
+                "^lit$": "<rootDir>/__tests__/mocks/lit.js",
+                "^lit/decorators.js$": "<rootDir>/__tests__/mocks/lit-decorators.js",
+                "^@formdown/core$": "<rootDir>/__tests__/mocks/formdown-core.js"
+            },
+            "extensionsToTreatAsEsm": [
+                ".ts"
+            ],
+            "transform": {
+                "^.+\\.ts$": [
+                    "ts-jest",
+                    {
+                        "useESM": true,
+                        "tsconfig": {
+                            "verbatimModuleSyntax": false,
+                            "esModuleInterop": true,
+                            "allowSyntheticDefaultImports": true,
+                            "types": [
+                                "jest"
+                            ]
+                        }
+                    }
+                ]
+            },
+            "transformIgnorePatterns": [
+                "node_modules/(?!(lit|@lit|lit-element|lit-html|@lit/reactive-element)/)"
+            ],
+            "displayName": "unit"
+        },
+        {
+            "displayName": "render",
+            "preset": "ts-jest",
+            "testEnvironment": "jsdom",
+            "roots": [
+                "<rootDir>/__tests__/render"
+            ],
+            "testMatch": [
+                "**/__tests__/render/**/*.test.ts"
+            ],
+            "moduleNameMapper": {
+                "\\.(css|less|scss)$": "identity-obj-proxy",
+                "^@formdown/core$": "<rootDir>/../formdown-core/src/index.ts",
+                "^(\\.{1,2}/.*)\\.js$": "$1"
+            },
+            "transform": {
+                "^.+\\.[jt]s$": [
+                    "ts-jest",
+                    {
+                        "tsconfig": {
+                            "allowJs": true,
+                            "experimentalDecorators": true,
+                            "useDefineForClassFields": false,
+                            "verbatimModuleSyntax": false,
+                            "esModuleInterop": true,
+                            "module": "commonjs",
+                            "target": "ES2020",
+                            "types": [
+                                "jest"
+                            ]
+                        },
+                        "diagnostics": false
+                    }
+                ]
+            },
+            "transformIgnorePatterns": [
+                "node_modules/(?!(lit|@lit|lit-element|lit-html|@lit/reactive-element|marked)/)"
+            ]
+        }
     ]
 }
