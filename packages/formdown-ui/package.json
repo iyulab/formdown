@@ -23,15 +23,20 @@
   ],
   "scripts": {
     "build": "node ../../node_modules/vite/bin/vite.js build && node ../../node_modules/vite/bin/vite.js build --config vite.standalone.config.ts && node ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
-    "test": "node ../../node_modules/jest/bin/jest.js"
+    "test": "node ../../node_modules/jest/bin/jest.js && npm run test:browser",
+    "test:browser": "web-test-runner"
   },
   "dependencies": {
     "@formdown/core": "0.11.0",
     "lit": "^3.3.3"
   },
   "devDependencies": {
+    "@open-wc/testing": "^5.0.0",
     "@testing-library/dom": "^10.4.2",
     "@types/jest": "^30.0.0",
+    "@types/mocha": "^10.0.10",
+    "@web/dev-server-esbuild": "^2.0.0",
+    "@web/test-runner": "^1.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.5.2",
     "jest-environment-jsdom": "^30.5.2",
