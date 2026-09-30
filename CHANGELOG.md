@@ -6,6 +6,7 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ### Added
 
+- `@formdown/ui` `choices` property: values the host offers for each field, `{ value, label? }`. Selects and radio or checkbox groups list them after their own options; fields one types into list them through a `<datalist>`. Added choices are marked `data-formdown-choice`, and a value the host offers is no longer shown as one nobody offers.
 - `@formdown/core` `duplicate-field-name` diagnostics carry the field's name (`field`) and the `span` of the occurrence reported, so an editor can point at it. `Diagnostic` has an optional `field` for problems about a field.
 
 ## 0.11.0

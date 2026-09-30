@@ -8,6 +8,7 @@ import {
 } from '@formdown/core'
 import { applyFieldValue, isCheckedValue } from './field-value'
 import { addUnlistedChoices } from './unlisted'
+import { applyChoices, type Choices } from './choices'
 import { applyConditions, type ConditionalField } from './conditions'
 import { applyFieldStates, type FieldStates } from './field-states'
 import { uiExtensionSupport } from './extension-support'
@@ -27,6 +28,15 @@ export class FormdownUI extends LitElement {
    */
   @property({ attribute: false })
   fieldStates: FieldStates = {}
+
+  /**
+   * Values the host offers for each field, by name, as `{ value, label? }` — options read from a server,
+   * values already settled elsewhere. A select or a radio or checkbox group lists them after its own
+   * options; a field one types into lists them as it is typed in (a `<datalist>`). The author's options
+   * stay as written. Each added choice is marked `data-formdown-choice`.
+   */
+  @property({ attribute: false })
+  choices: Choices = {}
 
   // Form ID generation removed - delegated to FormManager
 
@@ -258,6 +268,10 @@ export class FormdownUI extends LitElement {
     if (changedProperties.has('fieldStates') && !changedProperties.has('content')) {
       this.drawFieldStates()
     }
+
+    if (changedProperties.has('choices') && !changedProperties.has('content') && !changedProperties.has('data')) {
+      this.syncUIFromData()
+    }
   }
 
   private drawFieldStates() {
@@ -446,10 +460,10 @@ export class FormdownUI extends LitElement {
       // Get the currently focused element to avoid disrupting user input
       const activeElement = this.shadowRoot?.activeElement as HTMLElement | null
 
-      // A value a choice field does not offer gets a choice of its own before values are applied.
+      // What the host offers, then a choice of its own for a value nobody offers, before values are applied.
       const container = this.shadowRoot?.querySelector('#content-container')
       if (container) {
-        for (const input of addUnlistedChoices(container, this.data)) {
+        for (const input of [...applyChoices(container, this.choices ?? {}), ...addUnlistedChoices(container, this.data)]) {
           this.registerField(input.name, input)
           this.setupFieldEventHandlers(input, input.name)
         }
