@@ -8,13 +8,6 @@ For general usage documentation, please visit:
 - **Website**: [formdown.app/docs](https://formdown.app/docs)
 - **Source**: `/site/content/docs/`
 
-## Developer Documentation
-
-The following documents are maintained here for developers working on Formdown:
-
-- [`TASKS.md`](./TASKS.md) - Development task tracking and roadmap
-- [`CLAUDE.md`](../CLAUDE.md) - AI assistant instructions for development
-
 ## Legacy Documentation
 
 The following documents have been migrated to the website and are kept here for historical reference only:

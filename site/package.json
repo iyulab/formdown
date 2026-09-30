@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "node scripts/update-version.js && next dev",
-    "test": "cd ../packages/formdown-core && npm test && cd ../formdown-ui && npm test && cd ../formdown-editor && npm test",
     "build": "rimraf publish && node scripts/update-version.js && next build"
   },
   "dependencies": {

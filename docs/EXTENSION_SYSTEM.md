@@ -619,4 +619,4 @@ describe('Custom Plugin', () => {
 
 ---
 
-For more examples and advanced usage, see the [Extension Examples](./extension-examples.md) documentation.
+For more examples and advanced usage, see the [Extension Examples](./EXTENSION_EXAMPLES.md) documentation.

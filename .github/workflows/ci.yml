@@ -1,0 +1,42 @@
+name: CI
+
+# Builds and tests the three packages on every push to main and every pull request — the same
+# steps the release runs before it publishes, so a failure shows up here rather than at the tag.
+
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', 'site/content/**', '**/*.md']
+  pull_request:
+    branches: [main]
+    paths-ignore: ['docs/**', 'site/content/**', '**/*.md']
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  packages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build packages
+        run: npm run build --workspace=@formdown/core --workspace=@formdown/ui --workspace=@formdown/editor
+
+      - name: Check entry points
+        run: node scripts/check-entry-points.js
+
+      - name: Test
+        run: npm test --workspace=@formdown/core --workspace=@formdown/ui --workspace=@formdown/editor

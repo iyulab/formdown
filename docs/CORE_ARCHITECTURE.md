@@ -334,7 +334,6 @@ Planned improvements for the core architecture:
 
 ---
 
-For more detailed examples and API reference, see:
+For more detailed examples, see:
 - [Extension System Guide](./EXTENSION_SYSTEM.md)
 - [Extension Examples](./EXTENSION_EXAMPLES.md)
-- [API Reference](./api.md)
