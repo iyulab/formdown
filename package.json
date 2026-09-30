@@ -33,8 +33,7 @@
     "scripts": {
         "dev": "cd site && npm run dev",
         "test": "npm run test --workspaces --if-present",
-        "build": "node scripts/sync-versions.js && npm run build --workspaces --if-present",
-        "publish": "node scripts/publish-all.js",
+        "build": "npm run build --workspaces --if-present",
         "version:set": "node scripts/set-version.js",
         "update": "npm update --workspaces --include-workspace-root",
         "update:check": "npx npm-check-updates --workspaces --root",
