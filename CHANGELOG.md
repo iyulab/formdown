@@ -6,6 +6,7 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ### Fixed
 
+- `@formdown/ui` shows an inline field's value from its start once focus leaves it. A value longer than the field stayed scrolled to where typing ended, with its first characters cut off.
 - `@formdown/ui` hands focus back to a field when the offered value or the decline button that held focus is drawn away — picking or declining a suggestion no longer leaves focus on the page, where keyboard input stops reaching the form.
 
 ## 0.10.0

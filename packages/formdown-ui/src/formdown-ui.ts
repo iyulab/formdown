@@ -415,6 +415,11 @@ export class FormdownUI extends LitElement {
     element.addEventListener('focus', handleFocus)
     if (element.hasAttribute('contenteditable')) {
       element.addEventListener('blur', handleChange)
+      // Typing scrolls a one-line field's view to where the caret is. Leaving it shows the value from
+      // its start again, as an input does — otherwise its first characters stay cut off.
+      element.addEventListener('blur', () => {
+        element.scrollLeft = 0
+      })
     }
   }
 

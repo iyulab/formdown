@@ -268,4 +268,13 @@ describe('Reporting edits from fields', () => {
         empty.field.dispatchEvent(new Event('blur'));
         expect(empty.reported).toEqual([]);
     });
+
+    it("shows the start of an inline field's value once focus leaves it", () => {
+        const { field } = watched({ note: 'a value longer than the field is wide' });
+        // Typing at the end scrolled the field's view to its end; a blur brings the start back.
+        let scrolled = 120;
+        Object.defineProperty(field, 'scrollLeft', { get: () => scrolled, set: (v: number) => { scrolled = v; }, configurable: true });
+        field.dispatchEvent(new Event('blur'));
+        expect(scrolled).toBe(0);
+    });
 });
