@@ -25,6 +25,15 @@ export class FormdownGenerator {
     }
 
     /**
+     * The values a choice field holds that its options do not offer — written by hand or by another tool, or
+     * saved before an option was renamed. They are rendered after the offered ones, chosen and marked
+     * `data-formdown-unlisted`, so that a form never shows such a value as empty or reports it as cleared.
+     */
+    private unlistedValues(values: readonly string[], options: readonly string[] | undefined): string[] {
+        return [...new Set(values.filter(v => v !== '' && !(options ?? []).includes(v)))]
+    }
+
+    /**
      * Render one attribute as name="value". The value is HTML-escaped; a name that is
      * not a valid HTML attribute name is dropped rather than written into the markup.
      */
@@ -682,6 +691,11 @@ ${fieldHTML}
                     const escapedOpt = this.escapeHtml(opt)
                     return `<option value="${escapedOpt}"${isSelected}>${escapedOpt}</option>`
                 }).join('\n') || ''
+                // A field with an "other" option keeps its own handling of values it does not offer.
+                const unlistedOptionsHTML = allowOther ? '' : this.unlistedValues(value ? [String(value)] : [], options).map(v => {
+                    const escaped = this.escapeHtml(v)
+                    return `\n        <option value="${escaped}" selected data-formdown-unlisted="true">${escaped}</option>`
+                }).join('')
                 const otherOptionHTML = allowOther ? `\n        <option value="">${this.escapeHtml(field.otherLabel || 'Other')} (please specify)</option>` : ''
                 const otherInputHTML = allowOther ? `\n    <input type="text" id="${fieldId}_other" placeholder="Please specify..." class="formdown-other-input" data-formdown-other-for="${fieldId}">` : ''
 
@@ -689,7 +703,7 @@ ${fieldHTML}
 <div ${fieldWrapperAttrs} part="field">
     <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
     <select ${attrString} part="input select-input"${allowOther ? ` data-formdown-has-other="true" data-formdown-other-target="${fieldId}_other"` : ''}>
-        ${optionsHTML}${otherOptionHTML}
+        ${optionsHTML}${unlistedOptionsHTML}${otherOptionHTML}
     </select>${otherInputHTML}${generateHelpText()}
 </div>`
 
@@ -718,6 +732,16 @@ ${fieldHTML}
             <span>${escapedOpt}</span>
         </label>`
                 }).join('\n')
+                const unlistedRadiosHTML = allowOther ? '' : this.unlistedValues(value ? [String(value)] : [], options).map((v, index) => {
+                    const inputId = this.generateUniqueId(`${name}_unlisted_${index}`, defaultFormId)
+                    const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
+                    const escaped = this.escapeHtml(v)
+                    return `
+        <label for="${inputId}" class="formdown-option-label">
+            <input type="radio" id="${inputId}" name="${name}" value="${escaped}" checked${ariaAttr} data-formdown-unlisted="true">
+            <span>${escaped}</span>
+        </label>`
+                }).join('')
 
                 const otherRadioId = this.generateUniqueId(`${name}_other_radio`, defaultFormId)
                 const otherRadioHTML = allowOther ? `
@@ -735,7 +759,7 @@ ${fieldHTML}
     <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} part="fieldset">
         <legend part="legend">${displayLabel}${required ? ' *' : ''}</legend>
         <div class="${groupClass}" role="radiogroup" part="radio-group">
-${radioInputsHTML}${otherRadioHTML}
+${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
         </div>
     </fieldset>${generateHelpText()}
 </div>`
@@ -790,7 +814,17 @@ ${radioInputsHTML}${otherRadioHTML}
             <span>${escapedOpt}</span>
         </label>`
                     }).join('\n')
-                    
+                    const unlistedCheckboxesHTML = allowOther ? '' : this.unlistedValues(selectedValues, options).map((v, index) => {
+                        const inputId = this.generateUniqueId(`${name}_unlisted_${index}`, defaultFormId)
+                        const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
+                        const escaped = this.escapeHtml(v)
+                        return `
+        <label for="${inputId}" class="formdown-option-label">
+            <input type="checkbox" id="${inputId}" name="${name}" value="${escaped}" checked${ariaAttr} data-formdown-unlisted="true">
+            <span>${escaped}</span>
+        </label>`
+                    }).join('')
+
                     const otherCheckboxId = this.generateUniqueId(`${name}_other_checkbox`, defaultFormId)
                     const otherCheckboxHTML = allowOther ? `
         <label for="${otherCheckboxId}" class="formdown-option-label">
@@ -807,7 +841,7 @@ ${radioInputsHTML}${otherRadioHTML}
     <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} part="fieldset">
         <legend part="legend">${displayLabel}${required ? ' *' : ''}</legend>
         <div class="${groupClass}" role="group" part="checkbox-group">
-${checkboxInputsHTML}${otherCheckboxHTML}
+${checkboxInputsHTML}${unlistedCheckboxesHTML}${otherCheckboxHTML}
         </div>
     </fieldset>${generateHelpText()}
 </div>`

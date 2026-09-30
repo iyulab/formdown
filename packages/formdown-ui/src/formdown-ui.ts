@@ -7,6 +7,7 @@ import {
   type ValidationResult
 } from '@formdown/core'
 import { applyFieldValue, isCheckedValue } from './field-value'
+import { addUnlistedChoices } from './unlisted'
 import { applyFieldStates, type FieldStates } from './field-states'
 import { uiExtensionSupport } from './extension-support'
 import { formdownStyles } from './styles'
@@ -443,6 +444,15 @@ export class FormdownUI extends LitElement {
     try {
       // Get the currently focused element to avoid disrupting user input
       const activeElement = this.shadowRoot?.activeElement as HTMLElement | null
+
+      // A value a choice field does not offer gets a choice of its own before values are applied.
+      const container = this.shadowRoot?.querySelector('#content-container')
+      if (container) {
+        for (const input of addUnlistedChoices(container, this.data)) {
+          this.registerField(input.name, input)
+          this.setupFieldEventHandlers(input, input.name)
+        }
+      }
 
       // Get value assignments from DOMBinder and apply them
       const assignments = this.domBinder.getValueAssignments(this.data)

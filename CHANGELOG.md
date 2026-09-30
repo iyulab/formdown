@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- A select, radio group or checkbox group given a value its options do not offer — from front matter or data written elsewhere, or saved before an option was renamed — shows that value as an extra choice after the offered ones, chosen and marked `data-formdown-unlisted`. It rendered as an empty choice, so the value could not be seen, and nothing in the field could be chosen to keep it. `@formdown/core` renders such values with the source; `@formdown/ui` also adds them when they arrive as `data` later. Fields with an "other" choice are unchanged.
+
 ## 0.10.1
 
 ### Fixed

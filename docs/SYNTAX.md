@@ -611,6 +611,9 @@ For single checkboxes, you can use the `content` attribute to specify the displa
 - **Default (inline)**: Options are displayed horizontally, wrapping to new lines as needed
 - **`layout="vertical"`**: Options are displayed vertically, each on its own line
 
+**Values the options do not offer:**
+A selection field can be given a value that is not one of its options — from front matter or data written elsewhere, or saved before an option was renamed. It is shown as an extra choice after the offered ones, already chosen and marked `data-formdown-unlisted`, so the value is neither hidden nor reported as cleared. Fields with an "other" choice are not changed by this.
+
 ### Actions
 
 FormDown supports two syntaxes for action elements (buttons):

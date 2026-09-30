@@ -360,7 +360,7 @@ describe('Value Attribute Support', () => {
             expect(html).not.toContain('value=')
         })
 
-        test('should handle invalid values for selection fields', () => {
+        test('shows a value the select does not offer as an extra, chosen option rather than dropping it', () => {
             const field = {
                 name: 'country',
                 type: 'select',
@@ -371,7 +371,8 @@ describe('Value Attribute Support', () => {
             }
 
             const html = generator.generateFieldHTML(field)
-            expect(html).not.toContain('selected')  // No option should be selected
+            expect(html).not.toMatch(/value="(USA|Canada|UK)" selected/)
+            expect(html).toContain('<option value="NonExistentCountry" selected data-formdown-unlisted="true">NonExistentCountry</option>')
         })
     })
 })
