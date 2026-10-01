@@ -720,6 +720,15 @@ export const formdownStyles = css`
     user-select: none;
   }
 
+  /* A value from the data the field could not take (unread.ts): shown as written, beside the empty field. */
+  .formdown-unread {
+    margin-left: var(--formdown-spacing-sm);
+    color: var(--formdown-text-primary);
+    border-bottom: 1px dashed var(--formdown-warning-color);
+    font-size: var(--formdown-font-size-sm);
+    white-space: pre-wrap;
+  }
+
   .radio-group label, .checkbox-group label {
     display: flex;
     align-items: center;

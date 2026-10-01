@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- `@formdown/ui` shows a value a date, time, number, range or color field cannot hold — "next week" in a date field, "1,000" in a number field — beside the field, instead of an empty field. The browser drops such a value from the input, while the form's data keeps it and reports it unchanged; now the person sees it too. The input is marked `data-formdown-unread` and described by the shown value (`.formdown-unread`, `part="unread-value"`), which gives way once the field is given a value of its own.
+
 ## 0.12.1
 
 ### Fixed

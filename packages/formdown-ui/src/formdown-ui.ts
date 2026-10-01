@@ -8,6 +8,7 @@ import {
 } from '@formdown/core'
 import { applyFieldValue, isCheckedValue } from './field-value'
 import { addUnlistedChoices } from './unlisted'
+import { markUnreadValues } from './unread'
 import { applyChoices, type Choices } from './choices'
 import { applyConditions, type ConditionalField } from './conditions'
 import { applyFieldStates, focusFieldOf, hostFocused, type FieldStates } from './field-states'
@@ -494,6 +495,9 @@ export class FormdownUI extends LitElement {
 
         applyFieldValue(htmlElement, value, fieldType)
       })
+
+      // A value a typed input could not take is shown beside it rather than as an empty field.
+      if (container) markUnreadValues(container, this.data)
 
       // What the values now show, enable and require.
       if (container && this._schema) applyConditions(container, this._schema as Record<string, ConditionalField>, this.data)
