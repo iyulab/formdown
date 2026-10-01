@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- Every package ships the license text (`LICENSE`) in its tarball. The license sat at the repository root only, so the published packages carried their license as a name in `package.json` without its text.
+
 ## 0.12.2
 
 ### Fixed

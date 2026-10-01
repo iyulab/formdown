@@ -38,5 +38,9 @@ jobs:
       - name: Check entry points
         run: node scripts/check-entry-points.js
 
+      # npm packs a package's own folder: each carries the license, kept word for word.
+      - name: License in every package
+        run: for p in packages/*/; do cmp LICENSE "${p}LICENSE"; done
+
       - name: Test
         run: npm test --workspace=@formdown/core --workspace=@formdown/ui --workspace=@formdown/editor
