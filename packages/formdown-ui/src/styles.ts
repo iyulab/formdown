@@ -260,8 +260,10 @@ export const formdownStyles = css`
   formdown-field,
   [contenteditable="true"]:not(textarea) {
     display: inline-block;
+    box-sizing: border-box;
     min-width: 60px;
-    max-width: 200px;
+    /* Grow with the value; only a value wider than the line is cut short. */
+    max-width: 100%;
     font-style: normal;
     color: inherit;
     font-size: inherit;

@@ -37,6 +37,14 @@ describe('an inline field', () => {
     expect(field.scrollLeft).to.equal(0)
   })
 
+  it('shows the whole of a value that fits on the line', async () => {
+    const ui = await mount('요청: ___@request[text] 로 접수합니다.', 1024)
+    ui.data = { request: '노트북 배터리가 금방 닳아요' }
+    await ui.updateComplete
+    const field = inside(ui, '[data-field-name="request"]')
+    expect(field.scrollWidth).to.be.at.most(field.clientWidth)
+  })
+
   it('stays within the form however long its value', async () => {
     const ui = await mount('문의: ___@inquiry[text] 로 접수합니다.', 360)
     ui.data = { inquiry: long.repeat(3) }
