@@ -724,7 +724,8 @@ export const formdownStyles = css`
   .formdown-unread {
     margin-left: var(--formdown-spacing-sm);
     color: var(--formdown-text-primary);
-    border-bottom: 1px dashed var(--formdown-warning-color);
+    text-decoration: underline dashed var(--formdown-warning-color);
+    text-underline-offset: 0.2em;
     font-size: var(--formdown-font-size-sm);
     white-space: pre-wrap;
   }
