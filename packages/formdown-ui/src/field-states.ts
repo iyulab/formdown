@@ -182,6 +182,32 @@ function reachable(el: HTMLElement): boolean {
 }
 
 /**
+ * Controls the host focused through `focusField`. A field selects its value when a person moves into it
+ * (so typing replaces it); one the host puts the cursor back in keeps its value and gets the caret at its
+ * end, so typing goes on where it left off.
+ */
+export const hostFocused = new WeakSet<HTMLElement>()
+
+/** Puts the caret at the end of a control's value. */
+export function caretAtEnd(el: HTMLElement) {
+  if (el.isContentEditable) {
+    const selection = (el.getRootNode() as Document | ShadowRoot & { getSelection?: () => Selection | null }).getSelection?.() ?? window.getSelection()
+    if (!selection) return
+    const range = document.createRange()
+    range.selectNodeContents(el)
+    range.collapse(false)
+    selection.removeAllRanges()
+    selection.addRange(range)
+  } else if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+    try {
+      el.setSelectionRange(el.value.length, el.value.length)
+    } catch {
+      // A type without a text selection (number, date…): nothing to place.
+    }
+  }
+}
+
+/**
  * Focuses the field named `name`, or with no name the first field a person can reach, in the order the
  * form shows them. Answers whether a field took focus.
  */
@@ -195,6 +221,10 @@ export function focusFieldOf(container: ParentNode, name?: string): boolean {
     const firstName = first?.getAttribute('name') ?? first?.dataset.fieldName
     target = firstName !== undefined && firstName !== null ? controlOf(container, firstName) : undefined
   }
-  target?.focus()
+  if (target) {
+    hostFocused.add(target)
+    target.focus()
+    caretAtEnd(target)
+  }
   return !!target && focusRoot(container)?.activeElement === target
 }

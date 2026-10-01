@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- `@formdown/ui` `focusField(name)` puts the caret at the end of the field's value instead of selecting it, so a host returning a person to the field they were writing in (after a save, say) does not have the next keystroke replace the value. A person moving into a field still gets its value selected.
+
 ## 0.12.0
 
 ### Added

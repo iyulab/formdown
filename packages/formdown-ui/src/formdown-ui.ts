@@ -10,7 +10,7 @@ import { applyFieldValue, isCheckedValue } from './field-value'
 import { addUnlistedChoices } from './unlisted'
 import { applyChoices, type Choices } from './choices'
 import { applyConditions, type ConditionalField } from './conditions'
-import { applyFieldStates, focusFieldOf, type FieldStates } from './field-states'
+import { applyFieldStates, focusFieldOf, hostFocused, type FieldStates } from './field-states'
 import { uiExtensionSupport } from './extension-support'
 import { formdownStyles } from './styles'
 
@@ -413,6 +413,8 @@ export class FormdownUI extends LitElement {
     // Focus event handler for select all functionality
     const handleFocus = (event: Event) => {
       const target = event.target as HTMLElement
+      // Put back by the host (focusField): the value stays as it is, the caret at its end.
+      if (hostFocused.delete(target)) return
 
       // For contenteditable elements (inline fields)
       if (target.hasAttribute('contenteditable')) {
