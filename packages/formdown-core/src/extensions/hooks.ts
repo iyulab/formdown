@@ -14,6 +14,17 @@ import type {
     ExtensionEvent
 } from './types.js'
 
+/** The kind of value a transforming hook passes along: an array, null, or its `typeof`. */
+function kindOf(value: unknown): string {
+    if (Array.isArray(value)) return 'array'
+    if (value === null) return 'null'
+    return typeof value
+}
+
+function article(kind: string): string {
+    return /^[aeiou]/.test(kind) ? `an ${kind}` : `a ${kind}`
+}
+
 export class HookManager implements IHookManager {
     private hooks = new Map<HookName, Hook[]>()
     private eventEmitter?: EventEmitter
@@ -148,7 +159,16 @@ export class HookManager implements IHookManager {
                     result.catch(() => undefined)
                     throw new Error('asynchronous hooks cannot run during synchronous parsing or generation')
                 }
-                if (result !== undefined) value = result as T
+                if (result !== undefined) {
+                    // A value of another kind (the context handed back in place of the source, say)
+                    // would break the next step; it counts as the hook failing.
+                    const expected = kindOf(value)
+                    const got = kindOf(result)
+                    if (value !== undefined && value !== null && got !== expected) {
+                        throw new Error(`returned ${article(got)} where ${article(expected)} was expected`)
+                    }
+                    value = result as T
+                }
             } catch (error) {
                 const message = `Hook "${hookName}" failed: ${error instanceof Error ? error.message : String(error)}`
                 this.emit('hook-error', { hook: hookName, error: message })

@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- Once `@formdown/editor` had set up its extension support, every later parse on the page failed with "e.split is not a function" — the editor registered `pre-parse` and `post-parse` hooks that handed back the hook context in place of the value. The editor no longer registers them, and `@formdown/core` now treats a transforming hook that returns a different kind of value (an object where a string was expected, say) as a failing hook: it is reported as a `hook-error` diagnostic and the value it was given is kept.
+
 ## 0.12.3
 
 ### Fixed

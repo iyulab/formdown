@@ -74,6 +74,16 @@ describe('Hook pipeline', () => {
         expect(html).toContain('Added.')
     })
 
+    it('reports a hook that returns a different kind of value, and keeps the value it was given', () => {
+        // A handler written as (context) => context hands back the context object in place of the source.
+        add({ name: 'pre-parse', priority: 1, handler: (ctx) => ctx })
+        add({ name: 'post-parse', priority: 1, handler: () => 'not a result' })
+        const result = parseFormdown('___@a')
+        expect(result.forms.map(f => f.name)).toEqual(['a'])
+        expect(result.diagnostics!.map(d => d.code)).toEqual(['hook-error', 'hook-error'])
+        expect(result.diagnostics![0].message).toContain('returned an object where a string was expected')
+    })
+
     it('passes values through unchanged before the extension system is initialized', () => {
         expect(new ExtensionManager().transformSync('pre-parse', {}, 'x')).toBe('x')
     })

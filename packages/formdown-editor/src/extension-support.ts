@@ -52,36 +52,12 @@ export class EditorExtensionSupport {
   }
 
   private setupEditorHooks(): void {
-    // Hook for pre-parse validation in editor
-    registerHook({
-      name: 'pre-parse',
-      priority: 1,
-      handler: this.handlePreParse.bind(this)
-    })
-
-    // Hook for post-parse processing
-    registerHook({
-      name: 'post-parse',
-      priority: 1,
-      handler: this.handlePostParse.bind(this)
-    })
-
     // Hook for real-time validation
     registerHook({
       name: 'field-validate',
       priority: 1,
       handler: this.handleFieldValidate.bind(this)
     })
-  }
-
-  private handlePreParse(context: HookContext): HookContext {
-    // Editor can use this for syntax validation before parsing
-    return context
-  }
-
-  private handlePostParse(context: HookContext): HookContext {
-    // Editor can use this for enhanced parsing results
-    return context
   }
 
   private handleFieldValidate(_context: HookContext, _value: any): any {
