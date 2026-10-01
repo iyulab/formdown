@@ -263,6 +263,28 @@ schema.company_name.conditions // {
 // }
 ```
 
+## Relations
+
+A block field can say that its value names a record of another kind — a customer, an item — by writing an arrow and the target's name before the colon:
+
+```formdown
+@customer -> Customer: [select]
+@tags <-> Tag: [checkbox]
+```
+
+- `-> Target` — the value names one record of `Target` (a foreign key).
+- `<-> Target` — the value names several (many to many).
+
+The parser attaches the relation to the field and leaves the rest of the field as written:
+
+```typescript
+const { forms } = parseFormdown(content)
+forms[0].relation // { target: 'Customer', type: 'fk' }
+forms[1].relation // { target: 'Tag', type: 'many-to-many' }
+```
+
+What the target names, and which values it offers, is the host's to decide: Formdown does not check that `Target` exists, and the field renders as its own type. A host fills it with the target's records through `choices` (see the UI package), keeping each record's id as the value and its name as the label. A field without an arrow has no `relation`.
+
 ## Layout Options
 
 FormDown supports declarative layout options at both form and field levels for flexible form presentation.
