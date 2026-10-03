@@ -105,10 +105,12 @@ export class ExtensionManager {
         try {
             await this.pluginManager.destroy()
             this.hookManager.clear()
-            this.eventEmitter.removeAllListeners()
 
             this.initialized = false
             this.eventEmitter.emit('extension-system-destroyed')
+            // Listeners added from outside go; the manager's own error reporting stays for the next initialize()
+            this.eventEmitter.removeAllListeners()
+            this.setupErrorHandling()
 
             if (this.context.options.debug) {
                 console.debug('[Formdown] Extension system destroyed')

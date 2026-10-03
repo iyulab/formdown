@@ -41,6 +41,14 @@ export class PluginManager implements IPluginManager {
         // Validate dependencies
         await this.validateDependencies(plugin)
 
+        // Check every field type before registering anything, so a rejected plugin leaves nothing behind
+        const types = (plugin.fieldTypes ?? []).map(fieldType => fieldType.type)
+        for (const [index, type] of types.entries()) {
+            if (this.fieldTypes.has(type) || this.fieldTypeRegistry?.has(type) || types.indexOf(type) !== index) {
+                throw new Error(`Field type '${type}' is already registered`)
+            }
+        }
+
         // Register plugin
         this.plugins.set(plugin.metadata.name, plugin)
 
@@ -244,6 +252,9 @@ export class PluginManager implements IPluginManager {
         await Promise.all(destroyPromises)
 
         // Clear all plugin registrations
+        for (const type of this.fieldTypes.keys()) {
+            this.fieldTypeRegistry?.unregister(type)
+        }
         this.plugins.clear()
         this.fieldTypes.clear()
         this.validators.clear()

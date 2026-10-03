@@ -2,6 +2,16 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- An extension manager can be initialized again after `destroy()`. It failed with "Field type 'toggle' is already registered", since destroying left the field types in their registry; it also dropped the manager's own error reporting for good.
+- `registerPlugin()` rejects a plugin whose field type is already registered (or that names one type twice) before registering any of it. Its hooks used to be registered first and stayed active.
+- A field type whose `parser` or `generator` throws no longer breaks `parseFormdown()` or `generateFormHTML()`: the error is reported — a `field-type-error` diagnostic, or a console warning when rendering — and Formdown handles the field itself.
+- Hook events (`hook-registered`, `hook-executed`, `hook-error`, …) reach listeners as `{ type, data, timestamp }` with the hook's details in `data`, like plugin events. They were wrapped twice (`event.data.data`).
+- An inline field's `<span>` no longer carries a `form` attribute, which a span cannot have; it names its form in `data-form`.
+
 ## 0.13.1
 
 ### Fixed

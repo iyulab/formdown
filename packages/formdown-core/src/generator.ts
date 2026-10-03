@@ -441,7 +441,7 @@ ${fieldHTML}
             'role': 'textbox',
             ...(required && { 'data-required': 'true' }),
             ...(formId && { 'data-form': formId }),
-            ...(attributes && attributes)
+            ...(attributes && Object.fromEntries(Object.entries(attributes).filter(([key]) => key !== 'form')))
         }
 
         const attrString = Object.entries(commonAttrs)
@@ -469,7 +469,12 @@ ${fieldHTML}
             metadata: { formId: defaultFormId }
         }
 
-        const extensionHTML = getDefaultExtensionManager().getFieldTypeRegistry().generateFieldHTML(field, context)
+        let extensionHTML: string | null = null
+        try {
+            extensionHTML = getDefaultExtensionManager().getFieldTypeRegistry().generateFieldHTML(field, context)
+        } catch (error) {
+            warnHookError(`The '${field.type}' field type failed to render "${field.name}": ${error instanceof Error ? error.message : String(error)}`)
+        }
         if (extensionHTML) {
             return extensionHTML
         }

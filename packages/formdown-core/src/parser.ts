@@ -269,7 +269,13 @@ export class FormdownParser {
             input: trimmedLine
         }
         
-        const extensionField = getDefaultExtensionManager().getFieldTypeRegistry().parseField(trimmedLine, context)
+        let extensionField: Field | null = null
+        try {
+            extensionField = getDefaultExtensionManager().getFieldTypeRegistry().parseField(trimmedLine, context)
+        } catch (error) {
+            const reason = error instanceof Error ? error.message : String(error)
+            this.diagnostics.push({ code: 'field-type-error', message: `A field type failed to parse "${trimmedLine}": ${reason}`, severity: 'error' })
+        }
         if (extensionField) {
             return extensionField
         }

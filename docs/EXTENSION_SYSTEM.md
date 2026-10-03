@@ -256,8 +256,9 @@ These parts of the extension types exist but are not used by parsing, generation
 
 Other behavior to be aware of:
 
-- `destroy()` followed by `initialize()` on the same manager fails with `Field type 'toggle' is already registered`. To start over, call `initializeExtensions(options)` with an options object, which creates a fresh default instance.
-- `registerPlugin` rejects a plugin whose field type is already registered, but the plugin's hooks were registered before the check and stay active.
+- `destroy()` removes every plugin, hook and listener added from outside; the manager can be initialized again afterwards.
+- `registerPlugin` checks the plugin's field types before registering anything: a plugin whose field type is already registered is rejected and leaves no hooks or field types behind.
+- A field type whose `parser` throws is reported as a `field-type-error` diagnostic of `parseFormdown()`, and one whose `generator` throws as a console warning; Formdown then handles the field itself.
 
 ## API Reference
 

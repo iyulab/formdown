@@ -222,17 +222,15 @@ describe('Extension System', () => {
 
         const manager = getDefaultExtensionManager()
         await manager.destroy()
-        await expect(manager.initialize()).rejects.toThrow("Field type 'toggle' is already registered")
+        await expect(manager.initialize()).resolves.toBeUndefined()
 
-        await initializeExtensions({}) // a fresh default instance
         const handler = (_context: unknown, html: string) => html + '<!--late-->'
         await expect(registerPlugin({
             metadata: { name: 'duplicate-toggle', version: '1.0.0' },
             hooks: [{ name: 'post-generate', priority: 0, handler }],
             fieldTypes: [{ type: 'toggle' }]
         })).rejects.toThrow("Field type 'toggle' is already registered")
-        expect(generateFormHTML('@phone: [tel]').endsWith('<!--late-->')).toBe(true)
-        getDefaultExtensionManager().unregisterHook('post-generate', handler)
+        expect(generateFormHTML('@phone: [tel]').endsWith('<!--late-->')).toBe(false)
     })
 
     it('Testing plugins', async () => {

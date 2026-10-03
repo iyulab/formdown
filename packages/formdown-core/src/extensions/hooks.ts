@@ -10,8 +10,7 @@ import type {
     HookContext,
     HookManager as IHookManager,
     ExtensionOptions,
-    EventEmitter,
-    ExtensionEvent
+    EventEmitter
 } from './types.js'
 
 /** The kind of value a transforming hook passes along: an array, null, or its `typeof`. */
@@ -259,13 +258,6 @@ export class HookManager implements IHookManager {
      * Emit events if event emitter is available
      */
     private emit(type: string, data?: any): void {
-        if (this.eventEmitter) {
-            const event: ExtensionEvent = {
-                type,
-                data,
-                timestamp: Date.now()
-            }
-            this.eventEmitter.emit(type, event)
-        }
+        this.eventEmitter?.emit(type, data)
     }
 }
