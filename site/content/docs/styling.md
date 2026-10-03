@@ -237,13 +237,15 @@ Different form instances can have different styles:
 }
 ```
 
-## Legacy Support
+## Page-Wide Themes
 
-For backward compatibility, legacy `--theme-*` variables are still supported:
+Every variable can also be set on an ancestor. Set them on `:root` to theme all forms and editors on the page:
 
 ```css
-formdown-ui {
-  --theme-accent: #8b5cf6;  /* Still works */
+:root.dark {
+  --formdown-bg-primary: #111827;
+  --formdown-text-primary: #f9fafb;
+  --formdown-border-color: #374151;
 }
 ```
 

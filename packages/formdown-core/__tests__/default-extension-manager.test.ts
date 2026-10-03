@@ -1,4 +1,4 @@
-import { getDefaultExtensionManager, initializeExtensions, registerHook, parseFormdown } from '../src/index'
+import { ExtensionManager, getDefaultExtensionManager, initializeExtensions, registerHook, parseFormdown } from '../src/index'
 
 describe('default extension manager', () => {
     test('initializeExtensions with options configures the instance parsing runs through', async () => {
@@ -21,5 +21,17 @@ describe('default extension manager', () => {
 
     test('is one instance across calls', () => {
         expect(getDefaultExtensionManager()).toBe(getDefaultExtensionManager())
+    })
+
+    test('initialized from two places at once is initialized once', async () => {
+        const manager = new ExtensionManager()
+        const errors: unknown[] = []
+        manager.getEventEmitter().on('extension-system-error', (event: unknown) => { errors.push(event) })
+
+        await Promise.all([manager.initialize(), manager.initialize()])
+
+        expect(errors).toEqual([])
+        expect(manager.getStats().initialized).toBe(true)
+        await manager.destroy()
     })
 })

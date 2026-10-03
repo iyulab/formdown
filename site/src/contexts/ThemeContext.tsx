@@ -36,27 +36,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
             if (theme === 'dark') {
                 root.classList.add('dark');
                 body.classList.add('dark');
-                // Update CSS variables for Shadow DOM compatibility
-                root.style.setProperty('--theme-bg-primary', '#111827');
-                root.style.setProperty('--theme-bg-secondary', '#1f2937');
-                root.style.setProperty('--theme-text-primary', '#f9fafb');
-                root.style.setProperty('--theme-text-secondary', '#d1d5db');
-                root.style.setProperty('--theme-border', '#374151');
-                root.style.setProperty('--theme-accent', '#60a5fa');
-                root.style.setProperty('--theme-error', '#ef4444');
-                root.style.setProperty('--theme-error-bg', '#1f1f1f');
             } else {
                 root.classList.remove('dark');
                 body.classList.remove('dark');
-                // Update CSS variables for Shadow DOM compatibility
-                root.style.setProperty('--theme-bg-primary', '#ffffff');
-                root.style.setProperty('--theme-bg-secondary', '#f8fafc');
-                root.style.setProperty('--theme-text-primary', '#1f2937');
-                root.style.setProperty('--theme-text-secondary', '#6b7280');
-                root.style.setProperty('--theme-border', '#e5e7eb');
-                root.style.setProperty('--theme-accent', '#3b82f6');
-                root.style.setProperty('--theme-error', '#dc2626');
-                root.style.setProperty('--theme-error-bg', '#fef2f2');
             }
 
             localStorage.setItem('formdown-theme', theme);

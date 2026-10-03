@@ -10,10 +10,17 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 - `generateFormHTML()` no longer accepts the `{ fields, errors }` result of the removed functions; pass the source text or the result of `parseFormdown()`. Given that shape it used to fail.
 - `extensionManager`, the default extension manager exported as an object. Use `getDefaultExtensionManager()`, which returns the same instance: `extensionManager.getStats()` becomes `getDefaultExtensionManager().getStats()`.
 - `registerFormdownUI()` and `registerFormdownEditor()`, which did nothing: importing `@formdown/ui` or `@formdown/editor` registers its element.
+- The `--theme-*` custom properties. Use the `--formdown-*` names: `--theme-bg-primary` → `--formdown-bg-primary`, `--theme-bg-secondary` → `--formdown-bg-secondary`, `--theme-text-primary` → `--formdown-text-primary`, `--theme-text-secondary` → `--formdown-text-secondary`, `--theme-border` → `--formdown-border-color`, `--theme-accent` → `--formdown-accent-color`, `--theme-error` → `--formdown-error-color`, `--theme-error-bg` → `--formdown-error-bg`.
+
+### Changed
+
+- `@formdown/ui` reads each `--formdown-*` property where it is used, with its default beside it, instead of declaring them all on the element. They can be set on any ancestor — `:root` themes every form on the page — as well as on `formdown-ui`; a value on the element still wins. A property derived from another (`--formdown-section-border-color` from `--formdown-border-color`, say) follows it from wherever it is set.
+- `@formdown/editor` is themed by the same `--formdown-*` properties as the form, and `--formdown-error-bg` for its error panel.
 
 ### Fixed
 
 - `initializeExtensions(options)` configures the default extension manager, the one parsing and generation run through. It used to initialize a separate manager with those options and leave the default one uninitialized. Plugins and hooks registered on the earlier default manager are not carried over, so pass options before registering anything.
+- Initializing an extension manager from two places at once — a form and an editor on one page — failed with "Field type 'text' is already registered". The second call now waits for the first.
 
 ## 0.12.4
 

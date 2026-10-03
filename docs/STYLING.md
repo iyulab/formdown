@@ -32,7 +32,7 @@ FormDown supports two complementary styling methods:
 
 ## CSS Custom Properties
 
-CSS Custom Properties (CSS Variables) pass through the Shadow DOM boundary, making them ideal for theming. All FormDown variables use the `--formdown-*` prefix.
+CSS Custom Properties (CSS Variables) pass through the Shadow DOM boundary, making them ideal for theming. All FormDown variables use the `--formdown-*` prefix. Each is read where it is used, with its default beside it, so it can be set on `formdown-ui` (and `formdown-editor`) or on any ancestor — `:root` themes every form on the page, and a value set on the element wins over one set higher up.
 
 ### Colors
 
@@ -411,24 +411,21 @@ Different form instances can have different styles:
 
 ---
 
-## Legacy Support
+## Page-Wide Themes
 
-For backward compatibility, FormDown also supports the legacy `--theme-*` variable prefix:
+Set the variables on `:root` to theme every form and editor on the page, for example a dark theme:
 
 ```css
-/* Legacy variables (still supported) */
-formdown-ui {
-  --theme-accent: #8b5cf6;
-  --theme-bg-primary: #ffffff;
-  --theme-text-primary: #1f2937;
+:root.dark {
+  --formdown-bg-primary: #111827;
+  --formdown-bg-secondary: #1f2937;
+  --formdown-text-primary: #f9fafb;
+  --formdown-text-secondary: #d1d5db;
+  --formdown-border-color: #374151;
+  --formdown-accent-color: #60a5fa;
+  --formdown-error-color: #ef4444;
+  --formdown-error-bg: #1f1f1f; /* editor error panel */
 }
-```
-
-The new `--formdown-*` variables automatically fall back to `--theme-*` if defined:
-
-```css
-/* Internal mapping */
---formdown-accent-color: var(--theme-accent, #3b82f6);
 ```
 
 ---

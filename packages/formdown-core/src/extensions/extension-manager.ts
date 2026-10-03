@@ -26,6 +26,7 @@ export class ExtensionManager {
     private fieldTypeRegistry: FieldTypeRegistry
     private context: ExtensionContext
     private initialized = false
+    private initializing?: Promise<void>
 
     constructor(options: ExtensionOptions = {}) {
         // Set default options
@@ -58,11 +59,14 @@ export class ExtensionManager {
     /**
      * Initialize the extension system
      */
-    async initialize(): Promise<void> {
-        if (this.initialized) {
-            return
-        }
+    initialize(): Promise<void> {
+        if (this.initialized) return Promise.resolve()
+        // Callers that ask while it is under way (a form and an editor on one page) share the one run
+        this.initializing ??= this.runInitialize().finally(() => { this.initializing = undefined })
+        return this.initializing
+    }
 
+    private async runInitialize(): Promise<void> {
         this.eventEmitter.emit('extension-system-initializing')
 
         try {

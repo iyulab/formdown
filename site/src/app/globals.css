@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* dark: follows the .dark class the theme toggle sets, not the OS setting */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Enhanced Prism.js syntax highlighting styles */
 .token.comment,
 .token.prolog,
@@ -145,6 +148,16 @@ pre[class*="language-"]:before {
   --theme-accent: #3b82f6;
   --theme-error: #dc2626;
   --theme-error-bg: #fef2f2;
+
+  /* Formdown forms and editors take the page theme (they read --formdown-* from any ancestor) */
+  --formdown-bg-primary: var(--theme-bg-primary);
+  --formdown-bg-secondary: var(--theme-bg-secondary);
+  --formdown-text-primary: var(--theme-text-primary);
+  --formdown-text-secondary: var(--theme-text-secondary);
+  --formdown-border-color: var(--theme-border);
+  --formdown-accent-color: var(--theme-accent);
+  --formdown-error-color: var(--theme-error);
+  --formdown-error-bg: var(--theme-error-bg);
 }
 
 /* Dark theme variables when .dark class is applied */

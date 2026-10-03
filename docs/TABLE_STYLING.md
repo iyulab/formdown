@@ -170,19 +170,19 @@ You can add custom classes to tables by wrapping them in a div:
 
 ## Theme Integration
 
-Formdown tables respect global theme variables:
+Table variables default to the general theme variables, which can be set on any ancestor:
 
 ```css
 :root {
-  --theme-bg-primary: #ffffff;
-  --theme-bg-secondary: #f6f8fa;
-  --theme-border: #d0d7de;
-  --theme-text-primary: #1f2328;
-  --theme-text-secondary: #656d76;
+  --formdown-bg-primary: #ffffff;
+  --formdown-bg-secondary: #f6f8fa;
+  --formdown-border-color: #d0d7de;
+  --formdown-text-primary: #1f2328;
+  --formdown-text-secondary: #656d76;
 }
 ```
 
-Tables will automatically use these as fallbacks when specific table variables are not set.
+Tables use these when the specific table variables are not set.
 
 ## Accessibility
 
