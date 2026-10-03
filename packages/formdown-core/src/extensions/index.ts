@@ -10,7 +10,7 @@ export type * from './types.js'
 export { HookManager } from './hooks.js'
 export { PluginManager } from './plugin-manager.js'
 export { EventEmitter } from './event-emitter.js'
-export { ExtensionManager, defaultExtensionManager as extensionManager } from './extension-manager.js'
+export { ExtensionManager, getDefaultExtensionManager } from './extension-manager.js'
 
 // Export plugins
 export * from './built-in-plugins.js'

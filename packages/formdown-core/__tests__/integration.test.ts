@@ -1,4 +1,4 @@
-import { parseFormdown, generateFormHTML, parseFormFields } from '../src/index'
+import { parseFormdown, generateFormHTML } from '../src/index'
 import { FormdownGenerator } from '../src/generator'
 
 describe('Formdown Integration', () => {
@@ -44,16 +44,6 @@ Your username is ___@username[text required].`
             expect(html).toContain('formdown-form-default')
             expect(html).toContain('<textarea')
             expect(html).toContain('Message *')
-        })
-    })
-
-    describe('parseFormFields function (legacy)', () => {
-        test('should support legacy field parsing', () => {
-            const input = '@name: [text required]\n@email: [email]'
-            const result = parseFormFields(input)
-
-            expect(result.fields).toHaveLength(2)
-            expect(result.errors).toHaveLength(0)
         })
     })
 

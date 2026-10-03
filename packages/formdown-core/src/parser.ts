@@ -1,4 +1,4 @@
-import { Field, FieldRelation, ParseResult, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic, FrontMatter, SourceSpan } from './types'
+import { Field, FieldRelation, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic, FrontMatter, SourceSpan } from './types'
 import { NAME, ATTRIBUTES, isValidName, pattern, tokenizeAttributes, attributeValue, quoteAttributeValue, scanAttributes } from './grammar.js'
 import { readFrontMatter, FenceTracker, maskCodeSpans } from './source.js'
 
@@ -33,7 +33,7 @@ const INPUT_TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'searc
 
 /** Something shaped like a block field whose name is not a valid name, e.g. `@1st: [text]`. */
 const BLOCK_FIELD_CANDIDATE = /^@([^\s:([{*\-<>@\]]+)[^:]*:\s*\S*\[/u
-import { defaultExtensionManager } from './extensions/extension-manager.js'
+import { getDefaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 
 // Private-use characters delimit inline field markers; they cannot collide with
@@ -82,10 +82,10 @@ export class FormdownParser {
         const onHookError = (message: string) => {
             this.diagnostics.push({ code: 'hook-error', message, severity: 'error' })
         }
-        const source = defaultExtensionManager.transformSync('pre-parse', { input: content }, content, onHookError)
+        const source = getDefaultExtensionManager().transformSync('pre-parse', { input: content }, content, onHookError)
 
         const extracted = this.extractFields(source)
-        const fields = extracted.fields.map(field => defaultExtensionManager.transformSync(
+        const fields = extracted.fields.map(field => getDefaultExtensionManager().transformSync(
             'field-parse',
             { input: field.span ? source.slice(field.span.start, field.span.end) : undefined, field },
             field,
@@ -102,16 +102,7 @@ export class FormdownParser {
             datalistDeclarations: this.datalistDeclarations,
             groupDeclarations: this.groupDeclarations
         }
-        return defaultExtensionManager.transformSync('post-parse', { input: source }, result, onHookError)
-    }
-
-    /**
-     * @deprecated Use parseFormdown() instead, which returns richer FormdownContent
-     * including formDeclarations, datalistDeclarations, and groupDeclarations.
-     */
-    parse(content: string): ParseResult {
-        const { fields } = this.extractFields(content)
-        return { fields, errors: [] }
+        return getDefaultExtensionManager().transformSync('post-parse', { input: source }, result, onHookError)
     }
 
     private extractFields(content: string): { fields: Field[], cleanedMarkdown: string, frontMatter?: FrontMatter } {
@@ -277,7 +268,7 @@ export class FormdownParser {
             input: trimmedLine
         }
         
-        const extensionField = defaultExtensionManager.getFieldTypeRegistry().parseField(trimmedLine, context)
+        const extensionField = getDefaultExtensionManager().getFieldTypeRegistry().parseField(trimmedLine, context)
         if (extensionField) {
             return extensionField
         }

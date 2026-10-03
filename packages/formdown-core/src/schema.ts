@@ -12,10 +12,9 @@ export class SchemaExtractor {
      * Extract schema from FormDown content
      */
     extractSchema(content: string): FormDownSchema {
-        const parseResult = this.parser.parse(content)
         const schema: FormDownSchema = {}
 
-        parseResult.fields.forEach((field, index) => {
+        this.parser.parseFormdown(content).forms.forEach((field, index) => {
             schema[field.name] = this.convertFieldToSchema(field, index)
         })
 

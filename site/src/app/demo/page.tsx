@@ -68,15 +68,9 @@ export default function DemoPage() {
                     await import("@formdown/editor")
                     console.log('Formdown editor loaded')
 
-                    // Import UI component and ensure registration
-                    const uiModule = await import("@formdown/ui")
+                    // Importing the UI module registers its element
+                    await import("@formdown/ui")
                     console.log('Formdown UI loaded')
-
-                    // Force registration if needed
-                    if (uiModule.registerFormdownUI) {
-                        uiModule.registerFormdownUI()
-                        console.log('FormdownUI registration forced')
-                    }
 
                     // Wait a bit for custom elements to register
                     await new Promise(resolve => setTimeout(resolve, 100))

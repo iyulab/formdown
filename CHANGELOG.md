@@ -2,6 +2,19 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Removed
+
+- `parseFormFields()` and `FormdownParser.parse()`, deprecated since 0.7.0. Use `parseFormdown()` (or `new FormdownParser().parseFormdown()`): `parseFormFields(input).fields` becomes `parseFormdown(input).forms`.
+- `generateFormHTML()` no longer accepts the `{ fields, errors }` result of the removed functions; pass the source text or the result of `parseFormdown()`. Given that shape it used to fail.
+- `extensionManager`, the default extension manager exported as an object. Use `getDefaultExtensionManager()`, which returns the same instance: `extensionManager.getStats()` becomes `getDefaultExtensionManager().getStats()`.
+- `registerFormdownUI()` and `registerFormdownEditor()`, which did nothing: importing `@formdown/ui` or `@formdown/editor` registers its element.
+
+### Fixed
+
+- `initializeExtensions(options)` configures the default extension manager, the one parsing and generation run through. It used to initialize a separate manager with those options and leave the default one uninitialized. Plugins and hooks registered on the earlier default manager are not carried over, so pass options before registering anything.
+
 ## 0.12.4
 
 ### Fixed

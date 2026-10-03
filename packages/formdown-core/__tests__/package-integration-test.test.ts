@@ -1,4 +1,4 @@
-import { parseFormdown, generateFormHTML, getSchema, extensionManager } from '../src/index'
+import { parseFormdown, generateFormHTML, getSchema, getDefaultExtensionManager } from '../src/index'
 
 describe('Package Integration Tests', () => {
   const testContent = `
@@ -94,14 +94,14 @@ describe('Package Integration Tests', () => {
 
   describe('Extension System Integration', () => {
     test('Extension system should be available for UI/Editor packages', () => {
-      expect(extensionManager).toBeDefined()
-      expect(typeof extensionManager.initialize).toBe('function')
-      expect(typeof extensionManager.executeHooks).toBe('function')
+      expect(getDefaultExtensionManager()).toBeDefined()
+      expect(typeof getDefaultExtensionManager().initialize).toBe('function')
+      expect(typeof getDefaultExtensionManager().executeHooks).toBe('function')
     })
 
     test('Should support plugin registration from UI/Editor packages', async () => {
       // Initialize extension manager first
-      await extensionManager.initialize()
+      await getDefaultExtensionManager().initialize()
       
       const testPlugin = {
         name: 'test-integration-plugin',
@@ -122,11 +122,11 @@ describe('Package Integration Tests', () => {
       }
 
       // Should be able to register plugins
-      await expect(extensionManager.registerPlugin(testPlugin)).resolves.not.toThrow()
+      await expect(getDefaultExtensionManager().registerPlugin(testPlugin)).resolves.not.toThrow()
       
       // Should be able to execute hooks
       const context = { input: 'test' }
-      await expect(extensionManager.executeHooks('field-render', context)).resolves.toBeDefined()
+      await expect(getDefaultExtensionManager().executeHooks('field-render', context)).resolves.toBeDefined()
     })
   })
 

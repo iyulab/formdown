@@ -10,14 +10,14 @@ import {
     FormdownParser,
     FormdownGenerator,
     SchemaExtractor,
-    extensionManager
+    getDefaultExtensionManager
 } from '../src/index'
 
 describe('Core Architecture', () => {
     beforeAll(async () => {
         // Initialize extension system once for all tests
         try {
-            await extensionManager.initialize()
+            await getDefaultExtensionManager().initialize()
         } catch (error) {
             // Ignore if already initialized
             if (!(error instanceof Error) || !error.message?.includes('already registered')) {
@@ -28,7 +28,7 @@ describe('Core Architecture', () => {
 
     afterAll(async () => {
         // Clean up extension system after all tests
-        await extensionManager.destroy()
+        await getDefaultExtensionManager().destroy()
     })
 
     describe('Parser Role', () => {
@@ -226,10 +226,10 @@ Please fill out your information.
 
     describe('Extension System Integration', () => {
         test('should provide access to extension system', () => {
-            expect(extensionManager).toBeDefined()
-            expect(extensionManager.getStats).toBeDefined()
+            expect(getDefaultExtensionManager()).toBeDefined()
+            expect(getDefaultExtensionManager().getStats).toBeDefined()
             
-            const stats = extensionManager.getStats()
+            const stats = getDefaultExtensionManager().getStats()
             expect(stats).toHaveProperty('initialized')
             expect(stats).toHaveProperty('plugins')
             expect(stats).toHaveProperty('fieldTypes')
@@ -248,9 +248,9 @@ Please fill out your information.
                 }]
             }
             
-            await extensionManager.registerPlugin(testPlugin)
+            await getDefaultExtensionManager().registerPlugin(testPlugin)
             
-            const stats = extensionManager.getStats()
+            const stats = getDefaultExtensionManager().getStats()
             expect(stats.plugins.some(p => p.name === 'test-plugin')).toBe(true)
             expect(stats.fieldTypes.includes('custom-test')).toBe(true)
         })

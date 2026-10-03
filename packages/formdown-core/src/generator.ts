@@ -1,6 +1,6 @@
 import { marked } from 'marked'
 import { Field, FormdownContent, FormDeclaration, DatalistDeclaration, GroupDeclaration } from './types'
-import { defaultExtensionManager } from './extensions/extension-manager.js'
+import { getDefaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 
 /** Generation returns markup only, so a failing hook is reported as a console warning. */
@@ -210,14 +210,14 @@ export class FormdownGenerator {
 
     generateHTML(content: FormdownContent): string {
         // Extension hooks wrap generation; a failing hook is reported and skipped
-        const prepared = defaultExtensionManager.transformSync('pre-generate', {}, content, warnHookError)
+        const prepared = getDefaultExtensionManager().transformSync('pre-generate', {}, content, warnHookError)
         const html = this.renderHTML(prepared)
-        return defaultExtensionManager.transformSync('post-generate', {}, html, warnHookError)
+        return getDefaultExtensionManager().transformSync('post-generate', {}, html, warnHookError)
     }
 
     /** Pass a field's markup through the `field-render` hooks. */
     private renderField(field: Field, html: string): string {
-        return defaultExtensionManager.transformSync('field-render', { field }, html, warnHookError)
+        return getDefaultExtensionManager().transformSync('field-render', { field }, html, warnHookError)
     }
 
     private renderHTML(content: FormdownContent): string {
@@ -225,23 +225,15 @@ export class FormdownGenerator {
         this.usedIds.clear()
         this.fieldCounter = 0
 
-        const markdownHTML = content.markdown ? marked(content.markdown) : ''
-
-        // Handle both sync and async marked results
-        if (typeof markdownHTML === 'string') {
-            // Use Hidden Form Architecture as the default behavior
-            return this.processContentWithHiddenForms(
-                markdownHTML,
-                content.forms,
-                content.formDeclarations || [],
-                content.datalistDeclarations || [],
-                content.groupDeclarations || []
-            )
-        } else {
-            // If marked returns a Promise, we need to handle it differently
-            // For now, fallback to the old method
-            return this.generateLegacyHTML(content)
-        }
+        const markdownHTML = content.markdown ? marked.parse(content.markdown, { async: false }) : ''
+        // Use Hidden Form Architecture as the default behavior
+        return this.processContentWithHiddenForms(
+            markdownHTML,
+            content.forms,
+            content.formDeclarations || [],
+            content.datalistDeclarations || [],
+            content.groupDeclarations || []
+        )
     }
 
     private processContentWithHiddenForms(
@@ -401,18 +393,6 @@ export class FormdownGenerator {
         return result
     }
 
-    private generateLegacyHTML(content: FormdownContent): string {
-        const markdownHTML = content.markdown ? marked(content.markdown) as string : ''
-        // Generate fields without wrapper form using Hidden Form Architecture
-        if (content.forms.length === 0) return markdownHTML
-
-        const formId = `formdown-legacy-${Math.random().toString(36).substr(2, 9)}`
-        const fieldsHTML = content.forms.map(field => this.generateFieldHTML(field, formId)).join('\n')
-        const hiddenForm = `<form hidden id="${formId}"></form>`
-
-        return hiddenForm + markdownHTML + fieldsHTML
-    }
-
     generateStandaloneFieldHTML(field: Field, defaultFormId?: string): string {
         if (field.inline) {
             return this.generateInlineFieldHTML(field, defaultFormId)
@@ -497,7 +477,7 @@ ${fieldHTML}
             metadata: { formId: defaultFormId }
         }
 
-        const extensionHTML = defaultExtensionManager.getFieldTypeRegistry().generateFieldHTML(field, context)
+        const extensionHTML = getDefaultExtensionManager().getFieldTypeRegistry().generateFieldHTML(field, context)
         if (extensionHTML) {
             return extensionHTML
         }

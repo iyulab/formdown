@@ -52,7 +52,7 @@ export function parseFormdown(input: string) {
     return parser.parseFormdown(input)
 }
 
-export function generateFormHTML(content: string | import('./types.js').ParseResult | import('./types.js').FormdownContent) {
+export function generateFormHTML(content: string | import('./types.js').FormdownContent) {
     const generator = new FormdownGenerator()
 
     // If input is a string, parse it first
@@ -62,19 +62,8 @@ export function generateFormHTML(content: string | import('./types.js').ParseRes
         return generator.generateHTML(parsedContent)
     }
 
-    // If input is already parsed content (ParseResult or FormdownContent), use it directly
-    return generator.generateHTML(content as import('./types.js').FormdownContent)
-}
-
-/**
- * @deprecated Use parseFormdown() instead. parseFormFields() returns only { fields, errors }
- * while parseFormdown() returns the full FormdownContent including formDeclarations,
- * datalistDeclarations, groupDeclarations, and cleaned markdown.
- * Migration: replace `parseFormFields(input).fields` with `parseFormdown(input).forms`.
- */
-export function parseFormFields(input: string) {
-    const parser = new FormdownParser()
-    return parser.parse(input)
+    // Already parsed content is generated as is
+    return generator.generateHTML(content)
 }
 
 // Schema extraction

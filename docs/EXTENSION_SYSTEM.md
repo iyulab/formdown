@@ -460,8 +460,8 @@ const results = await executeHooks('field-parse', context)
 const stats = getExtensionStats()
 
 // Access field type registry
-import { defaultExtensionManager } from '@formdown/core'
-const registry = defaultExtensionManager.getFieldTypeRegistry()
+import { getDefaultExtensionManager } from '@formdown/core'
+const registry = getDefaultExtensionManager().getFieldTypeRegistry()
 
 // Parse content with custom field types
 const field = registry.parseField('@volume: [range]', context)

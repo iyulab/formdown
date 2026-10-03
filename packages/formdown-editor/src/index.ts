@@ -15,7 +15,3 @@ export const createFormdownEditor = (
     return editor
 }
 
-export const registerFormdownEditor = () => {
-    // Component is already registered via static import above
-    // This function is kept for API compatibility
-}

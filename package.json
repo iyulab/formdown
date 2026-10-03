@@ -33,7 +33,7 @@
     "scripts": {
         "dev": "cd site && npm run dev",
         "test": "npm run test --workspaces --if-present",
-        "build": "npm run build --workspaces --if-present",
+        "build": "npm run build -w @formdown/core -w @formdown/ui -w @formdown/editor -w site",
         "version:set": "node scripts/set-version.js",
         "update": "npm update --workspaces --include-workspace-root",
         "update:check": "npx npm-check-updates --workspaces --root",

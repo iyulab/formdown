@@ -20,7 +20,3 @@ export const createFormdownUI = (container: HTMLElement, options: {
     return ui
 }
 
-export const registerFormdownUI = () => {
-    // Component is already registered via static import above
-    // This function is kept for API compatibility
-}

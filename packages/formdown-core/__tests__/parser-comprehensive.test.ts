@@ -93,9 +93,9 @@ describe('FormdownParser - Comprehensive', () => {
 
         describe('HTML Attributes', () => {
             test('should parse custom data attributes', () => {
-                const result = parser.parse('@slider: [range min=0 max=100 data-unit="%" class="custom-slider"]')
+                const result = parser.parseFormdown('@slider: [range min=0 max=100 data-unit="%" class="custom-slider"]')
 
-                expect(result.fields[0].attributes).toEqual({
+                expect(result.forms[0].attributes).toEqual({
                     min: 0,
                     max: 100,
                     'data-unit': '%',
@@ -105,9 +105,9 @@ describe('FormdownParser - Comprehensive', () => {
             })
 
             test('should parse boolean attributes', () => {
-                const result = parser.parse('@field: [text disabled readonly autofocus]')
+                const result = parser.parseFormdown('@field: [text disabled readonly autofocus]')
 
-                expect(result.fields[0].attributes).toEqual({
+                expect(result.forms[0].attributes).toEqual({
                     disabled: true,
                     readonly: true,
                     autofocus: true,
@@ -116,9 +116,9 @@ describe('FormdownParser - Comprehensive', () => {
             })
 
             test('should parse accessibility attributes', () => {
-                const result = parser.parse('@bio: [textarea aria-required="true" aria-describedby="bio-hint"]')
+                const result = parser.parseFormdown('@bio: [textarea aria-required="true" aria-describedby="bio-hint"]')
 
-                expect(result.fields[0].attributes).toEqual({
+                expect(result.forms[0].attributes).toEqual({
                     'aria-required': 'true',
                     'aria-describedby': 'bio-hint',
                     form: "formdown-form-default"
@@ -423,16 +423,6 @@ Thank you!`
 
             expect(result.forms).toHaveLength(1)
             expect(result.forms[0].name).toBe('valid')
-        })
-    })
-
-    describe('Legacy Support', () => {
-        test('should support legacy parse method', () => {
-            const content = '@name: [text required]\n@email: [email]'
-            const result = parser.parse(content)
-
-            expect(result.fields).toHaveLength(2)
-            expect(result.errors).toHaveLength(0)
         })
     })
 })

@@ -3,7 +3,7 @@
  * Provides integration with @formdown/core extension system
  */
 
-import { extensionManager, registerPlugin, registerHook } from '@formdown/core'
+import { getDefaultExtensionManager, registerPlugin, registerHook } from '@formdown/core'
 import type { Plugin, HookContext, HookName } from '@formdown/core'
 
 /**
@@ -37,7 +37,7 @@ export class UIExtensionSupport {
     if (this.initialized) return
 
     try {
-      await extensionManager.initialize()
+      await getDefaultExtensionManager().initialize()
       this.setupUIHooks()
       this.initialized = true
     } catch {
@@ -82,14 +82,14 @@ export class UIExtensionSupport {
    * Get extension statistics
    */
   getExtensionStats() {
-    return extensionManager.getStats()
+    return getDefaultExtensionManager().getStats()
   }
 
   /**
    * Execute hooks for UI operations
    */
   async executeUIHooks(hookName: HookName, context: HookContext, ...args: any[]): Promise<any[]> {
-    return extensionManager.executeHooks(hookName, context, ...args)
+    return getDefaultExtensionManager().executeHooks(hookName, context, ...args)
   }
 }
 

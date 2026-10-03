@@ -273,27 +273,18 @@ export function getDefaultExtensionManager(): ExtensionManager {
     return _defaultInstance
 }
 
-// Proxy for backward compatibility — defers instantiation until first property access
-export const defaultExtensionManager: ExtensionManager = new Proxy({} as ExtensionManager, {
-    get(_target, prop) {
-        const instance = getDefaultExtensionManager()
-        const value = (instance as any)[prop]
-        if (typeof value === 'function') {
-            return value.bind(instance)
-        }
-        return value
-    }
-})
-
 // Convenience functions using default instance
+
+/**
+ * Initialize the default extension manager — the one parsing and generation run through.
+ * Options start it afresh with those options; plugins and hooks registered on the earlier
+ * default instance are not carried over, so pass options before registering anything.
+ */
 export async function initializeExtensions(options?: ExtensionOptions): Promise<void> {
     if (options) {
-        // Create new instance with custom options
-        const manager = new ExtensionManager(options)
-        await manager.initialize()
-    } else {
-        await getDefaultExtensionManager().initialize()
+        _defaultInstance = new ExtensionManager(options)
     }
+    await getDefaultExtensionManager().initialize()
 }
 
 export async function registerPlugin(plugin: Plugin): Promise<void> {
