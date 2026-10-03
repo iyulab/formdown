@@ -1,4 +1,16 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Inline code is set off by its background; typography's default backticks around it would print twice */
+.prose :where(code):not(:where(pre code))::before,
+.prose :where(code):not(:where(pre code))::after {
+  content: none;
+}
+
+/* A heading reached by its #id stops below the sticky header */
+.prose :where(h1, h2, h3, h4, h5, h6)[id] {
+  scroll-margin-top: 5rem;
+}
 
 /* dark: follows the .dark class the theme toggle sets, not the OS setting */
 @custom-variant dark (&:where(.dark, .dark *));

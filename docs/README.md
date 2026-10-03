@@ -1,21 +1,17 @@
 # Formdown Documentation
 
-This directory contains technical documentation and architectural guides for Formdown contributors and advanced users.
+Reference documents for Formdown contributors and advanced users. The guides for people using Formdown are on the website, [formdown.dev/docs](https://formdown.dev/docs), whose source is `site/content/docs/`.
 
-## User Documentation
+| Document | What it covers | Website page |
+|---|---|---|
+| [SYNTAX.md](SYNTAX.md) | The full syntax reference | [Syntax](https://formdown.dev/docs/syntax) (a shorter guide) |
+| [SHORTHAND_SYNTAX.md](SHORTHAND_SYNTAX.md) | Shorthand field syntax | [Shorthand](https://formdown.dev/docs/shorthand) |
+| [HIDDEN_FORM_ARCHITECTURE.md](HIDDEN_FORM_ARCHITECTURE.md) | How fields are tied to generated hidden forms | — |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | How the packages fit together | [Architecture](https://formdown.dev/docs/architecture) |
+| [CORE_ARCHITECTURE.md](CORE_ARCHITECTURE.md) | The modules of `@formdown/core` | — |
+| [EXTENSION_SYSTEM.md](EXTENSION_SYSTEM.md) | The extension API: hooks, field types, plugins | [Extensions](https://formdown.dev/docs/extensions) (same content) |
+| [EXTENSION_EXAMPLES.md](EXTENSION_EXAMPLES.md) | Worked extension examples | [Extension Examples](https://formdown.dev/docs/extension-examples) (same content) |
+| [STYLING.md](STYLING.md) | Theming with `--formdown-*` properties and `::part()` | [Styling](https://formdown.dev/docs/styling) |
+| [TABLE_STYLING.md](TABLE_STYLING.md) | Styling tables in forms | — |
 
-For general usage documentation, please visit:
-- **Website**: [formdown.app/docs](https://formdown.app/docs)
-- **Source**: `/site/content/docs/`
-
-## Legacy Documentation
-
-The following documents have been migrated to the website and are kept here for historical reference only:
-
-- `SYNTAX.md` → See [formdown.app/docs/syntax](https://formdown.app/docs/syntax)
-- `SHORTHAND_SYNTAX.md` → See [formdown.app/docs/shorthand](https://formdown.app/docs/shorthand)
-- `ARCHITECTURE.md` → See [formdown.app/docs/architecture](https://formdown.app/docs/architecture)
-- `EXTENSION_SYSTEM.md` → See [formdown.app/docs/extensions](https://formdown.app/docs/extensions)
-- `EXTENSION_EXAMPLES.md` → See [formdown.app/docs/extension-examples](https://formdown.app/docs/extension-examples)
-
-Please refer to the website documentation for the most up-to-date information.
+The examples in the extension documents run as tests (`packages/formdown-core/__tests__/extension-docs.test.ts`); change both together.

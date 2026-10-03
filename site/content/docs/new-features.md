@@ -315,7 +315,7 @@ The Value Attribute system provides:
 4. **Edge Case Handling**: Graceful handling of invalid or missing values
 5. **HTML Standards**: Generates proper `selected`, `checked`, and `value` attributes
 
-[**Learn More →**](/docs/syntax#default-values-with-value-attribute)
+[**Learn More →**](/docs/syntax#selection-fields)
 
 ---
 
@@ -390,7 +390,7 @@ Generates:
 - ✅ **Modern Standards**: Uses HTML5 `form` attribute
 - ✅ **Backward Compatible**: Existing code works unchanged
 
-[**Learn More →**](/docs/syntax#hidden-form-architecture)
+[**Learn More →**](/docs/syntax#form-declaration-and-hidden-form-architecture)
 
 ---
 

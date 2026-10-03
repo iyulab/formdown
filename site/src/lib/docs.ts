@@ -28,6 +28,25 @@ renderer.code = function ({ text, lang }: { text: string; lang?: string }) {
     return `<pre class="language-${validLang}"><code class="language-${validLang}">${highlighted}</code></pre>`;
 };
 
+// Headings get GitHub-style ids, so links such as /docs/api#formmanager-class land on them
+const usedIds = new Map<string, number>();
+
+function headingId(text: string): string {
+    const base = text
+        .toLowerCase()
+        .replace(/<[^>]*>/g, '')
+        .replace(/[^\p{L}\p{N}\s_-]/gu, '')
+        .trim()
+        .replace(/\s/g, '-');
+    const seen = usedIds.get(base) ?? 0;
+    usedIds.set(base, seen + 1);
+    return seen === 0 ? base : `${base}-${seen}`;
+}
+
+renderer.heading = function ({ tokens, depth, text }) {
+    return `<h${depth} id="${headingId(text)}">${this.parser.parseInline(tokens)}</h${depth}>\n`;
+};
+
 marked.setOptions({
     renderer,
     gfm: true,
@@ -61,6 +80,7 @@ export function getDocBySlug(slug: string): DocMeta | null {
     // Remove the first h1 to avoid duplication with the title displayed in the layout
     const contentWithoutFirstH1 = content.replace(/^# .+$/m, '').trim();
 
+    usedIds.clear();
     const html = marked(contentWithoutFirstH1) as string;
 
     return {
