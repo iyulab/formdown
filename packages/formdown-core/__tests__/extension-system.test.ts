@@ -51,7 +51,6 @@ describe('Extension System', () => {
             expect(stats).toHaveProperty('plugins')
             expect(stats).toHaveProperty('hookCount')
             expect(stats).toHaveProperty('fieldTypes')
-            expect(stats).toHaveProperty('validators')
         })
     })
 
@@ -326,16 +325,6 @@ describe('Extension System', () => {
         it('adds only field types the core does not have', () => {
             // A plugin type is consulted before the core's own, so text, select or range here would replace them
             expect(corePlugin.fieldTypes?.map(ft => ft.type)).toEqual(['toggle'])
-        })
-
-        it('should provide built-in validators', () => {
-            expect(corePlugin.validators).toBeDefined()
-            expect(corePlugin.validators?.length).toBeGreaterThan(0)
-
-            const validators = corePlugin.validators?.map(v => v.name) || []
-            expect(validators).toContain('required')
-            expect(validators).toContain('pattern')
-            expect(validators).toContain('minlength')
         })
     })
 

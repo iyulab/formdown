@@ -1,8 +1,6 @@
 // Importing the class registers `<formdown-editor>`.
 import { FormdownEditor } from './formdown-editor.js'
 export { FormdownEditor }
-export { editorExtensionSupport, EditorExtensionSupport } from './extension-support.js'
-export type { EditorPlugin } from './extension-support.js'
 
 /** Makes a `<formdown-editor>` with the given properties and appends it to `container`. */
 export const createFormdownEditor = (

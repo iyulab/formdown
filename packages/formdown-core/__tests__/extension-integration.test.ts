@@ -73,28 +73,6 @@ describe('Extension System Integration', () => {
             expect(fieldTypeStats.fieldTypes).toContain('rating')
             expect(fieldTypeStats.plugins.map(p => p.name)).toContain('rating-field-plugin')
         })
-
-        it('should handle custom field validation', async () => {
-            const validationPlugin: Plugin = {
-                metadata: {
-                    name: 'custom-validation-plugin',
-                    version: '1.0.0'
-                },
-                validators: [{
-                    name: 'phone',
-                    validate: (value: any) => {
-                        if (!value) return true
-                        return /^\+?[\d\s\-\(\)]+$/.test(value)
-                    },
-                    getMessage: () => 'Please enter a valid phone number'
-                }]
-            }
-
-            await extensionManager.registerPlugin(validationPlugin)
-
-            const validationStats = extensionManager.getStats()
-            expect(validationStats.validators).toContain('phone')
-        })
     })
 
     describe('Hook System Integration', () => {
@@ -141,18 +119,16 @@ describe('Extension System Integration', () => {
                 hooks: [{
                     name: 'post-parse',
                     priority: 10,
-                    handler: (context: HookContext) => {
-                        if (context.parseResult?.fields) {
-                            fieldsProcessed = context.parseResult.fields
-                            // Add default CSS classes to all fields
-                            context.parseResult.fields.forEach(field => {
-                                field.attributes = {
-                                    ...field.attributes,
-                                    className: `form-field form-field--${field.type}`
-                                }
-                            })
-                        }
-                        return context.parseResult
+                    handler: (_context: HookContext, content: { forms: Field[] }) => {
+                        fieldsProcessed = content.forms
+                        // Add default CSS classes to all fields
+                        content.forms.forEach(field => {
+                            field.attributes = {
+                                ...field.attributes,
+                                className: `form-field form-field--${field.type}`
+                            }
+                        })
+                        return content
                     }
                 }]
             }
@@ -165,11 +141,7 @@ describe('Extension System Integration', () => {
                 { name: 'name', type: 'text', label: 'Name', attributes: { form: "formdown-form-default" } }
             ]
 
-            const context: HookContext = {
-                parseResult: { fields: mockFields, errors: [] }
-            }
-
-            await extensionManager.executeHooks('post-parse', context)
+            await extensionManager.executeHooks('post-parse', {}, { forms: mockFields })
 
             expect(fieldsProcessed).toHaveLength(2)
             expect(mockFields[0].attributes?.className).toBe('form-field form-field--email')

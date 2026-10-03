@@ -189,10 +189,7 @@ describe('Extension System', () => {
         //   plugins: [{ name: 'formdown-core', version: '1.0.0' }],
         //   hookCount: 0,
         //   registeredHooks: [],
-        //   fieldTypes: ['toggle'],
-        //   validators: ['required', 'pattern', 'minlength'],
-        //   renderers: [],
-        //   themes: []
+        //   fieldTypes: ['toggle']
         // }
 
         expect(stats).toEqual({
@@ -200,10 +197,7 @@ describe('Extension System', () => {
             plugins: [{ name: 'formdown-core', version: '1.0.0' }],
             hookCount: 0,
             registeredHooks: [],
-            fieldTypes: ['toggle'],
-            validators: ['required', 'pattern', 'minlength'],
-            renderers: [],
-            themes: []
+            fieldTypes: ['toggle']
         })
     })
 

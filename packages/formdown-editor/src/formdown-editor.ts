@@ -3,13 +3,25 @@ import { customElement, property, state } from 'lit/decorators.js'
 import {
   FormManager,
   authoringCompletion,
+  executeHooks,
+  initializeExtensions,
   type ParseResult as CoreParseResult
 } from '@formdown/core'
 // The preview is a `<formdown-ui>`: importing the package registers it.
 import '@formdown/ui'
-import { editorExtensionSupport } from './extension-support'
 import styles from './styles.css?inline'
 // Template functions inlined for better performance
+
+/** Ask the `field-validate` hooks about the content; each may answer `{ valid: false, message }`. */
+async function validateContent(content: string): Promise<{ isValid: boolean; errors: string[] }> {
+    try {
+        const results = await executeHooks<{ valid?: boolean; message?: string } | undefined>('field-validate', { input: content }, content)
+        const errors = results.filter(result => result && !result.valid && result.message).map(result => result!.message!)
+        return { isValid: errors.length === 0, errors }
+    } catch (error) {
+        return { isValid: false, errors: [error instanceof Error ? error.message : 'Validation error'] }
+    }
+}
 
 var defaultContent = `# Contact Form
 
@@ -123,12 +135,8 @@ export class FormdownEditor extends LitElement {
             this.formManager.updateData(this._data)
         }
 
-        // Initialize extension system and editor support
-        try {
-            await editorExtensionSupport.initialize()
-        } catch {
-            // Extension system might already be initialized, silently continue
-        }
+        // Parsing and rendering run through the extension system; plugins registered on it apply here
+        await initializeExtensions()
 
         // Use inner text as content if content property is default and inner text exists
         if (this.content === defaultContent && this.textContent?.trim()) {
@@ -349,8 +357,8 @@ export class FormdownEditor extends LitElement {
             // Simplified via FormManager
             this.formManager.parse(this.content)
             
-            // Use extension system for enhanced validation
-            const validation = await editorExtensionSupport.validateContent(this.content)
+            // `field-validate` hooks report problems with the content: { valid: false, message }
+            const validation = await validateContent(this.content)
             
             // FormManager에서 필드 정보 직접 추출 - 복잡한 변환 로직 제거
             const fields = this.formManager.getFields()

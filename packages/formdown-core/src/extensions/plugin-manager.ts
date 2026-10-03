@@ -9,18 +9,12 @@ import type {
     HookManager,
     ExtensionOptions,
     EventEmitter,
-    FieldTypePlugin,
-    ValidationPlugin,
-    RendererPlugin,
-    ThemePlugin
+    FieldTypePlugin
 } from './types.js'
 
 export class PluginManager implements IPluginManager {
     private plugins = new Map<string, Plugin>()
     private fieldTypes = new Map<string, FieldTypePlugin>()
-    private validators = new Map<string, ValidationPlugin>()
-    private renderers = new Map<string, RendererPlugin>()
-    private themes = new Map<string, ThemePlugin>()
     private initialized = false
 
     constructor(
@@ -68,26 +62,6 @@ export class PluginManager implements IPluginManager {
             }
         }
 
-        // Register validators
-        if (plugin.validators) {
-            for (const validator of plugin.validators) {
-                this.validators.set(validator.name, validator)
-            }
-        }
-
-        // Register renderers
-        if (plugin.renderers) {
-            for (const renderer of plugin.renderers) {
-                this.renderers.set(renderer.template, renderer)
-            }
-        }
-
-        // Register themes
-        if (plugin.themes) {
-            for (const theme of plugin.themes) {
-                this.themes.set(theme.name, theme)
-            }
-        }
 
         this.emit('plugin-registered', {
             plugin: plugin.metadata.name,
@@ -144,26 +118,6 @@ export class PluginManager implements IPluginManager {
             }
         }
 
-        // Unregister validators
-        if (plugin.validators) {
-            for (const validator of plugin.validators) {
-                this.validators.delete(validator.name)
-            }
-        }
-
-        // Unregister renderers
-        if (plugin.renderers) {
-            for (const renderer of plugin.renderers) {
-                this.renderers.delete(renderer.template)
-            }
-        }
-
-        // Unregister themes
-        if (plugin.themes) {
-            for (const theme of plugin.themes) {
-                this.themes.delete(theme.name)
-            }
-        }
 
         this.plugins.delete(pluginName)
 
@@ -257,9 +211,6 @@ export class PluginManager implements IPluginManager {
         }
         this.plugins.clear()
         this.fieldTypes.clear()
-        this.validators.clear()
-        this.renderers.clear()
-        this.themes.clear()
 
         this.initialized = false
         this.emit('plugins-destroyed', { count: 0 })
@@ -288,27 +239,6 @@ export class PluginManager implements IPluginManager {
      */
     hasFieldType(type: string): boolean {
         return this.fieldTypes.has(type)
-    }
-
-    /**
-     * Get registered validation plugins
-     */
-    getValidators(): Map<string, ValidationPlugin> {
-        return new Map(this.validators)
-    }
-
-    /**
-     * Get registered renderer plugins
-     */
-    getRenderers(): Map<string, RendererPlugin> {
-        return new Map(this.renderers)
-    }
-
-    /**
-     * Get registered theme plugins
-     */
-    getThemes(): Map<string, ThemePlugin> {
-        return new Map(this.themes)
     }
 
     /**

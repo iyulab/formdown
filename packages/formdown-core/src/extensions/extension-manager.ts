@@ -31,7 +31,6 @@ export class ExtensionManager {
     constructor(options: ExtensionOptions = {}) {
         // Set default options
         const defaultOptions: ExtensionOptions = {
-            async: true,
             timeout: 1000, // Reduced from 5000 to prevent test hangs
             errorStrategy: 'warn',
             debug: false,
@@ -215,10 +214,7 @@ export class ExtensionManager {
             })),
             hookCount: this.hookManager.getHookCount(),
             registeredHooks: this.hookManager.getHookNames(),
-            fieldTypes: Array.from(this.pluginManager.getFieldTypes().keys()),
-            validators: Array.from(this.pluginManager.getValidators().keys()),
-            renderers: Array.from(this.pluginManager.getRenderers().keys()),
-            themes: Array.from(this.pluginManager.getThemes().keys())
+            fieldTypes: Array.from(this.pluginManager.getFieldTypes().keys())
         }
     }
 

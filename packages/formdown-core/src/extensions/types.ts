@@ -3,7 +3,7 @@
  * Defines interfaces and types for the Formdown extension system
  */
 
-import type { Field, ValidationRule, ParseResult } from '../types.js'
+import type { Field, ValidationRule } from '../types.js'
 
 // ================================
 // Hook System Types
@@ -24,8 +24,6 @@ export interface HookContext {
     input?: string
     /** Current field being processed */
     field?: Field
-    /** Parsing results so far */
-    parseResult?: ParseResult
     /** Additional metadata */
     metadata?: Record<string, any>
 }
@@ -87,35 +85,6 @@ export interface FieldDataProcessor {
     deserialize?: (value: string, field: Field) => any
 }
 
-export interface ValidationPlugin {
-    /** Validation rule name */
-    name: string
-    /** Validation function */
-    validate: (value: any, rule: ValidationRule, field: Field) => boolean | Promise<boolean>
-    /** Error message generator */
-    getMessage?: (rule: ValidationRule, field: Field) => string
-}
-
-export interface RendererPlugin {
-    /** Template name to override */
-    template: string
-    /** Template renderer function */
-    render: (field: Field, context: HookContext) => string
-    /** CSS styles for this template */
-    styles?: string
-}
-
-export interface ThemePlugin {
-    /** Theme identifier */
-    name: string
-    /** CSS custom properties */
-    cssProperties: Record<string, string>
-    /** CSS classes override */
-    classOverrides?: Record<string, string>
-    /** Component-specific overrides */
-    componentOverrides?: Record<string, any>
-}
-
 export interface Plugin {
     metadata: PluginMetadata
 
@@ -124,15 +93,6 @@ export interface Plugin {
 
     /** Field type extensions */
     fieldTypes?: FieldTypePlugin[]
-
-    /** Validation extensions */
-    validators?: ValidationPlugin[]
-
-    /** Renderer extensions */
-    renderers?: RendererPlugin[]
-
-    /** Theme extensions */
-    themes?: ThemePlugin[]
 
     /** Plugin initialization */
     initialize?: () => void | Promise<void>
@@ -177,8 +137,6 @@ export interface FieldTypeRegistry {
 }
 
 export interface ExtensionOptions {
-    /** Enable async hook execution */
-    async?: boolean
     /** Hook execution timeout (ms) */
     timeout?: number
     /** Error handling strategy */

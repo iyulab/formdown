@@ -4,6 +4,15 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ## Unreleased
 
+### Removed
+
+Parts of the extension API that nothing used — declared, stored, but never consulted by parsing, rendering or validation:
+
+- `Plugin.validators`, `Plugin.renderers`, `Plugin.themes` and their types `ValidationPlugin`, `RendererPlugin`, `ThemePlugin`; `getExtensionStats()` no longer lists `validators`, `renderers` and `themes`.
+- The exported `textFieldPlugin`, `emailFieldPlugin`, `selectFieldPlugin`, `requiredValidator`, `patternValidator` and `lengthValidator` (no longer part of the built-in plugin since 0.13.1). Formdown parses and renders these field types itself.
+- `HookContext.parseResult`, which was never set, and the `async` option of `ExtensionOptions`, which was never read.
+- `@formdown/ui`: `uiExtensionSupport`, `UIExtensionSupport` and the `UIPlugin` type. `@formdown/editor`: `editorExtensionSupport`, `EditorExtensionSupport` and the `EditorPlugin` type. They wrapped the core functions — use `registerPlugin`, `registerHook`, `executeHooks` and `getExtensionStats` from `@formdown/core` — and their `components` and `editor` plugin members were never read. Both components still initialize the extension system when they connect, and registered `field-render` and `field-validate` hooks that did nothing; they no longer register those.
+
 ### Fixed
 
 - An extension manager can be initialized again after `destroy()`. It failed with "Field type 'toggle' is already registered", since destroying left the field types in their registry; it also dropped the manager's own error reporting for good.

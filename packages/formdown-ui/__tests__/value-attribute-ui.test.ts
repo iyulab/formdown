@@ -21,6 +21,7 @@ jest.mock('lit/decorators.js', () => ({
 
 // Mock the core module
 jest.mock('@formdown/core', () => ({
+  initializeExtensions: jest.fn().mockResolvedValue(undefined),
   FormManager: jest.fn().mockImplementation(() => ({
     parse: jest.fn(),
     render: jest.fn(() => '<div>mock form</div>'),
@@ -70,12 +71,6 @@ jest.mock('@formdown/core', () => ({
       getStylesForTypes: jest.fn().mockReturnValue(''),
       getScriptsForTypes: jest.fn().mockReturnValue('')
     })
-  }
-}))
-
-jest.mock('../src/extension-support', () => ({
-  uiExtensionSupport: {
-    initialize: jest.fn().mockResolvedValue(undefined)
   }
 }))
 

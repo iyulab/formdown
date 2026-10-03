@@ -55,15 +55,7 @@ jest.mock('@formdown/core', () => ({
   DOMBinder: jest.fn(),
   ValidationManager: jest.fn(),
   EventOrchestrator: jest.fn(),
-  extensionManager: {
-    initialize: jest.fn(),
-    getPlugin: jest.fn(),
-    executeHook: jest.fn(),
-    getFieldTypeRegistry: jest.fn().mockReturnValue({
-      getStylesForTypes: jest.fn().mockReturnValue(''),
-      getScriptsForTypes: jest.fn().mockReturnValue('')
-    })
-  }
+  initializeExtensions: jest.fn().mockResolvedValue(undefined)
 }))
 
 // Mock lit

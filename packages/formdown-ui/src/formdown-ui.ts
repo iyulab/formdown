@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js'
 import {
   FormManager,
   DOMBinder,
+  initializeExtensions,
   type FormDownSchema,
   type ValidationResult
 } from '@formdown/core'
@@ -12,7 +13,6 @@ import { markUnreadValues } from './unread'
 import { applyChoices, type Choices } from './choices'
 import { applyConditions, type ConditionalField } from './conditions'
 import { applyFieldStates, focusFieldOf, hostFocused, type FieldStates } from './field-states'
-import { uiExtensionSupport } from './extension-support'
 import { formdownStyles } from './styles'
 
 @customElement('formdown-ui')
@@ -204,12 +204,8 @@ export class FormdownUI extends LitElement {
   async connectedCallback() {
     super.connectedCallback()
 
-    // Initialize extension system and UI support
-    try {
-      await uiExtensionSupport.initialize()
-    } catch {
-      // Extension system might already be initialized, silently continue
-    }
+    // Parsing and rendering run through the extension system; plugins registered on it apply to this form
+    await initializeExtensions()
 
     // Use inner text as content if content property is empty
     if (!this.content && this.textContent?.trim()) {

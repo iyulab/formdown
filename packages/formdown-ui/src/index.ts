@@ -1,7 +1,5 @@
 // Export the class for SDK usage
 export { FormdownUI } from './formdown-ui'
-export { uiExtensionSupport, UIExtensionSupport } from './extension-support'
-export type { UIPlugin } from './extension-support'
 export type { FieldState, FieldStates } from './field-states'
 export type { Choice, Choices } from './choices'
 

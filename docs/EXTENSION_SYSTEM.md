@@ -137,7 +137,7 @@ await getDefaultExtensionManager().unregisterPlugin('audit') // runs destroy()
 - `metadata.name` must be unique; registering a second plugin with the same name rejects.
 - Every name in `metadata.dependencies` must already be registered, or `registerPlugin` rejects.
 - `initialize` runs when the plugin is registered. `destroy` runs when it is unregistered and when the manager is destroyed (`getDefaultExtensionManager().destroy()`).
-- `hooks` and `fieldTypes` take effect as described on this page. The `Plugin` type also has `validators`, `renderers` and `themes`; see *Current Limitations* below.
+- `hooks` and `fieldTypes` take effect as described on this page.
 
 ## Custom Field Types
 
@@ -224,16 +224,13 @@ const stats = getExtensionStats()
 //   plugins: [{ name: 'formdown-core', version: '1.0.0' }],
 //   hookCount: 0,
 //   registeredHooks: [],
-//   fieldTypes: ['toggle'],
-//   validators: ['required', 'pattern', 'minlength'],
-//   renderers: [],
-//   themes: []
+//   fieldTypes: ['toggle']
 // }
 ```
 
 ## The Built-in Plugin
 
-Initialization registers the `formdown-core` plugin. It adds the `toggle` field type — `@notify: [toggle]` renders a switch (a checkbox with `role="switch"`); without the plugin, `[toggle]` renders as a text input — and lists the validators `required`, `pattern` and `minlength` (see *Current Limitations*). It does not change how the field types Formdown itself knows are parsed or rendered:
+Initialization registers the `formdown-core` plugin. It adds the `toggle` field type — `@notify: [toggle]` renders a switch (a checkbox with `role="switch"`); without the plugin, `[toggle]` renders as a text input. It does not change how the field types Formdown itself knows are parsed or rendered:
 
 ```typescript
 const before = generateFormHTML('@name: [text]')
@@ -248,11 +245,8 @@ A plugin can name `formdown-core` in `dependencies` to require it.
 
 These parts of the extension types exist but are not used by parsing, generation, `getSchema()` or the validation functions today:
 
-- **`Plugin.validators`, `Plugin.renderers`, `Plugin.themes`** — stored and listed by `getExtensionStats()`, nothing else.
 - **Field type `validator`, `dataProcessor`, `schemaGenerator`, `styles`, `clientScript`** — reachable only by calling the field type registry yourself (`getDefaultExtensionManager().getFieldTypeRegistry()`: `validateField`, `processFieldData`, `validateFieldData`, `generateFieldSchema`, `getStylesForTypes`, `getScriptsForTypes`).
-- **Hook names `field-validate` and `error-handle`** — run only through `executeHooks`.
-- **`HookContext.parseResult`** — never set; the contexts each hook receives are listed in the hook table under *Hooks*.
-- **The `async` option** — accepted, no effect.
+- **Hook names `field-validate` and `error-handle`** — run only through `executeHooks`. `@formdown/editor` runs `field-validate` with the source text and lists the `message` of every result that has `valid: false`.
 
 Other behavior to be aware of:
 
