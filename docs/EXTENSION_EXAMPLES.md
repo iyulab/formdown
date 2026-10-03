@@ -1,587 +1,182 @@
 # Extension Examples
 
-This document provides real-world examples of Formdown plugins for common use cases.
-
-## Table of Contents
-
-- [UI Enhancement Plugins](#ui-enhancement-plugins)
-- [Validation Plugins](#validation-plugins)
-- [Field Type Plugins](#field-type-plugins)
-- [Integration Plugins](#integration-plugins)
-- [Utility Plugins](#utility-plugins)
-
-## UI Enhancement Plugins
-
-### Bootstrap Theme Plugin
+Small, complete extensions built on the hooks and plugins described in [Extension System](./EXTENSION_SYSTEM.md). Each example assumes these imports and runs as shown; the package's test suite runs every one of them.
 
 ```typescript
-import type { Plugin } from '@formdown/core'
+import {
+  initializeExtensions,
+  registerHook,
+  registerPlugin,
+  executeHooks,
+  getDefaultExtensionManager,
+  parseFormdown,
+  generateFormHTML
+} from '@formdown/core'
+import type { Plugin, Field, FormdownContent } from '@formdown/core'
+```
 
-export const bootstrapThemePlugin: Plugin = {
-  metadata: {
-    name: 'bootstrap-theme',
-    version: '1.0.0',
-    description: 'Bootstrap 5 theme for Formdown forms'
-  },
-  
+Initializing also registers the built-in `formdown-core` plugin, which changes how `text`, `email`, `select`, `range` and `toggle` fields render (see *The Built-in Plugin* in [Extension System](./EXTENSION_SYSTEM.md)). The examples use other field types so their output matches Formdown's default rendering.
+
+## Template Variables
+
+Replace `{{name}}` placeholders in the source before it is parsed, with a `pre-parse` hook:
+
+```typescript
+await initializeExtensions()
+
+const variables: Record<string, string> = { company: 'Acme' }
+
+registerHook({
+  name: 'pre-parse',
+  priority: 10,
+  handler: (_context, source: string) =>
+    source.replace(/\{\{(\w+)\}\}/g, (match, key: string) => variables[key] ?? match)
+})
+
+const { markdown } = parseFormdown('# Join {{company}}\n@phone: [tel]')
+// markdown starts with '# Join Acme'
+```
+
+Field source spans then refer to the replaced text.
+
+## Default Placeholders
+
+Give every field without a placeholder one derived from its label, with a `field-parse` hook. Returning `undefined` leaves a field as it is:
+
+```typescript
+await initializeExtensions()
+
+registerHook({
+  name: 'field-parse',
+  priority: 10,
+  handler: (_context, field: Field) =>
+    field.placeholder ? undefined : { ...field, placeholder: `Enter ${field.label.toLowerCase()}` }
+})
+
+const { forms } = parseFormdown('@phone: [tel]\n@notes: [textarea placeholder="Anything else?"]')
+// forms[0].placeholder === 'Enter phone'
+// forms[1].placeholder === 'Anything else?'
+```
+
+## Bootstrap Classes
+
+Add Bootstrap 5 classes to each rendered block field with a `field-render` hook. The hook receives the field's HTML and returns the changed HTML:
+
+```typescript
+await initializeExtensions()
+
+registerHook({
+  name: 'field-render',
+  priority: 10,
+  handler: (context, html: string) => {
+    if (context.field?.inline) return undefined // leave inline fields as they are
+    return html
+      .replace('class="formdown-field"', 'class="formdown-field mb-3"')
+      .replace('<label ', '<label class="form-label" ')
+      .replace(/<(input|textarea|select) /, '<$1 class="form-control" ')
+  }
+})
+
+const html = generateFormHTML('@phone: [tel]\n@notes: [textarea]')
+// <div class="formdown-field mb-3" part="field">
+//     <label class="form-label" for="phone" part="label">Phone</label>
+//     <input class="form-control" type="tel" id="phone" ...>
+```
+
+For colors, spacing and the rest of the look, see [Styling](./STYLING.md); extension hooks are only needed to change the markup.
+
+## Translating Labels
+
+Translate labels after parsing with a `post-parse` hook, which receives the whole parse result:
+
+```typescript
+await initializeExtensions()
+
+const french: Record<string, string> = { Phone: 'Téléphone', Birthday: 'Date de naissance' }
+
+registerHook({
+  name: 'post-parse',
+  priority: 10,
+  handler: (_context, content: FormdownContent) => ({
+    ...content,
+    forms: content.forms.map(field => ({ ...field, label: french[field.label] ?? field.label }))
+  })
+})
+
+const html = generateFormHTML('@phone: [tel]\n@birthday: [date]')
+// <label for="phone" part="label">Téléphone</label> ... Date de naissance
+```
+
+## Wrapping the Generated HTML
+
+Wrap the whole output with a `post-generate` hook:
+
+```typescript
+await initializeExtensions()
+
+registerHook({
+  name: 'post-generate',
+  priority: 10,
+  handler: (_context, html: string) => `<section class="signup-form">\n${html}\n</section>`
+})
+
+const html = generateFormHTML('@phone: [tel]')
+// '<section class="signup-form">\n<form hidden id="formdown-form-default" ...'
+```
+
+## Usage Analytics Plugin
+
+A plugin bundles hooks with `initialize` and `destroy`. This one records which field types each parsed form uses; a `post-parse` hook that returns nothing observes without changing the result:
+
+```typescript
+const events: Array<{ name: string, fields?: string[] }> = [] // send these to your analytics service
+
+const analyticsPlugin: Plugin = {
+  metadata: { name: 'analytics', version: '1.0.0' },
+  initialize: () => { events.push({ name: 'analytics-ready' }) },
+  destroy: () => { events.push({ name: 'analytics-stopped' }) },
   hooks: [{
     name: 'post-parse',
-    priority: 10,
-    handler: (context) => {
-      if (context.parseResult?.fields) {
-        context.parseResult.fields.forEach(field => {
-          field.attributes = {
-            ...field.attributes,
-            className: getBootstrapClasses(field.type)
-          }
-        })
-      }
-    }
-  }],
-  
-  renderers: [{
-    template: 'text',
-    render: (field) => `
-      <div class="mb-3">
-        <label for="${field.name}" class="form-label">${field.label}</label>
-        <input type="text" 
-               class="form-control ${field.attributes?.className || ''}" 
-               name="${field.name}" 
-               id="${field.name}"
-               ${field.placeholder ? `placeholder="${field.placeholder}"` : ''}
-               ${field.required ? 'required' : ''} />
-      </div>
-    `
-  }]
-}
-
-function getBootstrapClasses(fieldType: string): string {
-  const baseClasses = 'form-control'
-  const typeClasses = {
-    'text': '',
-    'email': '',
-    'select': 'form-select',
-    'checkbox': 'form-check-input',
-    'radio': 'form-check-input'
-  }
-  
-  return `${baseClasses} ${typeClasses[fieldType] || ''}`
-}
-```
-
-### Accessibility Enhancement Plugin
-
-```typescript
-export const accessibilityPlugin: Plugin = {
-  metadata: {
-    name: 'accessibility-enhancer',
-    version: '1.0.0',
-    description: 'Enhances forms with ARIA attributes and screen reader support'
-  },
-  
-  hooks: [{
-    name: 'post-generate',
-    priority: 5,
-    handler: (context) => {
-      // Add ARIA attributes to form elements
-      if (context.parseResult?.fields) {
-        context.parseResult.fields.forEach(field => {
-          addAriaAttributes(field)
-        })
-      }
+    priority: 0,
+    handler: (_context, content: FormdownContent) => {
+      events.push({ name: 'form-parsed', fields: content.forms.map(field => field.type) })
     }
   }]
 }
 
-function addAriaAttributes(field: Field): void {
-  field.attributes = {
-    ...field.attributes,
-    'aria-label': field.label,
-    'aria-required': field.required ? 'true' : 'false',
-    'aria-describedby': field.description ? `${field.name}-desc` : undefined
-  }
-}
+await initializeExtensions()
+await registerPlugin(analyticsPlugin)
+
+parseFormdown('@phone: [tel]\n@birthday: [date]')
+
+await getDefaultExtensionManager().unregisterPlugin('analytics')
+// events:
+// [{ name: 'analytics-ready' },
+//  { name: 'form-parsed', fields: ['tel', 'date'] },
+//  { name: 'analytics-stopped' }]
 ```
 
-## Validation Plugins
+## Password Strength Check
 
-### Advanced Email Validation
+Parsing and generation never run `field-validate` hooks, but you can register checks under that name and run them yourself with `executeHooks`, which resolves to every result that is not `undefined`:
 
 ```typescript
-export const advancedEmailPlugin: Plugin = {
-  metadata: {
-    name: 'advanced-email-validation',
-    version: '1.0.0',
-    description: 'Advanced email validation with domain verification'
-  },
-  
-  validators: [{
-    name: 'verified-email',
-    validate: async (value: string) => {
-      if (!value) return true
-      
-      // Basic format check
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      if (!emailRegex.test(value)) return false
-      
-      // Check for disposable email domains
-      const domain = value.split('@')[1]
-      const isDisposable = await checkDisposableDomain(domain)
-      if (isDisposable) return false
-      
-      // DNS MX record verification
-      return await verifyMXRecord(domain)
-    },
-    getMessage: () => 'Please enter a valid, non-disposable email address'
-  }]
-}
+await initializeExtensions()
 
-async function checkDisposableDomain(domain: string): Promise<boolean> {
-  // Check against disposable email domain list
-  const disposableDomains = ['10minutemail.com', 'tempmail.org', /* ... */]
-  return disposableDomains.includes(domain.toLowerCase())
-}
-
-async function verifyMXRecord(domain: string): Promise<boolean> {
-  try {
-    // In a real implementation, you'd use DNS lookup
-    const response = await fetch(`/api/verify-domain/${domain}`)
-    return response.ok
-  } catch {
-    return true // Fail gracefully
+registerHook({
+  name: 'field-validate',
+  priority: 10,
+  handler: (context, value: string) => {
+    if (context.field?.type !== 'password') return undefined
+    return value.length >= 12 ? undefined : `${context.field.label} needs at least 12 characters`
   }
-}
+})
+
+const [field] = parseFormdown('@password: [password]').forms
+const messages = await executeHooks<string>('field-validate', { field }, 'hunter2')
+// ['Password needs at least 12 characters']
 ```
 
-### Credit Card Validation Plugin
+## A Custom Field Type
 
-```typescript
-export const creditCardPlugin: Plugin = {
-  metadata: {
-    name: 'credit-card-validation',
-    version: '1.0.0',
-    description: 'Credit card validation with Luhn algorithm'
-  },
-  
-  fieldTypes: [{
-    type: 'credit-card',
-    parser: (content) => {
-      const match = content.match(/@(\w+):\s*\[credit-card\](.*)/)
-      if (!match) return null
-      
-      return {
-        name: match[1],
-        type: 'credit-card',
-        label: 'Credit Card Number',
-        pattern: '[0-9\\s]{13,19}',
-        attributes: {
-          autoComplete: 'cc-number',
-          inputMode: 'numeric'
-        }
-      }
-    },
-    validator: (field, value) => {
-      const rules = []
-      
-      if (value && !isValidCreditCard(value)) {
-        rules.push({
-          type: 'custom',
-          message: 'Please enter a valid credit card number'
-        })
-      }
-      
-      return rules
-    },
-    generator: (field) => `
-      <div class="credit-card-field">
-        <label for="${field.name}">${field.label}</label>
-        <input type="text" 
-               name="${field.name}" 
-               id="${field.name}"
-               autocomplete="cc-number"
-               inputmode="numeric"
-               placeholder="1234 5678 9012 3456"
-               ${field.required ? 'required' : ''} />
-        <div class="card-icons">
-          <img src="/icons/visa.svg" alt="Visa" />
-          <img src="/icons/mastercard.svg" alt="Mastercard" />
-        </div>
-      </div>
-    `
-  }]
-}
-
-function isValidCreditCard(number: string): boolean {
-  // Remove spaces and non-digits
-  const cleanNumber = number.replace(/\D/g, '')
-  
-  // Check length
-  if (cleanNumber.length < 13 || cleanNumber.length > 19) {
-    return false
-  }
-  
-  // Luhn algorithm
-  let sum = 0
-  let alternate = false
-  
-  for (let i = cleanNumber.length - 1; i >= 0; i--) {
-    let digit = parseInt(cleanNumber.charAt(i), 10)
-    
-    if (alternate) {
-      digit *= 2
-      if (digit > 9) {
-        digit = (digit % 10) + 1
-      }
-    }
-    
-    sum += digit
-    alternate = !alternate
-  }
-  
-  return sum % 10 === 0
-}
-```
-
-## Field Type Plugins
-
-### Rich Text Editor Plugin
-
-```typescript
-export const richTextPlugin: Plugin = {
-  metadata: {
-    name: 'rich-text-editor',
-    version: '1.0.0',
-    description: 'Rich text editor field using TinyMCE'
-  },
-  
-  fieldTypes: [{
-    type: 'richtext',
-    parser: (content) => {
-      const match = content.match(/@(\w+):\s*\[richtext\](.*)/)
-      if (!match) return null
-      
-      const attributes = parseAttributes(match[2])
-      
-      return {
-        name: match[1],
-        type: 'richtext',
-        label: attributes.label || match[1],
-        attributes: {
-          toolbar: attributes.toolbar || 'bold italic underline | link image',
-          height: attributes.height || 300
-        }
-      }
-    },
-    generator: (field) => `
-      <div class="richtext-field">
-        <label for="${field.name}">${field.label}</label>
-        <textarea name="${field.name}" 
-                  id="${field.name}"
-                  class="richtext-editor"
-                  data-toolbar="${field.attributes?.toolbar}"
-                  style="height: ${field.attributes?.height}px;">
-        </textarea>
-      </div>
-      <script>
-        tinymce.init({
-          selector: '#${field.name}',
-          toolbar: '${field.attributes?.toolbar}',
-          height: ${field.attributes?.height}
-        });
-      </script>
-    `
-  }]
-}
-```
-
-### File Upload Plugin
-
-```typescript
-export const fileUploadPlugin: Plugin = {
-  metadata: {
-    name: 'file-upload',
-    version: '1.0.0',
-    description: 'Enhanced file upload with drag & drop and previews'
-  },
-  
-  fieldTypes: [{
-    type: 'file-upload',
-    parser: (content) => {
-      const match = content.match(/@(\w+):\s*\[file-upload\](.*)/)
-      if (!match) return null
-      
-      const attributes = parseAttributes(match[2])
-      
-      return {
-        name: match[1],
-        type: 'file-upload',
-        label: attributes.label || 'Upload Files',
-        attributes: {
-          accept: attributes.accept || '*/*',
-          multiple: attributes.multiple || false,
-          maxSize: attributes.maxSize || '10MB',
-          preview: attributes.preview !== false
-        }
-      }
-    },
-    generator: (field) => `
-      <div class="file-upload-field" data-field="${field.name}">
-        <label>${field.label}</label>
-        <div class="upload-area" 
-             ondrop="handleDrop(event, '${field.name}')"
-             ondragover="handleDragOver(event)">
-          <input type="file" 
-                 name="${field.name}" 
-                 id="${field.name}"
-                 accept="${field.attributes?.accept}"
-                 ${field.attributes?.multiple ? 'multiple' : ''}
-                 style="display: none;" />
-          <div class="upload-prompt">
-            <i class="upload-icon"></i>
-            <p>Drag files here or <button type="button" onclick="document.getElementById('${field.name}').click()">browse</button></p>
-          </div>
-        </div>
-        ${field.attributes?.preview ? '<div class="file-previews"></div>' : ''}
-      </div>
-    `
-  }]
-}
-```
-
-## Integration Plugins
-
-### Analytics Plugin
-
-```typescript
-export const analyticsPlugin: Plugin = {
-  metadata: {
-    name: 'google-analytics',
-    version: '1.0.0',
-    description: 'Google Analytics integration for form tracking'
-  },
-  
-  hooks: [
-    {
-      name: 'post-generate',
-      priority: 1,
-      handler: (context) => {
-        // Track form render
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'form_render', {
-            form_fields: context.parseResult?.fields.length,
-            field_types: context.parseResult?.fields.map(f => f.type)
-          })
-        }
-      }
-    },
-    {
-      name: 'field-validate',
-      priority: 1,
-      handler: (context) => {
-        // Track validation errors
-        if (context.field && typeof gtag !== 'undefined') {
-          gtag('event', 'form_validation_error', {
-            field_name: context.field.name,
-            field_type: context.field.type
-          })
-        }
-      }
-    }
-  ]
-}
-```
-
-### Translation Plugin
-
-```typescript
-export const i18nPlugin: Plugin = {
-  metadata: {
-    name: 'internationalization',
-    version: '1.0.0',
-    description: 'Multi-language support for forms'
-  },
-  
-  hooks: [{
-    name: 'post-parse',
-    priority: 20,
-    handler: (context) => {
-      if (context.parseResult?.fields) {
-        const currentLocale = getCurrentLocale()
-        
-        context.parseResult.fields.forEach(field => {
-          field.label = translate(field.label, currentLocale)
-          field.placeholder = field.placeholder ? translate(field.placeholder, currentLocale) : undefined
-          field.errorMessage = field.errorMessage ? translate(field.errorMessage, currentLocale) : undefined
-        })
-      }
-    }
-  }]
-}
-
-function getCurrentLocale(): string {
-  return document.documentElement.lang || 'en'
-}
-
-function translate(text: string, locale: string): string {
-  const translations = {
-    'en': {
-      'Name': 'Name',
-      'Email': 'Email',
-      'Submit': 'Submit'
-    },
-    'ko': {
-      'Name': '이름',
-      'Email': '이메일',
-      'Submit': '제출'
-    },
-    'es': {
-      'Name': 'Nombre',
-      'Email': 'Correo electrónico',
-      'Submit': 'Enviar'
-    }
-  }
-  
-  return translations[locale]?.[text] || text
-}
-```
-
-## Utility Plugins
-
-### Auto-save Plugin
-
-```typescript
-export const autoSavePlugin: Plugin = {
-  metadata: {
-    name: 'auto-save',
-    version: '1.0.0',
-    description: 'Automatically saves form data to localStorage'
-  },
-  
-  hooks: [{
-    name: 'post-generate',
-    priority: 1,
-    handler: (context) => {
-      if (context.parseResult?.fields) {
-        setupAutoSave(context.parseResult.fields)
-      }
-    }
-  }]
-}
-
-function setupAutoSave(fields: Field[]): void {
-  const formData = loadSavedData()
-  
-  fields.forEach(field => {
-    const element = document.getElementById(field.name)
-    if (element) {
-      // Restore saved data
-      if (formData[field.name]) {
-        (element as HTMLInputElement).value = formData[field.name]
-      }
-      
-      // Setup auto-save
-      element.addEventListener('input', debounce(() => {
-        saveFormData(field.name, (element as HTMLInputElement).value)
-      }, 500))
-    }
-  })
-}
-
-function loadSavedData(): Record<string, string> {
-  try {
-    return JSON.parse(localStorage.getItem('formdown-autosave') || '{}')
-  } catch {
-    return {}
-  }
-}
-
-function saveFormData(fieldName: string, value: string): void {
-  const data = loadSavedData()
-  data[fieldName] = value
-  localStorage.setItem('formdown-autosave', JSON.stringify(data))
-}
-
-function debounce(func: Function, wait: number) {
-  let timeout: NodeJS.Timeout
-  return function executedFunction(...args: any[]) {
-    const later = () => {
-      clearTimeout(timeout)
-      func(...args)
-    }
-    clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
-  }
-}
-```
-
-### Form Validation Summary Plugin
-
-```typescript
-export const validationSummaryPlugin: Plugin = {
-  metadata: {
-    name: 'validation-summary',
-    version: '1.0.0',
-    description: 'Shows validation errors in a summary at the top of the form'
-  },
-  
-  hooks: [{
-    name: 'post-generate',
-    priority: 1,
-    handler: (context) => {
-      addValidationSummary()
-    }
-  }]
-}
-
-function addValidationSummary(): void {
-  const form = document.querySelector('form')
-  if (!form) return
-  
-  const summaryElement = document.createElement('div')
-  summaryElement.id = 'validation-summary'
-  summaryElement.className = 'validation-summary hidden'
-  summaryElement.innerHTML = `
-    <h3>Please correct the following errors:</h3>
-    <ul class="error-list"></ul>
-  `
-  
-  form.insertBefore(summaryElement, form.firstChild)
-  
-  // Listen for validation events
-  form.addEventListener('invalid', (e) => {
-    e.preventDefault()
-    updateValidationSummary()
-  }, true)
-}
-
-function updateValidationSummary(): void {
-  const summary = document.getElementById('validation-summary')
-  const errorList = summary?.querySelector('.error-list')
-  
-  if (!summary || !errorList) return
-  
-  const invalidFields = document.querySelectorAll(':invalid')
-  
-  if (invalidFields.length === 0) {
-    summary.classList.add('hidden')
-    return
-  }
-  
-  errorList.innerHTML = ''
-  invalidFields.forEach(field => {
-    const input = field as HTMLInputElement
-    const label = document.querySelector(`label[for="${input.id}"]`)?.textContent || input.name
-    
-    const li = document.createElement('li')
-    li.innerHTML = `<a href="#${input.id}">${label}: ${input.validationMessage}</a>`
-    errorList.appendChild(li)
-  })
-  
-  summary.classList.remove('hidden')
-  summary.scrollIntoView({ behavior: 'smooth' })
-}
-```
-
----
-
-These examples demonstrate the power and flexibility of the Formdown extension system. You can combine multiple plugins to create sophisticated form experiences tailored to your specific needs.
+A complete field type, with parser and generator, is shown under *Custom Field Types* in [Extension System](./EXTENSION_SYSTEM.md).

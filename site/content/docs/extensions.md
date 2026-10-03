@@ -1,750 +1,318 @@
 # Extension System
 
-The Formdown Extension System provides a comprehensive plugin architecture that allows developers to extend and customize every aspect of Formdown's functionality. This system is built on a hook-based architecture with type-safe interfaces and robust error handling.
+Formdown's parser and generator run every document through one extension manager, the **default instance**. You extend Formdown by registering, on that instance:
+
+- **hooks** — functions that transform the source, each parsed field, the parse result, each rendered field, or the final HTML;
+- **plugins** — named bundles of hooks and custom field types, with optional `initialize` / `destroy` lifecycle functions.
+
+Everything here is exported from `@formdown/core`. Every example on this page and on [Extension Examples](/docs/extension-examples) is run by the package's test suite.
 
 ## Quick Start
 
-### Basic Plugin Registration
+```typescript
+import { initializeExtensions, registerHook, generateFormHTML } from '@formdown/core'
+
+// 1. Initialize the default extension manager once, before registering anything.
+await initializeExtensions()
+
+// 2. Register a hook: every rendered field gets a class naming its type.
+registerHook({
+  name: 'field-render',
+  priority: 10,
+  handler: (context, html: string) =>
+    html.replace('class="formdown-field"', `class="formdown-field field-${context.field?.type}"`)
+})
+
+// 3. Parse and generate as usual; the hook now applies.
+const html = generateFormHTML('@phone: [tel]')
+// ... <div class="formdown-field field-tel" part="field"> ...
+```
+
+## The Default Instance
+
+`parseFormdown()`, `generateFormHTML()` and `getSchema()` always use the instance returned by `getDefaultExtensionManager()`. The convenience functions `initializeExtensions`, `registerPlugin`, `registerHook`, `executeHooks` and `getExtensionStats` act on that same instance.
+
+An `ExtensionManager` you construct yourself works on its own (you can register hooks on it and run them with its `executeHooks`), but parsing and generation never consult it.
+
+### Before initialization
+
+Until `initializeExtensions()` has run, parsing and generation run without any hooks, and `registerPlugin`, `registerHook` and `executeHooks` throw `Extension system must be initialized before use`.
+
+### `initializeExtensions(options?)`
+
+- Registers the built-in `formdown-core` plugin (see *The Built-in Plugin* below) and initializes the default instance. Calling it again, or from two places at once, initializes only once.
+- Called **with** an options object, it replaces the default instance with a fresh one configured with those options. Plugins and hooks registered on the earlier instance are not carried over, so pass options before registering anything.
+
+| Option | Default | Effect |
+|---|---|---|
+| `debug` | `false` | Logs registrations and lifecycle steps with `console.debug`. |
+| `errorStrategy` | `'warn'` | `'ignore'`, `'warn'` or `'throw'` for errors in `executeHooks` handlers and in plugin `initialize` / `destroy`. Hooks run by parsing and generation never throw; see *When a hook fails* below. |
+| `timeout` | `1000` | Milliseconds each handler may take in `executeHooks`. |
+
+## Hooks
+
+A hook is `{ name, priority, handler }`. Parsing and generation run the hooks of each name synchronously, highest `priority` first (equal priorities in registration order). Each handler is called as `handler(context, value)` and returns a replacement for `value`; returning `undefined` keeps it unchanged. The next handler receives the result.
+
+| Hook | Runs | `value` | `context` |
+|---|---|---|---|
+| `pre-parse` | before parsing | the source text | `input`: the source |
+| `field-parse` | once per parsed field, in source order | the `Field` | `input`: the field's source text; `field` |
+| `post-parse` | after parsing | the `FormdownContent` result | `input`: the source after `pre-parse` |
+| `pre-generate` | before generating HTML | the `FormdownContent` | empty |
+| `field-render` | once per field, block and inline | the field's HTML | `field` |
+| `post-generate` | after generating HTML | the whole HTML | empty |
+
+- A handler must return the same kind of value it received (a string for a string, an object for an object) or `undefined`.
+- Handlers must be synchronous. One that returns a promise is skipped.
+- If `pre-parse` changes the text, field source spans refer to the changed text.
+- For an inline field, `field-render` receives its `<span>`; check `context.field?.inline` to tell the two apart.
+- `getDefaultExtensionManager().unregisterHook(name, handler)` removes a hook.
+
+`HookName` also lists `field-validate` and `error-handle`. Parsing and generation never call them; they run only when you call `executeHooks` yourself (see *Running hooks yourself* below).
+
+### When a hook fails
+
+A handler that throws, returns a promise, or returns the wrong kind of value is skipped, and the rest of the pipeline runs. During parsing the failure is added to the result's `diagnostics`; during generation it is logged with `console.warn`.
 
 ```typescript
-import { ExtensionManager } from '@formdown/core'
+registerHook({ name: 'pre-parse', priority: 0, handler: () => 42 })
 
-// Create and initialize extension manager
-const extensionManager = new ExtensionManager()
-await extensionManager.initialize()
+const { diagnostics } = parseFormdown('@phone: [tel]')
+// [{ code: 'hook-error', severity: 'error',
+//    message: 'Hook "pre-parse" failed: returned a number where a string was expected' }]
+```
 
-// Register a simple plugin
-const plugin = {
+### Running hooks yourself
+
+`executeHooks(name, context, ...args)` runs every handler registered under `name` with `(context, ...args)`, awaiting each in turn, and resolves to the list of results that are not `undefined`. It follows the `errorStrategy` and `timeout` options. Use it for checks of your own:
+
+```typescript
+registerHook({
+  name: 'field-validate',
+  priority: 10,
+  handler: (context, value: string) =>
+    context.field?.required && !value ? `${context.field.label} is required` : undefined
+})
+
+const [field] = parseFormdown('@phone*: [tel]').forms
+const messages = await executeHooks<string>('field-validate', { field }, '')
+// ['Phone is required']
+```
+
+## Plugins
+
+```typescript
+import { initializeExtensions, registerPlugin, getDefaultExtensionManager, parseFormdown } from '@formdown/core'
+import type { Plugin, FormdownContent } from '@formdown/core'
+
+const calls: string[] = []
+
+const auditPlugin: Plugin = {
   metadata: {
-    name: 'my-plugin',
+    name: 'audit',
     version: '1.0.0',
-    description: 'A custom field type plugin'
+    description: 'Records every parsed form',
+    dependencies: ['formdown-core'] // must already be registered
   },
+  hooks: [{
+    name: 'post-parse',
+    priority: 0,
+    handler: (_context, content: FormdownContent) => {
+      calls.push(`parsed ${content.forms.length} fields`)
+      // returning undefined keeps the result unchanged
+    }
+  }],
+  initialize: () => { calls.push('initialize') },
+  destroy: () => { calls.push('destroy') }
+}
+
+await initializeExtensions()
+await registerPlugin(auditPlugin)               // runs initialize()
+parseFormdown('@phone: [tel]\n@notes: [textarea]')
+await getDefaultExtensionManager().unregisterPlugin('audit') // runs destroy()
+
+// calls: ['initialize', 'parsed 2 fields', 'destroy']
+```
+
+- `metadata.name` must be unique; registering a second plugin with the same name rejects.
+- Every name in `metadata.dependencies` must already be registered, or `registerPlugin` rejects.
+- `initialize` runs when the plugin is registered. `destroy` runs when it is unregistered and when the manager is destroyed (`getDefaultExtensionManager().destroy()`).
+- `hooks` and `fieldTypes` take effect as described on this page. The `Plugin` type also has `validators`, `renderers` and `themes`; see *Current Limitations* below.
+
+## Custom Field Types
+
+A plugin's `fieldTypes` add new block-field types:
+
+```typescript
+import { initializeExtensions, registerPlugin, parseFormdown, generateFormHTML, getSchema } from '@formdown/core'
+import type { Plugin } from '@formdown/core'
+
+const ratingPlugin: Plugin = {
+  metadata: { name: 'rating-field', version: '1.0.0' },
   fieldTypes: [{
     type: 'rating',
-    parser: (content) => {
-      // Custom parsing logic
-      return parsedField
-    },
-    generator: (field) => {
-      // Custom HTML generation
-      return '<div class="rating">...</div>'
-    }
-  }]
-}
-
-await extensionManager.registerPlugin(plugin)
-```
-
-### Using Hooks
-
-```typescript
-import { ExtensionManager } from '@formdown/core'
-
-const extensionManager = new ExtensionManager()
-await extensionManager.initialize()
-
-// Register a custom hook
-const hook = {
-  name: 'pre-parse' as const,
-  priority: 10,
-  handler: (context: any) => {
-    // Transform input before parsing
-    return transformedInput
-  }
-}
-
-extensionManager.registerHook(hook)
-```
-
-## Core Concepts
-
-### Extension Manager
-
-The `ExtensionManager` is the central coordinator that manages:
-
-- **Plugin Registration**: Loading and initializing plugins
-- **Hook Execution**: Coordinating hook-based extensions
-- **Event System**: Publishing and subscribing to extension events
-- **Lifecycle Management**: Plugin initialization and cleanup
-
-### Hooks
-
-Hooks are execution points where plugins can inject custom behavior:
-
-```typescript
-type HookName = 
-  | 'pre-parse'      // Before parsing input
-  | 'post-parse'     // After parsing fields
-  | 'field-parse'    // When parsing individual fields
-  | 'field-validate' // When validating field values
-  | 'pre-generate'   // Before HTML generation
-  | 'post-generate'  // After HTML generation
-  | 'field-render'   // When rendering individual fields
-  | 'error-handle'   // When handling errors
-```
-
-### Plugins
-
-Plugins are collections of extensions that can include:
-
-- **Field Types**: Custom field type definitions
-- **Validators**: Custom validation logic
-- **Renderers**: Custom HTML generators
-- **Hooks**: Event handlers for various stages
-- **Themes**: Visual styling extensions
-
-## Hook System
-
-### Hook Types and Contexts
-
-Each hook type receives and returns specific context data:
-
-#### pre-parse
-```typescript
-interface PreParseContext {
-  content: string
-  options: ParseOptions
-}
-// Transform or validate input before parsing
-```
-
-#### post-parse
-```typescript
-interface PostParseContext {
-  fields: Field[]
-  forms: FormDeclaration[]
-  metadata: any
-}
-// Modify parsed results
-```
-
-#### field-parse
-```typescript
-interface FieldParseContext {
-  match: RegExpMatchArray
-  type: string
-  fieldName: string
-  attributes: Record<string, any>
-}
-// Custom field parsing logic
-```
-
-#### field-validate
-```typescript
-interface FieldValidateContext {
-  field: Field
-  value: any
-  formData: Record<string, any>
-  errors: ValidationError[]
-}
-// Add custom validation
-```
-
-#### pre-generate
-```typescript
-interface PreGenerateContext {
-  fields: Field[]
-  options: GenerateOptions
-  theme: ThemeConfig
-}
-// Modify fields before generation
-```
-
-#### post-generate
-```typescript
-interface PostGenerateContext {
-  html: string
-  fields: Field[]
-  scripts: string[]
-  styles: string[]
-}
-// Transform final HTML output
-```
-
-### Hook Priority and Execution
-
-Hooks execute in priority order (lower numbers first):
-
-```typescript
-const hook = {
-  name: 'pre-parse',
-  priority: 10,  // Executes before priority 20
-  handler: (context) => {
-    // Your logic here
-    return modifiedContext
-  }
-}
-```
-
-Default priorities:
-- System hooks: 0-99
-- Plugin hooks: 100-999
-- User hooks: 1000+
-
-## Plugin Development
-
-### Plugin Structure
-
-```typescript
-interface Plugin {
-  metadata: PluginMetadata
-  hooks?: Hook[]
-  fieldTypes?: FieldTypeExtension[]
-  validators?: ValidatorExtension[]
-  renderers?: RendererExtension[]
-  themes?: ThemeExtension[]
-  initialize?: (eventEmitter: EventEmitter) => Promise<void>
-  destroy?: () => Promise<void>
-}
-
-interface PluginMetadata {
-  name: string
-  version: string
-  description?: string
-  author?: string
-  dependencies?: string[]
-  homepage?: string
-  license?: string
-}
-```
-
-### Creating a Field Type Plugin
-
-```typescript
-const phoneFieldPlugin: Plugin = {
-  metadata: {
-    name: 'phone-field',
-    version: '1.0.0',
-    description: 'International phone number field'
-  },
-  
-  fieldTypes: [{
-    type: 'phone',
-    
-    parser: (content, context) => {
-      const match = content.match(/@(\w+):\s*\[phone\s*(.*?)\]/)
+    // Receives each block field line, trimmed. Return null for lines that are not yours.
+    parser: (line) => {
+      const match = line.match(/^@(\w+)(?:\(([^)]*)\))?:\s*\[rating(?:\s+max=(\d+))?\]/)
       if (!match) return null
-      
-      return {
-        name: match[1],
-        type: 'phone',
-        attributes: {
-          pattern: '[+]?[0-9\\s\\-()]+',
-          placeholder: '+1 (555) 123-4567',
-          ...parseAttributes(match[2])
-        }
-      }
+      const [, name, label, max] = match
+      return { name, type: 'rating', label: label ?? name, attributes: { max: Number(max ?? 5) } }
     },
-    
-    validator: (field, value) => {
-      const phoneRegex = /^[+]?[0-9\s\-()]+$/
-      if (value && !phoneRegex.test(value)) {
-        return [{
-          field: field.name,
-          message: 'Please enter a valid phone number'
-        }]
-      }
-      return []
-    },
-    
-    generator: (field, options) => {
-      return `<input type="tel" 
-              name="${field.name}" 
-              pattern="${field.attributes.pattern}"
-              placeholder="${field.attributes.placeholder}"
-              class="formdown-phone">`
-    }
+    // Return the control only; Formdown adds the label and the field container.
+    generator: (field, context) =>
+      `<input type="number" name="${field.name}" id="${field.name}" min="1" ` +
+      `max="${field.attributes?.max}" form="${context.metadata?.formId ?? ''}">`
   }]
 }
+
+await initializeExtensions()
+await registerPlugin(ratingPlugin)
+
+const source = '@service(Service): [rating max=10]'
+
+const [field] = parseFormdown(source).forms
+// field.type === 'rating', field.label === 'Service', field.attributes.max === 10
+
+const html = generateFormHTML(source)
+// <label for="service">Service</label>
+// <input type="number" name="service" id="service" min="1" max="10" form="formdown-form-default">
+
+const schema = getSchema(source)
+// schema.service.type === 'rating'
 ```
 
-### Creating a Validator Plugin
+**`parser(line, context)`** is offered every block field line (`@name: [...]`), trimmed, before Formdown's own parser. Registered field types are asked in registration order, the built-in ones first; the first non-null result is used. Return a `Field` (`name`, `type` and `label` are required). Formdown then adds the source span and form association as for any field, and merges the field type's `defaultAttributes` under the returned `attributes`. Inline fields (`___@name`) are not offered to field-type parsers.
+
+**`generator(field, context)`** renders every field whose `type` matches. `context.metadata.formId` is the id of the default form. Formdown places the returned markup in the field container under a `<label>` (with ` *` when the field is required), gives the first `id="…"` a unique id, and sets an existing `form="…"` attribute to the field's form. Markup without a `form` attribute is not associated with the generated form, which is why the example writes one. If the markup contains a `<div class="formdown-field">` (that class alone), Formdown adds only the container and no label.
+
+The field then passes through the `field-parse` and `field-render` hooks like any other. Unlike hooks, an error thrown by a field type's `parser` or `generator` is not caught: it propagates out of `parseFormdown()` / `generateFormHTML()`.
+
+## Events
+
+The default instance's event emitter reports plugin activity:
 
 ```typescript
-const asyncValidatorPlugin: Plugin = {
-  metadata: {
-    name: 'async-validator',
-    version: '1.0.0'
-  },
-  
-  validators: [{
-    name: 'unique-email',
-    
-    validate: async (value, field, formData) => {
-      if (!value || field.type !== 'email') return true
-      
-      // Check uniqueness via API
-      const response = await fetch(`/api/check-email?email=${value}`)
-      const { exists } = await response.json()
-      
-      return !exists
-    },
-    
-    getMessage: (field) => 'This email is already registered'
-  }],
-  
-  hooks: [{
-    name: 'field-validate',
-    handler: async (context) => {
-      // Add async validation support
-      if (context.field.attributes.unique) {
-        const isUnique = await this.validators[0].validate(
-          context.value,
-          context.field,
-          context.formData
-        )
-        
-        if (!isUnique) {
-          context.errors.push({
-            field: context.field.name,
-            message: this.validators[0].getMessage(context.field)
-          })
-        }
-      }
-      
-      return context
-    }
-  }]
-}
+const log: string[] = []
+const events = getDefaultExtensionManager().getEventEmitter()
+events.on('plugin-registered', event => log.push(`registered ${event.data.plugin}`))
+events.on('plugin-unregistered', event => log.push(`unregistered ${event.data.plugin}`))
+
+await registerPlugin({ metadata: { name: 'my-plugin', version: '1.0.0' } })
+await getDefaultExtensionManager().unregisterPlugin('my-plugin')
+
+// log: ['registered my-plugin', 'unregistered my-plugin']
 ```
 
-### Creating a Theme Plugin
+A listener receives `{ type, data, timestamp }`.
+
+| Event | `data` |
+|---|---|
+| `plugin-registered` | `{ plugin, version }` |
+| `plugin-initialized` | `{ plugin }` — after a registered plugin's `initialize` ran |
+| `plugin-unregistered` | `{ plugin }` |
+| `plugin-destroyed` | `{ plugin }` — after an unregistered plugin's `destroy` ran |
+| `plugin-error` | `{ plugin, operation, error }` — `initialize` or `destroy` threw |
+
+Remove a listener with `events.off(name, listener)`. Destroying the manager removes all of its listeners.
+
+## Inspecting the Extension System
 
 ```typescript
-const bootstrapThemePlugin: Plugin = {
-  metadata: {
-    name: 'bootstrap-theme',
-    version: '1.0.0',
-    description: 'Bootstrap 5 theme for Formdown'
-  },
-  
-  themes: [{
-    name: 'bootstrap',
-    
-    styles: `
-      .formdown-field {
-        margin-bottom: 1rem;
-      }
-      
-      .formdown-field label {
-        @apply form-label;
-      }
-      
-      .formdown-field input,
-      .formdown-field select,
-      .formdown-field textarea {
-        @apply form-control;
-      }
-      
-      .formdown-field input[type="checkbox"],
-      .formdown-field input[type="radio"] {
-        @apply form-check-input;
-      }
-      
-      .formdown-error {
-        @apply invalid-feedback d-block;
-      }
-    `,
-    
-    fieldWrapper: (field, content) => `
-      <div class="mb-3">
-        ${content}
-      </div>
-    `,
-    
-    errorTemplate: (error) => `
-      <div class="invalid-feedback d-block">
-        ${error.message}
-      </div>
-    `
-  }],
-  
-  hooks: [{
-    name: 'field-render',
-    handler: (context) => {
-      // Add Bootstrap classes
-      context.field.attributes.className = 
-        (context.field.attributes.className || '') + ' form-control'
-      
-      return context
-    }
-  }]
-}
+const stats = getExtensionStats()
+// {
+//   initialized: true,
+//   plugins: [{ name: 'formdown-core', version: '1.0.0' }],
+//   hookCount: 0,
+//   registeredHooks: [],
+//   fieldTypes: ['text', 'email', 'select', 'range', 'toggle'],
+//   validators: ['required', 'pattern', 'minlength'],
+//   renderers: [],
+//   themes: []
+// }
 ```
 
-## Built-in Extensions
+## The Built-in Plugin
 
-### Core Extensions
+Initialization registers the `formdown-core` plugin. It contributes the field types `text`, `email`, `select`, `range` and `toggle` and the validators `required`, `pattern` and `minlength`.
 
-Formdown includes several built-in extensions:
-
-#### Smart Label Extension
-Automatically generates human-readable labels from field names:
-```typescript
-@first_name → "First Name"
-@emailAddress → "Email Address"
-```
-
-#### Pattern Validation Extension
-Supports regex patterns in field names:
-```typescript
-@username{^[a-z0-9_]{3,20}$}: []
-```
-
-#### Other Option Extension
-Handles "other" options for selection fields:
-```typescript
-@color: [radio options="Red,Blue,Green,*"]
-```
-
-### Loading Built-in Extensions
+Once registered, those field types parse and render fields of their types in place of Formdown's default rendering, and the output differs from that of an uninitialized Formdown: `@name: [text]` is labelled `name` rather than `Name`; `text`, `email` and `select` controls are rendered without the `form` attribute that associates them with the generated form and without the default `part` and `autocomplete` attributes; `range` and `toggle` fields get a second, nested label. (`toggle` exists only through this plugin; without it, `[toggle]` renders as a text input.) Unregistering the plugin restores the default rendering:
 
 ```typescript
-import { ExtensionManager, loadBuiltinExtensions } from '@formdown/core'
+await initializeExtensions()
+const withBuiltIn = generateFormHTML('@name: [text]')
+// <label for="name">name</label>
+// <input type="text" name="name" id="name" />
 
-const extensionManager = new ExtensionManager()
-await extensionManager.initialize()
-
-// Load all built-in extensions
-await loadBuiltinExtensions(extensionManager)
-
-// Or load specific ones
-await extensionManager.loadBuiltin(['smart-labels', 'pattern-validation'])
+await getDefaultExtensionManager().unregisterPlugin('formdown-core')
+const withoutBuiltIn = generateFormHTML('@name: [text]')
+// <label for="name" part="label">Name</label>
+// <input type="text" id="name" name="name" form="formdown-form-default" autocomplete="name" ...>
 ```
 
-## Event System
+A plugin that lists `formdown-core` in `dependencies` cannot be registered after that.
 
-### Event Types
+## Current Limitations
 
-The extension system emits various events:
+These parts of the extension types exist but are not used by parsing, generation, `getSchema()` or the validation functions today:
 
-```typescript
-type ExtensionEvent = 
-  | 'plugin:registered'
-  | 'plugin:unregistered'
-  | 'plugin:error'
-  | 'hook:registered'
-  | 'hook:executing'
-  | 'hook:executed'
-  | 'hook:error'
-```
+- **`Plugin.validators`, `Plugin.renderers`, `Plugin.themes`** — stored and listed by `getExtensionStats()`, nothing else.
+- **Field type `validator`, `dataProcessor`, `schemaGenerator`, `styles`, `clientScript`** — reachable only by calling the field type registry yourself (`getDefaultExtensionManager().getFieldTypeRegistry()`: `validateField`, `processFieldData`, `validateFieldData`, `generateFieldSchema`, `getStylesForTypes`, `getScriptsForTypes`).
+- **Hook names `field-validate` and `error-handle`** — run only through `executeHooks`.
+- **`HookContext.parseResult`** — never set; the contexts each hook receives are listed in the hook table under *Hooks*.
+- **The `async` option** — accepted, no effect.
 
-### Subscribing to Events
+Other behavior to be aware of:
 
-```typescript
-const extensionManager = new ExtensionManager()
-
-// Subscribe to plugin events
-extensionManager.on('plugin:registered', (plugin) => {
-  console.log(`Plugin ${plugin.metadata.name} registered`)
-})
-
-// Subscribe to hook execution
-extensionManager.on('hook:executing', ({ hook, context }) => {
-  console.log(`Executing hook ${hook.name}`)
-})
-
-// Subscribe to errors
-extensionManager.on('plugin:error', ({ plugin, error }) => {
-  console.error(`Plugin ${plugin.metadata.name} error:`, error)
-})
-```
+- `destroy()` followed by `initialize()` on the same manager fails with `Field type 'text' is already registered`. To start over, call `initializeExtensions(options)` with an options object, which creates a fresh default instance.
+- `registerPlugin` rejects a plugin whose field type is already registered, but the plugin's hooks were registered before the check and stay active.
 
 ## API Reference
 
-### ExtensionManager
+### Functions
 
-```typescript
-class ExtensionManager {
-  // Initialize the extension system
-  initialize(): Promise<void>
-  
-  // Plugin management
-  registerPlugin(plugin: Plugin, options?: PluginOptions): Promise<void>
-  unregisterPlugin(pluginName: string): Promise<void>
-  getPlugin(pluginName: string): Plugin | null
-  listPlugins(): PluginInfo[]
-  
-  // Hook management
-  registerHook(hook: Hook): void
-  executeHooks(hookName: HookName, context: any): Promise<any>
-  
-  // Built-in extensions
-  loadBuiltin(names?: string[]): Promise<void>
-  
-  // Event system
-  on(event: ExtensionEvent, handler: Function): void
-  off(event: ExtensionEvent, handler: Function): void
-  emit(event: ExtensionEvent, data: any): void
-  
-  // Configuration
-  configure(options: ExtensionOptions): void
-}
-```
+| Function | Description |
+|---|---|
+| `initializeExtensions(options?)` | Initialize the default instance; with options, replace it with a fresh one first. |
+| `registerPlugin(plugin)` | Register a plugin on the default instance and run its `initialize`. |
+| `registerHook(hook)` | Register a hook on the default instance. |
+| `executeHooks(name, context, ...args)` | Run the hooks registered under `name`; resolves to their non-`undefined` results. |
+| `getExtensionStats()` | Plugins, hooks and registered field types of the default instance. |
+| `getDefaultExtensionManager()` | The instance parsing and generation use. |
 
-### Plugin Lifecycle
+### `ExtensionManager`
 
-```typescript
-interface Plugin {
-  // Called when plugin is registered
-  initialize?(eventEmitter: EventEmitter): Promise<void>
-  
-  // Called when plugin is unregistered
-  destroy?(): Promise<void>
-  
-  // Plugin can listen to events
-  on?(event: string, handler: Function): void
-  
-  // Plugin can emit events
-  emit?(event: string, data: any): void
-}
-```
-
-## Performance Considerations
-
-### Hook Performance
-
-- Hooks should execute quickly (< 50ms)
-- Use async hooks only when necessary
-- Consider debouncing for frequently called hooks
-
-### Memory Management
-
-- Clean up event listeners in destroy()
-- Avoid storing large objects in plugin state
-- Use WeakMap for object associations
-
-### Error Handling
-
-```typescript
-const extensionManager = new ExtensionManager({
-  errorHandling: {
-    onPluginError: 'warn',     // 'ignore' | 'warn' | 'throw'
-    onHookError: 'warn',
-    continueOnError: true      // Continue despite errors
-  }
-})
-```
-
-## Security Best Practices
-
-### Input Sanitization
-
-Always sanitize user input in plugins:
-
-```typescript
-const sanitizePlugin: Plugin = {
-  hooks: [{
-    name: 'pre-parse',
-    handler: (context) => {
-      context.content = DOMPurify.sanitize(context.content)
-      return context
-    }
-  }]
-}
-```
-
-### Content Security Policy
-
-Ensure plugins work with CSP:
-
-```typescript
-// Bad: Inline event handlers
-generator: () => '<button onclick="handleClick()">Click</button>'
-
-// Good: Use data attributes
-generator: () => '<button data-action="click">Click</button>'
-```
-
-### Validation
-
-Always validate plugin inputs:
-
-```typescript
-validator: (field, value) => {
-  // Validate type
-  if (typeof value !== 'string') {
-    return [{ field: field.name, message: 'Value must be a string' }]
-  }
-  
-  // Validate format
-  if (!isValidFormat(value)) {
-    return [{ field: field.name, message: 'Invalid format' }]
-  }
-  
-  return []
-}
-```
+| Method | Description |
+|---|---|
+| `initialize()` / `destroy()` | Start the manager; destroy every plugin, hook and listener. |
+| `registerPlugin(plugin)` / `unregisterPlugin(name)` | Add or remove a plugin, running its `initialize` / `destroy`. |
+| `registerHook(hook)` / `unregisterHook(name, handler)` | Add or remove a single hook. |
+| `executeHooks(name, context, ...args)` | Run hooks asynchronously, collecting results. |
+| `executeHooksSync(name, context, ...args)` | Run hooks synchronously, collecting results. |
+| `transformSync(name, context, value)` | Pass `value` through the hooks as parsing and generation do. |
+| `getEventEmitter()` | The emitter for the events listed under *Events*. |
+| `getFieldTypeRegistry()` | The registry holding the field types of all registered plugins. |
+| `getStats()` | Same as `getExtensionStats()` for this instance. |
+| `enableDebug()` / `disableDebug()` | Toggle the `debug` option. |
 
 ## Testing Plugins
 
-### Unit Testing
+Pass options to `initializeExtensions` before each test so every test starts from a fresh default instance, and destroy it afterwards so plugins' `destroy` functions run:
 
 ```typescript
-import { ExtensionManager } from '@formdown/core'
-import { myPlugin } from './my-plugin'
+import { initializeExtensions, getDefaultExtensionManager, registerPlugin, parseFormdown } from '@formdown/core'
 
-describe('MyPlugin', () => {
-  let extensionManager: ExtensionManager
-  
-  beforeEach(async () => {
-    extensionManager = new ExtensionManager()
-    await extensionManager.initialize()
-    await extensionManager.registerPlugin(myPlugin)
-  })
-  
-  test('should parse custom field type', async () => {
-    const context = {
-      content: '@rating: [rating max=5]',
-      options: {}
-    }
-    
-    const result = await extensionManager.executeHooks('pre-parse', context)
-    expect(result.fields).toContainEqual(
-      expect.objectContaining({
-        type: 'rating',
-        attributes: { max: 5 }
-      })
-    )
-  })
+beforeEach(async () => {
+  await initializeExtensions({ errorStrategy: 'throw' })
+})
+
+afterEach(async () => {
+  await getDefaultExtensionManager().destroy()
+})
+
+test('rating fields parse', async () => {
+  await registerPlugin(ratingPlugin)
+  expect(parseFormdown('@service: [rating]').forms[0].type).toBe('rating')
 })
 ```
 
-### Integration Testing
-
-```typescript
-import { parseFormdown } from '@formdown/core'
-import { setupExtensions } from './setup'
-
-test('plugin integrates with parser', async () => {
-  const extensionManager = await setupExtensions()
-  
-  const result = parseFormdown(
-    '@email: [email unique]',
-    { extensionManager }
-  )
-  
-  expect(result.fields[0].validators).toContain('unique-email')
-})
-```
-
-## Migration Guide
-
-### From Custom Parser to Plugin
-
-Before (custom parser):
-```typescript
-function parseCustomField(content: string) {
-  // Custom parsing logic
-}
-```
-
-After (plugin):
-```typescript
-const customFieldPlugin: Plugin = {
-  metadata: { name: 'custom-field', version: '1.0.0' },
-  fieldTypes: [{
-    type: 'custom',
-    parser: (content) => {
-      // Same parsing logic
-    }
-  }]
-}
-```
-
-### From Inline Hooks to Plugin
-
-Before (inline hooks):
-```typescript
-parser.beforeParse = (content) => {
-  // Transform content
-}
-```
-
-After (plugin hooks):
-```typescript
-const transformPlugin: Plugin = {
-  metadata: { name: 'transform', version: '1.0.0' },
-  hooks: [{
-    name: 'pre-parse',
-    handler: (context) => {
-      // Transform context.content
-      return context
-    }
-  }]
-}
-```
-
-## Troubleshooting
-
-### Common Issues
-
-#### Plugin Not Loading
-```typescript
-// Check plugin registration
-const info = extensionManager.getPlugin('my-plugin')
-console.log('Plugin loaded:', info)
-
-// Check for errors
-extensionManager.on('plugin:error', (error) => {
-  console.error('Plugin error:', error)
-})
-```
-
-#### Hook Not Executing
-```typescript
-// Enable debug logging
-const extensionManager = new ExtensionManager({
-  debug: true
-})
-
-// Log hook execution
-extensionManager.on('hook:executing', ({ hook }) => {
-  console.log('Executing hook:', hook.name)
-})
-```
-
-#### Performance Issues
-```typescript
-// Profile hook execution
-extensionManager.on('hook:executed', ({ hook, duration }) => {
-  if (duration > 50) {
-    console.warn(`Slow hook ${hook.name}: ${duration}ms`)
-  }
-})
-```
-
-## Contributing
-
-### Creating Community Plugins
-
-1. Use the plugin template:
-```bash
-npx create-formdown-plugin my-plugin
-```
-
-2. Follow naming conventions:
-- Package: `formdown-plugin-{name}`
-- Plugin name: `{name}-plugin`
-
-3. Include metadata:
-```typescript
-metadata: {
-  name: 'my-plugin',
-  version: '1.0.0',
-  author: 'Your Name',
-  homepage: 'https://github.com/...',
-  license: 'MIT'
-}
-```
-
-4. Document your plugin:
-- README with examples
-- API documentation
-- Migration guide if replacing existing functionality
-
-5. Publish to npm:
-```bash
-npm publish --tag formdown-plugin
-```
+See [Extension Examples](/docs/extension-examples) for more complete plugins.

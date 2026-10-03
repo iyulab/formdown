@@ -444,108 +444,36 @@ console.log(FormdownFieldHelper.isOtherValue('priority', 'Critical')); // → tr
 
 ## 🔌 Extension System
 
-**Major Release:** Formdown now features a complete plugin architecture that allows developers to customize and extend every aspect of form parsing, generation, and validation.
+Formdown has a hook and plugin system for changing how documents are parsed and rendered.
 
 ### What's New
 
-The extension system provides:
-
-- **Hook-based Architecture**: 14 different hook types for maximum customization
-- **Plugin System**: Complete plugin lifecycle management with error handling
-- **Type Safety**: Full TypeScript support with compile-time validation
-- **Event System**: Plugin communication through events
-- **Field Type Plugins**: Create entirely new field types
-- **Theme Integration**: Complete styling and layout customization
-- **Validation Extensions**: Custom validation rules and logic
+- **Hooks**: transform the source, each parsed field, the parse result, each rendered field, or the final HTML (`pre-parse`, `field-parse`, `post-parse`, `pre-generate`, `field-render`, `post-generate`)
+- **Plugins**: bundle hooks and custom field types, with `initialize` / `destroy` lifecycle functions
+- **Custom field types**: a parser and a generator for a new block-field type
+- **Events**: plugin registration and lifecycle events
 
 ### Quick Example
 
 ```typescript
-import { ExtensionManager } from '@formdown/core'
+import { initializeExtensions, registerHook, generateFormHTML } from '@formdown/core'
 
-const extensionManager = new ExtensionManager()
+await initializeExtensions()
 
-// Register a Bootstrap theme plugin
-extensionManager.registerPlugin({
-  metadata: {
-    name: 'bootstrap-theme',
-    version: '1.0.0'
-  },
-  hooks: [{
-    name: 'css-class',
-    handler: (context) => {
-      context.field.attributes.className = 'form-control'
-      return context
-    }
-  }]
+registerHook({
+  name: 'field-render',
+  priority: 10,
+  handler: (_context, html: string) =>
+    html.replace(/<(input|textarea|select) /, '<$1 class="form-control" ')
 })
 
-// Use with existing functions
-const ast = await parseForm(source, { extensionManager })
-const html = await generateHTML(ast, { extensionManager })
+const html = generateFormHTML('@phone: [tel]')
+// ... <input class="form-control" type="tel" id="phone" ...>
 ```
 
-### Real-World Plugin Examples
+Extensions are optional: until `initializeExtensions()` has run, `parseFormdown()` and `generateFormHTML()` run without hooks.
 
-**Credit Card Field Type:**
-```typescript
-const creditCardPlugin = {
-  fieldTypes: [{
-    type: 'credit-card',
-    parser: (content) => ({
-      name: 'cardNumber',
-      type: 'credit-card',
-      attributes: {
-        pattern: '[0-9\\s]{13,19}',
-        inputmode: 'numeric'
-      }
-    }),
-    validator: (field, value) => isValidCreditCard(value),
-    generator: (field) => `
-      <input type="text" 
-             pattern="${field.attributes.pattern}"
-             inputmode="numeric" />
-    `
-  }]
-}
-```
-
-**Internationalization Plugin:**
-```typescript
-const i18nPlugin = {
-  hooks: [{
-    name: 'post-parse',
-    handler: (context) => {
-      const locale = getCurrentLocale()
-      context.parseResult.fields.forEach(field => {
-        field.label = translate(field.label, locale)
-      })
-      return context
-    }
-  }]
-}
-```
-
-### Built-in Features
-
-- **Error Handling**: Robust error isolation and recovery
-- **Performance Management**: Timeout controls and profiling
-- **Testing Utilities**: Comprehensive testing framework for plugins
-- **Documentation**: Complete API reference and examples
-
-### Migration Path
-
-Existing code continues to work unchanged. Extensions are completely optional:
-
-```javascript
-// Existing code (still works)
-const html = generateHTML(ast)
-
-// With extensions (new capability)  
-const html = generateHTML(ast, { extensionManager })
-```
-
-[→ Learn more about the Extension System](./extensions.md)
+[→ Learn more about the Extension System](/docs/extensions)
 
 ---
 

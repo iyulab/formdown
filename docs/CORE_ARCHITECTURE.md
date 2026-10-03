@@ -70,31 +70,30 @@ const schema = getSchema('@name: [text required minlength=2]')
 
 ## Extension System
 
-The extension system allows external packages and users to customize parsing, generation, and validation behavior.
+The extension system allows external packages and users to customize parsing and generation. Parsing and generation always run through the default extension manager (`getDefaultExtensionManager()`); hooks apply once `initializeExtensions()` has run. See the [Extension System Guide](./EXTENSION_SYSTEM.md).
 
 ### Hook System
 
-The core provides 8 hook types for extension:
+Parsing and generation run six hooks, each receiving `(context, value)` and returning a replacement value (or `undefined` to keep it):
 
-- `pre-parse`: Before parsing begins
-- `post-parse`: After parsing completes
-- `field-parse`: For each field during parsing
-- `field-validate`: For field validation
-- `pre-generate`: Before HTML generation
-- `post-generate`: After HTML generation
-- `field-render`: For custom field rendering
-- `error-handle`: For error handling
+- `pre-parse`: the source text, before parsing begins
+- `field-parse`: each parsed field
+- `post-parse`: the parse result
+- `pre-generate`: the parse result, before HTML generation
+- `field-render`: each field's HTML
+- `post-generate`: the whole HTML
+
+`field-validate` and `error-handle` are also hook names, but only run when called with `executeHooks`.
 
 ```typescript
-import { registerHook } from '@formdown/core'
+import { initializeExtensions, registerHook } from '@formdown/core'
+
+await initializeExtensions()
 
 registerHook({
   name: 'field-parse',
   priority: 1,
-  handler: (context) => {
-    // Custom field processing logic
-    return enhancedField
-  }
+  handler: (context, field) => ({ ...field, placeholder: field.placeholder ?? field.label })
 })
 ```
 
@@ -103,7 +102,7 @@ registerHook({
 Plugins provide a structured way to extend functionality:
 
 ```typescript
-import { registerPlugin } from '@formdown/core'
+import { initializeExtensions, registerPlugin } from '@formdown/core'
 
 const customPlugin = {
   metadata: {
@@ -111,16 +110,14 @@ const customPlugin = {
     version: '1.0.0'
   },
   fieldTypes: [{
-    type: 'phone',
-    parser: (content, context) => ({ /* custom parsing */ }),
-    generator: (field, context) => '/* custom HTML */'
+    type: 'phone-us',
+    parser: (line, context) => /* a Field for lines like `@name: [phone-us]`, otherwise null */ null,
+    generator: (field, context) => '<input type="tel" ...>'
   }],
-  validators: [{
-    name: 'phone-format',
-    validate: (value) => /^\d{3}-\d{3}-\d{4}$/.test(value)
-  }]
+  hooks: [/* hooks as above */]
 }
 
+await initializeExtensions()
 await registerPlugin(customPlugin)
 ```
 
@@ -253,11 +250,11 @@ const schema = getSchema(content)
 const myPlugin = {
   metadata: { name: 'my-plugin', version: '1.0.0' },
   fieldTypes: [/* custom field types */],
-  validators: [/* custom validators */],
   hooks: [/* custom hooks */]
 }
 
-// 2. Register plugin
+// 2. Initialize the extension system and register the plugin
+await initializeExtensions()
 await registerPlugin(myPlugin)
 
 // 3. Use enhanced functionality
@@ -317,9 +314,9 @@ The extension system is now fully integrated. Existing code continues to work, b
 // Old approach (still supported)
 const parsed = parseFormdown(content)
 
-// New approach (recommended)
-await extensionManager.initialize()
-const parsed = parseFormdown(content) // Now with extension support
+// With extensions: initialize the default extension manager first
+await initializeExtensions()
+const parsed = parseFormdown(content) // registered hooks now apply
 ```
 
 ## Future Roadmap
