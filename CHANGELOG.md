@@ -2,6 +2,14 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- `@formdown/editor` lists Formdown's own diagnostics — a field name used twice, a condition naming a field that does not exist, a malformed attribute — in its problems panel, with the line they are on, before the messages of `field-validate` hooks. The panel showed hook messages only, and drew each as "[object Object]".
+- `@formdown/editor` no longer reports "Extension system must be initialized before use" as a problem with the source when the content is checked before the extension system is initialized.
+- `FormManager.createPreviewTemplate()` returns the parse diagnostics in `errors`; it returned an empty list.
+
 ## 0.14.0
 
 ### Removed

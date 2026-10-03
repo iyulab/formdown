@@ -508,18 +508,18 @@ export class FormManager {
   createPreviewTemplate(content: string): any {
     try {
       const previewManager = new FormManager(this.options)
-      previewManager.parse(content)
-      
+      const parsed = previewManager.parse(content)
+
       return {
         html: previewManager.render(),
-        errors: [], // Parsing errors will be implemented when parser error collection is enhanced
+        errors: parsed.diagnostics ?? [],
         schema: previewManager.getSchema(),
         fields: previewManager.getFields()
       }
     } catch (error) {
       return {
         html: '',
-        errors: [String(error)],
+        errors: [{ code: 'parse-failure', message: String(error), severity: 'error' }],
         schema: null,
         fields: []
       }

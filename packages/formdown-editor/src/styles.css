@@ -109,6 +109,10 @@
     margin-bottom: 0.25rem;
 }
 
+.error-item.warning {
+    color: var(--formdown-warning-color, #b45309);
+}
+
 /* Mode-specific styles */
 .mode-edit .preview-panel,
 .mode-view .editor-panel {

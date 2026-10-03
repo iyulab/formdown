@@ -4,6 +4,7 @@
  */
 import { FormdownEditor } from '../src/formdown-editor';
 import { createFormdownEditor } from '../src/index';
+import { FormManager } from '@formdown/core';
 
 /** Types `text` at the end of `before` in a text area, as the editor sees it. */
 function type(editor: FormdownEditor, before: string, text: string, inputType = 'insertText') {
@@ -51,5 +52,27 @@ describe('createFormdownEditor', () => {
         expect(editor.content).toBe('@name: [text]');
         expect(editor.mode).toBe('edit');
         expect(editor.toolbar).toBe(false);
+    });
+});
+
+describe('the problems panel', () => {
+    const editorWith = (content: string) => {
+        const editor = new FormdownEditor();
+        (editor as any).formManager = new FormManager();
+        editor.content = content;
+        return editor;
+    };
+
+    it("lists Formdown's own diagnostics with their line, then the field-validate messages", async () => {
+        const editor = editorWith('# Intake\n@name: [text]\n@name: [email]');
+        await (editor as any).updateParseResult();
+        const problems = (editor as any).parseResult.problems;
+        expect(problems).toContainEqual(expect.objectContaining({ severity: 'warning', line: 3, message: expect.stringContaining('"name"') }));
+    });
+
+    it('shows nothing for a source without problems', async () => {
+        const editor = editorWith('@name: [text]');
+        await (editor as any).updateParseResult();
+        expect((editor as any).parseResult.problems).toEqual([]);
     });
 });

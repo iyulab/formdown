@@ -4,16 +4,27 @@ import {
   FormManager,
   authoringCompletion,
   executeHooks,
+  getExtensionStats,
   initializeExtensions,
-  type ParseResult as CoreParseResult
+  type Field
 } from '@formdown/core'
 // The preview is a `<formdown-ui>`: importing the package registers it.
 import '@formdown/ui'
 import styles from './styles.css?inline'
 // Template functions inlined for better performance
 
+/** A problem with the source the editor shows: Formdown's own diagnostics, then `field-validate` hook messages. */
+interface SourceProblem {
+    message: string
+    severity: 'error' | 'warning'
+    /** Line of the source (from 1), when the problem has a place */
+    line?: number
+}
+
 /** Ask the `field-validate` hooks about the content; each may answer `{ valid: false, message }`. */
 async function validateContent(content: string): Promise<{ isValid: boolean; errors: string[] }> {
+    // No hook can be registered before the extension system is initialized, and asking would throw
+    if (!getExtensionStats().initialized) return { isValid: true, errors: [] }
     try {
         const results = await executeHooks<{ valid?: boolean; message?: string } | undefined>('field-validate', { input: content }, content)
         const errors = results.filter(result => result && !result.valid && result.message).map(result => result!.message!)
@@ -92,7 +103,7 @@ export class FormdownEditor extends LitElement {
     }
 
     @state()
-    private parseResult: CoreParseResult = { fields: [], errors: [] }
+    private parseResult: { fields: Field[]; problems: SourceProblem[] } = { fields: [], problems: [] }
 
 
     // Remove SimpleFormdownParser - now using @formdown/core
@@ -354,22 +365,26 @@ export class FormdownEditor extends LitElement {
 
     private async updateParseResult() {
         try {
-            // Simplified via FormManager
-            this.formManager.parse(this.content)
-            
+            const parsed = this.formManager.parse(this.content)
+
             // `field-validate` hooks report problems with the content: { valid: false, message }
             const validation = await validateContent(this.content)
-            
-            // FormManager에서 필드 정보 직접 추출 - 복잡한 변환 로직 제거
-            const fields = this.formManager.getFields()
+
             this.parseResult = {
-                fields: fields || [],
-                errors: validation.errors.map(err => ({ line: 0, message: err }))
+                fields: this.formManager.getFields() || [],
+                problems: [
+                    ...(parsed?.diagnostics ?? []).map(diagnostic => ({
+                        message: diagnostic.message,
+                        severity: diagnostic.severity,
+                        line: diagnostic.span?.line
+                    })),
+                    ...validation.errors.map(message => ({ message, severity: 'error' as const }))
+                ]
             }
         } catch (error) {
             this.parseResult = {
                 fields: [],
-                errors: [{ line: 0, message: error instanceof Error ? error.message : 'Parse error' }]
+                problems: [{ message: error instanceof Error ? error.message : 'Parse error', severity: 'error' }]
             }
         }
     }
@@ -409,13 +424,14 @@ export class FormdownEditor extends LitElement {
 
     // Error rendering
     private renderErrors() {
-        if (this.parseResult.errors.length === 0) return ''
-        
+        const { problems } = this.parseResult
+        if (problems.length === 0) return ''
+
         return html`
             <div class="error-list">
-                <strong>Errors:</strong>
-                ${this.parseResult.errors.map(error => html`
-                    <div class="error-item">${error}</div>
+                <strong>Problems:</strong>
+                ${problems.map(problem => html`
+                    <div class="error-item ${problem.severity}">${problem.line ? `Line ${problem.line}: ` : ''}${problem.message}</div>
                 `)}
             </div>
         `
