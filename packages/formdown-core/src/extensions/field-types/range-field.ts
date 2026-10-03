@@ -6,6 +6,7 @@
 import type { FieldTypePlugin, HookContext } from '../types.js'
 import type { Field, ValidationRule } from '../../types.js'
 import { NAME, pattern as unicodePattern } from '../../grammar.js'
+import { escapeHtml } from '../../escape.js'
 
 export const rangeFieldPlugin: FieldTypePlugin = {
     type: 'range',
@@ -130,20 +131,20 @@ export const rangeFieldPlugin: FieldTypePlugin = {
                 if (typeof val === 'boolean') {
                     return val ? key : ''
                 }
-                return `${key}="${val}"`
+                return `${key}="${escapeHtml(val)}"`
             })
             .filter(Boolean)
             .join(' ')
 
         const valueDisplay = showValue ? 
-            `<output id="${outputId}" for="${fieldId}" class="formdown-range-output">${value}${unit}</output>` : 
+            `<output id="${escapeHtml(outputId)}" for="${escapeHtml(fieldId)}" class="formdown-range-output">${escapeHtml(value)}${escapeHtml(unit)}</output>` : 
             ''
 
         return `
 <div class="formdown-field formdown-range-field">
-    <label for="${fieldId}">${label}${required ? ' *' : ''}</label>
+    <label for="${escapeHtml(fieldId)}">${label}${required ? ' *' : ''}</label>
     <div class="formdown-range-container">
-        <input ${attrString} data-formdown-range-output="${outputId}" data-formdown-range-unit="${unit}">
+        <input ${attrString} data-formdown-range-output="${escapeHtml(outputId)}" data-formdown-range-unit="${escapeHtml(unit)}">
         ${valueDisplay}
     </div>
 </div>`

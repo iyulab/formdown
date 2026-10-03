@@ -2,6 +2,7 @@ import { marked } from 'marked'
 import { Field, FormdownContent, FormDeclaration, DatalistDeclaration, GroupDeclaration } from './types'
 import { getDefaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
+import { escapeHtml } from './escape.js'
 
 /** Generation returns markup only, so a failing hook is reported as a console warning. */
 const warnHookError = (message: string) => console.warn(`[Formdown] ${message}`)
@@ -15,15 +16,6 @@ export class FormdownGenerator {
      * @param text - The text to escape
      * @returns HTML-escaped text
      */
-    private escapeHtml(text: string): string {
-        return text
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#39;')
-    }
-
     /**
      * The values a choice field holds that its options do not offer — written by hand or by another tool, or
      * saved before an option was renamed. They are rendered after the offered ones, chosen and marked
@@ -39,7 +31,7 @@ export class FormdownGenerator {
      */
     private renderAttribute(key: string, value: unknown): string {
         if (!/^[^\s"'>/=\u0000-\u001F]+$/.test(key)) return ''
-        return `${key}="${this.escapeHtml(String(value))}"`
+        return `${key}="${escapeHtml(String(value))}"`
     }
 
     /**
@@ -317,10 +309,10 @@ export class FormdownGenerator {
      * Following WCAG accessibility best practices for fieldset/legend
      */
     private generateGroupStartHTML(group: GroupDeclaration): string {
-        const escapedLabel = this.escapeHtml(group.label)
+        const escapedLabel = escapeHtml(group.label)
         const attrs: string[] = [
             `class="formdown-group"`,
-            `data-group="${this.escapeHtml(group.id)}"`
+            `data-group="${escapeHtml(group.id)}"`
         ]
 
         if (group.collapsible) {
@@ -465,7 +457,7 @@ ${fieldHTML}
         // The span's text is its value; without one it shows the label
         const value = field.value ?? attributes?.value
         const text = value === undefined || value === null || value === '' ? displayLabel : String(value)
-        return `<span ${attrString}>${this.escapeHtml(text)}</span>`
+        return `<span ${attrString}>${escapeHtml(text)}</span>`
     }
 
     generateFieldHTML(field: Field, defaultFormId?: string): string {
@@ -582,68 +574,68 @@ ${fieldHTML}
 
                 if (field.conditions.visibleIf) {
                     const cond = field.conditions.visibleIf
-                    dataAttrs.push(`data-visible-if-field="${this.escapeHtml(cond.field)}"`)
+                    dataAttrs.push(`data-visible-if-field="${escapeHtml(cond.field)}"`)
                     dataAttrs.push(`data-visible-if-operator="${cond.operator}"`)
                     if (cond.value !== undefined) {
-                        dataAttrs.push(`data-visible-if-value="${this.escapeHtml(cond.value)}"`)
+                        dataAttrs.push(`data-visible-if-value="${escapeHtml(cond.value)}"`)
                     }
                 }
 
                 if (field.conditions.hiddenIf) {
                     const cond = field.conditions.hiddenIf
-                    dataAttrs.push(`data-hidden-if-field="${this.escapeHtml(cond.field)}"`)
+                    dataAttrs.push(`data-hidden-if-field="${escapeHtml(cond.field)}"`)
                     dataAttrs.push(`data-hidden-if-operator="${cond.operator}"`)
                     if (cond.value !== undefined) {
-                        dataAttrs.push(`data-hidden-if-value="${this.escapeHtml(cond.value)}"`)
+                        dataAttrs.push(`data-hidden-if-value="${escapeHtml(cond.value)}"`)
                     }
                 }
 
                 if (field.conditions.enabledIf) {
                     const cond = field.conditions.enabledIf
-                    dataAttrs.push(`data-enabled-if-field="${this.escapeHtml(cond.field)}"`)
+                    dataAttrs.push(`data-enabled-if-field="${escapeHtml(cond.field)}"`)
                     dataAttrs.push(`data-enabled-if-operator="${cond.operator}"`)
                     if (cond.value !== undefined) {
-                        dataAttrs.push(`data-enabled-if-value="${this.escapeHtml(cond.value)}"`)
+                        dataAttrs.push(`data-enabled-if-value="${escapeHtml(cond.value)}"`)
                     }
                 }
 
                 if (field.conditions.disabledIf) {
                     const cond = field.conditions.disabledIf
-                    dataAttrs.push(`data-disabled-if-field="${this.escapeHtml(cond.field)}"`)
+                    dataAttrs.push(`data-disabled-if-field="${escapeHtml(cond.field)}"`)
                     dataAttrs.push(`data-disabled-if-operator="${cond.operator}"`)
                     if (cond.value !== undefined) {
-                        dataAttrs.push(`data-disabled-if-value="${this.escapeHtml(cond.value)}"`)
+                        dataAttrs.push(`data-disabled-if-value="${escapeHtml(cond.value)}"`)
                     }
                 }
 
                 if (field.conditions.requiredIf) {
                     const cond = field.conditions.requiredIf
-                    dataAttrs.push(`data-required-if-field="${this.escapeHtml(cond.field)}"`)
+                    dataAttrs.push(`data-required-if-field="${escapeHtml(cond.field)}"`)
                     dataAttrs.push(`data-required-if-operator="${cond.operator}"`)
                     if (cond.value !== undefined) {
-                        dataAttrs.push(`data-required-if-value="${this.escapeHtml(cond.value)}"`)
+                        dataAttrs.push(`data-required-if-value="${escapeHtml(cond.value)}"`)
                     }
                 }
             }
 
             // Add group attribute if field belongs to a group
             if (field.group) {
-                dataAttrs.push(`data-group="${this.escapeHtml(field.group)}"`)
+                dataAttrs.push(`data-group="${escapeHtml(field.group)}"`)
             }
 
             // Handle field-level layout attributes (width, span, etc.)
             const styleProps: string[] = []
             if (field.attributes) {
                 if (field.attributes.width !== undefined) {
-                    styleProps.push(`width: ${this.escapeHtml(String(field.attributes.width))}`)
+                    styleProps.push(`width: ${escapeHtml(String(field.attributes.width))}`)
                 }
                 if (field.attributes.span !== undefined) {
-                    styleProps.push(`grid-column: span ${this.escapeHtml(String(field.attributes.span))}`)
+                    styleProps.push(`grid-column: span ${escapeHtml(String(field.attributes.span))}`)
                 }
                 // Support custom CSS properties on fields
                 Object.entries(field.attributes).forEach(([key, value]) => {
                     if (key.startsWith('--')) {
-                        styleProps.push(`${key}: ${this.escapeHtml(String(value))}`)
+                        styleProps.push(`${key}: ${escapeHtml(String(value))}`)
                     }
                 })
             }
@@ -658,7 +650,7 @@ ${fieldHTML}
 
         switch (type) {
             case 'textarea':
-                const textareaContent = value ? this.escapeHtml(String(value)) : ''
+                const textareaContent = value ? escapeHtml(String(value)) : ''
                 return `
 <div ${fieldWrapperAttrs} part="field">
     <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
@@ -668,15 +660,15 @@ ${fieldHTML}
             case 'select':
                 const optionsHTML = options?.map(opt => {
                     const isSelected = value && String(value) === opt ? ' selected' : ''
-                    const escapedOpt = this.escapeHtml(opt)
+                    const escapedOpt = escapeHtml(opt)
                     return `<option value="${escapedOpt}"${isSelected}>${escapedOpt}</option>`
                 }).join('\n') || ''
                 // A field with an "other" option keeps its own handling of values it does not offer.
                 const unlistedOptionsHTML = allowOther ? '' : this.unlistedValues(value ? [String(value)] : [], options).map(v => {
-                    const escaped = this.escapeHtml(v)
+                    const escaped = escapeHtml(v)
                     return `\n        <option value="${escaped}" selected data-formdown-unlisted="true">${escaped}</option>`
                 }).join('')
-                const otherOptionHTML = allowOther ? `\n        <option value="">${this.escapeHtml(field.otherLabel || 'Other')} (please specify)</option>` : ''
+                const otherOptionHTML = allowOther ? `\n        <option value="">${escapeHtml(field.otherLabel || 'Other')} (please specify)</option>` : ''
                 const otherInputHTML = allowOther ? `\n    <input type="text" id="${fieldId}_other" placeholder="Please specify..." class="formdown-other-input" data-formdown-other-for="${fieldId}">` : ''
 
                 return `
@@ -705,7 +697,7 @@ ${fieldHTML}
                     const requiredAttr = isRequired ? ' required' : ''
                     const checkedAttr = isChecked ? ' checked' : ''
                     const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
-                    const escapedOpt = this.escapeHtml(opt)
+                    const escapedOpt = escapeHtml(opt)
                     return `
         <label for="${inputId}" class="formdown-option-label">
             <input type="radio" id="${inputId}" name="${name}" value="${escapedOpt}"${requiredAttr}${checkedAttr}${ariaAttr}${hideOtherAttr}>
@@ -715,7 +707,7 @@ ${fieldHTML}
                 const unlistedRadiosHTML = allowOther ? '' : this.unlistedValues(value ? [String(value)] : [], options).map((v, index) => {
                     const inputId = this.generateUniqueId(`${name}_unlisted_${index}`, defaultFormId)
                     const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
-                    const escaped = this.escapeHtml(v)
+                    const escaped = escapeHtml(v)
                     return `
         <label for="${inputId}" class="formdown-option-label">
             <input type="radio" id="${inputId}" name="${name}" value="${escaped}" checked${ariaAttr} data-formdown-unlisted="true">
@@ -727,7 +719,7 @@ ${fieldHTML}
                 const otherRadioHTML = allowOther ? `
         <label for="${otherRadioId}" class="formdown-option-label">
             <input type="radio" id="${otherRadioId}" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} data-formdown-other-radio="true">
-            <span>${this.escapeHtml(field.otherLabel || 'Other')}:</span>
+            <span>${escapeHtml(field.otherLabel || 'Other')}:</span>
             <input type="text" placeholder="Please specify..." class="formdown-other-input" data-formdown-other-for="${name}">
         </label>` : ''
 
@@ -774,7 +766,7 @@ ${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
 <div ${fieldWrapperAttrs} part="field">
     <label for="${fieldId}" class="formdown-checkbox-label" part="label checkbox-label">
         <input type="checkbox" id="${fieldId}" name="${name}" value="true"${requiredAttr}${checkedAttr}${formAttr} ${checkboxAttrString} part="input checkbox-input">
-        <span>${this.escapeHtml(checkboxDisplayText)}${required ? ' *' : ''}</span>
+        <span>${escapeHtml(checkboxDisplayText)}${required ? ' *' : ''}</span>
     </label>${generateHelpText()}
 </div>`
                 } else {
@@ -787,7 +779,7 @@ ${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
                         const requiredAttr = isRequired ? ' required' : ''
                         const checkedAttr = isChecked ? ' checked' : ''
                         const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
-                        const escapedOpt = this.escapeHtml(opt)
+                        const escapedOpt = escapeHtml(opt)
                         return `
         <label for="${inputId}" class="formdown-option-label">
             <input type="checkbox" id="${inputId}" name="${name}" value="${escapedOpt}"${requiredAttr}${checkedAttr}${ariaAttr}>
@@ -797,7 +789,7 @@ ${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
                     const unlistedCheckboxesHTML = allowOther ? '' : this.unlistedValues(selectedValues, options).map((v, index) => {
                         const inputId = this.generateUniqueId(`${name}_unlisted_${index}`, defaultFormId)
                         const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
-                        const escaped = this.escapeHtml(v)
+                        const escaped = escapeHtml(v)
                         return `
         <label for="${inputId}" class="formdown-option-label">
             <input type="checkbox" id="${inputId}" name="${name}" value="${escaped}" checked${ariaAttr} data-formdown-unlisted="true">
@@ -809,7 +801,7 @@ ${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
                     const otherCheckboxHTML = allowOther ? `
         <label for="${otherCheckboxId}" class="formdown-option-label">
             <input type="checkbox" id="${otherCheckboxId}" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} data-formdown-other-checkbox="true">
-            <span>${this.escapeHtml(field.otherLabel || 'Other')}:</span>
+            <span>${escapeHtml(field.otherLabel || 'Other')}:</span>
             <input type="text" placeholder="Please specify..." class="formdown-other-input" data-formdown-other-for="${name}">
         </label>` : ''
 
@@ -964,18 +956,18 @@ ${checkboxInputsHTML}${unlistedCheckboxesHTML}${otherCheckboxHTML}
 
             // Handle layout-specific attributes
             if (key === 'layout') {
-                layoutAttrs.push(`data-layout="${this.escapeHtml(String(value))}"`)
+                layoutAttrs.push(`data-layout="${escapeHtml(String(value))}"`)
             } else if (key === 'label-width') {
-                styleProps.push(`--formdown-label-width: ${this.escapeHtml(String(value))}`)
+                styleProps.push(`--formdown-label-width: ${escapeHtml(String(value))}`)
             } else if (key === 'columns') {
-                styleProps.push(`--formdown-columns: ${this.escapeHtml(String(value))}`)
+                styleProps.push(`--formdown-columns: ${escapeHtml(String(value))}`)
             } else if (key === 'gap') {
-                styleProps.push(`--formdown-gap: ${this.escapeHtml(String(value))}`)
+                styleProps.push(`--formdown-gap: ${escapeHtml(String(value))}`)
             } else if (key.startsWith('--')) {
                 // Allow custom CSS properties
-                styleProps.push(`${key}: ${this.escapeHtml(String(value))}`)
+                styleProps.push(`${key}: ${escapeHtml(String(value))}`)
             } else {
-                otherAttrs.push(`${key}="${this.escapeHtml(String(value))}"`)
+                otherAttrs.push(`${key}="${escapeHtml(String(value))}"`)
             }
         })
 
@@ -1009,7 +1001,7 @@ ${checkboxInputsHTML}${unlistedCheckboxesHTML}${otherCheckboxHTML}
      */
     private generateSingleDatalistHTML(datalist: DatalistDeclaration): string {
         const optionsHTML = datalist.options
-            .map(option => `<option value="${this.escapeHtml(option)}">${this.escapeHtml(option)}</option>`)
+            .map(option => `<option value="${escapeHtml(option)}">${escapeHtml(option)}</option>`)
             .join('')
 
         return `<datalist id="${datalist.id}">${optionsHTML}</datalist>\n`

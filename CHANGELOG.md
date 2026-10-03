@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- `@formdown/ui` and `@formdown/editor` initialize the extension system as they connect, and initialization registered built-in `text`, `email`, `select` and `range` field types that replaced Formdown's own parsing and rendering of those fields. On every page using the components, such fields were drawn without the `form` attribute that ties them to the form (and without `part`, `autocomplete` and the label made from the field name), their option values and placeholders were written into the markup unescaped, and range fields got a second label. The built-in plugin now adds only the `toggle` type; fields of the other types render the same whether or not the extension system is initialized. The `range` and `toggle` plugin types escape the attribute values they write.
+
 ## 0.13.0
 
 ### Removed

@@ -6,6 +6,7 @@
 import type { FieldTypePlugin, HookContext } from '../types.js'
 import type { Field, ValidationRule } from '../../types.js'
 import { NAME, pattern as unicodePattern } from '../../grammar.js'
+import { escapeHtml } from '../../escape.js'
 
 export const toggleFieldPlugin: FieldTypePlugin = {
     type: 'toggle',
@@ -59,11 +60,11 @@ export const toggleFieldPlugin: FieldTypePlugin = {
         const inputAttrs = [
             'type="checkbox"',
             'role="switch"',
-            `id="${name}"`,
-            `name="${name}"`,
+            `id="${escapeHtml(name)}"`,
+            `name="${escapeHtml(name)}"`,
             checked ? 'checked' : '',
             required ? 'required' : '',
-            formId ? `form="${formId}"` : '',
+            formId ? `form="${escapeHtml(formId)}"` : '',
             `aria-checked="${checked}"`,
         ].filter(Boolean).join(' ')
 

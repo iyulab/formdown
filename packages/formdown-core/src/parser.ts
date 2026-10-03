@@ -35,6 +35,7 @@ const INPUT_TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'searc
 const BLOCK_FIELD_CANDIDATE = /^@([^\s:([{*\-<>@\]]+)[^:]*:\s*\S*\[/u
 import { getDefaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
+import { escapeHtml } from './escape.js'
 
 // Private-use characters delimit inline field markers; they cannot collide with
 // anything markdown or HTML gives meaning to
@@ -1350,7 +1351,7 @@ export class FormdownParser {
     }
 
     private generateTableHtml(headers: string[], dataRows: string[][]): string {
-        const headerCells = headers.map(h => `<th>${this.escapeHtml(h)}</th>`).join('')
+        const headerCells = headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')
         const bodyRows = dataRows.map(row => {
             const cells = row.map(cell => `<td>${cell}</td>`).join('')
             return `<tr>${cells}</tr>`
@@ -1366,14 +1367,4 @@ ${bodyRows}
 </table>`
     }
 
-    private escapeHtml(text: string): string {
-        const escapeMap: Record<string, string> = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-        }
-        return text.replace(/[&<>"']/g, char => escapeMap[char] || char)
-    }
 }

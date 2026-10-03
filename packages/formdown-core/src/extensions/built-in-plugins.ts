@@ -200,11 +200,9 @@ export const corePlugin: Plugin = {
         description: 'Built-in field types and validators for Formdown',
         author: 'Formdown Team'
     },
+    // Only types the core parser and generator do not have. A plugin type is consulted before the
+    // core's own, so registering text, select or range here would replace their parsing and rendering.
     fieldTypes: [
-        textFieldPlugin,
-        emailFieldPlugin,
-        selectFieldPlugin,
-        rangeFieldPlugin,
         toggleFieldPlugin
     ],
     validators: [

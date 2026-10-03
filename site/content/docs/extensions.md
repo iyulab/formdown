@@ -224,7 +224,7 @@ const stats = getExtensionStats()
 //   plugins: [{ name: 'formdown-core', version: '1.0.0' }],
 //   hookCount: 0,
 //   registeredHooks: [],
-//   fieldTypes: ['text', 'email', 'select', 'range', 'toggle'],
+//   fieldTypes: ['toggle'],
 //   validators: ['required', 'pattern', 'minlength'],
 //   renderers: [],
 //   themes: []
@@ -233,23 +233,16 @@ const stats = getExtensionStats()
 
 ## The Built-in Plugin
 
-Initialization registers the `formdown-core` plugin. It contributes the field types `text`, `email`, `select`, `range` and `toggle` and the validators `required`, `pattern` and `minlength`.
-
-Once registered, those field types parse and render fields of their types in place of Formdown's default rendering, and the output differs from that of an uninitialized Formdown: `@name: [text]` is labelled `name` rather than `Name`; `text`, `email` and `select` controls are rendered without the `form` attribute that associates them with the generated form and without the default `part` and `autocomplete` attributes; `range` and `toggle` fields get a second, nested label. (`toggle` exists only through this plugin; without it, `[toggle]` renders as a text input.) Unregistering the plugin restores the default rendering:
+Initialization registers the `formdown-core` plugin. It adds the `toggle` field type — `@notify: [toggle]` renders a switch (a checkbox with `role="switch"`); without the plugin, `[toggle]` renders as a text input — and lists the validators `required`, `pattern` and `minlength` (see *Current Limitations*). It does not change how the field types Formdown itself knows are parsed or rendered:
 
 ```typescript
+const before = generateFormHTML('@name: [text]')
 await initializeExtensions()
-const withBuiltIn = generateFormHTML('@name: [text]')
-// <label for="name">name</label>
-// <input type="text" name="name" id="name" />
-
-await getDefaultExtensionManager().unregisterPlugin('formdown-core')
-const withoutBuiltIn = generateFormHTML('@name: [text]')
-// <label for="name" part="label">Name</label>
-// <input type="text" id="name" name="name" form="formdown-form-default" autocomplete="name" ...>
+generateFormHTML('@name: [text]') === before // true
+generateFormHTML('@notify: [toggle]')        // <input type="checkbox" role="switch" id="notify" name="notify" ...>
 ```
 
-A plugin that lists `formdown-core` in `dependencies` cannot be registered after that.
+A plugin can name `formdown-core` in `dependencies` to require it.
 
 ## Current Limitations
 
@@ -263,7 +256,7 @@ These parts of the extension types exist but are not used by parsing, generation
 
 Other behavior to be aware of:
 
-- `destroy()` followed by `initialize()` on the same manager fails with `Field type 'text' is already registered`. To start over, call `initializeExtensions(options)` with an options object, which creates a fresh default instance.
+- `destroy()` followed by `initialize()` on the same manager fails with `Field type 'toggle' is already registered`. To start over, call `initializeExtensions(options)` with an options object, which creates a fresh default instance.
 - `registerPlugin` rejects a plugin whose field type is already registered, but the plugin's hooks were registered before the check and stay active.
 
 ## API Reference

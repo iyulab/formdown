@@ -189,7 +189,7 @@ describe('Extension System', () => {
         //   plugins: [{ name: 'formdown-core', version: '1.0.0' }],
         //   hookCount: 0,
         //   registeredHooks: [],
-        //   fieldTypes: ['text', 'email', 'select', 'range', 'toggle'],
+        //   fieldTypes: ['toggle'],
         //   validators: ['required', 'pattern', 'minlength'],
         //   renderers: [],
         //   themes: []
@@ -200,7 +200,7 @@ describe('Extension System', () => {
             plugins: [{ name: 'formdown-core', version: '1.0.0' }],
             hookCount: 0,
             registeredHooks: [],
-            fieldTypes: ['text', 'email', 'select', 'range', 'toggle'],
+            fieldTypes: ['toggle'],
             validators: ['required', 'pattern', 'minlength'],
             renderers: [],
             themes: []
@@ -208,22 +208,12 @@ describe('Extension System', () => {
     })
 
     it('The built-in plugin', async () => {
+        const before = generateFormHTML('@name: [text]')
         await initializeExtensions()
-        const withBuiltIn = generateFormHTML('@name: [text]')
-        // <label for="name">name</label>
-        // <input type="text" name="name" id="name" />
-
-        await getDefaultExtensionManager().unregisterPlugin('formdown-core')
-        const withoutBuiltIn = generateFormHTML('@name: [text]')
-        // <label for="name" part="label">Name</label>
-        // <input type="text" id="name" name="name" form="formdown-form-default" autocomplete="name" ...>
-
-        expect(withBuiltIn).toContain('<label for="name">name</label>')
-        expect(withBuiltIn).toContain('<input type="text" name="name" id="name" />')
-        expect(withoutBuiltIn).toContain('<label for="name" part="label">Name</label>')
-        expect(withoutBuiltIn).toContain('<input type="text" id="name" name="name" form="formdown-form-default" autocomplete="name"')
+        expect(generateFormHTML('@name: [text]')).toBe(before)
+        expect(generateFormHTML('@notify: [toggle]')).toContain('<input type="checkbox" role="switch" id="notify" name="notify"')
         await expect(registerPlugin({ metadata: { name: 'needs-core', version: '1.0.0', dependencies: ['formdown-core'] } }))
-            .rejects.toThrow("requires dependency 'formdown-core'")
+            .resolves.toBeUndefined()
     })
 
     it('Current limitations', async () => {
@@ -232,15 +222,15 @@ describe('Extension System', () => {
 
         const manager = getDefaultExtensionManager()
         await manager.destroy()
-        await expect(manager.initialize()).rejects.toThrow("Field type 'text' is already registered")
+        await expect(manager.initialize()).rejects.toThrow("Field type 'toggle' is already registered")
 
         await initializeExtensions({}) // a fresh default instance
         const handler = (_context: unknown, html: string) => html + '<!--late-->'
         await expect(registerPlugin({
-            metadata: { name: 'duplicate-text', version: '1.0.0' },
+            metadata: { name: 'duplicate-toggle', version: '1.0.0' },
             hooks: [{ name: 'post-generate', priority: 0, handler }],
-            fieldTypes: [{ type: 'text' }]
-        })).rejects.toThrow("Field type 'text' is already registered")
+            fieldTypes: [{ type: 'toggle' }]
+        })).rejects.toThrow("Field type 'toggle' is already registered")
         expect(generateFormHTML('@phone: [tel]').endsWith('<!--late-->')).toBe(true)
         getDefaultExtensionManager().unregisterHook('post-generate', handler)
     })

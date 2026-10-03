@@ -15,7 +15,7 @@ import {
 import type { Plugin, Field, FormdownContent } from '@formdown/core'
 ```
 
-Initializing also registers the built-in `formdown-core` plugin, which changes how `text`, `email`, `select`, `range` and `toggle` fields render (see *The Built-in Plugin* in [Extension System](/docs/extensions)). The examples use other field types so their output matches Formdown's default rendering.
+Initializing also registers the built-in `formdown-core` plugin, which adds the `toggle` field type and leaves the rendering of Formdown's own field types as it is.
 
 ## Template Variables
 

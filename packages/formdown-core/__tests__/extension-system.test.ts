@@ -323,14 +323,9 @@ describe('Extension System', () => {
     })
 
     describe('Core Plugin', () => {
-        it('should provide built-in field types', () => {
-            expect(corePlugin.fieldTypes).toBeDefined()
-            expect(corePlugin.fieldTypes?.length).toBeGreaterThan(0)
-
-            const fieldTypes = corePlugin.fieldTypes?.map(ft => ft.type) || []
-            expect(fieldTypes).toContain('text')
-            expect(fieldTypes).toContain('email')
-            expect(fieldTypes).toContain('select')
+        it('adds only field types the core does not have', () => {
+            // A plugin type is consulted before the core's own, so text, select or range here would replace them
+            expect(corePlugin.fieldTypes?.map(ft => ft.type)).toEqual(['toggle'])
         })
 
         it('should provide built-in validators', () => {
