@@ -109,3 +109,23 @@ describe('inline fields with braces', () => {
         expect(parsed.datalistDeclarations?.find(d => d.id === list)?.options).toEqual(['Seoul', 'Busan'])
     })
 })
+
+describe('escaping in option lists', () => {
+    it('keeps an escaped comma in its option, and an escaped = in its value', () => {
+        expect(parseOptionList(String.raw`서울\, 경기,부산`).options).toEqual([{ value: '서울, 경기' }, { value: '부산' }])
+        expect(parseOption(String.raw`a\=b=A or B`)).toEqual({ value: 'a=b', label: 'A or B' })
+        expect(parseOption(String.raw`dir=C:\\temp`)).toEqual({ value: 'dir', label: String.raw`C:\temp` })
+    })
+
+    it('writes what it reads back the same', () => {
+        const options = [{ value: '서울, 경기' }, { value: 'a=b', label: 'A, or B' }, { value: String.raw`back\slash` }]
+        expect(parseOptionList(formatOptions(options)).options).toEqual(options)
+    })
+
+    it('reads escapes written in an options attribute and in braces', () => {
+        const attribute = parse(String.raw`@region: [select options="서울\, 경기,부산"]`).forms[0].options
+        const braces = parse(String.raw`@region{서울\, 경기,부산}: s[]`).forms[0].options
+        expect(attribute).toEqual([{ value: '서울, 경기' }, { value: '부산' }])
+        expect(braces).toEqual(attribute)
+    })
+})

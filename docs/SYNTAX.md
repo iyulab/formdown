@@ -647,6 +647,12 @@ An option can store a value apart from the text shown for it — write `value=La
 @kind{hw=Hardware,sw=Software,Other}: s[]
 ```
 
+A backslash keeps a character in its option: `\,` is a comma inside an option, `\=` an `=` inside a value, `\\` a backslash.
+
+```formdown
+@region: [select options="seoul=Seoul\, Gyeonggi,busan=Busan"]
+```
+
 **An "other" choice:**
 End the options with `*` to add a choice whose value the person types; `*(text)` names it (default "Other"). The same can be written as the `allow-other` and `other-label="text"` attributes.
 
