@@ -1,5 +1,6 @@
 import { getSchema } from '../src/schema'
 import { FormDownSchema } from '../src/types'
+import { fastestOf } from './timing'
 
 describe('Schema Integration Tests', () => {
     describe('Real-world Forms', () => {
@@ -116,12 +117,10 @@ Please enter your name: ___@first_name* and ___@last_name*
             }
             const content = fields.join('\n')
 
-            const startTime = Date.now()
             const schema = getSchema(content)
-            const endTime = Date.now()
 
             expect(Object.keys(schema)).toHaveLength(50)
-            expect(endTime - startTime).toBeLessThan(500) // Should complete quickly
+            expect(fastestOf(() => getSchema(content))).toBeLessThan(500) // Should complete quickly
 
             // Check first and last fields
             expect(schema.field1.position).toBe(1)

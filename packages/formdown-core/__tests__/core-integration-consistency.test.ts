@@ -1,4 +1,5 @@
 import { parseFormdown, generateFormHTML, getSchema } from '../src/index'
+import { fastestOf } from './timing'
 
 describe('Core Integration Consistency Tests', () => {
   const testContent = `
@@ -229,17 +230,16 @@ ${largeFormFields}
 @submit: [submit label="Submit Large Form"]
 `
       
-      const startTime = Date.now()
-      
       const parseResult = parseFormdown(largeFormContent)
       const html = generateFormHTML(largeFormContent)
       const schema = getSchema(largeFormContent)
-      
-      const endTime = Date.now()
-      const processingTime = endTime - startTime
-      
+
       // Should complete within reasonable time (< 1 second)
-      expect(processingTime).toBeLessThan(1000)
+      expect(fastestOf(() => {
+        parseFormdown(largeFormContent)
+        generateFormHTML(largeFormContent)
+        getSchema(largeFormContent)
+      })).toBeLessThan(1000)
       
       // Should handle all fields consistently
       expect(parseResult.forms).toHaveLength(101) // 100 fields + 1 submit

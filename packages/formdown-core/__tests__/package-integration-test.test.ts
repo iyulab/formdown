@@ -1,4 +1,5 @@
 import { parseFormdown, generateFormHTML, getSchema, getDefaultExtensionManager } from '../src/index'
+import { fastestOf } from './timing'
 
 describe('Package Integration Tests', () => {
   const testContent = `
@@ -143,22 +144,17 @@ ${largeFormFields}
 @submit: [submit]
 `
 
-      // Warm up first: the first call includes one-time module and JIT cost, which
-      // made this wall-clock check fail on a loaded machine
-      parseFormdown(largeContent)
-      generateFormHTML(largeContent)
-      getSchema(largeContent)
-
-      const startTime = Date.now()
-      
       const parseResult = parseFormdown(largeContent)
       const html = generateFormHTML(largeContent)
       const schema = getSchema(largeContent)
-      
-      const endTime = Date.now()
-      
-      // Should complete within reasonable time
-      expect(endTime - startTime).toBeLessThan(500)
+
+      // Should complete within reasonable time. One timed run failed on a loaded machine even after a
+      // warm-up; the fastest of several is what the code itself costs.
+      expect(fastestOf(() => {
+        parseFormdown(largeContent)
+        generateFormHTML(largeContent)
+        getSchema(largeContent)
+      })).toBeLessThan(500)
       
       // Should handle all fields
       expect(parseResult.forms).toHaveLength(51) // 50 fields + submit

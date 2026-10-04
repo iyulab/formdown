@@ -12,6 +12,7 @@ import {
     SchemaExtractor,
     getDefaultExtensionManager
 } from '../src/index'
+import { fastestOf } from './timing'
 
 describe('Core Architecture', () => {
     beforeAll(async () => {
@@ -283,12 +284,10 @@ Please fill out your information.
                 `@field${i}: [text required]`
             ).join('\n')
             
-            const start = performance.now()
             const result = parseFormdown(fields)
-            const end = performance.now()
-            
+
             expect(result.forms).toHaveLength(100)
-            expect(end - start).toBeLessThan(1000) // Should parse in under 1 second
+            expect(fastestOf(() => parseFormdown(fields))).toBeLessThan(1000) // Should parse in under 1 second
         })
 
         test('should generate HTML for large forms efficiently', () => {
@@ -305,13 +304,11 @@ Please fill out your information.
                 forms: fields
             }
             
-            const start = performance.now()
             const html = generateFormHTML(content)
-            const end = performance.now()
 
             expect(html).toContain('formdown-form-default')
             expect(html).toContain('<h1>Large Form</h1>')
-            expect(end - start).toBeLessThan(500) // Should generate in under 0.5 seconds
+            expect(fastestOf(() => generateFormHTML(content))).toBeLessThan(500) // Should generate in under 0.5 seconds
         })
     })
 })

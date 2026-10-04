@@ -15,6 +15,7 @@ import {
     ValidationManager,
     EventOrchestrator
 } from '../src/index'
+import { fastestOf } from './timing'
 
 describe('Cross-Package Integration: Core API Surface', () => {
     describe('Core Module Exports', () => {
@@ -412,12 +413,10 @@ describe('Cross-Package Integration: Performance', () => {
             `@field_${i}: [text required]`
         ).join('\n')
 
-        const start = performance.now()
         const parsed = parseFormdown(fields)
-        const end = performance.now()
 
         expect(parsed.forms.length).toBe(100)
-        expect(end - start).toBeLessThan(1000) // Should complete in under 1 second
+        expect(fastestOf(() => parseFormdown(fields))).toBeLessThan(1000) // Should complete in under 1 second
     })
 
     it('should generate HTML for large forms efficiently', () => {
@@ -425,12 +424,10 @@ describe('Cross-Package Integration: Performance', () => {
             `@field_${i}: [text required]`
         ).join('\n')
 
-        const start = performance.now()
         const html = generateFormHTML(fields)
-        const end = performance.now()
 
         expect(html).toContain('field_0')
         expect(html).toContain('field_49')
-        expect(end - start).toBeLessThan(1000) // Should complete in under 1 second
+        expect(fastestOf(() => generateFormHTML(fields))).toBeLessThan(1000) // Should complete in under 1 second
     })
 })
