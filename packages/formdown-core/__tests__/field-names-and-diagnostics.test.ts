@@ -84,3 +84,26 @@ describe('Diagnostics', () => {
         expect(diagnostic.span).toEqual(expect.objectContaining({ line: 2, column: 3 }))
     })
 })
+
+describe('a line that looks like a field but is not read as one', () => {
+    it('is reported instead of becoming text without a word', () => {
+        const parsed = parseFormdown('@browser: r{Chrome,Firefox,*}[]')
+        expect(parsed.forms).toEqual([])
+        const [d] = parsed.diagnostics!
+        expect(d).toMatchObject({ code: 'unrecognized-field', severity: 'warning', field: 'browser' })
+        expect(d.message).toContain('@browser{…}: r[]')
+        expect(d.span).toMatchObject({ line: 1, column: 1 })
+    })
+
+    it('names what was not read without the braces hint when there are none', () => {
+        const [d] = parseFormdown('@size: zz[]').diagnostics!
+        expect(d).toMatchObject({ code: 'unrecognized-field', field: 'size' })
+        expect(d.message).not.toContain('braces')
+    })
+
+    it('is not said of fields that are read, or of lines with another problem', () => {
+        expect(codes('@browser{Chrome,Firefox,*}: r[]\n@plan: [radio options="a,b"]\n@kind*: s[options="a"]')).toEqual([])
+        expect(codes('@1st: [text]')).toEqual(['invalid-field-name'])
+        expect(codes('@open: [text placeholder="x"')).not.toContain('unrecognized-field')
+    })
+})

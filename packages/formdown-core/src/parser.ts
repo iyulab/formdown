@@ -814,18 +814,22 @@ export class FormdownParser {
         })
     }
 
-    /** Report attribute brackets starting at `open` that do not close on this line. */
-    private checkAttributeBrackets(line: string, open: number, from: number, base = 0): void {
+    /** Report attribute brackets starting at `open` that do not close on this line; says whether it did. */
+    private checkAttributeBrackets(line: string, open: number, from: number, base = 0): boolean {
         const scan = scanAttributes(line, open)
-        if (!('error' in scan)) return
+        if (!('error' in scan)) return false
         this.report(scan.error,
             scan.error === 'unterminated-quoted-value'
                 ? 'A quoted attribute value is never closed; attribute values cannot span lines'
                 : 'Field attributes are opened with "[" but never closed with "]"',
             base + from, line.length - from)
+        return true
     }
 
-    /** A line shaped like a block field that did not parse: an invalid name or unclosed brackets. */
+    /**
+     * A line shaped like a block field that did not parse: an invalid name, unclosed brackets, or a shape
+     * the parser does not read — which would otherwise leave the line as text with no field and no word.
+     */
     private checkBlockFieldSyntax(line: string): void {
         const trimmed = line.trim()
         const candidate = trimmed.match(BLOCK_FIELD_CANDIDATE)
@@ -837,7 +841,15 @@ export class FormdownParser {
                 column, candidate[0].length)
             return
         }
-        this.checkAttributeBrackets(line, column + candidate[0].length - 1, column)
+        if (this.checkAttributeBrackets(line, column + candidate[0].length - 1, column)) return
+        const afterColon = trimmed.slice(trimmed.indexOf(':') + 1)
+        const hint = /^\s*\S*\{/.test(afterColon)
+            ? ` In shorthand, the braces go after the name: @${candidate[1]}{…}: r[]`
+            : ''
+        this.report('unrecognized-field',
+            `This line looks like the field "${candidate[1]}" but is not read as one, so it shows as text.${hint}`,
+            column, trimmed.length, 'warning')
+        this.diagnostics[this.diagnostics.length - 1].field = candidate[1]
     }
 
     /** Inline field markers that cannot become fields. */
