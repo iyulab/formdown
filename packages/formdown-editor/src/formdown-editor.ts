@@ -191,6 +191,7 @@ export class FormdownEditor extends LitElement {
                             placeholder=${this.placeholder}
                             spellcheck="false"
                         ></textarea>
+                        ${this.renderErrors()}
                         <div class="stats">
                             <span>Lines: ${this.content.split('\n').length}</span>
                             <span>Characters: ${this.content.length}</span>
@@ -201,7 +202,6 @@ export class FormdownEditor extends LitElement {
                     <div class="preview-panel">
                         ${this.header ? html`<div class="panel-header">Formdown UI</div>` : ''}
                         <div class="preview-content">
-                            ${this.renderErrors()}
                             <div id="formdown-ui-container"></div>
                         </div>
                     </div>
@@ -431,7 +431,7 @@ export class FormdownEditor extends LitElement {
         `
     }
 
-    // Error rendering
+    // The problems with the source, under it: they name its lines
     private renderErrors() {
         const { problems } = this.parseResult
         if (problems.length === 0) return ''

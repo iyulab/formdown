@@ -1,45 +1,90 @@
 {
-    "preset": "ts-jest",
-    "testEnvironment": "jsdom",
-    "roots": [
-        "<rootDir>/src",
-        "<rootDir>/__tests__"
-    ],
-    "testMatch": [
-        "**/__tests__/**/*.test.ts"
-    ],
-    "collectCoverageFrom": [
-        "src/**/*.ts",
-        "!src/**/*.d.ts",
-        "!src/vite-env.d.ts"
-    ],
-    "moduleNameMapper": {
-        "\\.css\\?inline$": "<rootDir>/__tests__/mocks/empty.js",
-        "^lit$": "<rootDir>/__tests__/mocks/lit.js",
-        "^lit/decorators.js$": "<rootDir>/__tests__/mocks/lit-decorators.js",
-        "^@formdown/ui$": "<rootDir>/__tests__/mocks/empty.js",
-        "^@formdown/core$": "<rootDir>/../formdown-core/src/index.ts",
-        "^(\\.{1,2}/.*)\\.js$": "$1"
-    },
-    "transform": {
-        "^.+\\.[jt]s$": [
-            "ts-jest",
-            {
-                "tsconfig": {
-                    "verbatimModuleSyntax": false,
-                    "esModuleInterop": true,
-                    "allowJs": true,
-                    "experimentalDecorators": true,
-                    "useDefineForClassFields": false,
-                    "types": [
-                        "jest"
-                    ]
-                },
-                "diagnostics": false
-            }
-        ]
-    },
-    "transformIgnorePatterns": [
-        "node_modules/(?!marked/)"
+    "projects": [
+        {
+            "displayName": "unit",
+            "preset": "ts-jest",
+            "testEnvironment": "jsdom",
+            "roots": [
+                "<rootDir>/src",
+                "<rootDir>/__tests__"
+            ],
+            "testMatch": [
+                "**/__tests__/*.test.ts"
+            ],
+            "collectCoverageFrom": [
+                "src/**/*.ts",
+                "!src/**/*.d.ts",
+                "!src/vite-env.d.ts"
+            ],
+            "moduleNameMapper": {
+                "\\.css\\?inline$": "<rootDir>/__tests__/mocks/empty.js",
+                "^lit$": "<rootDir>/__tests__/mocks/lit.js",
+                "^lit/decorators.js$": "<rootDir>/__tests__/mocks/lit-decorators.js",
+                "^@formdown/ui$": "<rootDir>/__tests__/mocks/empty.js",
+                "^@formdown/core$": "<rootDir>/../formdown-core/src/index.ts",
+                "^(\\.{1,2}/.*)\\.js$": "$1"
+            },
+            "transform": {
+                "^.+\\.[jt]s$": [
+                    "ts-jest",
+                    {
+                        "tsconfig": {
+                            "verbatimModuleSyntax": false,
+                            "esModuleInterop": true,
+                            "allowJs": true,
+                            "experimentalDecorators": true,
+                            "useDefineForClassFields": false,
+                            "types": [
+                                "jest"
+                            ]
+                        },
+                        "diagnostics": false
+                    }
+                ]
+            },
+            "transformIgnorePatterns": [
+                "node_modules/(?!marked/)"
+            ]
+        },
+        {
+            "displayName": "render",
+            "preset": "ts-jest",
+            "testEnvironment": "jsdom",
+            "roots": [
+                "<rootDir>/__tests__/render"
+            ],
+            "testMatch": [
+                "**/__tests__/render/**/*.test.ts"
+            ],
+            "moduleNameMapper": {
+                "\\.css\\?inline$": "<rootDir>/__tests__/mocks/empty.js",
+                "^@formdown/ui$": "<rootDir>/../formdown-ui/src/index.ts",
+                "^@formdown/core$": "<rootDir>/../formdown-core/src/index.ts",
+                "^(\\.{1,2}/.*)\\.js$": "$1"
+            },
+            "transform": {
+                "^.+\\.[jt]s$": [
+                    "ts-jest",
+                    {
+                        "tsconfig": {
+                            "allowJs": true,
+                            "experimentalDecorators": true,
+                            "useDefineForClassFields": false,
+                            "verbatimModuleSyntax": false,
+                            "esModuleInterop": true,
+                            "module": "commonjs",
+                            "target": "ES2020",
+                            "types": [
+                                "jest"
+                            ]
+                        },
+                        "diagnostics": false
+                    }
+                ]
+            },
+            "transformIgnorePatterns": [
+                "node_modules/(?!(lit|@lit|lit-element|lit-html|@lit/reactive-element|marked)/)"
+            ]
+        }
     ]
 }

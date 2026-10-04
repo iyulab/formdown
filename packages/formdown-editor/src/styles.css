@@ -99,8 +99,9 @@
 .error-list {
     background-color: var(--formdown-error-bg, #fef2f2);
     border-left: 4px solid var(--formdown-error-color, #dc2626);
-    padding: 1rem;
-    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    max-height: 10rem;
+    overflow-y: auto;
 }
 
 .error-item {

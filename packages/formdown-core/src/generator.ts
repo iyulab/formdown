@@ -393,8 +393,9 @@ export class FormdownGenerator {
         // Always wrap fields in proper structure for accessibility
         const fieldHTML = this.generateFieldHTML(field, defaultFormId)
         
-        // If the field HTML already contains proper form structure, return as is
-        if (fieldHTML.includes('<div class="formdown-field"') || fieldHTML.includes('<div class="formdown-field formdown-conditional"')) {
+        // Markup that draws its own field — a <div> whose classes include formdown-field, with a label of its
+        // own — is only put in a container; another label would name the field twice
+        if (/<div class="formdown-field(?:\s[^"]*)?"/.test(fieldHTML)) {
             return `
 <div class="formdown-field-container">
 ${fieldHTML}
