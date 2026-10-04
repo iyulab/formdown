@@ -427,12 +427,10 @@ Please schedule your appointment:
 function interpretContent(content, typeMarker) {
   // 선택 타입: options 속성
   if (['r', 's', 'c'].includes(typeMarker)) {
-    const hasOther = content.includes(',*');
-    const options = content.replace(',*', '');
-    return {
-      options: options,
-      allowOther: hasOther
-    };
+    // parseOptionList(@formdown/core): 쉼표로 나누고, 항목마다 `값=이름`을 첫 `=`에서 나누며,
+    // `*`는 기타 선택지, `*(이름)`은 그 이름
+    const { options, allowOther, otherLabel } = parseOptionList(content);
+    return { options: formatOptions(options), allowOther, otherLabel };
   }
   
   // 날짜시간 타입: format 속성
