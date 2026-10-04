@@ -260,37 +260,37 @@ FormDown supports abbreviated syntax for faster form creation:
 ```formdown
 @email: @[]                    // Email field
 @age: #[]                      // Number field
-@password: ***[]               // Password field
-@website: http://[]            // URL field
-@phone: tel:[]                 // Tel field
-@birthdate: date:[]            // Date field
+@password: ?[]                 // Password field
+@website: &[]                  // URL field
+@phone: %[]                    // Tel field
+@birthdate: d[]                // Date field
+@meeting: t[]                  // Time field
 @bio: T[]                      // Textarea (default)
 @bio: T5[]                     // Textarea with 5 rows
-@agree: []                     // Checkbox (single)
-@plan: ()                      // Radio (with options)
-@country: v[]                  // Select dropdown
+@agree: [checkbox]             // Single checkbox
 ```
 
 ### Required Fields
 ```formdown
 @username*: []                 // Required field (asterisk after name)
 @email*: @[]                   // Required email
-@age*: #[min=18]              // Required number with validation
+@age*: #[min=18]               // Required number with validation
 ```
 
 ### Option Shortcuts
+Options go in braces after the name; the marker after the colon says the kind of choice.
 ```formdown
-// Radio shorthand
-@size: (S,M,L,XL)             // Radio buttons
-@size: (S,M,L,XL=L)           // With default value
+// Radio
+@size{S,M,L,XL}: r[]
+@size{S,M,L,XL}: r[value="L"]          // With a default value
 
-// Checkbox shorthand  
-@features: [x,y,z]            // Multiple checkboxes
-@features: [x,y=y,z=z]        // With default checked
+// Checkboxes
+@features{x,y,z}: c[]
+@features{x,y,z}: c[value="y,z"]       // With defaults checked
 
-// Select shorthand
-@country: v[USA,Canada,UK]    // Select dropdown
-@country: v[USA,Canada=Canada,UK]  // With default
+// Select
+@country{USA,Canada,UK}: s[]
+@country{us=USA,ca=Canada}: s[value="ca"]   // value=Label; the default is a value
 ```
 
 ## Validation Attributes
@@ -348,12 +348,12 @@ FormDown supports abbreviated syntax for faster form creation:
 ## Account Information
 @username*{^[a-zA-Z0-9_]{3,20}$}: [placeholder="Choose username"]
 @email*: @[]
-@password*: ***[minlength=8]
-@confirm_password*: ***[placeholder="Confirm password"]
+@password*: ?[minlength=8]
+@confirm_password*: ?[placeholder="Confirm password"]
 
 ## Profile Details  
 @full_name*: []
-@birth_date: date:[max="2006-01-01"]
+@birth_date: d[max="2006-01-01"]
 @gender: (Male,Female,Other,Prefer not to say)
 @bio: T4[maxlength=500 placeholder="Tell us about yourself"]
 
@@ -417,8 +417,8 @@ Use Markdown headers to organize forms:
 ### 3. Provide Clear Placeholders
 Help users understand expected input:
 ```formdown
-@phone: tel:[placeholder="(555) 123-4567"]
-@date: date:[placeholder="MM/DD/YYYY"]
+@phone: %[placeholder="(555) 123-4567"]
+@date: d[placeholder="MM/DD/YYYY"]
 @username: [placeholder="Letters, numbers, underscore only"]
 ```
 
@@ -426,7 +426,7 @@ Help users understand expected input:
 Choose the right input type for better UX:
 ```formdown
 @email: @[]                  // Email keyboard on mobile
-@phone: tel:[]               // Number pad on mobile
+@phone: %[]               // Number pad on mobile
 @website: http://[]          // URL keyboard on mobile
 @age: #[min=0 max=120]      // Number spinner
 ```
@@ -434,7 +434,7 @@ Choose the right input type for better UX:
 ### 5. Add Helpful Validation
 Validate on the client side when possible:
 ```formdown
-@password: ***[minlength=8 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"]
+@password: ?[minlength=8 pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"]
 @username{^[a-zA-Z0-9_]{3,20}$}: [required]
 @age: #[min=13 max=120 required]
 ```

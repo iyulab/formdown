@@ -10,9 +10,9 @@ Complete reference for all Formdown field types, attributes, and patterns.
 |------|--------|-----------|-----------|-------------|
 | **Text** | `[text]` | `[]` | `text` | General text input |
 | **Email** | `[email]` | `@[]` | `email` | Email validation |
-| **Password** | `[password]` | `***[]` | `password` | Hidden text input |
+| **Password** | `[password]` | `?[]` | `password` | Hidden text input |
 | **URL** | `[url]` | `http://[]` | `url` | URL validation |
-| **Tel** | `[tel]` | `tel:[]` | `tel` | Phone number input |
+| **Tel** | `[tel]` | `%[]` | `tel` | Phone number input |
 | **Search** | `[search]` | | `search` | Search input with clear |
 | **Number** | `[number]` | `#[]` | `number` | Numeric input with validation |
 | **Range** | `[range]` | `R[]` | `range` | Slider input with min/max |
@@ -24,7 +24,7 @@ Complete reference for all Formdown field types, attributes, and patterns.
 @email: [email required]            # Email with validation
 @email: @[]                         # Shorthand email
 @password: [password minlength=8]   # Password field
-@phone: tel:[]                      # Shorthand phone
+@phone: %[]                      # Shorthand phone
 @age: #[min=18 max=100]            # Number with constraints
 ```
 
@@ -32,8 +32,8 @@ Complete reference for all Formdown field types, attributes, and patterns.
 
 | Type | Syntax | Shorthand | HTML Type | Description |
 |------|--------|-----------|-----------|-------------|
-| **Date** | `[date]` | `date:[]` | `date` | Date picker |
-| **Time** | `[time]` | `time:[]` | `time` | Time selector |
+| **Date** | `[date]` | `d[]` | `date` | Date picker |
+| **Time** | `[time]` | `t[]` | `time` | Time selector |
 | **DateTime** | `[datetime-local]` | `dt[]` | `datetime-local` | Date and time picker |
 | **Month** | `[month]` | `M[]` | `month` | Month picker |
 | **Week** | `[week]` | `W[]` | `week` | Week picker |
@@ -41,8 +41,8 @@ Complete reference for all Formdown field types, attributes, and patterns.
 **Example:**
 ```formdown
 @birth_date: [date max="2010-12-31"]
-@birth_date: date:[]                 # Shorthand
-@meeting_time: time:[]               # Time only
+@birth_date: d[]                 # Shorthand
+@meeting_time: t[]               # Time only
 @appointment: dt[]                   # Date and time
 @birth_month: [month]               # Month picker
 ```

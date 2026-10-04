@@ -86,9 +86,9 @@ FormDown's shorthand syntax provides **sugar syntax** for common patterns to mak
 ### Password Fields
 ```formdown
 // Standard → Shorthand
-@password: [password] → @password: ***[]
-@password: [password required] → @password*: ***[]
-@password: [password minlength=8] → @password*: ***[minlength=8]
+@password: [password] → @password: ?[]
+@password: [password required] → @password*: ?[]
+@password: [password minlength=8] → @password*: ?[minlength=8]
 ```
 
 ### URL Fields
@@ -101,16 +101,16 @@ FormDown's shorthand syntax provides **sugar syntax** for common patterns to mak
 ### Phone Fields
 ```formdown
 // Standard → Shorthand  
-@phone: [tel] → @phone: tel:[]
-@phone: [tel required] → @phone*: tel:[]
+@phone: [tel] → @phone: %[]
+@phone: [tel required] → @phone*: %[]
 ```
 
 ### Date/Time Fields
 ```formdown
 // Standard → Shorthand
-@birthdate: [date] → @birthdate: date:[]
-@appointment: [time] → @appointment: time:[]
-@birthdate: [date required] → @birthdate*: date:[]
+@birthdate: [date] → @birthdate: d[]
+@appointment: [time] → @appointment: t[]
+@birthdate: [date required] → @birthdate*: d[]
 ```
 
 ### Textarea
@@ -158,7 +158,7 @@ FormDown's shorthand syntax provides **sugar syntax** for common patterns to mak
 ### Using Field Name Pattern
 ```formdown
 // Username pattern (3-20 alphanumeric + underscore)
-@username{^[a-zA-Z0-9_]{3,20}$}*: []
+@username*{^[a-zA-Z0-9_]{3,20}$}: []
 
 // Employee ID pattern
 @employee_id{^EMP[0-9]{6}$}: []
@@ -187,7 +187,7 @@ My name is ___@name[] and I'm ___@age: #[] years old.
 Please enter your ___@email*: @[] to continue.
 
 // With options
-I prefer ___@color: s{Red,Blue,Green}[] as my favorite color.
+I prefer ___@color{Red,Blue,Green}: s[] as my favorite color.
 ```
 
 ## Label Shorthand
@@ -199,7 +199,7 @@ I prefer ___@color: s{Red,Blue,Green}[] as my favorite color.
 @age(Your Age): #[min=0 max=120]
 
 // Combines with all other shorthand
-@password(Choose Password)*: ***[minlength=8]
+@password(Choose Password)*: ?[minlength=8]
 ```
 
 ### Money/Currency Fields
@@ -232,7 +232,7 @@ I prefer ___@color: s{Red,Blue,Green}[] as my favorite color.
 
 @name(Full Name)*: []
 @email*: @[]
-@phone(Phone Number): tel:[]
+@phone(Phone Number): %[]
 @subject: []
 @message(Your Message)*: T5[]
 @newsletter: c[] Subscribe to newsletter
@@ -242,20 +242,20 @@ I prefer ___@color: s{Red,Blue,Green}[] as my favorite color.
 ```formdown
 # Sign Up
 
-@username{^[a-zA-Z0-9_]{3,20}$}*: []
+@username*{^[a-zA-Z0-9_]{3,20}$}: []
 @email*: @[]
-@password*: ***[minlength=8]
-@confirm_password(Confirm Password)*: ***[]
+@password*: ?[minlength=8]
+@confirm_password(Confirm Password)*: ?[]
 @age: #[min=13 max=120]
-@country: s{USA,Canada,UK,Other}[]
-@interests: c{Sports,Music,Tech,Gaming}[]
+@country{USA,Canada,UK,Other}: s[]
+@interests{Sports,Music,Tech,Gaming}: c[]
 @terms*: c[] I agree to terms
 ```
 
 ### Survey Form
 ```formdown
-@rating(How would you rate us?): r{1|2|3|4|5=3}[]
-@improve(What should we improve?): c{UI|Features|Docs|Support|*}[]
+@rating(How would you rate us?){1,2,3,4,5}: r[value="3"]
+@improve(What should we improve?){UI,Features,Docs,Support,*}: c[]
 @comments: T4[maxlength=500]
 ```
 
@@ -276,7 +276,7 @@ I prefer ___@color: s{Red,Blue,Green}[] as my favorite color.
 @email*: @[]
 @age: #[min=18 max=100]
 @bio: T5[maxlength=500]
-@country: s{USA,Canada,UK,Other}[]
+@country{USA,Canada,UK,Other}: s[]
 @newsletter: [checked] Subscribe
 ```
 
@@ -306,10 +306,10 @@ I prefer ___@color: s{Red,Blue,Green}[] as my favorite color.
 ### 3. Keep Options Readable
 ```formdown
 // Good - Pipe separator for few options
-@size: r{S|M|L|XL}[]
+@size{S,M,L,XL}: r[]
 
 // Good - Comma for many options
-@country: s{USA,Canada,Mexico,UK,France,Germany,Japan,Australia}[]
+@country{USA,Canada,Mexico,UK,France,Germany,Japan,Australia}: s[]
 ```
 
 ### 4. Smart Label Usage
@@ -332,11 +332,11 @@ I prefer ___@color: s{Red,Blue,Green}[] as my favorite color.
 | `[email]` | `@[]` | @ prefix |
 | `[number]` | `#[]` | # prefix |
 | `[number]` (money) | `$[]` | $ prefix (currency) |
-| `[password]` | `***[]` | *** prefix |
-| `[tel]` | `tel:[]` | tel: prefix |
+| `[password]` | `?[]` | ? prefix |
+| `[tel]` | `%[]` | % prefix |
 | `[url]` | `http://[]` | http:// prefix |
-| `[date]` | `date:[]` | date: prefix |
-| `[time]` | `time:[]` | time: prefix |
+| `[date]` | `d[]` | d prefix |
+| `[time]` | `t[]` | t prefix |
 | `[datetime-local]` | `dt[]` | dt prefix |
 | `[month]` | `M[]` | M prefix |
 | `[week]` | `W[]` | W prefix |
