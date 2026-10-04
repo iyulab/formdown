@@ -4,6 +4,10 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ## Unreleased
 
+### Added
+
+- Diagnostics `invalid-condition` — a `visible-if`, `hidden-if`, `enabled-if`, `disabled-if` or `required-if` whose value is not a condition, which left the field unconditional without a word — and `condition-unknown-field` — a condition naming a field the form does not have. Both are warnings on the field they are about.
+
 ### Changed
 
 - **Breaking**: a field type's `validator` is called by `validateForm()` — and so by `<formdown-ui>`'s `validate()` — for every field of the type that can be filled in, after the required check. It is `(value, field) => string[]`: the messages of the errors it finds, given the field's schema entry and its `name`. It was `(field, value) => ValidationRule[]`, and nothing called it. The registry's `validateField(field, value)` is `validate(value, field)`.

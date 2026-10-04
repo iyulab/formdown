@@ -33,6 +33,15 @@ const INPUT_TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'searc
 
 /** Something shaped like a block field whose name is not a valid name, e.g. `@1st: [text]`. */
 const BLOCK_FIELD_CANDIDATE = /^@([^\s:([{*\-<>@\]]+)[^:]*:\s*\S*\[/u
+
+/** The conditional attributes, each with where its condition is kept on the field. */
+const CONDITIONAL_ATTRIBUTES: Record<string, keyof ConditionalAttributes> = {
+    'visible-if': 'visibleIf',
+    'hidden-if': 'hiddenIf',
+    'enabled-if': 'enabledIf',
+    'disabled-if': 'disabledIf',
+    'required-if': 'requiredIf',
+}
 import { getDefaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 import { escapeHtml } from './escape.js'
@@ -56,6 +65,8 @@ export class FormdownParser {
     private lineStarts: number[] = []
     private currentLine = 0
     private markedInlineFields: Field[] = []
+    /** Conditional attributes whose value could not be read, reported once every field is known. */
+    private unreadableConditions: { field: Field; attribute: string; text: string }[] = []
 
     constructor(options: FormdownOptions = {}) {
         this.options = {
@@ -78,6 +89,7 @@ export class FormdownParser {
         this.defaultFormCreated = false
         this.diagnostics = []
         this.markedInlineFields = []
+        this.unreadableConditions = []
 
         // Extension hooks: a failing hook is reported, never fatal
         const onHookError = (message: string) => {
@@ -93,6 +105,7 @@ export class FormdownParser {
             onHookError
         ))
         this.reportDuplicateNames(fields)
+        this.reportConditions(fields)
 
         const result: FormdownContent = {
             markdown: this.options.preserveMarkdown ? extracted.cleanedMarkdown : '',
@@ -818,45 +831,12 @@ export class FormdownParser {
                         }
                     }
                 }
-            } else if (key === 'visible-if' && hasValue) {
-                // Handle conditional visibility
-                const conditionValue = text
-                const condition = this.parseCondition(conditionValue)
+            } else if (key in CONDITIONAL_ATTRIBUTES && hasValue) {
+                const condition = this.parseCondition(text)
                 if (condition) {
-                    if (!field.conditions) field.conditions = {}
-                    field.conditions.visibleIf = condition
-                }
-            } else if (key === 'hidden-if' && hasValue) {
-                // Handle conditional hiding
-                const conditionValue = text
-                const condition = this.parseCondition(conditionValue)
-                if (condition) {
-                    if (!field.conditions) field.conditions = {}
-                    field.conditions.hiddenIf = condition
-                }
-            } else if (key === 'enabled-if' && hasValue) {
-                // Handle conditional enabling
-                const conditionValue = text
-                const condition = this.parseCondition(conditionValue)
-                if (condition) {
-                    if (!field.conditions) field.conditions = {}
-                    field.conditions.enabledIf = condition
-                }
-            } else if (key === 'disabled-if' && hasValue) {
-                // Handle conditional disabling
-                const conditionValue = text
-                const condition = this.parseCondition(conditionValue)
-                if (condition) {
-                    if (!field.conditions) field.conditions = {}
-                    field.conditions.disabledIf = condition
-                }
-            } else if (key === 'required-if' && hasValue) {
-                // Handle conditional requirement
-                const conditionValue = text
-                const condition = this.parseCondition(conditionValue)
-                if (condition) {
-                    if (!field.conditions) field.conditions = {}
-                    field.conditions.requiredIf = condition
+                    field.conditions = { ...field.conditions, [CONDITIONAL_ATTRIBUTES[key]]: condition }
+                } else {
+                    this.unreadableConditions.push({ field, attribute: key, text })
                 }
             } else if (hasValue) {
                 field.attributes![key] = attributeValue(token)
@@ -940,6 +920,40 @@ export class FormdownParser {
                 })
             }
             seen.add(field.name)
+        }
+    }
+
+    /**
+     * A condition that could not be read leaves its field unconditional, and one naming a field the form
+     * does not have never holds (or always does): both are reported where the field is.
+     */
+    private reportConditions(fields: Field[]): void {
+        for (const { field, attribute, text } of this.unreadableConditions) {
+            this.diagnostics.push({
+                code: 'invalid-condition',
+                message: `${attribute}="${text}" cannot be read: a condition is "field", "!field", "field=value" or "field!=value"`,
+                severity: 'warning',
+                field: field.name,
+                ...(field.span && { span: field.span })
+            })
+        }
+        const names = new Set(fields.map(field => field.name))
+        for (const field of fields) {
+            // One problem per name a field's conditions miss, however many of its conditions name it.
+            const missing = new Map<string, string[]>()
+            for (const [attribute, property] of Object.entries(CONDITIONAL_ATTRIBUTES)) {
+                const condition = field.conditions?.[property]
+                if (condition && !names.has(condition.field)) missing.set(condition.field, [...(missing.get(condition.field) ?? []), attribute])
+            }
+            for (const [name, attributes] of missing) {
+                this.diagnostics.push({
+                    code: 'condition-unknown-field',
+                    message: `${attributes.join(' and ')} ${attributes.length > 1 ? 'name' : 'names'} "${name}", which is not a field of this form`,
+                    severity: 'warning',
+                    field: field.name,
+                    ...(field.span && { span: field.span })
+                })
+            }
         }
     }
 

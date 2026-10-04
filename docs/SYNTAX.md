@@ -974,6 +974,8 @@ const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
 | `unterminated-attributes` | error | A field opens `[` without a closing `]` on the same line |
 | `unterminated-quoted-value` | error | A quoted attribute value is not closed on the same line |
 | `duplicate-field-name` | warning | A name is used by more than one field. All occurrences are kept; each one after the first is reported, with `field` and its `span` |
+| `invalid-condition` | warning | A conditional attribute (`visible-if`, `hidden-if`, `enabled-if`, `disabled-if`, `required-if`) whose value is not a condition, e.g. `visible-if="a == 1"`. The field is kept without that condition |
+| `condition-unknown-field` | warning | A condition names a field the form does not have, so it never holds (or, negated, always does) |
 | `front-matter-invalid-yaml` | error | The front matter is not valid YAML. `frontMatter.raw` keeps the text; `frontMatter.data` is empty |
 | `front-matter-not-mapping` | error | The front matter is valid YAML but not a mapping of keys to values |
 
