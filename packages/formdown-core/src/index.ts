@@ -46,6 +46,7 @@ export { FormdownFieldHelper, type FieldHelperOptions, type FieldValue, type For
 import { FormdownParser } from './parser.js'
 import { FormdownGenerator } from './generator.js'
 import { getSchema as getSchemaFunction } from './schema.js'
+import { getDefaultExtensionManager } from './extensions/extension-manager.js'
 
 export function parseFormdown(input: string) {
     const parser = new FormdownParser()
@@ -74,6 +75,8 @@ export function getSchema(content: string) {
 // Validation utilities
 interface BasicFieldSchema {
     name?: string
+    /** The field type; a type a plugin adds is checked by that plugin's `validator` as well. */
+    type?: string
     label?: string
     required?: boolean
     errorMessage?: string
@@ -98,7 +101,8 @@ export function validateField(value: unknown, schema: BasicFieldSchema): import(
 }
 
 /**
- * Basic form validation. For advanced validation with async support, use ValidationManager.
+ * Basic form validation: required (and `required-if`), then each field type's own `validator` when a
+ * plugin registered one. For advanced validation with async support, use ValidationManager.
  */
 export function validateForm(data: Record<string, unknown>, schema: Record<string, BasicFieldSchema>): import('./types.js').ValidationResult {
     const errors: import('./types.js').FieldError[] = []
@@ -113,6 +117,9 @@ export function validateForm(data: Record<string, unknown>, schema: Record<strin
             required: fieldSchema.required || state.required,
         })
         errors.push(...fieldErrors)
+        for (const message of getDefaultExtensionManager().getFieldTypeRegistry().validate(data[fieldName], { ...fieldSchema, name: fieldName })) {
+            errors.push({ field: fieldName, message })
+        }
     })
 
     return {

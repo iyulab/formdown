@@ -3,7 +3,7 @@
  * Defines interfaces and types for the Formdown extension system
  */
 
-import type { Field, ValidationRule } from '../types.js'
+import type { Field, FieldSchema } from '../types.js'
 
 // ================================
 // Hook System Types
@@ -51,38 +51,26 @@ export interface PluginMetadata {
     dependencies?: string[]
 }
 
+/** A field as `validateForm` sees it: its schema entry (`getSchema`) and its name. */
+export type FieldTypeSubject = Omit<Partial<FieldSchema>, 'type'> & { name: string; type?: string }
+
 export interface FieldTypePlugin {
     /** Field type identifier */
     type: string
     /** Parser for this field type */
     parser?: (content: string, context: HookContext) => Field | null
-    /** Validator for this field type */
-    validator?: (field: Field, value: any) => ValidationRule[]
+    /**
+     * Checks a value of this field type. `validateForm` (and `<formdown-ui>`'s `validate()`) call it for
+     * every field of the type that can be filled in, after the required check; each message returned is
+     * one error. Required is checked by Formdown already — check only what is particular to the type.
+     */
+    validator?: (value: unknown, field: FieldTypeSubject) => string[]
     /** HTML generator for this field type */
     generator?: (field: Field, context: HookContext) => string
     /** Default attributes for this field type */
     defaultAttributes?: Record<string, any>
-    /** Data processor for handling field values */
-    dataProcessor?: FieldDataProcessor
-    /** Schema generator for JSON Schema validation */
-    schemaGenerator?: (field: Field) => object
-    /** CSS styles specific to this field type */
+    /** CSS for the HTML `generator` writes; `<formdown-ui>` applies it to a form holding a field of this type */
     styles?: string
-    /** Client-side initialization script */
-    clientScript?: string
-}
-
-export interface FieldDataProcessor {
-    /** Process input value before form submission */
-    processInput?: (value: any, field: Field) => any
-    /** Process value for display */
-    processOutput?: (value: any, field: Field) => any
-    /** Validate data format */
-    validate?: (value: any, field: Field) => { valid: boolean; error?: string }
-    /** Serialize data for storage */
-    serialize?: (value: any, field: Field) => string
-    /** Deserialize data from storage */
-    deserialize?: (value: string, field: Field) => any
 }
 
 export interface Plugin {
@@ -124,14 +112,9 @@ export interface FieldTypeRegistry {
     getAll(): Map<string, FieldTypePlugin>
     parseField(content: string, context: HookContext): Field | null
     generateFieldHTML(field: Field, context: HookContext): string | null
-    validateField(field: Field, value: any): ValidationRule[]
-    processFieldData(field: Field, value: any, operation: 'input' | 'output' | 'serialize' | 'deserialize'): any
-    validateFieldData(field: Field, value: any): { valid: boolean; error?: string }
-    generateFieldSchema(field: Field): object | null
+    validate(value: unknown, field: FieldTypeSubject): string[]
     getAllStyles(): string
     getStylesForTypes(types: string[]): string
-    getAllScripts(): string
-    getScriptsForTypes(types: string[]): string
     getStats(): object
     clear(): void
 }

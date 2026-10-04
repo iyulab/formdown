@@ -50,29 +50,6 @@ describe('Toggle Field Plugin', () => {
         })
     })
 
-    describe('Validator', () => {
-        const validate = toggleFieldPlugin.validator!
-
-        test('should pass when required and value is true', () => {
-            const field = { name: 'agree', type: 'toggle', label: 'Agree', required: true }
-            const rules = validate(field, true)
-            expect(rules).toHaveLength(0)
-        })
-
-        test('should fail when required and value is false', () => {
-            const field = { name: 'agree', type: 'toggle', label: 'Agree', required: true }
-            const rules = validate(field, false)
-            expect(rules).toHaveLength(1)
-            expect(rules[0].type).toBe('required')
-        })
-
-        test('should pass when not required regardless of value', () => {
-            const field = { name: 'option', type: 'toggle', label: 'Option' }
-            expect(validate(field, false)).toHaveLength(0)
-            expect(validate(field, true)).toHaveLength(0)
-        })
-    })
-
     describe('Generator', () => {
         const generate = toggleFieldPlugin.generator!
 
@@ -99,8 +76,17 @@ describe('Toggle Field Plugin', () => {
         test('should include checked when set', () => {
             const field = { name: 'toggle1', type: 'toggle', label: 'Toggle', attributes: { checked: true } }
             const html = generate(field, { input: '' })
-            expect(html).toContain('checked')
-            expect(html).toContain('aria-checked="true"')
+            expect(html).toMatch(/<input[^>]* checked[ >]/)
+        })
+
+        test('carries value "true" like a single checkbox, so its form data is a boolean', () => {
+            const field = { name: 'toggle1', type: 'toggle', label: 'Toggle', attributes: {} }
+            expect(generate(field, { input: '' })).toContain('value="true"')
+        })
+
+        test('leaves its on/off state to the checkbox — no aria-checked to go stale', () => {
+            const field = { name: 'toggle1', type: 'toggle', label: 'Toggle', attributes: { checked: true } }
+            expect(generate(field, { input: '' })).not.toContain('aria-checked')
         })
 
         test('should include required when set', () => {
@@ -117,59 +103,10 @@ describe('Toggle Field Plugin', () => {
         })
     })
 
-    describe('DataProcessor', () => {
-        const dp = toggleFieldPlugin.dataProcessor!
-        const field = { name: 'test', type: 'toggle', label: 'Test' }
-
-        test('processInput should convert string to boolean', () => {
-            expect(dp.processInput!('true', field)).toBe(true)
-            expect(dp.processInput!('false', field)).toBe(false)
-            expect(dp.processInput!('on', field)).toBe(true)
-            expect(dp.processInput!('off', field)).toBe(false)
-        })
-
-        test('processInput should pass through booleans', () => {
-            expect(dp.processInput!(true, field)).toBe(true)
-            expect(dp.processInput!(false, field)).toBe(false)
-        })
-
-        test('processOutput should return string', () => {
-            expect(dp.processOutput!(true, field)).toBe('true')
-            expect(dp.processOutput!(false, field)).toBe('false')
-        })
-
-        test('serialize/deserialize round-trip', () => {
-            expect(dp.deserialize!(dp.serialize!(true, field), field)).toBe(true)
-            expect(dp.deserialize!(dp.serialize!(false, field), field)).toBe(false)
-        })
-    })
-
-    describe('SchemaGenerator', () => {
-        const generateSchema = toggleFieldPlugin.schemaGenerator!
-
-        test('should generate boolean type schema', () => {
-            const field = { name: 'toggle1', type: 'toggle', label: 'My Toggle' }
-            const schema = generateSchema(field) as any
-            expect(schema.type).toBe('boolean')
-            expect(schema.title).toBe('My Toggle')
-        })
-
-        test('should include required when set', () => {
-            const field = { name: 'toggle1', type: 'toggle', label: 'Test', required: true }
-            const schema = generateSchema(field) as any
-            expect(schema.required).toBe(true)
-        })
-    })
-
-    describe('Styles and ClientScript', () => {
+    describe('Styles', () => {
         test('should have styles defined', () => {
             expect(toggleFieldPlugin.styles).toBeDefined()
             expect(toggleFieldPlugin.styles).toContain('formdown-toggle')
-        })
-
-        test('should have client script defined', () => {
-            expect(toggleFieldPlugin.clientScript).toBeDefined()
-            expect(toggleFieldPlugin.clientScript).toContain('aria-checked')
         })
     })
 

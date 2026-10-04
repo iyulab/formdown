@@ -137,132 +137,23 @@ describe('FieldTypeRegistry', () => {
     })
 
     describe('Field validation', () => {
-        it('should validate fields using registered validators', () => {
-            const testPlugin: FieldTypePlugin = {
+        it("returns the messages of the type's validator", () => {
+            registry.register({
                 type: 'custom',
-                validator: (field: Field, value: any) => {
-                    if (!value) {
-                        return [{ type: 'required', message: 'Field is required' }]
-                    }
-                    return []
-                }
-            }
-
-            registry.register(testPlugin)
-
-            const field: Field = { name: 'test', type: 'custom', label: 'Test' }
-            const rules = registry.validateField(field, '')
-
-            expect(rules).toHaveLength(1)
-            expect(rules[0]).toEqual({
-                type: 'required',
-                message: 'Field is required'
+                validator: (value, field) => (String(value).includes('@') ? [] : [`${field.label} needs an @`]),
             })
+
+            expect(registry.validate('a', { name: 'test', type: 'custom', label: 'Test' })).toEqual(['Test needs an @'])
+            expect(registry.validate('a@b', { name: 'test', type: 'custom', label: 'Test' })).toEqual([])
         })
 
-        it('should return empty array when no validator exists', () => {
-            const field: Field = { name: 'test', type: 'unknown', label: 'Test' }
-            const rules = registry.validateField(field, 'value')
-
-            expect(rules).toEqual([])
-        })
-    })
-
-    describe('Data processing', () => {
-        it('should process field data using registered processors', () => {
-            const testPlugin: FieldTypePlugin = {
-                type: 'custom',
-                dataProcessor: {
-                    processInput: (value: any) => value.toUpperCase(),
-                    processOutput: (value: any) => value.toLowerCase(),
-                    serialize: (value: any) => JSON.stringify(value),
-                    deserialize: (value: string) => JSON.parse(value)
-                }
-            }
-
-            registry.register(testPlugin)
-
-            const field: Field = { name: 'test', type: 'custom', label: 'Test' }
-
-            expect(registry.processFieldData(field, 'hello', 'input')).toBe('HELLO')
-            expect(registry.processFieldData(field, 'WORLD', 'output')).toBe('world')
-            expect(registry.processFieldData(field, { data: 'test' }, 'serialize')).toBe('{"data":"test"}')
-            expect(registry.processFieldData(field, '{"data":"test"}', 'deserialize')).toEqual({ data: 'test' })
-        })
-
-        it('should return original value when no processor exists', () => {
-            const field: Field = { name: 'test', type: 'unknown', label: 'Test' }
-            const result = registry.processFieldData(field, 'value', 'input')
-
-            expect(result).toBe('value')
+        it('finds nothing for a type without a validator, or a field without a type', () => {
+            expect(registry.validate('value', { name: 'test', type: 'unknown' })).toEqual([])
+            expect(registry.validate('value', { name: 'test' })).toEqual([])
         })
     })
 
-    describe('Data validation', () => {
-        it('should validate field data using registered validators', () => {
-            const testPlugin: FieldTypePlugin = {
-                type: 'custom',
-                dataProcessor: {
-                    validate: (value: any) => {
-                        if (typeof value !== 'string') {
-                            return { valid: false, error: 'Must be a string' }
-                        }
-                        return { valid: true }
-                    }
-                }
-            }
-
-            registry.register(testPlugin)
-
-            const field: Field = { name: 'test', type: 'custom', label: 'Test' }
-
-            expect(registry.validateFieldData(field, 'valid')).toEqual({ valid: true })
-            expect(registry.validateFieldData(field, 123)).toEqual({
-                valid: false,
-                error: 'Must be a string'
-            })
-        })
-
-        it('should return valid when no validator exists', () => {
-            const field: Field = { name: 'test', type: 'unknown', label: 'Test' }
-            const result = registry.validateFieldData(field, 'any value')
-
-            expect(result).toEqual({ valid: true })
-        })
-    })
-
-    describe('Schema generation', () => {
-        it('should generate schema using registered generators', () => {
-            const testPlugin: FieldTypePlugin = {
-                type: 'custom',
-                schemaGenerator: (field: Field) => ({
-                    type: 'string',
-                    title: field.label,
-                    required: field.required
-                })
-            }
-
-            registry.register(testPlugin)
-
-            const field: Field = { name: 'test', type: 'custom', label: 'Test', required: true }
-            const schema = registry.generateFieldSchema(field)
-
-            expect(schema).toEqual({
-                type: 'string',
-                title: 'Test',
-                required: true
-            })
-        })
-
-        it('should return null when no schema generator exists', () => {
-            const field: Field = { name: 'test', type: 'unknown', label: 'Test' }
-            const schema = registry.generateFieldSchema(field)
-
-            expect(schema).toBeNull()
-        })
-    })
-
-    describe('Styles and scripts management', () => {
+    describe('Styles', () => {
         it('should collect and return all styles', () => {
             const plugin1: FieldTypePlugin = {
                 type: 'type1',
@@ -300,25 +191,6 @@ describe('FieldTypeRegistry', () => {
             expect(specificStyles).toBe('.type1 { color: red; }')
             expect(specificStyles).not.toContain('.type2 { color: blue; }')
         })
-
-        it('should collect and return all scripts', () => {
-            const plugin1: FieldTypePlugin = {
-                type: 'type1',
-                clientScript: 'console.log("type1");'
-            }
-
-            const plugin2: FieldTypePlugin = {
-                type: 'type2',
-                clientScript: 'console.log("type2");'
-            }
-
-            registry.register(plugin1)
-            registry.register(plugin2)
-
-            const allScripts = registry.getAllScripts()
-            expect(allScripts).toContain('console.log("type1");')
-            expect(allScripts).toContain('console.log("type2");')
-        })
     })
 
     describe('Statistics and management', () => {
@@ -326,7 +198,6 @@ describe('FieldTypeRegistry', () => {
             const plugin1: FieldTypePlugin = {
                 type: 'type1',
                 styles: '.type1 { color: red; }',
-                clientScript: 'console.log("type1");'
             }
 
             const plugin2: FieldTypePlugin = {
@@ -341,7 +212,6 @@ describe('FieldTypeRegistry', () => {
             expect(stats.registeredTypes).toEqual(['type1', 'type2'])
             expect(stats.totalTypes).toBe(2)
             expect(stats.typesWithStyles).toEqual(['type1'])
-            expect(stats.typesWithScripts).toEqual(['type1'])
         })
 
         it('should clear all registrations', () => {

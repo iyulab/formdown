@@ -1,10 +1,11 @@
 /**
  * @fileoverview Toggle Field Type Plugin
- * Renders a toggle switch (checkbox with role="switch")
+ * Renders a toggle switch: a single checkbox with role="switch". Like a single checkbox it carries
+ * value "true", so its form data is a boolean, and its on/off state is the checkbox's own.
  */
 
 import type { FieldTypePlugin, HookContext } from '../types.js'
-import type { Field, ValidationRule } from '../../types.js'
+import type { Field } from '../../types.js'
 import { NAME, pattern as unicodePattern } from '../../grammar.js'
 import { escapeHtml } from '../../escape.js'
 
@@ -39,19 +40,6 @@ export const toggleFieldPlugin: FieldTypePlugin = {
         return null
     },
 
-    validator: (field: Field, value: any): ValidationRule[] => {
-        const rules: ValidationRule[] = []
-
-        if (field.required && !value) {
-            rules.push({
-                type: 'required' as const,
-                message: `${field.label} must be enabled`
-            })
-        }
-
-        return rules
-    },
-
     generator: (field: Field, context: HookContext) => {
         const { name, label, required, attributes = {} } = field
         const checked = attributes.checked === true || attributes.checked === 'true'
@@ -62,10 +50,11 @@ export const toggleFieldPlugin: FieldTypePlugin = {
             'role="switch"',
             `id="${escapeHtml(name)}"`,
             `name="${escapeHtml(name)}"`,
+            'value="true"',
             checked ? 'checked' : '',
             required ? 'required' : '',
             formId ? `form="${escapeHtml(formId)}"` : '',
-            `aria-checked="${checked}"`,
+            'part="input toggle-input"',
         ].filter(Boolean).join(' ')
 
         return `
@@ -78,46 +67,6 @@ export const toggleFieldPlugin: FieldTypePlugin = {
         <span class="formdown-toggle-text">${label}${required ? ' *' : ''}</span>
     </label>
 </div>`
-    },
-
-    dataProcessor: {
-        processInput: (value: any, field: Field) => {
-            if (typeof value === 'boolean') return value
-            if (typeof value === 'string') return value === 'true' || value === 'on'
-            return Boolean(value)
-        },
-
-        processOutput: (value: any, field: Field) => {
-            return value ? 'true' : 'false'
-        },
-
-        validate: (value: any, field: Field) => {
-            return { valid: true }
-        },
-
-        serialize: (value: any, field: Field) => {
-            return value ? 'true' : 'false'
-        },
-
-        deserialize: (value: string, field: Field) => {
-            return value === 'true' || value === 'on'
-        }
-    },
-
-    schemaGenerator: (field: Field) => {
-        const schema: any = {
-            type: 'boolean'
-        }
-
-        if (field.required) {
-            schema.required = true
-        }
-
-        if (field.label) {
-            schema.title = field.label
-        }
-
-        return schema
     },
 
     styles: `
@@ -184,17 +133,6 @@ export const toggleFieldPlugin: FieldTypePlugin = {
         .formdown-toggle-text {
             font-weight: 500;
         }
-    `,
-
-    clientScript: `
-        document.addEventListener('DOMContentLoaded', function() {
-            var toggles = document.querySelectorAll('.formdown-toggle-field input[role="switch"]');
-            toggles.forEach(function(input) {
-                input.addEventListener('change', function() {
-                    this.setAttribute('aria-checked', String(this.checked));
-                });
-            });
-        });
     `,
 
     defaultAttributes: {

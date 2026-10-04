@@ -14,6 +14,7 @@ import { applyChoices, type Choices } from './choices'
 import { applyConditions, type ConditionalField } from './conditions'
 import { applyFieldStates, focusFieldOf, hostFocused, type FieldStates } from './field-states'
 import { formdownStyles } from './styles'
+import { fieldTypeStyles, ShadowStyleSheet } from './field-type-styles'
 
 @customElement('formdown-ui')
 export class FormdownUI extends LitElement {
@@ -96,7 +97,18 @@ export class FormdownUI extends LitElement {
     }
   }
   private formManager: FormManager
-  
+  /** Settles once the extension system's plugins are registered; the form is not drawn before. */
+  private extensionsReady?: Promise<void>
+  /** The styles of the plugin field types in the form drawn now. */
+  private fieldTypeSheet?: ShadowStyleSheet
+
+  // Parsing consults the field types plugins add, so drawing before they are registered would draw
+  // their fields as something else — and nothing would draw them again once they are.
+  protected override async scheduleUpdate(): Promise<void> {
+    await this.extensionsReady
+    super.scheduleUpdate()
+  }
+
   // Core modules for delegated functionality
   private domBinder: DOMBinder
   
@@ -201,11 +213,11 @@ export class FormdownUI extends LitElement {
     return this.formManager.isDirty()
   }
 
-  async connectedCallback() {
+  connectedCallback() {
+    // Parsing and rendering run through the extension system; plugins registered on it apply to this form.
+    // A failed plugin is reported by the extension system and leaves the core field types to draw the form.
+    this.extensionsReady ??= initializeExtensions().catch(() => undefined)
     super.connectedCallback()
-
-    // Parsing and rendering run through the extension system; plugins registered on it apply to this form
-    await initializeExtensions()
 
     // Use inner text as content if content property is empty
     if (!this.content && this.textContent?.trim()) {
@@ -306,6 +318,8 @@ export class FormdownUI extends LitElement {
       // Use Core template rendering system - much simpler!
       this.formManager.parse(this.content)
       this._schema = this.formManager.getSchema()
+      this.fieldTypeSheet ??= new ShadowStyleSheet(this.shadowRoot!)
+      this.fieldTypeSheet.set(fieldTypeStyles(this._schema))
       
       // Sync existing data with FormManager
       if (this.data && Object.keys(this.data).length > 0) {

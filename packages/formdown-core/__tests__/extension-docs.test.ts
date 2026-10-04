@@ -16,6 +16,7 @@ import {
     parseFormdown,
     generateFormHTML,
     getSchema,
+    validateForm,
 } from '../src/index'
 import type { Plugin, Field, FormdownContent } from '../src/index'
 
@@ -162,6 +163,25 @@ describe('Extension System', () => {
         expect(html).toContain('<label for="service">Service</label>')
         expect(html).toContain('<input type="number" name="service" id="service" min="1" max="10" form="formdown-form-default">')
         expect(schema.service.type).toBe('rating')
+    })
+
+    it('Custom field types: validator and styles', async () => {
+        await initializeExtensions()
+        await registerPlugin({
+            ...ratingPlugin,
+            fieldTypes: [{
+                ...ratingPlugin.fieldTypes![0],
+                validator: (value) =>
+                    value === undefined || value === '' || Number.isInteger(Number(value)) ? [] : ['A rating is a whole number'],
+                styles: '.rating { width: 4em; }',
+            }],
+        })
+        const source = '@service(Service): [rating max=10]'
+
+        expect(validateForm({ service: '7.5' }, getSchema(source)))
+            .toEqual({ isValid: false, errors: [{ field: 'service', message: 'A rating is a whole number' }] })
+        expect(validateForm({ service: '7' }, getSchema(source)).isValid).toBe(true)
+        expect(getDefaultExtensionManager().getFieldTypeRegistry().getStylesForTypes(['rating'])).toBe('.rating { width: 4em; }')
     })
 
     it('Events', async () => {

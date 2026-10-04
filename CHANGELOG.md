@@ -4,7 +4,26 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ## Unreleased
 
+### Changed
+
+- **Breaking**: a field type's `validator` is called by `validateForm()` — and so by `<formdown-ui>`'s `validate()` — for every field of the type that can be filled in, after the required check. It is `(value, field) => string[]`: the messages of the errors it finds, given the field's schema entry and its `name`. It was `(field, value) => ValidationRule[]`, and nothing called it. The registry's `validateField(field, value)` is `validate(value, field)`.
+
+### Removed
+
+Field type members that nothing read — every one was reachable only by calling the field type registry yourself:
+
+| Removed | Instead |
+|---|---|
+| `FieldTypePlugin.schemaGenerator`, the registry's `generateFieldSchema()` | `getSchema()` builds the field's entry from the `Field` your `parser` returns. The member returned a JSON Schema fragment, which is not what `getSchema()` returns. |
+| `FieldTypePlugin.dataProcessor`, the `FieldDataProcessor` type, the registry's `processFieldData()` and `validateFieldData()` | A field's value is what its control reports, read like the core field it is built from (a single checkbox with `value="true"` reports a boolean). Check a value's format in `validator`. |
+| `FieldTypePlugin.clientScript`, the registry's `getAllScripts()` and `getScriptsForTypes()`, `typesWithScripts` in its `getStats()` | Markup a component or `innerHTML` inserts runs no script, and a page's content security policy may forbid inline script anyway. Give the markup the behavior itself. |
+
 ### Fixed
+
+- `<formdown-ui>` drew its form before the extension system had registered its plugins, and did not draw it again once they were: a `[toggle]` field showed as a text input. It now draws once they are registered, and `updateComplete` waits for that.
+- A `toggle` reported `["on"]` or `[]`, like a group of checkboxes. It carries value `"true"` like a single checkbox and reports `true` or `false`, and shows a boolean it is given.
+- A `toggle` kept `aria-checked="false"` after it was turned on, so assistive technology heard it as off. It no longer writes `aria-checked`: the checkbox's own state is what is read.
+- `<formdown-ui>` applies the `styles` of the plugin field types its form holds; a `toggle` was drawn as a bare checkbox beside an empty track.
 
 - `@formdown/editor` lists Formdown's own diagnostics — a field name used twice, a condition naming a field that does not exist, a malformed attribute — in its problems panel, with the line they are on, before the messages of `field-validate` hooks. The panel showed hook messages only, and drew each as "[object Object]".
 - `@formdown/editor` no longer reports "Extension system must be initialized before use" as a problem with the source when the content is checked before the extension system is initialized.

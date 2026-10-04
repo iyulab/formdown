@@ -3,17 +3,12 @@
  * Manages registration and execution of custom field types
  */
 
-import type { 
-    FieldTypePlugin, 
-    FieldDataProcessor, 
-    HookContext 
-} from './types.js'
-import type { Field, ValidationRule } from '../types.js'
+import type { FieldTypePlugin, FieldTypeSubject, HookContext } from './types.js'
+import type { Field } from '../types.js'
 
 export class FieldTypeRegistry {
     private fieldTypes = new Map<string, FieldTypePlugin>()
     private styleCache = new Map<string, string>()
-    private scriptCache = new Map<string, string>()
 
     /**
      * Register a field type plugin
@@ -29,11 +24,6 @@ export class FieldTypeRegistry {
         if (plugin.styles) {
             this.styleCache.set(plugin.type, plugin.styles)
         }
-
-        // Cache scripts if provided
-        if (plugin.clientScript) {
-            this.scriptCache.set(plugin.type, plugin.clientScript)
-        }
     }
 
     /**
@@ -42,7 +32,6 @@ export class FieldTypeRegistry {
     unregister(type: string): void {
         this.fieldTypes.delete(type)
         this.styleCache.delete(type)
-        this.scriptCache.delete(type)
     }
 
     /**
@@ -100,64 +89,11 @@ export class FieldTypeRegistry {
     }
 
     /**
-     * Validate field using registered validators
+     * The errors the field type's own validator finds in `value` — none when the type has no validator.
      */
-    validateField(field: Field, value: any): ValidationRule[] {
-        const plugin = this.fieldTypes.get(field.type)
-        if (plugin?.validator) {
-            return plugin.validator(field, value)
-        }
-        return []
-    }
-
-    /**
-     * Process field data using registered data processors
-     */
-    processFieldData(field: Field, value: any, operation: 'input' | 'output' | 'serialize' | 'deserialize'): any {
-        const plugin = this.fieldTypes.get(field.type)
-        const processor = plugin?.dataProcessor
-
-        if (!processor) {
-            return value
-        }
-
-        switch (operation) {
-            case 'input':
-                return processor.processInput?.(value, field) ?? value
-            case 'output':
-                return processor.processOutput?.(value, field) ?? value
-            case 'serialize':
-                return processor.serialize?.(value, field) ?? value
-            case 'deserialize':
-                return processor.deserialize?.(value, field) ?? value
-            default:
-                return value
-        }
-    }
-
-    /**
-     * Validate field data format using registered data processors
-     */
-    validateFieldData(field: Field, value: any): { valid: boolean; error?: string } {
-        const plugin = this.fieldTypes.get(field.type)
-        const processor = plugin?.dataProcessor
-
-        if (!processor?.validate) {
-            return { valid: true }
-        }
-
-        return processor.validate(value, field)
-    }
-
-    /**
-     * Generate JSON schema for a field using registered schema generators
-     */
-    generateFieldSchema(field: Field): object | null {
-        const plugin = this.fieldTypes.get(field.type)
-        if (plugin?.schemaGenerator) {
-            return plugin.schemaGenerator(field)
-        }
-        return null
+    validate(value: unknown, field: FieldTypeSubject): string[] {
+        const plugin = field.type ? this.fieldTypes.get(field.type) : undefined
+        return plugin?.validator ? plugin.validator(value, field) : []
     }
 
     /**
@@ -178,31 +114,13 @@ export class FieldTypeRegistry {
     }
 
     /**
-     * Get all client scripts for registered field types
-     */
-    getAllScripts(): string {
-        return Array.from(this.scriptCache.values()).join('\n')
-    }
-
-    /**
-     * Get scripts for specific field types
-     */
-    getScriptsForTypes(types: string[]): string {
-        return types
-            .map(type => this.scriptCache.get(type))
-            .filter(Boolean)
-            .join('\n')
-    }
-
-    /**
      * Get registry statistics
      */
     getStats() {
         return {
             registeredTypes: Array.from(this.fieldTypes.keys()),
             totalTypes: this.fieldTypes.size,
-            typesWithStyles: Array.from(this.styleCache.keys()),
-            typesWithScripts: Array.from(this.scriptCache.keys())
+            typesWithStyles: Array.from(this.styleCache.keys())
         }
     }
 
@@ -212,7 +130,6 @@ export class FieldTypeRegistry {
     clear(): void {
         this.fieldTypes.clear()
         this.styleCache.clear()
-        this.scriptCache.clear()
     }
 }
 
