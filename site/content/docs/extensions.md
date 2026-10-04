@@ -183,9 +183,25 @@ const schema = getSchema(source)
 
 **`parser(line, context)`** is offered every block field line (`@name: [...]`), trimmed, before Formdown's own parser. Registered field types are asked in registration order, the built-in ones first; the first non-null result is used. Return a `Field` (`name`, `type` and `label` are required). Formdown then adds the source span and form association as for any field, and merges the field type's `defaultAttributes` under the returned `attributes`. Inline fields (`___@name`) are not offered to field-type parsers.
 
-**`generator(field, context)`** renders every field whose `type` matches. `context.metadata.formId` is the id of the default form. Formdown places the returned markup in the field container under a `<label>` (with ` *` when the field is required), gives the first `id="…"` a unique id, and sets an existing `form="…"` attribute to the field's form. Markup without a `form` attribute is not associated with the generated form, which is why the example writes one. If the markup contains a `<div class="formdown-field">` (that class alone), Formdown adds only the container and no label.
+**`generator(field, context)`** renders every field whose `type` matches. `context.metadata.formId` is the id of the default form. Formdown places the returned markup in the field container under a `<label>` (with ` *` when the field is required), gives the first `id="…"` a unique id, and sets an existing `form="…"` attribute to the field's form. Markup without a `form` attribute is not associated with the generated form, which is why the example writes one. If the markup draws the field itself — a `<div>` whose classes include `formdown-field`, such as `<div class="formdown-field rating-field">`, with a label of its own — Formdown adds only the container and no label.
 
-The field then passes through the `field-parse` and `field-render` hooks like any other. Unlike hooks, an error thrown by a field type's `parser` or `generator` is not caught: it propagates out of `parseFormdown()` / `generateFormHTML()`.
+The field then passes through the `field-parse` and `field-render` hooks like any other. An error thrown by a field type's `parser` is reported as a `field-type-error` diagnostic of `parseFormdown()`, one thrown by its `generator` as a console warning; Formdown then handles the field itself.
+
+**`validator(value, field)`** checks a value of the type. `validateForm()` — and so `<formdown-ui>`'s `validate()` — calls it for every field of the type that can be filled in right now, after its own required check, with the field's schema entry (`getSchema()`) and its `name`. Each message it returns is one error of that field. Required is checked by Formdown already; check only what is particular to the type:
+
+```typescript
+validator: (value) =>
+  value === undefined || value === '' || Number.isInteger(Number(value)) ? [] : ['A rating is a whole number']
+
+validateForm({ service: '7.5' }, getSchema(source))
+// { isValid: false, errors: [{ field: 'service', message: 'A rating is a whole number' }] }
+```
+
+**`styles`** is the CSS the `generator`'s markup is drawn with. `<formdown-ui>` applies the styles of the field types its form holds; with `generateFormHTML()` you place them yourself — `getDefaultExtensionManager().getFieldTypeRegistry().getStylesForTypes(['rating'])`.
+
+**`defaultAttributes`** are merged under the `attributes` the `parser` returns.
+
+A field type's value is what its control reports, read like the core field it is built from: a single checkbox that carries `value="true"` reports a boolean, a group of checkboxes a list, any other control its text.
 
 ## Events
 
@@ -230,7 +246,7 @@ const stats = getExtensionStats()
 
 ## The Built-in Plugin
 
-Initialization registers the `formdown-core` plugin. It adds the `toggle` field type — `@notify: [toggle]` renders a switch (a checkbox with `role="switch"`); without the plugin, `[toggle]` renders as a text input. It does not change how the field types Formdown itself knows are parsed or rendered:
+Initialization registers the `formdown-core` plugin. It adds the `toggle` field type — `@notify: [toggle]` renders a switch (a checkbox with `role="switch"`, drawn by the plugin's `styles`), whose value is a boolean like a single checkbox's; without the plugin, `[toggle]` renders as a text input. `<formdown-ui>` draws its form once the plugin is registered. It does not change how the field types Formdown itself knows are parsed or rendered:
 
 ```typescript
 const before = generateFormHTML('@name: [text]')
@@ -245,7 +261,6 @@ A plugin can name `formdown-core` in `dependencies` to require it.
 
 These parts of the extension types exist but are not used by parsing, generation, `getSchema()` or the validation functions today:
 
-- **Field type `validator`, `dataProcessor`, `schemaGenerator`, `styles`, `clientScript`** — reachable only by calling the field type registry yourself (`getDefaultExtensionManager().getFieldTypeRegistry()`: `validateField`, `processFieldData`, `validateFieldData`, `generateFieldSchema`, `getStylesForTypes`, `getScriptsForTypes`).
 - **Hook names `field-validate` and `error-handle`** — run only through `executeHooks`. `@formdown/editor` runs `field-validate` with the source text and lists the `message` of every result that has `valid: false`.
 
 Other behavior to be aware of:
