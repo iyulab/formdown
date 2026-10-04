@@ -130,6 +130,11 @@ export interface Diagnostic {
     span?: SourceSpan
     /** The name of the field the problem is about, when it is about a field. */
     field?: string
+    /**
+     * Another name the problem involves, when it involves one: for `condition-unknown-field`, the name the
+     * condition gives that no field of the form has.
+     */
+    related?: string
 }
 
 /** YAML front matter at the start of a document. */

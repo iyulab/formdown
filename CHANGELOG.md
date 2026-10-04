@@ -11,6 +11,7 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 - `parseOption`, `parseOptionList`, `optionLabel` and `formatOptions` from `@formdown/core`: read and write option lists the way the parser does.
 - `getSchema()` carries an "other" choice's text as `otherLabel`.
 - Diagnostic `unrecognized-field` — a line shaped like a field (`@name…: …[…]`) that the parser does not read, which became text with no field and no word (`@browser: r{Chrome,Firefox}[]` — the braces go after the name). A warning on the field it names; it says so when braces come after the colon.
+- `Diagnostic.related`: another name a problem involves — for `condition-unknown-field`, the name the condition gives that no field has, so a tool can say it in its own words without reading the message.
 - Diagnostics `invalid-condition` — a `visible-if`, `hidden-if`, `enabled-if`, `disabled-if` or `required-if` whose value is not a condition, which left the field unconditional without a word — and `condition-unknown-field` — a condition naming a field the form does not have. Both are warnings on the field they are about.
 
 ### Changed

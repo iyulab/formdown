@@ -25,6 +25,8 @@ describe('condition diagnostics', () => {
             { code: 'condition-unknown-field', severity: 'warning', field: 'x', line: 1 },
         ])
         expect(parseFormdown('@x: [text hidden-if="!nope"]').diagnostics![0].message).toContain('"nope"')
+        // The name itself, for a tool that says it in its own words.
+        expect(parseFormdown('@x: [text hidden-if="!nope"]').diagnostics![0].related).toBe('nope')
     })
 
     it('reports a missing name once per field, however many of its conditions name it', () => {

@@ -912,6 +912,7 @@ export class FormdownParser {
                     message: `${attributes.join(' and ')} ${attributes.length > 1 ? 'name' : 'names'} "${name}", which is not a field of this form`,
                     severity: 'warning',
                     field: field.name,
+                    related: name,
                     ...(field.span && { span: field.span })
                 })
             }
