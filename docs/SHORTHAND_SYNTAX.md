@@ -221,6 +221,9 @@ FormDown의 단축표기법은 자주 사용하는 패턴을 간결하게 표현
 @country{USA,Canada,UK}: s[]
 @language{English,Korean,Japanese}: s[]
 
+// 저장하는 값과 보이는 이름을 나눔: 값=이름
+@kind{hw=하드웨어,sw=소프트웨어}: s[]
+
 // 체크박스 그룹
 @skills{JS,Python,Java}: c[]
 @interests{Web,Mobile,AI}: c[]
@@ -237,6 +240,7 @@ FormDown의 단축표기법은 자주 사용하는 패턴을 간결하게 표현
 
 @country: [select options="USA,Canada,UK"]
 @language: [select options="English,Korean,Japanese"]
+@kind: [select options="hw=하드웨어,sw=소프트웨어"]
 
 @skills: [checkbox options="JS,Python,Java"]
 @interests: [checkbox options="Web,Mobile,AI"]

@@ -1,5 +1,6 @@
 import { marked } from 'marked'
-import { Field, FormdownContent, FormDeclaration, DatalistDeclaration, GroupDeclaration } from './types'
+import { Field, FieldOption, FormdownContent, FormDeclaration, DatalistDeclaration, GroupDeclaration } from './types'
+import { optionLabel } from './options.js'
 import { getDefaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 import { escapeHtml } from './escape.js'
@@ -21,8 +22,8 @@ export class FormdownGenerator {
      * saved before an option was renamed. They are rendered after the offered ones, chosen and marked
      * `data-formdown-unlisted`, so that a form never shows such a value as empty or reports it as cleared.
      */
-    private unlistedValues(values: readonly string[], options: readonly string[] | undefined): string[] {
-        return [...new Set(values.filter(v => v !== '' && !(options ?? []).includes(v)))]
+    private unlistedValues(values: readonly string[], options: readonly FieldOption[] | undefined): string[] {
+        return [...new Set(values.filter(v => v !== '' && !(options ?? []).some(o => o.value === v)))]
     }
 
     /**
@@ -665,9 +666,8 @@ ${fieldHTML}
 
             case 'select':
                 const optionsHTML = options?.map(opt => {
-                    const isSelected = value && String(value) === opt ? ' selected' : ''
-                    const escapedOpt = escapeHtml(opt)
-                    return `<option value="${escapedOpt}"${isSelected}>${escapedOpt}</option>`
+                    const isSelected = value && String(value) === opt.value ? ' selected' : ''
+                    return `<option value="${escapeHtml(opt.value)}"${isSelected}>${escapeHtml(optionLabel(opt))}</option>`
                 }).join('\n') || ''
                 // A field with an "other" option keeps its own handling of values it does not offer.
                 const unlistedOptionsHTML = allowOther ? '' : this.unlistedValues(value ? [String(value)] : [], options).map(v => {
@@ -698,16 +698,15 @@ ${fieldHTML}
                 const radioInputsHTML = options.map((opt, index) => {
                     const inputId = this.generateUniqueId(`${name}_${index}`, defaultFormId)
                     const isRequired = required && index === 0
-                    const isChecked = value && String(value) === opt
+                    const isChecked = value && String(value) === opt.value
                     const hideOtherAttr = allowOther ? ' data-formdown-hides-other="true"' : ''
                     const requiredAttr = isRequired ? ' required' : ''
                     const checkedAttr = isChecked ? ' checked' : ''
                     const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
-                    const escapedOpt = escapeHtml(opt)
                     return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="radio" id="${inputId}" name="${name}" value="${escapedOpt}"${requiredAttr}${checkedAttr}${ariaAttr}${hideOtherAttr}>
-            <span>${escapedOpt}</span>
+            <input type="radio" id="${inputId}" name="${name}" value="${escapeHtml(opt.value)}"${requiredAttr}${checkedAttr}${ariaAttr}${hideOtherAttr}>
+            <span>${escapeHtml(optionLabel(opt))}</span>
         </label>`
                 }).join('\n')
                 const unlistedRadiosHTML = allowOther ? '' : this.unlistedValues(value ? [String(value)] : [], options).map((v, index) => {
@@ -781,15 +780,14 @@ ${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
                     const checkboxInputsHTML = options.map((opt, index) => {
                         const inputId = this.generateUniqueId(`${name}_${index}`, defaultFormId)
                         const isRequired = required && index === 0
-                        const isChecked = selectedValues.includes(opt)
+                        const isChecked = selectedValues.includes(opt.value)
                         const requiredAttr = isRequired ? ' required' : ''
                         const checkedAttr = isChecked ? ' checked' : ''
                         const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
-                        const escapedOpt = escapeHtml(opt)
                         return `
         <label for="${inputId}" class="formdown-option-label">
-            <input type="checkbox" id="${inputId}" name="${name}" value="${escapedOpt}"${requiredAttr}${checkedAttr}${ariaAttr}>
-            <span>${escapedOpt}</span>
+            <input type="checkbox" id="${inputId}" name="${name}" value="${escapeHtml(opt.value)}"${requiredAttr}${checkedAttr}${ariaAttr}>
+            <span>${escapeHtml(optionLabel(opt))}</span>
         </label>`
                     }).join('\n')
                     const unlistedCheckboxesHTML = allowOther ? '' : this.unlistedValues(selectedValues, options).map((v, index) => {

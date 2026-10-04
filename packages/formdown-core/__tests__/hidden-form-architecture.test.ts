@@ -248,7 +248,7 @@ Your name is ___@name[text form="survey"] and age is ___@age[number form="survey
       
       expect(result.forms).toHaveLength(3)
       expect(result.forms[0].type).toBe('radio')
-      expect(result.forms[0].options).toEqual(['Male', 'Female', 'Other'])
+      expect(result.forms[0].options).toEqual([{ value: 'Male' }, { value: 'Female' }, { value: 'Other' }])
       expect(result.forms[1].type).toBe('checkbox')
       expect(result.forms[1].attributes?.layout).toBe('vertical')
       expect(result.forms[2].type).toBe('select')

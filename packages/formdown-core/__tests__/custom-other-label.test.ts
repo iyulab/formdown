@@ -8,7 +8,7 @@ describe('Custom Other Label', () => {
       
       expect(parsed.forms[0].allowOther).toBe(true)
       expect(parsed.forms[0].otherLabel).toBe('Custom Label')
-      expect(parsed.forms[0].options).toEqual(['Low', 'Medium', 'High'])
+      expect(parsed.forms[0].options).toEqual([{ value: 'Low' }, { value: 'Medium' }, { value: 'High' }])
     })
 
     it('should parse *(label) in shorthand syntax for select', () => {
@@ -17,7 +17,7 @@ describe('Custom Other Label', () => {
       
       expect(parsed.forms[0].allowOther).toBe(true)
       expect(parsed.forms[0].otherLabel).toBe('Please specify country')
-      expect(parsed.forms[0].options).toEqual(['USA', 'Canada'])
+      expect(parsed.forms[0].options).toEqual([{ value: 'USA' }, { value: 'Canada' }])
     })
 
     it('should parse *(label) in shorthand syntax for checkbox', () => {
@@ -26,7 +26,7 @@ describe('Custom Other Label', () => {
       
       expect(parsed.forms[0].allowOther).toBe(true)
       expect(parsed.forms[0].otherLabel).toBe('Other skill')
-      expect(parsed.forms[0].options).toEqual(['JS', 'Python'])
+      expect(parsed.forms[0].options).toEqual([{ value: 'JS' }, { value: 'Python' }])
     })
 
     it('should parse *(label) in standard syntax', () => {
@@ -35,7 +35,7 @@ describe('Custom Other Label', () => {
       
       expect(parsed.forms[0].allowOther).toBe(true)
       expect(parsed.forms[0].otherLabel).toBe('Different label')
-      expect(parsed.forms[0].options).toEqual(['JavaScript', 'Python'])
+      expect(parsed.forms[0].options).toEqual([{ value: 'JavaScript' }, { value: 'Python' }])
     })
 
     it('should default to "Other" when no custom label provided', () => {
@@ -44,7 +44,7 @@ describe('Custom Other Label', () => {
       
       expect(parsed.forms[0].allowOther).toBe(true)
       expect(parsed.forms[0].otherLabel).toBeUndefined()
-      expect(parsed.forms[0].options).toEqual(['Low', 'Medium', 'High'])
+      expect(parsed.forms[0].options).toEqual([{ value: 'Low' }, { value: 'Medium' }, { value: 'High' }])
     })
 
     it('should handle multiple *(label) entries (use first one)', () => {
@@ -53,7 +53,7 @@ describe('Custom Other Label', () => {
       
       expect(parsed.forms[0].allowOther).toBe(true)
       expect(parsed.forms[0].otherLabel).toBe('Label 1')
-      expect(parsed.forms[0].options).toEqual(['A', 'B'])
+      expect(parsed.forms[0].options).toEqual([{ value: 'A' }, { value: 'B' }])
     })
   })
 

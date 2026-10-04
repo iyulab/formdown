@@ -200,10 +200,10 @@ describe('SHORTHAND_SYNTAX.md 포괄적 기능 테스트', () => {
             const result = parser.parseFormdown(content)
 
             expect(result.forms[0].type).toBe('radio')
-            expect(result.forms[0].options).toEqual(['S', 'M', 'L', 'XL'])
+            expect(result.forms[0].options).toEqual([{ value: 'S' }, { value: 'M' }, { value: 'L' }, { value: 'XL' }])
 
             expect(result.forms[1].type).toBe('radio')
-            expect(result.forms[1].options).toEqual(['low', 'medium', 'high'])
+            expect(result.forms[1].options).toEqual([{ value: 'low' }, { value: 'medium' }, { value: 'high' }])
         })
 
         test('셀렉트 드롭다운 옵션', () => {
@@ -214,10 +214,10 @@ describe('SHORTHAND_SYNTAX.md 포괄적 기능 테스트', () => {
             const result = parser.parseFormdown(content)
 
             expect(result.forms[0].type).toBe('select')
-            expect(result.forms[0].options).toEqual(['USA', 'Canada', 'UK'])
+            expect(result.forms[0].options).toEqual([{ value: 'USA' }, { value: 'Canada' }, { value: 'UK' }])
 
             expect(result.forms[1].type).toBe('select')
-            expect(result.forms[1].options).toEqual(['English', 'Korean', 'Japanese'])
+            expect(result.forms[1].options).toEqual([{ value: 'English' }, { value: 'Korean' }, { value: 'Japanese' }])
         })
 
         test('체크박스 그룹 옵션', () => {
@@ -228,10 +228,10 @@ describe('SHORTHAND_SYNTAX.md 포괄적 기능 테스트', () => {
             const result = parser.parseFormdown(content)
 
             expect(result.forms[0].type).toBe('checkbox')
-            expect(result.forms[0].options).toEqual(['JS', 'Python', 'Java'])
+            expect(result.forms[0].options).toEqual([{ value: 'JS' }, { value: 'Python' }, { value: 'Java' }])
 
             expect(result.forms[1].type).toBe('checkbox')
-            expect(result.forms[1].options).toEqual(['Web', 'Mobile', 'AI'])
+            expect(result.forms[1].options).toEqual([{ value: 'Web' }, { value: 'Mobile' }, { value: 'AI' }])
         })
 
         test('단일 체크박스', () => {
@@ -259,13 +259,13 @@ describe('SHORTHAND_SYNTAX.md 포괄적 기능 테스트', () => {
 `
             const result = parser.parseFormdown(content)
 
-            expect(result.forms[0].options).toEqual(['S', 'M', 'L', 'XL'])
+            expect(result.forms[0].options).toEqual([{ value: 'S' }, { value: 'M' }, { value: 'L' }, { value: 'XL' }])
             expect(result.forms[0].allowOther).toBe(true)
 
-            expect(result.forms[1].options).toEqual(['JS', 'Python', 'Java'])
+            expect(result.forms[1].options).toEqual([{ value: 'JS' }, { value: 'Python' }, { value: 'Java' }])
             expect(result.forms[1].allowOther).toBe(true)
 
-            expect(result.forms[2].options).toEqual(['USA', 'Canada', 'UK'])
+            expect(result.forms[2].options).toEqual([{ value: 'USA' }, { value: 'Canada' }, { value: 'UK' }])
             expect(result.forms[2].allowOther).toBe(true)
             expect(result.forms[2].required).toBe(true)
         })
@@ -289,7 +289,7 @@ describe('SHORTHAND_SYNTAX.md 포괄적 기능 테스트', () => {
             expect(result.forms[1].required).toBe(true)
 
             expect(result.forms[2].label).toBe('T-Shirt Size')
-            expect(result.forms[2].options).toEqual(['S', 'M', 'L', 'XL'])
+            expect(result.forms[2].options).toEqual([{ value: 'S' }, { value: 'M' }, { value: 'L' }, { value: 'XL' }])
 
             expect(result.forms[3].label).toBe('Birth Date')
             expect(result.forms[3].format).toBe('yyyy-MM-dd')
@@ -367,7 +367,7 @@ Meeting time: t___@meeting_time{HH:mm}
             expect(result.forms[2].label).toBe('Your Skills')
             expect(result.forms[2].required).toBe(true)
             expect(result.forms[2].type).toBe('checkbox')
-            expect(result.forms[2].options).toEqual(['Frontend', 'Backend', 'Mobile'])
+            expect(result.forms[2].options).toEqual([{ value: 'Frontend' }, { value: 'Backend' }, { value: 'Mobile' }])
             expect(result.forms[2].allowOther).toBe(true)
 
             // phone 필드
@@ -410,12 +410,12 @@ Meeting time: t___@meeting_time{HH:mm}
             // gender radio
             const genderField = result.forms.find(f => f.name === 'gender')
             expect(genderField?.type).toBe('radio')
-            expect(genderField?.options).toEqual(['male', 'female', 'other'])
+            expect(genderField?.options).toEqual([{ value: 'male' }, { value: 'female' }, { value: 'other' }])
 
             // interests checkbox with other
             const interestsField = result.forms.find(f => f.name === 'interests')
             expect(interestsField?.type).toBe('checkbox')
-            expect(interestsField?.options).toEqual(['Web', 'Mobile', 'AI', 'Gaming'])
+            expect(interestsField?.options).toEqual([{ value: 'Web' }, { value: 'Mobile' }, { value: 'AI' }, { value: 'Gaming' }])
             expect(interestsField?.allowOther).toBe(true)
 
             // bio textarea
@@ -457,7 +457,7 @@ Please schedule your appointment:
             const serviceField = result.forms.find(f => f.name === 'service')
             expect(serviceField?.inline).toBe(true)
             expect(serviceField?.type).toBe('select')
-            expect(serviceField?.options).toEqual(['Consultation', 'Checkup', 'Treatment'])
+            expect(serviceField?.options).toEqual([{ value: 'Consultation' }, { value: 'Checkup' }, { value: 'Treatment' }])
 
             const dateField = result.forms.find(f => f.name === 'appointment_date')
             expect(dateField?.inline).toBe(true)
@@ -508,14 +508,14 @@ Please schedule your appointment:
             const skillsField = result.forms.find(f => f.name === 'skills')
             expect(skillsField?.type).toBe('checkbox')
             expect(skillsField?.required).toBe(true)
-            expect(skillsField?.options).toEqual(['Frontend', 'Backend', 'DevOps'])
+            expect(skillsField?.options).toEqual([{ value: 'Frontend' }, { value: 'Backend' }, { value: 'DevOps' }])
             expect(skillsField?.allowOther).toBe(true)
             expect(skillsField?.attributes?.class).toBe('skill-tags')
 
             // 전체 문법 필드들
             const advancedField = result.forms.find(f => f.name === 'advanced_options')
             expect(advancedField?.type).toBe('checkbox')
-            expect(advancedField?.options).toEqual(['option1', 'option2', 'option3'])
+            expect(advancedField?.options).toEqual([{ value: 'option1' }, { value: 'option2' }, { value: 'option3' }])
             expect(advancedField?.attributes?.class).toBe('advanced')
         })
     })
@@ -541,7 +541,7 @@ Please schedule your appointment:
             expect(result.forms[2].required).toBe(true)
 
             expect(result.forms[3].type).toBe('radio')
-            expect(result.forms[3].options).toEqual(['valid', 'options'])
+            expect(result.forms[3].options).toEqual([{ value: 'valid' }, { value: 'options' }])
         })
 
         test('복잡한 정규식과 이스케이프 문자', () => {
@@ -585,9 +585,9 @@ describe('Required marker with a type named in the brackets', () => {
     it('takes the type and its options from the brackets', () => {
         const { forms } = new FormdownParser().parseFormdown('@status*: [select options="Open,Closed"]\n@tone(Tone)*: [radio options="Calm,Urgent"]\n@kind*{A,B}: [select]')
         expect(forms.map(f => [f.name, f.type, f.required, f.options])).toEqual([
-            ['status', 'select', true, ['Open', 'Closed']],
-            ['tone', 'radio', true, ['Calm', 'Urgent']],
-            ['kind', 'select', true, ['A', 'B']],
+            ['status', 'select', true, [{ value: 'Open' }, { value: 'Closed' }]],
+            ['tone', 'radio', true, [{ value: 'Calm' }, { value: 'Urgent' }]],
+            ['kind', 'select', true, [{ value: 'A' }, { value: 'B' }]],
         ])
         expect(forms[0].attributes).not.toHaveProperty('select')
     })

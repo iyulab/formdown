@@ -176,12 +176,12 @@ For radio, checkbox groups, and select fields:
 # Basic options
 @size: [radio options="Small,Medium,Large"]
 
-# Options with values
-@country: [select options="us:United States,ca:Canada,uk:United Kingdom"]
+# Options with values (value=Label: the value is stored, the label is shown)
+@country: [select options="us=United States,ca=Canada,uk=United Kingdom"]
 
 # Shorthand syntax
 @size{Small,Medium,Large}: r[]
-@country{us:United States,ca:Canada,uk:United Kingdom}: s[]
+@country{us=United States,ca=Canada,uk=United Kingdom}: s[]
 ```
 
 ### Layout Options

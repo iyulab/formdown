@@ -639,6 +639,23 @@ For single checkboxes, you can use the `content` attribute to specify the displa
 - **Default (inline)**: Options are displayed horizontally, wrapping to new lines as needed
 - **`layout="vertical"`**: Options are displayed vertically, each on its own line
 
+**Values and labels:**
+An option can store a value apart from the text shown for it — write `value=Label`. The value is what the field holds (front matter, form data, conditions); the label is what people see, so it can be reworded without changing saved values. The split is at the first `=`: a label may contain `=`, a value may not. An option without `=` (or with nothing on one side of it) is a value shown as written.
+
+```formdown
+@kind: [select options="hw=Hardware,sw=Software,Other"]
+@kind{hw=Hardware,sw=Software,Other}: s[]
+```
+
+**An "other" choice:**
+End the options with `*` to add a choice whose value the person types; `*(text)` names it (default "Other"). The same can be written as the `allow-other` and `other-label="text"` attributes.
+
+```formdown
+@browser: [radio options="Chrome,Firefox,*"]
+@browser{Chrome,Firefox,*(Another browser)}: r[]
+@browser: [radio options="Chrome,Firefox" allow-other other-label="Another browser"]
+```
+
 **Values the options do not offer:**
 A selection field can be given a value that is not one of its options — from front matter or data written elsewhere, or saved before an option was renamed. It is shown as an extra choice after the offered ones, already chosen and marked `data-formdown-unlisted`, so the value is neither hidden nor reported as cleared. Fields with an "other" choice are not changed by this.
 

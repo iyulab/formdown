@@ -102,7 +102,7 @@ describe('setFieldAttribute', () => {
         const src = '# Intake\n\n@status(Status)*: [select options="Open,Closed" class="wide"]\n@note: []\n'
         const out = setFieldAttribute(src, 'status', 'options', 'Open,In progress,Closed')
         expect(out).toBe('# Intake\n\n@status(Status)*: [select options="Open,In progress,Closed" class="wide"]\n@note: []\n')
-        expect(field(out, 'status').options).toEqual(['Open', 'In progress', 'Closed'])
+        expect(field(out, 'status').options).toEqual([{ value: 'Open' }, { value: 'In progress' }, { value: 'Closed' }])
         expect(field(out, 'status').required).toBe(true)
         expect(field(out, 'status').label).toBe('Status')
     })
@@ -110,13 +110,13 @@ describe('setFieldAttribute', () => {
     it('adds an attribute to empty brackets and to brackets that have some', () => {
         expect(setFieldAttribute('@team: []', 'team', 'options', 'A,B')).toBe('@team: [options="A,B"]')
         expect(setFieldAttribute('@team: [radio]', 'team', 'options', 'A,B')).toBe('@team: [radio options="A,B"]')
-        expect(field(setFieldAttribute('@team: [radio]', 'team', 'options', 'A,B'), 'team').options).toEqual(['A', 'B'])
+        expect(field(setFieldAttribute('@team: [radio]', 'team', 'options', 'A,B'), 'team').options).toEqual([{ value: 'A' }, { value: 'B' }])
     })
 
     it('edits options written in braces where they are', () => {
         const out = setFieldAttribute('@priority{Low,High}: r[]', 'priority', 'options', 'Low,Mid,High')
         expect(out).toBe('@priority{Low,Mid,High}: r[]')
-        expect(field(out, 'priority').options).toEqual(['Low', 'Mid', 'High'])
+        expect(field(out, 'priority').options).toEqual([{ value: 'Low' }, { value: 'Mid' }, { value: 'High' }])
     })
 
     it('edits an inline field, giving brackets to one that has none', () => {

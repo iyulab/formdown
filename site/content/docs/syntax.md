@@ -241,15 +241,15 @@ I prefer ___@color[select options="Red, Blue, Green"] as my favorite color.
 ```formdown
 // Radio with other option
 @browser: [radio options="Chrome, Firefox, Safari, *"]
-@browser{Chrome|Firefox|Safari|*}: r[]
+@browser{Chrome,Firefox,Safari,*}: r[]
 
 // Checkbox with other option
 @languages: [checkbox options="English, Spanish, French, *"]
-@languages{English|Spanish|French|*(Other Languages)}: c[]
+@languages{English,Spanish,French,*(Other Languages)}: c[]
 
 // Select with other option
 @country: [select options="USA, Canada, UK, *"]
-@country{USA|Canada|UK|*(Other Country)}: s[]
+@country{USA,Canada,UK,*(Other Country)}: s[]
 ```
 
 ## Shorthand Syntax

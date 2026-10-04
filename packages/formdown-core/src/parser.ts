@@ -45,6 +45,7 @@ const CONDITIONAL_ATTRIBUTES: Record<string, keyof ConditionalAttributes> = {
 import { getDefaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 import { escapeHtml } from './escape.js'
+import { parseOptionList, formatOptions } from './options.js'
 
 // Private-use characters delimit inline field markers; they cannot collide with
 // anything markdown or HTML gives meaning to
@@ -452,15 +453,17 @@ export class FormdownParser {
 
             // Handle options if present
             if (field && options) {
-                // Process options from {options} part
-                const optionsArray = options.split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
-                if (optionsArray.length > 0) {
-                    // If field type supports options (select, radio, checkbox), set them
-                    if (['select', 'radio', 'checkbox'].includes(field.type)) {
-                        field.options = optionsArray
-                    } else {
-                        // For other types, create datalist
-                        const datalistId = `datalist-${Math.floor(Math.random() * 1000000000)}`
+                if (['select', 'radio', 'checkbox'].includes(field.type)) {
+                    const list = parseOptionList(options)
+                    if (list.options.length > 0) field.options = list.options
+                    if (list.allowOther) {
+                        field.allowOther = true
+                        if (list.otherLabel) field.otherLabel = list.otherLabel
+                    }
+                } else {
+                    // Other types get the options as suggestions to type
+                    const datalistId = this.declareDatalist(options)
+                    if (datalistId) {
                         field.attributes = field.attributes || {}
                         field.attributes.list = datalistId
                     }
@@ -561,29 +564,12 @@ export class FormdownParser {
     private interpretContent(content: string, typeMarker: string): Record<string, any> {
         // Selection types: options attribute
         if (['r', 's', 'c'].includes(typeMarker)) {
-            const options = content.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0)
-            let hasOther = false
-            let otherLabel = 'Other'
-            
-            const cleanedOptions = options.filter(opt => {
-                if (opt === '*') {
-                    hasOther = true
-                    return false
-                } else if (opt.startsWith('*(') && opt.endsWith(')')) {
-                    if (!hasOther) { // Only set label for the first *(label) encountered
-                        hasOther = true
-                        otherLabel = opt.slice(2, -1)
-                    }
-                    return false
-                }
-                return true
-            })
-            
-            const result: Record<string, any> = { options: cleanedOptions.join(',') || '' }
-            if (hasOther) {
+            const list = parseOptionList(content)
+            const result: Record<string, any> = { options: formatOptions(list.options) }
+            if (list.allowOther) {
                 result['allow-other'] = true
-                if (otherLabel !== 'Other') {
-                    result['other-label'] = otherLabel
+                if (list.otherLabel) {
+                    result['other-label'] = list.otherLabel
                 }
             }
             return result
@@ -629,28 +615,8 @@ export class FormdownParser {
         if (content && !['r', 's', 'c', 'd', 't', 'dt'].includes(typeMarker)) {
             // For non-selection/non-datetime types, check if content should be datalist or pattern
             if (hasComma || (!isRegexPattern && content.length > 0)) {
-                // Parse options from content (split by comma, or single option)
-                const options = content.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0)
-
-                if (options.length > 0) { // Create datalist for any valid options
-                    // Generate datalist ID from content hash
-                    const datalistId = this.generateDatalistId(content)
-
-                    // Create datalist declaration automatically
-                    const datalistDeclaration: DatalistDeclaration = {
-                        id: datalistId,
-                        options
-                    }
-
-                    // Check if this datalist already exists
-                    const existingDatalist = this.datalistDeclarations.find(d => d.id === datalistId)
-                    if (!existingDatalist) {
-                        this.datalistDeclarations.push(datalistDeclaration)
-                    }
-
-                    // Return list attribute to connect field to datalist
-                    return { list: datalistId }
-                }
+                const datalistId = this.declareDatalist(content)
+                if (datalistId) return { list: datalistId }
             }
         }
         
@@ -766,29 +732,12 @@ export class FormdownParser {
                 const optionsValue = text
                 if (['radio', 'checkbox', 'select'].includes(type)) {
                     if (optionsValue) {
-                        const options = optionsValue.split(',').map((opt: string) => opt.trim()).filter((opt: string) => opt.length > 0)
-                        let hasOther = false
-                        let otherLabel = 'Other'
-                        
-                        const cleanedOptions = options.filter(opt => {
-                            if (opt === '*') {
-                                hasOther = true
-                                return false
-                            } else if (opt.startsWith('*(') && opt.endsWith(')')) {
-                                if (!hasOther) { // Only set label for the first *(label) encountered
-                                    hasOther = true
-                                    otherLabel = opt.slice(2, -1)
-                                }
-                                return false
-                            }
-                            return true
-                        })
-                        
-                        field.options = cleanedOptions
-                        if (hasOther) {
+                        const list = parseOptionList(optionsValue)
+                        field.options = list.options
+                        if (list.allowOther) {
                             field.allowOther = true
-                            if (otherLabel !== 'Other') {
-                                field.otherLabel = otherLabel
+                            if (list.otherLabel) {
+                                field.otherLabel = list.otherLabel
                             }
                         }
                     } else {
@@ -1121,6 +1070,21 @@ export class FormdownParser {
 
     private generateFormId(): string {
         return `formdown-form-${this.formCounter++}`
+    }
+
+    /**
+     * Declares a datalist for comma-separated suggestions written inline (`{a,b}` on a field one types
+     * into), reusing the one already declared for the same text. Returns its id, or nothing when the
+     * text holds no suggestion.
+     */
+    private declareDatalist(content: string): string | undefined {
+        const options = content.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0)
+        if (options.length === 0) return undefined
+        const id = this.generateDatalistId(content)
+        if (!this.datalistDeclarations.some(d => d.id === id)) {
+            this.datalistDeclarations.push({ id, options })
+        }
+        return id
     }
 
     /**

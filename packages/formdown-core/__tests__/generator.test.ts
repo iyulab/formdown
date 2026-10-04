@@ -152,7 +152,7 @@ describe('FormdownGenerator', () => {
                 name: 'country',
                 type: 'select',
                 label: 'Country',
-                options: ['USA', 'Canada', 'UK'],
+                options: [{ value: 'USA' }, { value: 'Canada' }, { value: 'UK' }],
                 attributes: {}
             }]
 
@@ -172,7 +172,7 @@ describe('FormdownGenerator', () => {
                 type: 'radio',
                 label: 'Gender',
                 required: true,
-                options: ['Male', 'Female', 'Other'],
+                options: [{ value: 'Male' }, { value: 'Female' }, { value: 'Other' }],
                 attributes: {}
             }]
 
@@ -212,7 +212,7 @@ describe('FormdownGenerator', () => {
 
             expect(parsed.forms).toHaveLength(1)
             expect(parsed.forms[0].type).toBe('radio')
-            expect(parsed.forms[0].options).toEqual(['Male', 'Female', 'Other'])
+            expect(parsed.forms[0].options).toEqual([{ value: 'Male' }, { value: 'Female' }, { value: 'Other' }])
 
             expect(html).toContain('<fieldset')
             expect(html).toContain('<legend part="legend">Gender</legend>')
@@ -264,7 +264,7 @@ describe('FormdownGenerator', () => {
                 name: 'interests',
                 type: 'checkbox',
                 label: 'Interests',
-                options: ['Programming', 'Design', 'Music'],
+                options: [{ value: 'Programming' }, { value: 'Design' }, { value: 'Music' }],
                 attributes: {}
             }]
 
@@ -302,7 +302,7 @@ describe('FormdownGenerator', () => {
 
             expect(parsed.forms).toHaveLength(1)
             expect(parsed.forms[0].type).toBe('checkbox')
-            expect(parsed.forms[0].options).toEqual(['Programming', 'Design', 'Music'])
+            expect(parsed.forms[0].options).toEqual([{ value: 'Programming' }, { value: 'Design' }, { value: 'Music' }])
 
             expect(html).toContain('<fieldset')
             expect(html).toContain('<legend part="legend">Interests</legend>')

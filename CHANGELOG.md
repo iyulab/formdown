@@ -6,10 +6,14 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ### Added
 
+- An option can store a value apart from the text shown for it: `value=Label`, in `options="…"`, in braces (`@kind{hw=Hardware,sw=Software}: s[]`) and in inline fields. The value is what the field holds; the label is what is shown, so it can be reworded without changing saved values. The split is at the first `=` — a label may contain `=`, a value may not — and an option without one is read as before.
+- `parseOption`, `parseOptionList`, `optionLabel` and `formatOptions` from `@formdown/core`: read and write option lists the way the parser does.
+- `getSchema()` carries an "other" choice's text as `otherLabel`.
 - Diagnostics `invalid-condition` — a `visible-if`, `hidden-if`, `enabled-if`, `disabled-if` or `required-if` whose value is not a condition, which left the field unconditional without a word — and `condition-unknown-field` — a condition naming a field the form does not have. Both are warnings on the field they are about.
 
 ### Changed
 
+- **Breaking**: `Field.options` and `FieldSchema.options` are `FieldOption[]` — `{ value, label? }` — not `string[]`. Read `option.value` where you read the string, and `optionLabel(option)` for the text shown. `<formdown-ui>`'s `Choice` is the same type. An option written with `=` in it (`a=b`) is now a value and a label; to show `=` in an option, give it a value first (`eq=a=b`).
 - **Breaking**: a field type's `validator` is called by `validateForm()` — and so by `<formdown-ui>`'s `validate()` — for every field of the type that can be filled in, after the required check. It is `(value, field) => string[]`: the messages of the errors it finds, given the field's schema entry and its `name`. It was `(field, value) => ValidationRule[]`, and nothing called it. The registry's `validateField(field, value)` is `validate(value, field)`.
 
 ### Removed
@@ -24,6 +28,9 @@ Field type members that nothing read — every one was reachable only by calling
 
 ### Fixed
 
+- An inline choice field read `*` and `*(text)` in its braces as options (`Pay by ___@pay{Card,Cash,*}: r[]` offered a choice named `*`); they add the "other" choice, as they do everywhere else.
+- An inline field one types into with options in braces (`City: ___@city{Seoul,Busan}: []`) pointed at a datalist that was never written; it gets the datalist.
+- The site's syntax pages showed option syntax the parser does not read — `r{…}[]` after the colon (the field was dropped), `|` between options, `options="us:United States"` for values and `{…=Pro}` for a default. They show what works: options in braces after the name, commas, `value=Label`, and `value="…"` for a default.
 - `<formdown-ui>` drew its form before the extension system had registered its plugins, and did not draw it again once they were: a `[toggle]` field showed as a text input. It now draws once they are registered, and `updateComplete` waits for that.
 - A `toggle` reported `["on"]` or `[]`, like a group of checkboxes. It carries value `"true"` like a single checkbox and reports `true` or `false`, and shows a boolean it is given.
 - A `toggle` kept `aria-checked="false"` after it was turned on, so assistive technology heard it as off. It no longer writes `aria-checked`: the checkbox's own state is what is read.

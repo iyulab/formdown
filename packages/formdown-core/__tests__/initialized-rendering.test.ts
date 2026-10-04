@@ -34,7 +34,9 @@ describe('rendering once the extension system is initialized', () => {
     test('keeps option values as text', () => {
         const html = generateFormHTML(source)
         expect(html).not.toMatch(/<img/)
-        expect(html).toContain('&lt;img src=x&gt;')
+        // `<img src=x>` splits at its `=` into a value and the text shown for it; both stay text.
+        expect(html).toContain('value="&lt;img src"')
+        expect(html).toContain('x&gt;')
     })
 
     test('adds the toggle type, with its attributes escaped', () => {

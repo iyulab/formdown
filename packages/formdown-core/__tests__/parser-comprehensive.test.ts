@@ -229,7 +229,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const result = parser.parseFormdown(content)
 
                 expect(result.forms[0].type).toBe('radio')
-                expect(result.forms[0].options).toEqual(['Male', 'Female', 'Other'])
+                expect(result.forms[0].options).toEqual([{ value: 'Male' }, { value: 'Female' }, { value: 'Other' }])
             })
 
             test('should parse select field with options', () => {
@@ -237,7 +237,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const result = parser.parseFormdown(content)
 
                 expect(result.forms[0].type).toBe('select')
-                expect(result.forms[0].options).toEqual(['USA', 'Canada', 'UK'])
+                expect(result.forms[0].options).toEqual([{ value: 'USA' }, { value: 'Canada' }, { value: 'UK' }])
             })
 
             test('should parse checkbox field with options', () => {
@@ -245,7 +245,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const result = parser.parseFormdown(content)
 
                 expect(result.forms[0].type).toBe('checkbox')
-                expect(result.forms[0].options).toEqual(['Web', 'Mobile', 'AI'])
+                expect(result.forms[0].options).toEqual([{ value: 'Web' }, { value: 'Mobile' }, { value: 'AI' }])
             })
 
             test('should parse selection field with allowOther', () => {
@@ -253,7 +253,7 @@ describe('FormdownParser - Comprehensive', () => {
                 const result = parser.parseFormdown(content)
 
                 expect(result.forms[0].allowOther).toBe(true)
-                expect(result.forms[0].options).toEqual(['JavaScript', 'Python'])
+                expect(result.forms[0].options).toEqual([{ value: 'JavaScript' }, { value: 'Python' }])
             })
         })
 

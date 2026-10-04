@@ -235,7 +235,7 @@ describe('Checkbox Array Data Extraction', () => {
 
       expect(field?.required).toBe(true)
       expect(field?.type).toBe('checkbox')
-      expect(field?.options).toEqual(['Tech News', 'Product Updates', 'Events'])
+      expect(field?.options).toEqual([{ value: 'Tech News' }, { value: 'Product Updates' }, { value: 'Events' }])
     })
 
     it('should update checkbox array values correctly', () => {

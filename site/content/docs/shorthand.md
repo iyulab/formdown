@@ -124,30 +124,33 @@ FormDown's shorthand syntax provides **sugar syntax** for common patterns to mak
 ### Selection Fields
 ```formdown
 // Radio buttons
-@plan: [radio options="Basic,Pro,Enterprise"] → @plan: r{Basic,Pro,Enterprise}[]
-@plan: [radio options="Basic,Pro,Enterprise" value="Pro"] → @plan: r{Basic,Pro,Enterprise=Pro}[]
+@plan: [radio options="Basic,Pro,Enterprise"] → @plan{Basic,Pro,Enterprise}: r[]
+@plan: [radio options="Basic,Pro,Enterprise" value="Pro"] → @plan{Basic,Pro,Enterprise}: r[value="Pro"]
 
 // Checkboxes
-@features: [checkbox options="A,B,C"] → @features: c{A,B,C}[]
-@features: [checkbox options="A,B,C" value="A,C"] → @features: c{A,B=A,C=C}[]
+@features: [checkbox options="A,B,C"] → @features{A,B,C}: c[]
+@features: [checkbox options="A,B,C" value="A,C"] → @features{A,B,C}: c[value="A,C"]
 
 // Select dropdown
-@country: [select options="USA,Canada,UK"] → @country: s{USA,Canada,UK}[]
+@country: [select options="USA,Canada,UK"] → @country{USA,Canada,UK}: s[]
+
+// A value stored apart from the text shown for it: value=Label
+@country: [select options="us=United States,ca=Canada"] → @country{us=United States,ca=Canada}: s[]
 ```
 
 ### Options with "Other"
 ```formdown
 // Radio with other
-@browser: r{Chrome,Firefox,Safari,*}[]
-@browser: r{Chrome,Firefox,Safari,*(Other Browser)}[]
+@browser{Chrome,Firefox,Safari,*}: r[]
+@browser{Chrome,Firefox,Safari,*(Other Browser)}: r[]
 
 // Checkbox with other
-@skills: c{JavaScript,Python,Go,*}[]
-@skills: c{JavaScript,Python,Go,*(Other Skills)}[]
+@skills{JavaScript,Python,Go,*}: c[]
+@skills{JavaScript,Python,Go,*(Other Skills)}: c[]
 
 // Select with other
-@country: s{USA,Canada,UK,*}[]
-@country: s{USA,Canada,UK,*(Other Country)}[]
+@country{USA,Canada,UK,*}: s[]
+@country{USA,Canada,UK,*(Other Country)}: s[]
 ```
 
 ## Pattern Validation Shorthand
@@ -341,8 +344,8 @@ I prefer ___@color: s{Red,Blue,Green}[] as my favorite color.
 | `[color]` | `C[]` | C prefix |
 | `[range]` | `R[]` | R prefix |
 | `[textarea rows=5]` | `T5[]` | T + number |
-| `[radio options="..."]` | `r{...}[]` | r + options |
-| `[checkbox options="..."]` | `c{...}[]` | c + options |
-| `[select options="..."]` | `s{...}[]` | s + options |
+| `[radio options="..."]` | `@name{...}: r[]` | options in braces, r |
+| `[checkbox options="..."]` | `@name{...}: c[]` | options in braces, c |
+| `[select options="..."]` | `@name{...}: s[]` | options in braces, s |
 | `[label="..."]` | `(...)` | Parentheses |
 | Pattern validation | `{pattern}` | In field name |

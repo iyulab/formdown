@@ -216,7 +216,7 @@ describe('Checkbox Content Attribute', () => {
             
             // Checkbox group with content and options
             expect(parsed.forms[1].content).toBe('Select your interests')
-            expect(parsed.forms[1].options).toEqual(['Web', 'Mobile', 'AI'])
+            expect(parsed.forms[1].options).toEqual([{ value: 'Web' }, { value: 'Mobile' }, { value: 'AI' }])
         })
     })
 })

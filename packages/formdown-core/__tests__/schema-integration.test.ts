@@ -38,8 +38,8 @@ describe('Schema Integration Tests', () => {
             expect(schema.gender.type).toBe('radio')
 
             // Check options
-            expect(schema.gender.options).toEqual(['Male', 'Female', 'Other'])
-            expect(schema.interests.options).toEqual(['Web', 'Mobile', 'AI'])
+            expect(schema.gender.options).toEqual([{ value: 'Male' }, { value: 'Female' }, { value: 'Other' }])
+            expect(schema.interests.options).toEqual([{ value: 'Web' }, { value: 'Mobile' }, { value: 'AI' }])
             expect(schema.interests.allowOther).toBe(true)
         })
 

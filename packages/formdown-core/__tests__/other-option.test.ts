@@ -19,7 +19,7 @@ describe('Other Option (*) Functionality', () => {
                 name: 'country',
                 type: 'select',
                 label: 'Country',
-                options: ['USA', 'Canada', 'UK'],
+                options: [{ value: 'USA' }, { value: 'Canada' }, { value: 'UK' }],
                 allowOther: true,
                 attributes: {
                     form: 'formdown-form-default'
@@ -35,7 +35,7 @@ describe('Other Option (*) Functionality', () => {
                 name: 'gender',
                 type: 'radio',
                 label: 'Gender',
-                options: ['Male', 'Female', 'Other'],
+                options: [{ value: 'Male' }, { value: 'Female' }, { value: 'Other' }],
                 allowOther: true,
                 attributes: {
                     form: 'formdown-form-default'
@@ -51,7 +51,7 @@ describe('Other Option (*) Functionality', () => {
                 name: 'interests',
                 type: 'checkbox',
                 label: 'Interests',
-                options: ['Programming', 'Design', 'Music'],
+                options: [{ value: 'Programming' }, { value: 'Design' }, { value: 'Music' }],
                 allowOther: true,
                 attributes: {
                     form: 'formdown-form-default'
@@ -64,7 +64,7 @@ describe('Other Option (*) Functionality', () => {
             const result = parser.parseFormdown(content)
 
             expect(result.forms[0].type).toBe('checkbox')
-            expect(result.forms[0].options).toEqual(['JavaScript', 'Python'])
+            expect(result.forms[0].options).toEqual([{ value: 'JavaScript' }, { value: 'Python' }])
             expect(result.forms[0].allowOther).toBe(true)
             expect(result.forms[0].required).toBe(true)
         })
@@ -77,10 +77,10 @@ describe('Other Option (*) Functionality', () => {
             const result2 = parser.parseFormdown(content2)
 
             expect(result1.forms[0].allowOther).toBe(true)
-            expect(result1.forms[0].options).toEqual(['Web', 'Mobile'])
+            expect(result1.forms[0].options).toEqual([{ value: 'Web' }, { value: 'Mobile' }])
             
             expect(result2.forms[0].allowOther).toBe(true)
-            expect(result2.forms[0].options).toEqual(['Web', 'Mobile'])
+            expect(result2.forms[0].options).toEqual([{ value: 'Web' }, { value: 'Mobile' }])
         })
 
         test('should not parse other option without asterisk', () => {
@@ -88,7 +88,7 @@ describe('Other Option (*) Functionality', () => {
             const result = parser.parseFormdown(content)
 
             expect(result.forms[0].allowOther).toBeUndefined()
-            expect(result.forms[0].options).toEqual(['USA', 'Canada', 'UK'])
+            expect(result.forms[0].options).toEqual([{ value: 'USA' }, { value: 'Canada' }, { value: 'UK' }])
         })
     })
 
@@ -98,7 +98,7 @@ describe('Other Option (*) Functionality', () => {
                 name: 'country',
                 type: 'select',
                 label: 'Country',
-                options: ['USA', 'Canada', 'UK'],
+                options: [{ value: 'USA' }, { value: 'Canada' }, { value: 'UK' }],
                 allowOther: true,
                 attributes: { form: "formdown-form-default" }
             }
@@ -123,7 +123,7 @@ describe('Other Option (*) Functionality', () => {
                 name: 'gender',
                 type: 'radio',
                 label: 'Gender',
-                options: ['Male', 'Female'],
+                options: [{ value: 'Male' }, { value: 'Female' }],
                 allowOther: true,
                 attributes: { form: "formdown-form-default" }
             }
@@ -146,7 +146,7 @@ describe('Other Option (*) Functionality', () => {
                 name: 'interests',
                 type: 'checkbox',
                 label: 'Interests',
-                options: ['Programming', 'Design', 'Music'],
+                options: [{ value: 'Programming' }, { value: 'Design' }, { value: 'Music' }],
                 allowOther: true,
                 attributes: { form: "formdown-form-default" }
             }
@@ -170,7 +170,7 @@ describe('Other Option (*) Functionality', () => {
                 name: 'country',
                 type: 'select',
                 label: 'Country',
-                options: ['USA', 'Canada', 'UK'],
+                options: [{ value: 'USA' }, { value: 'Canada' }, { value: 'UK' }],
                 allowOther: false,
                 attributes: { form: "formdown-form-default" }
             }
@@ -187,7 +187,7 @@ describe('Other Option (*) Functionality', () => {
                 name: 'country',
                 type: 'select',
                 label: 'Country',
-                options: ['USA', 'Canada', 'UK'],
+                options: [{ value: 'USA' }, { value: 'Canada' }, { value: 'UK' }],
                 attributes: { form: "formdown-form-default" }
             }
 
@@ -282,7 +282,7 @@ Thank you for your response!`
             const result = parser.parseFormdown(content)
 
             expect(result.forms[0].allowOther).toBe(true)
-            expect(result.forms[0].options).toEqual(['Yes'])
+            expect(result.forms[0].options).toEqual([{ value: 'Yes' }])
         })
 
         test('should handle multiple asterisks', () => {
@@ -290,7 +290,7 @@ Thank you for your response!`
             const result = parser.parseFormdown(content)
 
             expect(result.forms[0].allowOther).toBe(true)
-            expect(result.forms[0].options).toEqual(['Option1', 'Option2'])
+            expect(result.forms[0].options).toEqual([{ value: 'Option1' }, { value: 'Option2' }])
         })
 
         test('should handle asterisk in option text (escaped)', () => {
@@ -298,7 +298,7 @@ Thank you for your response!`
             const result = parser.parseFormdown(content)
 
             expect(result.forms[0].allowOther).toBeUndefined()
-            expect(result.forms[0].options).toEqual(['Good', 'Average', 'Bad'])
+            expect(result.forms[0].options).toEqual([{ value: 'Good' }, { value: 'Average' }, { value: 'Bad' }])
         })
     })
 })

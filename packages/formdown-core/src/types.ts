@@ -8,13 +8,22 @@ export interface FieldRelation {
     type: 'fk' | 'many-to-many'
 }
 
+/**
+ * One option of a choice field: the value it stores, and the text shown for it when that differs
+ * (written `value=Label`; without a label the value is shown).
+ */
+export interface FieldOption {
+    value: string
+    label?: string
+}
+
 export interface Field {
     name: string
     type: string
     label: string
     required?: boolean
     placeholder?: string
-    options?: string[]
+    options?: FieldOption[]
     allowOther?: boolean
     otherLabel?: string
     format?: string
@@ -164,8 +173,9 @@ export interface FieldSchema {
     validation?: ValidationRules
 
     // Selection fields
-    options?: string[]
+    options?: FieldOption[]
     allowOther?: boolean
+    otherLabel?: string
 
     // Layout and presentation
     layout?: 'inline' | 'vertical'

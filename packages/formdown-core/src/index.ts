@@ -1,5 +1,6 @@
 import { conditionState } from './conditions.js'
 export * from './types.js'
+export { parseOption, parseOptionList, optionLabel, formatOptions, type OptionList } from './options.js'
 export * from './parser.js'
 export * from './generator.js'
 export * from './schema.js'

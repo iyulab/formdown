@@ -1,8 +1,10 @@
-/** A value the host offers for a field, and the text shown for it (the value itself when absent). */
-export interface Choice {
-  value: string
-  label?: string
-}
+import type { FieldOption } from '@formdown/core'
+
+/**
+ * A value the host offers for a field, and the text shown for it (the value itself when absent) —
+ * the same shape as an option the author writes (`value=Label`).
+ */
+export type Choice = FieldOption
 
 /** What the host offers for each field, by name. */
 export type Choices = Record<string, Choice[]>

@@ -64,7 +64,7 @@ describe('Core Integration Consistency Tests', () => {
       
       expect(schema.interests).toBeDefined()
       expect(schema.interests.type).toBe('checkbox')
-      expect(schema.interests.options).toEqual(['Tech', 'Sports', 'Music'])
+      expect(schema.interests.options).toEqual([{ value: 'Tech' }, { value: 'Sports' }, { value: 'Music' }])
     })
 
     test('All core functions should handle same content consistently', () => {

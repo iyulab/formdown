@@ -62,7 +62,7 @@ describe('Package Integration Tests', () => {
       expect(schema.name.required).toBe(true)
       expect(schema.email.type).toBe('email')
       expect(schema.age.validation?.min).toBe(18)
-      expect(schema.interests.options).toEqual(['Tech', 'Sports', 'Music'])
+      expect(schema.interests.options).toEqual([{ value: 'Tech' }, { value: 'Sports' }, { value: 'Music' }])
     })
 
     test('Should provide Editor-ready parsing results', () => {

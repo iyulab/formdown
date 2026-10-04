@@ -296,16 +296,16 @@ Your age is ___@age.
             const result = parser.parseFormdown(content)
 
             expect(result.forms[0].type).toBe('radio')
-            expect(result.forms[0].options).toEqual(['Male', 'Female', 'Other'])
+            expect(result.forms[0].options).toEqual([{ value: 'Male' }, { value: 'Female' }, { value: 'Other' }])
 
             expect(result.forms[1].type).toBe('checkbox')
             expect(result.forms[1].options).toBeUndefined()
 
             expect(result.forms[2].type).toBe('checkbox')
-            expect(result.forms[2].options).toEqual(['Web', 'Mobile', 'AI', 'Design'])
+            expect(result.forms[2].options).toEqual([{ value: 'Web' }, { value: 'Mobile' }, { value: 'AI' }, { value: 'Design' }])
 
             expect(result.forms[3].type).toBe('select')
-            expect(result.forms[3].options).toEqual(['USA', 'Canada', 'UK', 'Other'])
+            expect(result.forms[3].options).toEqual([{ value: 'USA' }, { value: 'Canada' }, { value: 'UK' }, { value: 'Other' }])
         })
     })
 
@@ -426,7 +426,7 @@ Contact preference: ___@contact_method[radio options="Email,Phone,SMS"]
             expect(result.forms[0].placeholder).toBe('Optional notes')
 
             expect(result.forms[1].type).toBe('radio')
-            expect(result.forms[1].options).toEqual(['Email', 'Phone', 'SMS'])
+            expect(result.forms[1].options).toEqual([{ value: 'Email' }, { value: 'Phone' }, { value: 'SMS' }])
         })
     })
 
@@ -631,7 +631,7 @@ Contact preference: ___@contact_method[radio options="Email,Phone,SMS"]
             expect(result.forms[1].label).toBe('Email Address')
             expect(result.forms[2].attributes?.maxlength).toBe(100)
             expect(result.forms[3].attributes?.rows).toBe(5)
-            expect(result.forms[4].options).toEqual(['Low', 'Medium', 'High'])
+            expect(result.forms[4].options).toEqual([{ value: 'Low' }, { value: 'Medium' }, { value: 'High' }])
             expect(result.forms[5].content).toBe('Subscribe to our weekly newsletter')
             expect(result.forms[6].required).toBe(true)
         })

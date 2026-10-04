@@ -65,3 +65,18 @@ test('a text field lists the host choices as it is typed in', async () => {
   const list = ui.shadowRoot!.getElementById(input.getAttribute('list')!) as HTMLDataListElement
   expect(Array.from(list.options).map((o) => o.value)).toEqual(['장비', '인사'])
 })
+
+test('an option the author labels shows its label, holds its value, and keeps it over a host choice', async () => {
+  const ui = await mount('@kind(분류): [select options="hw=하드웨어,sw=소프트웨어"]', {
+    data: { kind: 'sw' },
+    choices: { kind: [{ value: 'hw', label: '장비' }, { value: 'net', label: '네트워크' }] },
+  })
+  const field = select(ui, 'kind')
+  expect(values(field)).toEqual(['hw', 'sw', 'net'])
+  expect(Array.from(field.options).map((o) => o.textContent)).toEqual(['하드웨어', '소프트웨어', '네트워크'])
+  expect(field.value).toBe('sw')
+  field.value = 'hw'
+  field.dispatchEvent(new Event('change', { bubbles: true }))
+  await ui.updateComplete
+  expect(ui.data.kind).toBe('hw')
+})

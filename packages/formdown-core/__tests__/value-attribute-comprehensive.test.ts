@@ -126,7 +126,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 type: 'select',
                 label: 'Country',
                 value: 'Canada',
-                options: ['USA', 'Canada', 'UK', 'Australia'],
+                options: [{ value: 'USA' }, { value: 'Canada' }, { value: 'UK' }, { value: 'Australia' }],
                 attributes: { form: "formdown-form-default" }
             }
 
@@ -142,7 +142,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 type: 'radio',
                 label: 'Priority',
                 value: 'High',
-                options: ['Low', 'Medium', 'High'],
+                options: [{ value: 'Low' }, { value: 'Medium' }, { value: 'High' }],
                 attributes: { form: "formdown-form-default" }
             }
 
@@ -172,7 +172,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 type: 'checkbox',
                 label: 'Features',
                 value: 'Email,Push',
-                options: ['Email', 'SMS', 'Push', 'Phone'],
+                options: [{ value: 'Email' }, { value: 'SMS' }, { value: 'Push' }, { value: 'Phone' }],
                 attributes: { form: "formdown-form-default" }
             }
 
@@ -330,7 +330,7 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
                 type: 'select',
                 label: 'Country',
                 value: 'NonExistentCountry',
-                options: ['USA', 'Canada', 'UK'],
+                options: [{ value: 'USA' }, { value: 'Canada' }, { value: 'UK' }],
                 attributes: { form: "formdown-form-default" }
             }
 

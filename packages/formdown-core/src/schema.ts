@@ -50,6 +50,10 @@ export class SchemaExtractor {
             schema.allowOther = field.allowOther
         }
 
+        if (field.otherLabel) {
+            schema.otherLabel = field.otherLabel
+        }
+
         if (field.format) {
             schema.format = field.format
         }
@@ -164,7 +168,7 @@ export class SchemaExtractor {
         const htmlAttributes: Record<string, any> = {}
         const excludedKeys = new Set([
             'min', 'max', 'step', 'minlength', 'maxlength', 'pattern', 'accept', 'required',
-            'placeholder', 'options', 'allow-other', 'format'
+            'placeholder', 'options', 'allow-other', 'other-label', 'format'
         ])
         let hasAttributes = false
 
