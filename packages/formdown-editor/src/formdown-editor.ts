@@ -105,10 +105,22 @@ export class FormdownEditor extends LitElement {
     @state()
     private parseResult: { fields: Field[]; problems: SourceProblem[] } = { fields: [], problems: [] }
 
+    /** Counts parses of the content; only the latest one's result is shown. */
+    private parseRun = 0
+    /** Settles once the extension system's plugins are registered; nothing is parsed or drawn before. */
+    private extensionsReady?: Promise<void>
 
-    // Remove SimpleFormdownParser - now using @formdown/core
+    // Parsing consults the field types plugins add: a parse before they are registered would read
+    // their fields as something else.
+    protected override async scheduleUpdate(): Promise<void> {
+        await this.extensionsReady
+        super.scheduleUpdate()
+    }
 
-    async connectedCallback() {
+    connectedCallback() {
+        // Parsing and rendering run through the extension system; plugins registered on it apply here.
+        // A failed plugin is reported by the extension system and leaves the core field types to parse.
+        this.extensionsReady ??= initializeExtensions().catch(() => undefined)
         super.connectedCallback()
 
         // Initialize FormManager and EventOrchestrator bridge
@@ -146,30 +158,24 @@ export class FormdownEditor extends LitElement {
             this.formManager.updateData(this._data)
         }
 
-        // Parsing and rendering run through the extension system; plugins registered on it apply here
-        await initializeExtensions()
-
         // Use inner text as content if content property is default and inner text exists
         if (this.content === defaultContent && this.textContent?.trim()) {
             this.content = this.textContent.trim()
             // Clear the text content to avoid duplication
             this.textContent = ''
         }
-
-        await this.updateParseResult()
     }
 
     willUpdate(changedProperties: Map<string | number | symbol, unknown>) {
         super.willUpdate(changedProperties)
 
-        // Prevent content updates from external sources when user is editing
-        if (changedProperties.has('content')) {
-            const textarea = this.shadowRoot?.querySelector('.editor-textarea') as HTMLTextAreaElement
-            if (textarea && document.activeElement === textarea) {
-                return
-            }
+        // The fields and problems follow the content however it changed: typed, inserted, or set from outside.
+        if (changedProperties.has('content') && this.formManager) {
+            void this.updateParseResult()
         }
-    } render() {
+    }
+
+    render() {
         // Inline template rendering
         return html`
             <div class="editor-container mode-${this.mode}">
@@ -319,7 +325,6 @@ export class FormdownEditor extends LitElement {
             }
         }
         this.content = target.value
-        this.updateParseResult()
         this.dispatchContentChange()
     }
 
@@ -338,7 +343,6 @@ export class FormdownEditor extends LitElement {
             target.selectionStart = target.selectionEnd = start + 2
 
             this.content = target.value
-            this.updateParseResult()
             this.dispatchContentChange()
         }
     }
@@ -353,7 +357,6 @@ export class FormdownEditor extends LitElement {
         const after = this.content.substring(end)
 
         this.content = before + snippet + after
-        this.updateParseResult()
         this.dispatchContentChange()
 
         // Focus and position cursor after the inserted snippet
@@ -364,14 +367,19 @@ export class FormdownEditor extends LitElement {
     }
 
     private async updateParseResult() {
+        const run = ++this.parseRun
+        const content = this.content
         try {
-            const parsed = this.formManager.parse(this.content)
+            const parsed = this.formManager.parse(content)
+            const fields = this.formManager.getFields() || []
 
             // `field-validate` hooks report problems with the content: { valid: false, message }
-            const validation = await validateContent(this.content)
+            const validation = await validateContent(content)
+            // The content changed again while the hooks ran: the newer parse is the one to show.
+            if (run !== this.parseRun) return
 
             this.parseResult = {
-                fields: this.formManager.getFields() || [],
+                fields,
                 problems: [
                     ...(parsed?.diagnostics ?? []).map(diagnostic => ({
                         message: diagnostic.message,
@@ -382,6 +390,7 @@ export class FormdownEditor extends LitElement {
                 ]
             }
         } catch (error) {
+            if (run !== this.parseRun) return
             this.parseResult = {
                 fields: [],
                 problems: [{ message: error instanceof Error ? error.message : 'Parse error', severity: 'error' }]

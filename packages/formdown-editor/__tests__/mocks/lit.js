@@ -7,6 +7,8 @@ class LitElement {
     connectedCallback() { }
     disconnectedCallback() { }
     requestUpdate() { }
+    scheduleUpdate() { }
+    willUpdate() { }
     dispatchEvent() { return true; }
 }
 const template = (strings) => strings.join('');

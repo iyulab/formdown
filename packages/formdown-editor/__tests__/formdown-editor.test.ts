@@ -4,7 +4,7 @@
  */
 import { FormdownEditor } from '../src/formdown-editor';
 import { createFormdownEditor } from '../src/index';
-import { FormManager } from '@formdown/core';
+import { FormManager, initializeExtensions, registerHook, getDefaultExtensionManager } from '@formdown/core';
 
 /** Types `text` at the end of `before` in a text area, as the editor sees it. */
 function type(editor: FormdownEditor, before: string, text: string, inputType = 'insertText') {
@@ -74,5 +74,43 @@ describe('the problems panel', () => {
         const editor = editorWith('@name: [text]');
         await (editor as any).updateParseResult();
         expect((editor as any).parseResult.problems).toEqual([]);
+    });
+
+    /** What Lit does when `content` changed: runs `willUpdate` with it among the changed properties. */
+    const settle = async (editor: FormdownEditor) => {
+        (editor as any).willUpdate(new Map([['content', undefined]]));
+        await new Promise((resolve) => setTimeout(resolve, 0));
+    };
+
+    it('follows content set from outside, not only content typed', async () => {
+        const editor = editorWith('@name: [text]\n@name: [email]');
+        await settle(editor);
+        expect((editor as any).parseResult.problems).toHaveLength(1);
+
+        editor.content = '@title: [text]';
+        await settle(editor);
+        expect((editor as any).parseResult.problems).toEqual([]);
+        expect((editor as any).parseResult.fields.map((f: { name: string }) => f.name)).toEqual(['title']);
+    });
+
+    it('shows the parse of the latest content when an earlier one finishes after it', async () => {
+        await initializeExtensions({});
+        // The earlier content's check is the slow one, so its result comes back last.
+        registerHook({
+            name: 'field-validate',
+            priority: 1,
+            handler: async (_context: unknown, content: string) => {
+                if (content.includes('@name')) await new Promise((resolve) => setTimeout(resolve, 30));
+                return { valid: true };
+            },
+        });
+        const editor = editorWith('@name: [text]\n@name: [email]');
+        (editor as any).willUpdate(new Map([['content', undefined]]));
+        editor.content = '@title: [text]';
+        await settle(editor);
+        await new Promise((resolve) => setTimeout(resolve, 60));
+        expect((editor as any).parseResult.fields.map((f: { name: string }) => f.name)).toEqual(['title']);
+        expect((editor as any).parseResult.problems).toEqual([]);
+        await getDefaultExtensionManager().destroy();
     });
 });

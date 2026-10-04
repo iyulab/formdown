@@ -24,6 +24,7 @@ Field type members that nothing read — every one was reachable only by calling
 - A `toggle` reported `["on"]` or `[]`, like a group of checkboxes. It carries value `"true"` like a single checkbox and reports `true` or `false`, and shows a boolean it is given.
 - A `toggle` kept `aria-checked="false"` after it was turned on, so assistive technology heard it as off. It no longer writes `aria-checked`: the checkbox's own state is what is read.
 - `<formdown-ui>` applies the `styles` of the plugin field types its form holds; a `toggle` was drawn as a bare checkbox beside an empty track.
+- `@formdown/editor`'s fields and problems panel follow `content` set from outside, such as a page switching examples; they kept describing the content it was connected with until something was typed. A check that finishes after a newer one no longer replaces its result, and the editor parses nothing before the extension system has registered its plugins.
 
 - `@formdown/editor` lists Formdown's own diagnostics — a field name used twice, a condition naming a field that does not exist, a malformed attribute — in its problems panel, with the line they are on, before the messages of `field-validate` hooks. The panel showed hook messages only, and drew each as "[object Object]".
 - `@formdown/editor` no longer reports "Extension system must be initialized before use" as a problem with the source when the content is checked before the extension system is initialized.
