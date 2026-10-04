@@ -15,7 +15,7 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ### Changed
 
-- **Breaking**: `Field.options` and `FieldSchema.options` are `FieldOption[]` — `{ value, label? }` — not `string[]`. Read `option.value` where you read the string, and `optionLabel(option)` for the text shown. `<formdown-ui>`'s `Choice` is the same type. An option written with `=` in it (`a=b`) is now a value and a label; to show `=` in an option, give it a value first (`eq=a=b`).
+- **Breaking**: `Field.options` and `FieldSchema.options` are `FieldOption[]` — `{ value, label? }` — not `string[]`. Read `option.value` where you read the string — including code that turned options into strings with `String(…)`, which still compiles and now yields `"[object Object]"` — and `optionLabel(option)` for the text shown. `<formdown-ui>`'s `Choice` is the same type. An option written with `=` in it (`a=b`) is now a value and a label; to show `=` in an option, give it a value first (`eq=a=b`).
 - **Breaking**: a field type's `validator` is called by `validateForm()` — and so by `<formdown-ui>`'s `validate()` — for every field of the type that can be filled in, after the required check. It is `(value, field) => string[]`: the messages of the errors it finds, given the field's schema entry and its `name`. It was `(field, value) => ValidationRule[]`, and nothing called it. The registry's `validateField(field, value)` is `validate(value, field)`.
 
 ### Removed
