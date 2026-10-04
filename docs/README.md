@@ -14,4 +14,4 @@ Reference documents for Formdown contributors and advanced users. The guides for
 | [STYLING.md](STYLING.md) | Theming with `--formdown-*` properties and `::part()` | [Styling](https://formdown.dev/docs/styling) |
 | [TABLE_STYLING.md](TABLE_STYLING.md) | Styling tables in forms | — |
 
-The examples in the extension documents run as tests (`packages/formdown-core/__tests__/extension-docs.test.ts`); change both together.
+The examples in the extension documents run as tests (`packages/formdown-core/__tests__/extension-docs.test.ts`); change both together. The two website pages marked "same content" are checked against these documents (`site-docs-mirror.test.ts` beside it): edit both, differing only in the title and the links between pages.
