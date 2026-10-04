@@ -64,6 +64,7 @@ import '@formdown/ui';
 | **Phone Number** | `@phone: [tel pattern="\d{3}-\d{3}-\d{4}"]` | `@phone{###-###-####}: %[]` |
 | **Inline Fields** | `Name: ___@name[text required]` | `Name: ___@name*` |
 | **Selection** | `@size: [radio options="S,M,L,XL"]` | `@size{S,M,L,XL}: r[]` |
+| **Values and labels** | `@kind: [select options="hw=Hardware,sw=Software"]` | `@kind{hw=Hardware,sw=Software}: s[]` |
 
 ## 🏗️ Core-First Architecture
 
@@ -178,6 +179,12 @@ import '@formdown/ui';
 Hello ___@name*! Your order #___@order_id is ready.
 Delivery date: ___@delivery_date: d[]
 ```
+
+### Values Apart from the Text Shown
+```formdown
+@kind{hw=Hardware,sw=Software,Other}: s[]
+```
+The field holds `hw`; people see "Hardware" — the label can be reworded without changing saved values.
 
 ### Other Options with Custom Labels
 ```formdown
