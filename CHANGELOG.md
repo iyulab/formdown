@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- A checkbox group given its value as a list (as data from front matter carries it) is checked from the list as it is. It was turned into text and split at commas again, so a value containing a comma (`\,`, since 0.15.0) checked the options named by its pieces instead, or showed the pieces as unlisted values.
+
 ## 0.15.0
 
 ### Added

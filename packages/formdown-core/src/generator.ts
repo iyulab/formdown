@@ -775,8 +775,11 @@ ${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
     </label>${generateHelpText()}
 </div>`
                 } else {
-                    // Checkbox group - handle comma-separated values
-                    const selectedValues = value ? String(value).split(',').map(v => v.trim()) : []
+                    // Checkbox group: a list of values names its choices as they are (a comma inside one
+                    // included); text names them separated by commas.
+                    const selectedValues = Array.isArray(value)
+                        ? value.map(String)
+                        : value ? String(value).split(',').map(v => v.trim()) : []
                     const checkboxInputsHTML = options.map((opt, index) => {
                         const inputId = this.generateUniqueId(`${name}_${index}`, defaultFormId)
                         const isRequired = required && index === 0

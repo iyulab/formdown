@@ -929,7 +929,7 @@ Additional notes: ___@notes[textarea rows=3 placeholder="Special delivery instru
 - **Number/Date fields**: Display the default value 
 - **Select**: Pre-selects the matching option
 - **Radio**: Pre-selects the matching option
-- **Checkbox group**: Pre-checks matching options (comma-separated values)
+- **Checkbox group**: Pre-checks matching options (comma-separated values in text; a list of values from data is taken as it is, so a value may contain a comma)
 - **Single checkbox**: `value=true` checks the box, `value=false` unchecks it
 - **Range**: Sets the initial position
 

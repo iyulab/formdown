@@ -185,6 +185,23 @@ describe('Value Attribute - Comprehensive TDD Tests', () => {
             expect(html).not.toContain('value="Phone" checked')
         })
 
+        test('checks a checkbox group from a list of values as they are, a comma inside one included', () => {
+            const field = {
+                name: 'regions',
+                type: 'checkbox',
+                label: 'Regions',
+                value: ['seoul,gyeonggi', 'busan'],
+                options: [{ value: 'seoul,gyeonggi', label: 'Seoul, Gyeonggi' }, { value: 'busan' }, { value: 'seoul' }],
+                attributes: { form: "formdown-form-default" }
+            }
+
+            const html = generator.generateFieldHTML(field)
+            expect(html).toContain('value="seoul,gyeonggi" checked')
+            expect(html).toContain('value="busan" checked')
+            expect(html).not.toContain('value="seoul" checked')
+            expect(html).not.toContain('data-formdown-unlisted')
+        })
+
         test('should generate range input with initial value', () => {
             const field = {
                 name: 'satisfaction',
