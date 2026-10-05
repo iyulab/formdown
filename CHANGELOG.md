@@ -2,7 +2,7 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
-## Unreleased
+## 0.15.0
 
 ### Added
 
