@@ -281,7 +281,7 @@ FormdownFieldHelper.clear('priority');               // Clear priority selection
 
 ## Live Demo
 
-Try the [Field Helper API Demo](/samples/field-helper-api) to see the API in action with an interactive form.
+Try the [Field Helper API Demo](/samples/field-helper-api.fd) to see the API in action with an interactive form.
 
 ## Browser Console Testing
 

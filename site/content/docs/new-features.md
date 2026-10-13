@@ -126,7 +126,7 @@ Enhanced action element syntax that clearly distinguishes user actions from inpu
 - ✅ **Framework Ready**: Generated HTML works with all CSS frameworks
 - ✅ **Backward Compatible**: Legacy `@button: [submit]` syntax still supported
 
-[**View Action Elements Demo →**](/samples/file-button-fields.fd)
+[**View Action Elements Demo →**](/samples/action-elements-demo.fd)
 
 ---
 
