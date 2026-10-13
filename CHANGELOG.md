@@ -4,6 +4,10 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ## Unreleased
 
+### Added
+
+- A choice for HTML written in a form's Markdown body: `generateFormHTML(content, { html: 'escape' })`, `new FormManager({ html: 'escape' })` or `render({ html: 'escape' })`, and `formdown-ui`'s `body-html` attribute. With `escape`, such HTML is shown as text and a Markdown link or image to a `javascript:`, `vbscript:` or `data:` address keeps its text without the link — for forms someone else wrote. The default, `trust`, renders it as before.
+
 ### Fixed
 
 - A checkbox group given its value as a list (as data from front matter carries it) is checked from the list as it is. It was turned into text and split at commas again, so a value containing a comma (`\,`, since 0.15.0) checked the options named by its pieces instead, or showed the pieces as unlisted values.

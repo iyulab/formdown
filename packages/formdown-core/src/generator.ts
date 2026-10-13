@@ -1,22 +1,25 @@
-import { marked } from 'marked'
 import { Field, FieldOption, FormdownContent, FormDeclaration, DatalistDeclaration, GroupDeclaration } from './types'
 import { optionLabel } from './options.js'
 import { getDefaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 import { escapeHtml } from './escape.js'
+import { bodyHtml, type BodyHtml } from './body-html.js'
 
 /** Generation returns markup only, so a failing hook is reported as a console warning. */
 const warnHookError = (message: string) => console.warn(`[Formdown] ${message}`)
+
+export interface GeneratorOptions {
+    /** What becomes of HTML written in the Markdown body; see {@link BodyHtml}. `trust` when left out. */
+    html?: BodyHtml
+}
 
 export class FormdownGenerator {
     private formCounter = 0
     private fieldCounter = 0
     private usedIds = new Set<string>()
-    /**
-     * Escape HTML special characters
-     * @param text - The text to escape
-     * @returns HTML-escaped text
-     */
+
+    constructor(private readonly options: GeneratorOptions = {}) {}
+
     /**
      * The values a choice field holds that its options do not offer — written by hand or by another tool, or
      * saved before an option was renamed. They are rendered after the offered ones, chosen and marked
@@ -201,10 +204,11 @@ export class FormdownGenerator {
         return nearestForm || sortedForms[0]
     }
 
-    generateHTML(content: FormdownContent): string {
+    /** The form's HTML; `options` given here stand for this call over those the generator was made with. */
+    generateHTML(content: FormdownContent, options: GeneratorOptions = {}): string {
         // Extension hooks wrap generation; a failing hook is reported and skipped
         const prepared = getDefaultExtensionManager().transformSync('pre-generate', {}, content, warnHookError)
-        const html = this.renderHTML(prepared)
+        const html = this.renderHTML(prepared, options.html ?? this.options.html)
         return getDefaultExtensionManager().transformSync('post-generate', {}, html, warnHookError)
     }
 
@@ -213,12 +217,12 @@ export class FormdownGenerator {
         return getDefaultExtensionManager().transformSync('field-render', { field }, html, warnHookError)
     }
 
-    private renderHTML(content: FormdownContent): string {
+    private renderHTML(content: FormdownContent, bodyHtmlAs: BodyHtml | undefined): string {
         // Reset ID tracking for each form generation
         this.usedIds.clear()
         this.fieldCounter = 0
 
-        const markdownHTML = content.markdown ? marked.parse(content.markdown, { async: false }) : ''
+        const markdownHTML = content.markdown ? bodyHtml(content.markdown, bodyHtmlAs) : ''
         // Use Hidden Form Architecture as the default behavior
         return this.processContentWithHiddenForms(
             markdownHTML,

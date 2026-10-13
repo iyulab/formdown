@@ -1,5 +1,6 @@
 import { FormdownParser } from './parser.js'
 import { FormdownGenerator } from './generator.js'
+import type { BodyHtml } from './body-html.js'
 import { getSchema } from './schema.js'
 import { validateForm, validateField } from './index.js'
 import { FormDataBinding } from './form-data-binding.js'
@@ -15,12 +16,16 @@ export interface FormManagerOptions {
   inlineFieldDelimiter?: string
   autoGenerateFormIds?: boolean
   theme?: Record<string, any>
+  /** What becomes of HTML written in the form's Markdown body; see {@link BodyHtml}. `trust` when left out. */
+  html?: BodyHtml
 }
 
 export interface RenderOptions {
   theme?: Record<string, any>
   customAttributes?: Record<string, any>
   outputFormat?: 'html' | 'json'
+  /** What becomes of HTML written in the body, for this render; the form manager's own option when left out. */
+  html?: BodyHtml
 }
 
 export interface FormManagerEvents {
@@ -52,7 +57,7 @@ export class FormManager {
   
   constructor(private options: FormManagerOptions = {}) {
     this.parser = new FormdownParser(options)
-    this.generator = new FormdownGenerator()
+    this.generator = new FormdownGenerator({ html: options.html })
     
     // Initialize event listener maps
     Object.keys({} as FormManagerEvents).forEach(event => {
@@ -95,7 +100,7 @@ export class FormManager {
       return JSON.stringify(this.parsedContent, null, 2)
     }
 
-    return this.generator.generateHTML(this.parsedContent)
+    return this.generator.generateHTML(this.parsedContent, { html: options.html })
   }
 
   /**
@@ -463,7 +468,7 @@ export class FormManager {
   /**
    * Render form to template format (for UI components)
    */
-  renderToTemplate(options: { theme?: any, container?: any } = {}): any {
+  renderToTemplate(options: { theme?: any, container?: any, html?: BodyHtml } = {}): any {
     if (!this.parsedContent) {
       throw new Error('No content parsed. Call parse() first.')
     }
@@ -475,7 +480,7 @@ export class FormManager {
       formDeclarations: this.getFormDeclarations(),
       schema: this.getSchema(),
       data: this.getData(),
-      html: this.render(),
+      html: this.render({ html: options.html }),
       options
     }
   }

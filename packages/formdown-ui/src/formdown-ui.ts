@@ -4,6 +4,7 @@ import {
   FormManager,
   DOMBinder,
   initializeExtensions,
+  type BodyHtml,
   type FormDownSchema,
   type ValidationResult
 } from '@formdown/core'
@@ -21,6 +22,14 @@ export class FormdownUI extends LitElement {
   static styles = formdownStyles
   @property()
   content = ''
+
+  /**
+   * What becomes of HTML written in the form's Markdown body: `trust` renders it, `escape` shows it as text and
+   * drops the link of a Markdown link to a script or data address — for a form someone else wrote. The form's own
+   * fields are drawn either way.
+   */
+  @property({ attribute: 'body-html' })
+  bodyHtml: BodyHtml = 'trust'
 
   /**
    * What the host says about each field, by name: values it offers and a short note (see
@@ -244,7 +253,8 @@ export class FormdownUI extends LitElement {
       
       // Use new Core template rendering system
       const template = this.formManager.renderToTemplate({
-        container: this
+        container: this,
+        html: this.bodyHtml,
       })
 
       if (!template.html || !template.html.trim()) {
@@ -270,7 +280,7 @@ export class FormdownUI extends LitElement {
   override updated(changedProperties: Map<string | number | symbol, unknown>) {
     super.updated(changedProperties)
 
-    if (changedProperties.has('content')) {
+    if (changedProperties.has('content') || changedProperties.has('bodyHtml')) {
       this.updateContent()
       this.drawFieldStates() // the new content was drawn without them
       // After updating content and schema, sync UI with new default values
@@ -327,7 +337,8 @@ export class FormdownUI extends LitElement {
       }
       
       const template = this.formManager.renderToTemplate({
-        container: this
+        container: this,
+        html: this.bodyHtml,
       })
 
       if (!template.html || template.html.trim() === '') {

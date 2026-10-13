@@ -3,6 +3,7 @@ export * from './types.js'
 export { parseOption, parseOptionList, optionLabel, formatOptions, type OptionList } from './options.js'
 export * from './parser.js'
 export * from './generator.js'
+export type { BodyHtml } from './body-html.js'
 export * from './schema.js'
 export { conditionHolds, conditionState, type ConditionState } from './conditions.js'
 export { applyEdits, updateFrontMatter, setFieldAttribute, authoringCompletion, type TextEdit, type Completion } from './edit.js'
@@ -54,8 +55,8 @@ export function parseFormdown(input: string) {
     return parser.parseFormdown(input)
 }
 
-export function generateFormHTML(content: string | import('./types.js').FormdownContent) {
-    const generator = new FormdownGenerator()
+export function generateFormHTML(content: string | import('./types.js').FormdownContent, options: import('./generator.js').GeneratorOptions = {}) {
+    const generator = new FormdownGenerator(options)
 
     // If input is a string, parse it first
     if (typeof content === 'string') {

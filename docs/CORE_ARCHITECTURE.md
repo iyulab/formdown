@@ -138,6 +138,17 @@ const html = generateFormHTML(parsed)
 const schema = getSchema(formdownContent)
 ```
 
+### HTML Written in the Body
+
+The Markdown around the fields may contain HTML, and by default it is rendered as written, as CommonMark does. For a form someone else wrote (read from a shared folder, sent by a user), pass `html: 'escape'`: HTML in the body is shown as text, and a Markdown link or image to a `javascript:`, `vbscript:` or `data:` address keeps its text and loses its link. The form's own fields are generated either way.
+
+```typescript
+const html = generateFormHTML(formdownContent, { html: 'escape' })
+const manager = new FormManager({ html: 'escape' }) // or per render: manager.render({ html: 'escape' })
+```
+
+`formdown-ui` takes the same choice as its `body-html` attribute (`bodyHtml` property).
+
 ### Source Positions and Lossless Editing
 
 Every parsed field carries `span`, its location in the original text. Offsets are 0-based character offsets into the source exactly as given (CRLF included); `line` and `column` are 1-based. Diagnostics and front matter carry spans too. Fields are listed in source order.
