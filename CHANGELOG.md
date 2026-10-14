@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- A field written without its brackets — `@due: date`, `@kind: select options="a,b"` — is reported as `unrecognized-field`, with how to write it (`@due: [date]`). It was left as text without a word. A line of text that only starts like one (`@kim: text me later`) is not reported.
+
 ## 0.16.0
 
 ### Added

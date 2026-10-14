@@ -101,6 +101,25 @@ describe('a line that looks like a field but is not read as one', () => {
         expect(d.message).not.toContain('braces')
     })
 
+    it('names a field written without its brackets, and how to write it', () => {
+        const parsed = parseFormdown('@due: date\n@kind(Kind)*: select options="a,b"\n@notes: textarea rows=5')
+        expect(parsed.forms).toEqual([])
+        expect(parsed.diagnostics!.map(d => [d.code, d.severity, d.field, d.span?.line])).toEqual([
+            ['unrecognized-field', 'warning', 'due', 1],
+            ['unrecognized-field', 'warning', 'kind', 2],
+            ['unrecognized-field', 'warning', 'notes', 3],
+        ])
+        expect(parsed.diagnostics!.map(d => d.message.slice(d.message.indexOf('brackets: ') + 10))).toEqual([
+            '@due: [date]',
+            '@kind(Kind)*: [select options="a,b"]',
+            '@notes: [textarea rows=5]',
+        ])
+    })
+
+    it('does not take a line of text starting with a name for a field without brackets', () => {
+        expect(codes('@kim: text me later\n@team: the date is fixed\n@note: textbook')).toEqual([])
+    })
+
     it('is not said of fields that are read, or of lines with another problem', () => {
         expect(codes('@browser{Chrome,Firefox,*}: r[]\n@plan: [radio options="a,b"]\n@kind*: s[options="a"]')).toEqual([])
         expect(codes('@1st: [text]')).toEqual(['invalid-field-name'])

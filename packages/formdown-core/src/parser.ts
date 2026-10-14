@@ -34,6 +34,12 @@ const INPUT_TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'searc
 /** Something shaped like a block field whose name is not a valid name, e.g. `@1st: [text]`. */
 const BLOCK_FIELD_CANDIDATE = /^@([^\s:([{*\-<>@\]]+)[^:]*:\s*\S*\[/u
 
+/**
+ * A block field written without its brackets: a type named after the colon, then nothing or attributes with values —
+ * `@due: date`, `@kind: select options="a,b"`. A line like `@kim: text me later` is not taken for one.
+ */
+const BRACKETLESS_FIELD = pattern(String.raw`^@(${NAME})(?:\([^)]*\))?\*?\s*:\s*(${INPUT_TYPES.join('|')})((?:\s+[\w-]+(?:=(?:"[^"]*"|'[^']*'|\S+))?)*)\s*$`)
+
 /** The conditional attributes, each with where its condition is kept on the field. */
 const CONDITIONAL_ATTRIBUTES: Record<string, keyof ConditionalAttributes> = {
     'visible-if': 'visibleIf',
@@ -833,7 +839,10 @@ export class FormdownParser {
     private checkBlockFieldSyntax(line: string): void {
         const trimmed = line.trim()
         const candidate = trimmed.match(BLOCK_FIELD_CANDIDATE)
-        if (!candidate) return
+        if (!candidate) {
+            this.checkBracketlessField(line, trimmed)
+            return
+        }
         const column = line.indexOf(trimmed)
         if (!isValidName(candidate[1])) {
             this.report('invalid-field-name',
@@ -850,6 +859,19 @@ export class FormdownParser {
             `This line looks like the field "${candidate[1]}" but is not read as one, so it shows as text.${hint}`,
             column, trimmed.length, 'warning')
         this.diagnostics[this.diagnostics.length - 1].field = candidate[1]
+    }
+
+    /** A block field whose type and attributes were written without the brackets that make it a field. */
+    private checkBracketlessField(line: string, trimmed: string): void {
+        const bare = trimmed.match(BRACKETLESS_FIELD)
+        if (!bare || !isValidName(bare[1])) return
+        const [, name, type, rest] = bare
+        if (rest.trim() !== '' && !rest.includes('=')) return
+        const written = trimmed.slice(0, trimmed.indexOf(':') + 1)
+        this.report('unrecognized-field',
+            `This line looks like the field "${name}" but is not read as one, so it shows as text. Its type and attributes go in brackets: ${written} [${type}${rest.trimEnd()}]`,
+            line.indexOf(trimmed), trimmed.length, 'warning')
+        this.diagnostics[this.diagnostics.length - 1].field = name
     }
 
     /** Inline field markers that cannot become fields. */
