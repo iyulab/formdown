@@ -109,11 +109,18 @@ describe('a line that looks like a field but is not read as one', () => {
             ['unrecognized-field', 'warning', 'kind', 2],
             ['unrecognized-field', 'warning', 'notes', 3],
         ])
-        expect(parsed.diagnostics!.map(d => d.message.slice(d.message.indexOf('brackets: ') + 10))).toEqual([
-            '@due: [date]',
-            '@kind(Kind)*: [select options="a,b"]',
-            '@notes: [textarea rows=5]',
-        ])
+        const fixes = ['@due: [date]', '@kind(Kind)*: [select options="a,b"]', '@notes: [textarea rows=5]']
+        expect(parsed.diagnostics!.map(d => d.fix)).toEqual(fixes)
+        expect(parsed.diagnostics!.map(d => d.message.slice(d.message.indexOf('brackets: ') + 10))).toEqual(fixes)
+    })
+
+    it('gives a fix that, put in place of the span, makes the field', () => {
+        const source = '# Visit\n\n  @due: date\n'
+        const [d] = parseFormdown(source).diagnostics!
+        const fixed = source.slice(0, d.span!.start) + d.fix + source.slice(d.span!.end)
+        expect(fixed).toBe('# Visit\n\n  @due: [date]\n')
+        expect(parseFormdown(fixed).forms.map(f => [f.name, f.type])).toEqual([['due', 'date']])
+        expect(parseFormdown(fixed).diagnostics).toEqual([])
     })
 
     it('does not take a line of text starting with a name for a field without brackets', () => {

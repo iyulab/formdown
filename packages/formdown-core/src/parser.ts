@@ -867,11 +867,11 @@ export class FormdownParser {
         if (!bare || !isValidName(bare[1])) return
         const [, name, type, rest] = bare
         if (rest.trim() !== '' && !rest.includes('=')) return
-        const written = trimmed.slice(0, trimmed.indexOf(':') + 1)
+        const fix = `${trimmed.slice(0, trimmed.indexOf(':') + 1)} [${type}${rest.trimEnd()}]`
         this.report('unrecognized-field',
-            `This line looks like the field "${name}" but is not read as one, so it shows as text. Its type and attributes go in brackets: ${written} [${type}${rest.trimEnd()}]`,
+            `This line looks like the field "${name}" but is not read as one, so it shows as text. Its type and attributes go in brackets: ${fix}`,
             line.indexOf(trimmed), trimmed.length, 'warning')
-        this.diagnostics[this.diagnostics.length - 1].field = name
+        Object.assign(this.diagnostics[this.diagnostics.length - 1], { field: name, fix })
     }
 
     /** Inline field markers that cannot become fields. */

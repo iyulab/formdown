@@ -4,6 +4,10 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ## Unreleased
 
+### Added
+
+- `Diagnostic.fix`: text that, put in place of the diagnostic's `span`, makes the source what it looks meant to be, when the parser can tell — for an editor's quick fix. `unrecognized-field` carries one for a field written without its brackets.
+
 ### Fixed
 
 - A field written without its brackets — `@due: date`, `@kind: select options="a,b"` — is reported as `unrecognized-field`, with how to write it (`@due: [date]`). It was left as text without a word. A line of text that only starts like one (`@kim: text me later`) is not reported.

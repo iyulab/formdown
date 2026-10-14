@@ -135,6 +135,11 @@ export interface Diagnostic {
      * condition gives that no field of the form has.
      */
     related?: string
+    /**
+     * Text that, put in place of `span`, makes the source what it looks meant to be — when the parser can tell
+     * (`unrecognized-field` for a field written without its brackets). An editor can offer it as a quick fix.
+     */
+    fix?: string
 }
 
 /** YAML front matter at the start of a document. */

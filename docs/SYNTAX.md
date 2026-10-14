@@ -996,7 +996,7 @@ const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
 | `invalid-field-name` | error | Field syntax whose name is not a valid name, e.g. `@1st: [text]`. The field is not created |
 | `unterminated-attributes` | error | A field opens `[` without a closing `]` on the same line |
 | `unterminated-quoted-value` | error | A quoted attribute value is not closed on the same line |
-| `unrecognized-field` | warning | A line shaped like a block field that is not read as one, so it shows as text: a shape the parser does not read (`@size: zz[]`), or a type and attributes written without their brackets (`@due: date`, `@kind: select options="a,b"`). The message says how to write it (`@due: [date]`) |
+| `unrecognized-field` | warning | A line shaped like a block field that is not read as one, so it shows as text: a shape the parser does not read (`@size: zz[]`), or a type and attributes written without their brackets (`@due: date`, `@kind: select options="a,b"`). The message says how to write it, and `fix` holds that text to put in place of `span` (`@due: [date]`) |
 | `duplicate-field-name` | warning | A name is used by more than one field. All occurrences are kept; each one after the first is reported, with `field` and its `span` |
 | `invalid-condition` | warning | A conditional attribute (`visible-if`, `hidden-if`, `enabled-if`, `disabled-if`, `required-if`) whose value is not a condition, e.g. `visible-if="a == 1"`. The field is kept without that condition |
 | `condition-unknown-field` | warning | A condition names a field the form does not have, so it never holds (or, negated, always does) |
