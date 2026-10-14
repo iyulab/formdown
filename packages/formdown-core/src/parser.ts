@@ -851,14 +851,28 @@ export class FormdownParser {
             return
         }
         if (this.checkAttributeBrackets(line, column + candidate[0].length - 1, column)) return
-        const afterColon = trimmed.slice(trimmed.indexOf(':') + 1)
+        const colon = trimmed.indexOf(':')
+        const afterColon = trimmed.slice(colon + 1)
         const hint = /^\s*\S*\{/.test(afterColon)
             ? ` In shorthand, the braces go after the name: @${candidate[1]}{…}: r[]`
             : ''
         this.report('unrecognized-field',
             `This line looks like the field "${candidate[1]}" but is not read as one, so it shows as text.${hint}`,
             column, trimmed.length, 'warning')
-        this.diagnostics[this.diagnostics.length - 1].field = candidate[1]
+        const fix = hint ? this.bracesMoved(trimmed, colon) : undefined
+        Object.assign(this.diagnostics[this.diagnostics.length - 1], { field: candidate[1], ...(fix && { fix }) })
+    }
+
+    /**
+     * A shorthand line with its braces written after the colon (`@browser: r{Chrome,Firefox}[]`) as it reads — the braces
+     * moved after the name, `@browser{Chrome,Firefox}: r[]` — when that is a field; otherwise undefined.
+     */
+    private bracesMoved(trimmed: string, colon: number): string | undefined {
+        const moved = trimmed.slice(colon + 1).match(/^(\s*\S*?)\{([^}]*)\}(.*)$/)
+        if (!moved) return undefined
+        const [, marker, content, rest] = moved
+        const fix = `${trimmed.slice(0, colon).trimEnd()}{${content}}:${marker}${rest}`
+        return fix.match(SHORTHAND_BLOCK_FIELD_LABEL_FIRST) ? fix : undefined
     }
 
     /** A block field whose type and attributes were written without the brackets that make it a field. */

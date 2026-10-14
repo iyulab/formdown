@@ -93,12 +93,15 @@ describe('a line that looks like a field but is not read as one', () => {
         expect(d).toMatchObject({ code: 'unrecognized-field', severity: 'warning', field: 'browser' })
         expect(d.message).toContain('@browser{…}: r[]')
         expect(d.span).toMatchObject({ line: 1, column: 1 })
+        expect(d.fix).toBe('@browser{Chrome,Firefox,*}: r[]')
+        expect(parseFormdown(d.fix!).forms.map(f => [f.name, f.type])).toEqual([['browser', 'radio']])
     })
 
     it('names what was not read without the braces hint when there are none', () => {
         const [d] = parseFormdown('@size: zz[]').diagnostics!
         expect(d).toMatchObject({ code: 'unrecognized-field', field: 'size' })
         expect(d.message).not.toContain('braces')
+        expect(d.fix).toBeUndefined() // nothing the parser can tell it was meant to be
     })
 
     it('names a field written without its brackets, and how to write it', () => {

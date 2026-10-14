@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- `unrecognized-field` carries a `fix` for a shorthand line with its braces after the colon: `@browser: r{Chrome,Firefox}[]` → `@browser{Chrome,Firefox}: r[]`.
+
 ## 0.17.0
 
 ### Added
