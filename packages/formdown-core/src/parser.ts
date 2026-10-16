@@ -1,5 +1,5 @@
 import { Field, FieldRelation, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic, FrontMatter, SourceSpan } from './types'
-import { NAME, TARGET, ATTRIBUTES, isValidName, pattern, tokenizeAttributes, attributeValue, quoteAttributeValue, scanAttributes } from './grammar.js'
+import { NAME, TARGET, LABEL, LABEL_SPAN, ATTRIBUTES, isValidName, pattern, tokenizeAttributes, attributeValue, quoteAttributeValue, scanAttributes } from './grammar.js'
 import { readFrontMatter, FenceTracker, maskCodeSpans } from './source.js'
 
 const TYPE_MARKER = String.raw`(?:dt|d|[#@%&t?TrscRFCMW$])`
@@ -10,20 +10,20 @@ const SHORTHAND_MARKERS = [
     pattern(String.raw`^@${NAME}\*`),                                           // Required marker
     pattern(String.raw`^@${NAME}\{[^}]*\}`),                                    // Content
     pattern(String.raw`^@${NAME}\s*:\s*${TYPE_MARKER}\d*\[`),                   // Type marker
-    pattern(String.raw`^@${NAME}\([^)]+\)\*`),                                  // Label + required
-    pattern(String.raw`^@${NAME}\([^)]+\)\{[^}]*\}`),                           // Label + content
-    pattern(String.raw`^@${NAME}\([^)]+\)\s*:\s*${TYPE_MARKER}\d*\[`),          // Label + type marker
+    pattern(String.raw`^@${NAME}${LABEL}\*`),                                    // Label + required
+    pattern(String.raw`^@${NAME}${LABEL}\{[^}]*\}`),                             // Label + content
+    pattern(String.raw`^@${NAME}${LABEL}\s*:\s*${TYPE_MARKER}\d*\[`),            // Label + type marker
     pattern(String.raw`^@${NAME}[^:]*(?:<->|->)\s*${TARGET}\s*:\s*${TYPE_MARKER}\d*\[`) // FK relation + type marker
 ]
 
 /** Standard block syntax: @name(Label) [-> Target]: [type attributes] */
-const BLOCK_FIELD = pattern(String.raw`^@(${NAME})(?:\(([^)]+)\))?\s*${RELATION}:\s*${ATTRIBUTES}.*$`)
+const BLOCK_FIELD = pattern(String.raw`^@(${NAME})(?:${LABEL})?\s*${RELATION}:\s*${ATTRIBUTES}.*$`)
 
 /** Shorthand block syntax: @name*{content}(Label) [-> Target]: marker[attributes] */
-const SHORTHAND_BLOCK_FIELD = pattern(String.raw`^@(${NAME})(\*)?(?:\{(.*?)\})?(?:\(([^)]+)\))?\s*${RELATION}:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?${ATTRIBUTES}.*$`)
+const SHORTHAND_BLOCK_FIELD = pattern(String.raw`^@(${NAME})(\*)?(?:\{(.*?)\})?(?:${LABEL})?\s*${RELATION}:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?${ATTRIBUTES}.*$`)
 
 /** Shorthand block syntax with the label first: @name(Label)*{content} [-> Target]: marker[attributes] */
-const SHORTHAND_BLOCK_FIELD_LABEL_FIRST = pattern(String.raw`^@(${NAME})(?:\(([^)]+)\))?(\*)?(?:\{(.*?)\})?\s*${RELATION}:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?${ATTRIBUTES}.*$`)
+const SHORTHAND_BLOCK_FIELD_LABEL_FIRST = pattern(String.raw`^@(${NAME})(?:${LABEL})?(\*)?(?:\{(.*?)\})?\s*${RELATION}:\s*(?:(dt|d|[#@%&t?TrscRFCMW$])(\d*)?)?${ATTRIBUTES}.*$`)
 
 /** The types a field can be given by name in its brackets, `[select …]`. */
 const INPUT_TYPES = ['text', 'email', 'password', 'number', 'tel', 'url', 'search',
@@ -38,7 +38,7 @@ const BLOCK_FIELD_CANDIDATE = /^@([^\s:([{*\-<>@\]]+)[^:]*:\s*\S*\[/u
  * A block field written without its brackets: a type named after the colon, then nothing or attributes with values —
  * `@due: date`, `@kind: select options="a,b"`. A line like `@kim: text me later` is not taken for one.
  */
-const BRACKETLESS_FIELD = pattern(String.raw`^@(${NAME})(?:\([^)]*\))?\*?\s*:\s*(${INPUT_TYPES.join('|')})((?:\s+[\w-]+(?:=(?:"[^"]*"|'[^']*'|\S+))?)*)\s*$`)
+const BRACKETLESS_FIELD = pattern(String.raw`^@(${NAME})(?:${LABEL_SPAN})?\*?\s*:\s*(${INPUT_TYPES.join('|')})((?:\s+[\w-]+(?:=(?:"[^"]*"|'[^']*'|\S+))?)*)\s*$`)
 
 /** The conditional attributes, each with where its condition is kept on the field. */
 const CONDITIONAL_ATTRIBUTES: Record<string, keyof ConditionalAttributes> = {
@@ -404,7 +404,7 @@ export class FormdownParser {
         // Note: need to handle single 'd' separately from 'dt'
         this.checkInlineFieldSyntax(line, delimiter, column)
 
-        const shorthandPattern = pattern(String.raw`(dt|d|[#@%&t?TrscRFCMW$]?)${delimiter}@(${NAME})(\*)?(?:\{([^}]*)\})?(?:\(([^)]+)\))?(?:${ATTRIBUTES}|:\s*([^\s]*?)${ATTRIBUTES})?`, 'g')
+        const shorthandPattern = pattern(String.raw`(dt|d|[#@%&t?TrscRFCMW$]?)${delimiter}@(${NAME})(\*)?(?:\{([^}]*)\})?(?:${LABEL})?(?:${ATTRIBUTES}|:\s*([^\s]*?)${ATTRIBUTES})?`, 'g')
         
         let cleanedLine = line.replace(shorthandPattern, (match, typeMarker, name, requiredMarker, content, customLabel, attributes, colonType, colonAttributes, offset: number) => {
             // Only process as shorthand if it has actual shorthand features
@@ -442,7 +442,7 @@ export class FormdownParser {
         // Occurrences the shorthand pass handled were already replaced with markup, so
         // everything this pass matches is still unprocessed source. (Comparing names here
         // used to drop a second field that happened to share a name.)
-        const standardPattern = pattern(String.raw`${delimiter}@(${NAME})(?:\{([^}]*)\})?(?:\(([^)]+)\))?(?::\s*([^\s]*?)${ATTRIBUTES}|${ATTRIBUTES})?`, 'g')
+        const standardPattern = pattern(String.raw`${delimiter}@(${NAME})(?:\{([^}]*)\})?(?:${LABEL})?(?::\s*([^\s]*?)${ATTRIBUTES}|${ATTRIBUTES})?`, 'g')
         cleanedLine = cleanedLine.replace(standardPattern, (match, name, options, customLabel, colonType, colonAttributes, directAttributes, offset: number) => {
             // Determine type and attributes
             let finalTypeAndAttributes = 'text'
@@ -897,7 +897,7 @@ export class FormdownParser {
                 base + match.index!, match[0].length)
         }
 
-        const opening = pattern(String.raw`${delimiter}@${NAME}(?:\{[^}]*\})?(?:\([^)]*\))?(?::\s*[^\s\[]*)?\[`, 'g')
+        const opening = pattern(String.raw`${delimiter}@${NAME}(?:\{[^}]*\})?(?:${LABEL_SPAN})?(?::\s*[^\s\[]*)?\[`, 'g')
         for (const match of line.matchAll(opening)) {
             this.checkAttributeBrackets(line, match.index! + match[0].length - 1, match.index!, base)
         }

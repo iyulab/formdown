@@ -38,6 +38,30 @@ describe('Field names', () => {
         })
     })
 
+    describe('a label holding parentheses of its own, as form labels do', () => {
+        it.each([
+            ['block', '@주소(주소(소재지)): [text]', '주소(소재지)'],
+            ['block shorthand', '@생년월일(Date of birth (MM/DD)): d[]', 'Date of birth (MM/DD)'],
+            ['shorthand, label first and required', '@성명(성명(법인ㆍ단체명))*: [text]', '성명(법인ㆍ단체명)'],
+            ['relation', '@업소(업소(상호)) -> food-business: [select]', '업소(상호)'],
+            ['inline', '신청인: ___@신청인(신청인(대표))', '신청인(대표)'],
+        ])('%s', (_kind, src, label) => {
+            const result = parseFormdown(src)
+            expect(result.forms.map(f => f.label)).toEqual([label])
+            expect(result.diagnostics).toEqual([])
+        })
+
+        it('ends the label at its own closing parenthesis, not at one later in the line', () => {
+            const [field] = parseFormdown('이름: ___@이름(성명) 을 적으세요 (필수)').forms
+            expect(field.label).toBe('성명')
+        })
+
+        it('reads a field written without brackets the same way', () => {
+            const result = parseFormdown('@주소(주소(소재지)): text')
+            expect(result.diagnostics!.map(d => d.fix)).toEqual(['@주소(주소(소재지)): [text]'])
+        })
+    })
+
     describe('duplicate names', () => {
         it('keeps both inline occurrences and reports the duplicate', () => {
             const result = parseFormdown('___@a and ___@a')

@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- A field's label may hold parentheses of its own: `@address(Address (street, city)): [text]`. Such a line was not read as a field at all — the label ended at the first closing parenthesis — and showed as text with an `unrecognized-field` diagnostic. Labels on paper forms are often written this way. The same holds for shorthand, relation, inline and bracketless fields, and for the authoring completion of `[]`.
+
 ## 0.19.0
 
 ### Added

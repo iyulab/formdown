@@ -15,6 +15,16 @@ export const NAME = String.raw`[\p{L}_][\p{L}\p{N}_]*`
  */
 export const TARGET = String.raw`[\p{L}\p{N}_](?:[\p{L}\p{N}_.-]*[\p{L}\p{N}_])?`
 
+/**
+ * A field's label in parentheses after its name, `(Label)`. Form labels often hold parentheses of their own
+ * (`주소(소재지)`, `Date (MM/DD)`), so one level of balanced parentheses inside is part of the label. The capture
+ * group holds the text between the outer parentheses.
+ */
+export const LABEL = String.raw`\(((?:[^()]|\([^()]*\))+)\)`
+
+/** As {@link LABEL} without capturing, for patterns that only recognise a field; it may be empty, `()`. */
+export const LABEL_SPAN = String.raw`\((?:[^()]|\([^()]*\))*\)`
+
 const FULL_NAME = new RegExp(`^${NAME}$`, 'u')
 
 /** True when `name` is a valid field name. */

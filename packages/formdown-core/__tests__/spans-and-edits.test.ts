@@ -169,6 +169,7 @@ describe('authoringCompletion', () => {
         expect(at('@status: ')).toEqual({ text: '[]', caret: 1 })
         expect(at('@담당*: ')).toEqual({ text: '[]', caret: 1 })
         expect(at('@tone{Warm,Cool}(Tone): ')).toEqual({ text: '[]', caret: 1 })
+        expect(at('@주소(주소(소재지)): ')).toEqual({ text: '[]', caret: 1 })
         expect(at('@status: ', '[select]')).toBeNull()
         expect(at('@status:')).toBeNull()
         expect(at('see @status: ')).toBeNull()

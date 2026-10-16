@@ -9,7 +9,10 @@
 import { Document, parseDocument, isMap } from 'yaml'
 import { FenceTracker, readFrontMatter } from './source.js'
 import { FormdownParser } from './parser.js'
-import { quoteAttributeValue, scanAttributes, tokenizeAttributes } from './grammar.js'
+import { LABEL_SPAN, quoteAttributeValue, scanAttributes, tokenizeAttributes } from './grammar.js'
+
+/** A block field's start typed up to its colon and a space, `@name{content}(Label)*: ` — the label may hold parentheses. */
+const OPENING_FIELD = new RegExp(String.raw`^ {0,3}@[^\s@:[\]{}()*]+(\{[^}]*\})?(?:${LABEL_SPAN})?\*?: $`)
 
 /** Replace `source.slice(start, end)` with `text`. */
 export interface TextEdit {
@@ -170,7 +173,7 @@ export function authoringCompletion(source: string, caret: number): Completion |
     if (before.endsWith('___') && !after.startsWith('@') && before.replace(/_+$/, '').trim() !== '') {
         return { text: '@', caret: 1 }
     }
-    if (/^ {0,3}@[^\s@:[\]{}()*]+(\{[^}]*\})?(\([^)]*\))?\*?: $/.test(before) && after.trim() === '') {
+    if (OPENING_FIELD.test(before) && after.trim() === '') {
         return { text: '[]', caret: 1 }
     }
     return null

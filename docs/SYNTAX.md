@@ -495,6 +495,12 @@ FormDown intelligently converts field names to proper labels:
 @phone_number(Phone): [tel]
 ```
 
+A label may hold one level of parentheses of its own, as labels on paper forms often do; the label ends at its own closing parenthesis:
+```formdown
+@address(Address (street, city)): [text]
+@birth_date(Date of birth (MM/DD/YYYY)): [date]
+```
+
 **Benefits:**
 - **Cleaner syntax** - Separates label from attributes
 - **Better readability** - Label stands out visually
