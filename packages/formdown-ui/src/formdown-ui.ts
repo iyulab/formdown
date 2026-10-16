@@ -14,6 +14,7 @@ import { markUnreadValues } from './unread'
 import { applyChoices, type Choices } from './choices'
 import { applySelectFilters } from './select-filter'
 import { applyConditions, type ConditionalField } from './conditions'
+import { computations, computedValues } from './computed'
 import { applyFieldStates, focusFieldOf, hostFocused, type FieldStates } from './field-states'
 import { formdownStyles } from './styles'
 import { fieldTypeStyles, ShadowStyleSheet } from './field-type-styles'
@@ -133,6 +134,8 @@ export class FormdownUI extends LitElement {
   private fieldRegistry: Map<string, Set<HTMLElement>> = new Map()
   private _isUpdatingUI = false  // Prevent infinite loops
   private _schema: FormDownSchema | null = null
+  /** The fields worked out from others' values, kept as the schema is read. */
+  private computed: ReturnType<typeof computations> = new Map()
 
   constructor() {
     super()
@@ -254,6 +257,7 @@ export class FormdownUI extends LitElement {
       // Parse content using FormManager
       this.formManager.parse(this.content)
       this._schema = this.formManager.getSchema()
+      this.computed = computations(this._schema as Record<string, { compute?: string }>)
       
       // Sync data with FormManager
       if (this.data && Object.keys(this.data).length > 0) {
@@ -342,6 +346,7 @@ export class FormdownUI extends LitElement {
       // Use Core template rendering system - much simpler!
       this.formManager.parse(this.content)
       this._schema = this.formManager.getSchema()
+      this.computed = computations(this._schema as Record<string, { compute?: string }>)
       this.fieldTypeSheet ??= new ShadowStyleSheet(this.shadowRoot!)
       this.fieldTypeSheet.set(fieldTypeStyles(this._schema))
       
@@ -496,8 +501,15 @@ export class FormdownUI extends LitElement {
 
     // Delegate to FormManager
     this.formManager.setFieldValue(fieldName, value)
-    this.data = { ...this.data, [fieldName]: value }
+    this.data = { ...this.data, [fieldName]: value, ...this.followComputed() }
     this.emitFieldEvents(fieldName, value)
+  }
+
+  /** Sets the fields worked out from others to what the values now make them, and answers those that moved. */
+  private followComputed(): Record<string, string> {
+    const worked = computedValues(this.computed, this.formManager.getData())
+    for (const [name, value] of Object.entries(worked)) this.formManager.setFieldValue(name, value)
+    return worked
   }
 
 
@@ -607,6 +619,8 @@ export class FormdownUI extends LitElement {
   // Field synchronization - delegated to FormManager
   syncFieldValue(fieldName: string, value: string | string[] | boolean) {
     this.formManager.setFieldValue(fieldName, value)
+    // A field worked out from this one follows it, in the same change.
+    this.followComputed()
     this.data = this.formManager.getData()
     this.emitFieldEvents(fieldName, value)
   }

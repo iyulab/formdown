@@ -52,6 +52,7 @@ import { getDefaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 import { escapeHtml } from './escape.js'
 import { parseOptionList, formatOptions } from './options.js'
+import { parseComputation } from './compute.js'
 
 // Private-use characters delimit inline field markers; they cannot collide with
 // anything markdown or HTML gives meaning to
@@ -113,6 +114,7 @@ export class FormdownParser {
         ))
         this.reportDuplicateNames(fields)
         this.reportConditions(fields)
+        this.reportComputations(fields)
 
         const result: FormdownContent = {
             markdown: this.options.preserveMarkdown ? extracted.cleanedMarkdown : '',
@@ -736,6 +738,8 @@ export class FormdownParser {
                 field.placeholder = text
             } else if (key === 'description' && hasValue) {
                 field.description = text
+            } else if (key === 'compute' && hasValue) {
+                field.compute = text
             } else if (key === 'options' && hasValue) {
                 const optionsValue = text
                 if (['radio', 'checkbox', 'select'].includes(type)) {
@@ -953,6 +957,30 @@ export class FormdownParser {
                     related: name,
                     ...(field.span && { span: field.span })
                 })
+            }
+        }
+    }
+
+    /**
+     * A computed value that cannot be read is never worked out, and one reading a field the form does not have never
+     * has a value: both are reported where the field is.
+     */
+    private reportComputations(fields: Field[]): void {
+        const names = new Set(fields.map(field => field.name))
+        for (const field of fields) {
+            if (field.compute === undefined) continue
+            const read = parseComputation(field.compute)
+            const problems = 'error' in read
+                ? [{ code: 'invalid-compute', message: `compute="${field.compute}" ${read.error}: it is numbers and fields with + - * / and parentheses` }]
+                : read.fields.filter(name => !names.has(name) || name === field.name).map(name => ({
+                    code: 'compute-unknown-field',
+                    message: name === field.name
+                        ? `compute reads "${name}", the field it computes`
+                        : `compute reads "${name}", which is not a field of this form`,
+                    related: name,
+                }))
+            for (const problem of problems) {
+                this.diagnostics.push({ ...problem, severity: 'warning', field: field.name, ...(field.span && { span: field.span }) })
             }
         }
     }

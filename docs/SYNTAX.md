@@ -752,6 +752,11 @@ Please enter ___@age and ___@email.
 - `required` - Field is mandatory
 - `placeholder="text"` - Placeholder text
 - `description="text"` - How to fill the field, shown under it and named by the field's `aria-describedby`
+- `compute="expression"` - A value worked out from other fields' numbers, not typed in: numbers and field names with
+  `+ - * /` and parentheses (`*` and `/` first), as in `@amount: [number compute="quantity * price"]`. The field is
+  read-only and follows the fields it reads as they change; while one of them holds no number, or it divides by zero,
+  it is empty. A value it was given is kept until a field it reads changes. An expression that cannot be read, or that
+  reads a field the form does not have, is reported (`invalid-compute`, `compute-unknown-field`).
 
 A label, a description and an option are text: markup written in them shows as written, whether the body's own HTML is
 trusted or not.

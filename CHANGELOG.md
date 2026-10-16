@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- A field may be worked out from other fields' numbers: `@amount: [number compute="quantity * price"]` — numbers and field names with `+ - * /` and parentheses, never evaluated as code. `formdown-ui` keeps it read-only and sets it as the fields it reads change, in the same `formdown-change`; it is empty while one of them holds no number. A value given with the data is kept until a field it reads changes. The core exports `parseComputation`; the schema carries `compute`; an expression that cannot be read or reads a field the form does not have is a diagnostic (`invalid-compute`, `compute-unknown-field`).
+
 ## 0.20.0
 
 ### Added

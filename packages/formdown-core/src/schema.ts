@@ -66,6 +66,10 @@ export class SchemaExtractor {
             schema.description = field.description
         }
 
+        if (field.compute) {
+            schema.compute = field.compute
+        }
+
         if (field.errorMessage) {
             schema.errorMessage = field.errorMessage
         }

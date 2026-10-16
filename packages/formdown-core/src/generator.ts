@@ -552,6 +552,8 @@ ${fieldHTML}
             ...(errorMessage && { 'aria-describedby': `${descriptionId ? descriptionId + ' ' : ''}${errorId}` }),
             ...(formId && { form: formId }),
             ...(suggestedAutocomplete && !attributes?.autocomplete && { autocomplete: suggestedAutocomplete }),
+            // Worked out, not typed in: read-only, saying what from.
+            ...(field.compute && { readonly: true, 'data-compute': field.compute }),
             ...filteredAttributes
         }
 

@@ -37,6 +37,8 @@ export interface Field {
     position?: number  // Position in the source content for form association
     group?: string    // Group ID for fieldset grouping
     conditions?: ConditionalAttributes  // Conditional visibility/behavior
+    /** Worked out from other fields' numbers (`compute="quantity * price"`), not typed in; see `parseComputation`. */
+    compute?: string
     relation?: FieldRelation  // FK relation metadata (-> or <->)
     span?: SourceSpan  // Where the field syntax is in the original source
     [key: string]: unknown  // Index signature for compatibility with FieldSchema
@@ -203,6 +205,8 @@ export interface FieldSchema {
     errorMessage?: string
     group?: string  // Group ID for fieldset grouping
     conditions?: ConditionalAttributes  // Conditional visibility/behavior
+    /** Worked out from other fields' numbers (`compute="quantity * price"`), not typed in; see `parseComputation`. */
+    compute?: string
 }
 
 export type FieldType =
