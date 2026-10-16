@@ -128,6 +128,65 @@ export const formdownStyles = css`
     padding-right: 2.5rem;
   }
 
+  /* A long select, narrowed by typing (select-filter.ts): the select stays in place as the field, unseen. */
+  .formdown-select-filter {
+    position: relative;
+    display: block;
+  }
+
+  select[data-formdown-filtered] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .formdown-select-filter-input {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+  }
+
+  .formdown-select-filter-list {
+    position: absolute;
+    z-index: 10;
+    top: calc(100% + 2px);
+    left: 0;
+    right: 0;
+    max-height: 16rem;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0.25rem 0;
+    list-style: none;
+    background-color: var(--formdown-bg-primary, #ffffff);
+    color: var(--formdown-text-primary, #1f2937);
+    border: var(--formdown-input-border-width, 1px) solid var(--formdown-border-color, #e2e8f0);
+    border-radius: var(--formdown-input-border-radius, 0.5rem);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+
+  .formdown-select-filter-list[hidden] {
+    display: none;
+  }
+
+  .formdown-select-filter-list [role="option"] {
+    padding: 0.375rem var(--formdown-input-padding-x, 0.75rem);
+    cursor: pointer;
+    overflow-wrap: anywhere;
+  }
+
+  .formdown-select-filter-list [role="option"][aria-selected="true"] {
+    font-weight: 600;
+  }
+
+  .formdown-select-filter-list [role="option"].active,
+  .formdown-select-filter-list [role="option"]:hover {
+    background-color: var(--formdown-accent-color, #3b82f6);
+    color: var(--formdown-bg-primary, #ffffff);
+  }
+
   /* ========================================
    * Fieldset/Section
    * ======================================== */

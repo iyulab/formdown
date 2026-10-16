@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- `formdown-ui`: a select with many options can be narrowed by typing. Past `filter-select-above` options (default 20) — a host's `choices` can make a select that long — a single-choice select becomes a combobox (WAI-ARIA combobox with a listbox popup) that filters its options by their labels; choosing one sets the select, which stays the field with its name, value and events. `Infinity` keeps the native select.
+
 ## 0.18.1
 
 ### Fixed

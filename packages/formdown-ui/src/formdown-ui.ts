@@ -12,6 +12,7 @@ import { applyFieldValue, isCheckedValue } from './field-value'
 import { addUnlistedChoices } from './unlisted'
 import { markUnreadValues } from './unread'
 import { applyChoices, type Choices } from './choices'
+import { applySelectFilters } from './select-filter'
 import { applyConditions, type ConditionalField } from './conditions'
 import { applyFieldStates, focusFieldOf, hostFocused, type FieldStates } from './field-states'
 import { formdownStyles } from './styles'
@@ -48,6 +49,14 @@ export class FormdownUI extends LitElement {
    */
   @property({ attribute: false })
   choices: Choices = {}
+
+  /**
+   * A select with more options than this becomes a field one types into to narrow its options by their
+   * labels (a combobox), for lists too long to scroll — the host's `choices` can make them so. The select stays
+   * the field: its name, value and events are as before. `Infinity` keeps every select as it is.
+   */
+  @property({ attribute: 'filter-select-above', type: Number })
+  filterSelectAbove = 20
 
   // Form ID generation removed - delegated to FormManager
 
@@ -302,6 +311,11 @@ export class FormdownUI extends LitElement {
     if (changedProperties.has('choices') && !changedProperties.has('content') && !changedProperties.has('data')) {
       this.syncUIFromData()
     }
+
+    if (changedProperties.has('filterSelectAbove') && !changedProperties.has('content')) {
+      const container = this.shadowRoot?.querySelector('#content-container')
+      if (container) applySelectFilters(container, this.filterSelectAbove)
+    }
   }
 
   private drawFieldStates() {
@@ -522,6 +536,9 @@ export class FormdownUI extends LitElement {
 
       // What the values now show, enable and require.
       if (container && this._schema) applyConditions(container, this._schema as Record<string, ConditionalField>, this.data)
+
+      // Last: a long select's combobox shows the value and follows the state just applied.
+      if (container) applySelectFilters(container, this.filterSelectAbove)
     } finally {
       this._isUpdatingUI = false
       this.domBinder.releaseSyncLock()

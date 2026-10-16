@@ -1,3 +1,5 @@
+import { comboboxOf } from './select-filter'
+
 /**
  * What the host says about a field, drawn by the field: values it offers and a short note.
  *
@@ -174,7 +176,9 @@ function focusField(container: ParentNode, name: string) {
 /** The element that takes focus for a field: for a choice group, its chosen option, or its first. */
 function controlOf(container: ParentNode, name: string): HTMLElement | undefined {
   const elements = fieldElements(container, name)
-  return elements.find((el) => el instanceof HTMLInputElement && el.checked) ?? elements[0]
+  const control = elements.find((el) => el instanceof HTMLInputElement && el.checked) ?? elements[0]
+  // A filtered select is reached through the input that stands for it.
+  return (control && comboboxOf(control)) ?? control
 }
 
 /** Whether a person can reach the control: not hidden or turned off by a condition, not a hidden input. */
