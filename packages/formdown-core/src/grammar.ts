@@ -9,6 +9,12 @@
 /** A field name: a Unicode letter or underscore, then letters, digits or underscores. */
 export const NAME = String.raw`[\p{L}_][\p{L}\p{N}_]*`
 
+/**
+ * What a relation names (`-> Target`): the host's own identifier for a kind of record, so wider than a field
+ * name — it may start with a digit and hold `-` and `.` inside, as slugs and ids do (`customer-v2`, `crm.contact`).
+ */
+export const TARGET = String.raw`[\p{L}\p{N}_](?:[\p{L}\p{N}_.-]*[\p{L}\p{N}_])?`
+
 const FULL_NAME = new RegExp(`^${NAME}$`, 'u')
 
 /** True when `name` is a valid field name. */

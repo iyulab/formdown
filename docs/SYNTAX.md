@@ -275,6 +275,8 @@ A block field can say that its value names a record of another kind — a custom
 - `-> Target` — the value names one record of `Target` (a foreign key).
 - `<-> Target` — the value names several (many to many).
 
+The target is the host's own identifier for the kind of record, so it is spelled more freely than a field name: letters, digits and `_` in any script, with `-` and `.` inside — `-> food-business`, `-> crm.contact`, `-> 2024-orders`.
+
 The parser attaches the relation to the field and leaves the rest of the field as written:
 
 ```typescript

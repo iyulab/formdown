@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- A relation's target may be spelled as hosts spell their identifiers — starting with a digit, with `-` or `.` inside (`@shop -> food-business: [select]`). It was read with the field-name grammar, so such a line was not a field at all and showed as text.
+
 ## 0.18.0
 
 ### Added

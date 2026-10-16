@@ -1,9 +1,9 @@
 import { Field, FieldRelation, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic, FrontMatter, SourceSpan } from './types'
-import { NAME, ATTRIBUTES, isValidName, pattern, tokenizeAttributes, attributeValue, quoteAttributeValue, scanAttributes } from './grammar.js'
+import { NAME, TARGET, ATTRIBUTES, isValidName, pattern, tokenizeAttributes, attributeValue, quoteAttributeValue, scanAttributes } from './grammar.js'
 import { readFrontMatter, FenceTracker, maskCodeSpans } from './source.js'
 
 const TYPE_MARKER = String.raw`(?:dt|d|[#@%&t?TrscRFCMW$])`
-const RELATION = String.raw`(?:(<->|->)\s*(${NAME})\s*)?`
+const RELATION = String.raw`(?:(<->|->)\s*(${TARGET})\s*)?`
 
 /** Features that make a block line shorthand rather than standard syntax. */
 const SHORTHAND_MARKERS = [
@@ -13,7 +13,7 @@ const SHORTHAND_MARKERS = [
     pattern(String.raw`^@${NAME}\([^)]+\)\*`),                                  // Label + required
     pattern(String.raw`^@${NAME}\([^)]+\)\{[^}]*\}`),                           // Label + content
     pattern(String.raw`^@${NAME}\([^)]+\)\s*:\s*${TYPE_MARKER}\d*\[`),          // Label + type marker
-    pattern(String.raw`^@${NAME}[^:]*(?:<->|->)\s*${NAME}\s*:\s*${TYPE_MARKER}\d*\[`) // FK relation + type marker
+    pattern(String.raw`^@${NAME}[^:]*(?:<->|->)\s*${TARGET}\s*:\s*${TYPE_MARKER}\d*\[`) // FK relation + type marker
 ]
 
 /** Standard block syntax: @name(Label) [-> Target]: [type attributes] */
