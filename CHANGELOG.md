@@ -8,6 +8,10 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 - `unrecognized-field` carries a `fix` for a shorthand line with its braces after the colon: `@browser: r{Chrome,Firefox}[]` → `@browser{Chrome,Firefox}: r[]`.
 
+### Fixed
+
+- `formdown-ui`: when an offered value or the decline button is drawn away and focus goes back to its field, the field keeps its value with the caret at its end, as `focusField` leaves it. It selected the whole value, as a person moving into the field does, so the next key typed replaced what had just been taken.
+
 ## 0.17.0
 
 ### Added

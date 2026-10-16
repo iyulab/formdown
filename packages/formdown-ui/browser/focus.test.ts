@@ -31,3 +31,25 @@ describe('focusField', () => {
     expect(s.focusOffset).to.be.greaterThan(0)
   })
 })
+
+describe('an offered value taken', () => {
+  it('gives focus back to its field with the caret after the value, so typing goes on from it', async () => {
+    const ui = await mount('@code: [text]')
+    ui.addEventListener('formdown-suggestion-pick', (e) => {
+      const { field, value } = (e as CustomEvent<{ field: string; value: string }>).detail
+      ui.data = { [field]: value }
+      ui.fieldStates = {} // taken: nothing is offered any more, and the button is drawn away
+    })
+    ui.fieldStates = { code: { suggestions: ['32'] } }
+    await ui.updateComplete
+    const button = ui.shadowRoot!.querySelector<HTMLButtonElement>('.formdown-suggestion')!
+    button.focus()
+    button.click()
+    await ui.updateComplete
+    await tick() // after any focus handling of the field's own
+    const input = ui.shadowRoot!.querySelector<HTMLInputElement>('input[name="code"]')!
+    expect(ui.shadowRoot!.activeElement).to.equal(input)
+    expect(input.value).to.equal('32')
+    expect([input.selectionStart, input.selectionEnd]).to.deep.equal([2, 2])
+  })
+})

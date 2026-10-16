@@ -160,11 +160,15 @@ function fieldOfFocusedNote(container: ParentNode): string | null {
   return active.closest(`[${NOTE}]`)?.getAttribute(NOTE) ?? null
 }
 
-/** Focuses a field's control — for a choice group, its chosen option, or its first. */
+/**
+ * Gives focus back to a field's control — for a choice group, its chosen option, or its first — as the host
+ * does: the value the button just put there, or left there, stays, with the caret after it.
+ */
 function focusField(container: ParentNode, name: string) {
   const active = focusRoot(container)?.activeElement
   if (active && (container as Node).contains(active)) return // the drawing kept focus somewhere in the form
-  controlOf(container, name)?.focus()
+  const target = controlOf(container, name)
+  if (target) putCursorBack(target)
 }
 
 /** The element that takes focus for a field: for a choice group, its chosen option, or its first. */
@@ -221,10 +225,18 @@ export function focusFieldOf(container: ParentNode, name?: string): boolean {
     const firstName = first?.getAttribute('name') ?? first?.dataset.fieldName
     target = firstName !== undefined && firstName !== null ? controlOf(container, firstName) : undefined
   }
-  if (target) {
-    hostFocused.add(target)
-    target.focus()
-    caretAtEnd(target)
-  }
+  if (target) putCursorBack(target)
   return !!target && focusRoot(container)?.activeElement === target
+}
+
+/**
+ * Focuses `target` keeping its value, the caret at its end — not as a person moving into it, which selects the
+ * value. A control that did not take focus is not left marked, so a person's next move into it selects as usual.
+ */
+function putCursorBack(target: HTMLElement) {
+  hostFocused.add(target)
+  target.focus()
+  const root = target.getRootNode() as Document | ShadowRoot
+  if (root.activeElement !== target) hostFocused.delete(target)
+  caretAtEnd(target)
 }
