@@ -139,6 +139,7 @@ All field types support these attributes:
 | `label` | String | Custom field label | `label="Full Name"` |
 | `required` | Boolean | Field is mandatory | `required` |
 | `placeholder` | String | Placeholder text | `placeholder="Enter your name"` |
+| `description` | String | How to fill the field, shown under it | `description="As on your ID card"` |
 | `value` | String | Default value | `value="John Doe"` |
 | `disabled` | Boolean | Disable field | `disabled` |
 | `readonly` | Boolean | Read-only field | `readonly` |

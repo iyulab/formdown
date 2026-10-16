@@ -95,6 +95,35 @@ describe('XSS Prevention', () => {
             expect(html).toContain('&lt;script&gt;')
         })
 
+        it('shows markup in a field label as written, for every kind of field', () => {
+            const content = [
+                '@name(<img src=x onerror=alert(1)>): [text]',
+                '@plan(<b>Plan</b>){A,B}: [select]',
+                '@size(<i>Size</i>){S,M}: [radio]',
+                '@notes: [textarea label="<script>alert(1)</script>"]',
+            ].join('\n')
+            const html = generator.generateHTML(parser.parseFormdown(content))
+
+            expect(html).not.toContain('<img src=x')
+            expect(html).not.toContain('<b>Plan</b>')
+            expect(html).not.toContain('<i>Size</i>')
+            expect(html).not.toContain('<script>')
+            expect(html).toContain('&lt;img src=x onerror=alert(1)&gt;')
+            expect(html).toContain('&lt;b&gt;Plan&lt;/b&gt;')
+        })
+
+        it('shows markup in a field label as written when the body\'s HTML is escaped too', () => {
+            const html = generateFormHTML(parseFormdown('@name(<b>Name</b>): [text]'), { html: 'escape' })
+            expect(html).toContain('&lt;b&gt;Name&lt;/b&gt;')
+            expect(html).not.toContain('<b>Name</b>')
+        })
+
+        it('shows markup in a field description as written', () => {
+            const html = generator.generateHTML(parser.parseFormdown('@name: [text description="<a href=x>here</a>"]'))
+            expect(html).toContain('&lt;a href=x&gt;here&lt;/a&gt;')
+            expect(html).not.toContain('<a href=x>')
+        })
+
         it('should escape HTML in checkbox display text', () => {
             const content = '@agree(<b>Bold</b> Terms): [checkbox]'
             const parsed = parser.parseFormdown(content)

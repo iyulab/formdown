@@ -751,6 +751,10 @@ Please enter ___@age and ___@email.
 - `value="text"` - Default value for the field
 - `required` - Field is mandatory
 - `placeholder="text"` - Placeholder text
+- `description="text"` - How to fill the field, shown under it and named by the field's `aria-describedby`
+
+A label, a description and an option are text: markup written in them shows as written, whether the body's own HTML is
+trusted or not.
 - `disabled` - Disable field
 
 ### Validation Attributes

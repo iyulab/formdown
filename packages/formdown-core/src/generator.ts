@@ -424,7 +424,7 @@ ${fieldHTML}
         return `
 <div class="formdown-field-container">
 <div class="formdown-field">
-    <label for="${fieldId}">${displayLabel}${requiredMark}</label>
+    <label for="${fieldId}">${escapeHtml(displayLabel)}${requiredMark}</label>
     ${fieldHTML.replace(/id="[^"]*"/, `id="${fieldId}"`).replace(/form="[^"]*"/, formId ? `form="${formId}"` : '')}
 </div>
 </div>`
@@ -489,7 +489,9 @@ ${fieldHTML}
 
         // Use smart label generation if no label is provided
         const displayLabel = label || this.generateSmartLabel(name)
-        
+        // A label is text, as an option's or a group's is: markup written in it shows as written.
+        const labelHtml = escapeHtml(displayLabel)
+
         // For checkboxes, use content with priority: content > label > smart_label(name)
         const checkboxDisplayText = type === 'checkbox' ? 
             (content || label || this.generateSmartLabel(name)) : 
@@ -567,10 +569,10 @@ ${fieldHTML}
         const generateHelpText = () => {
             let helpHTML = ''
             if (description) {
-                helpHTML += `\n    <div id="${descriptionId}" class="formdown-field-description">${description}</div>`
+                helpHTML += `\n    <div id="${descriptionId}" class="formdown-field-description" part="description">${escapeHtml(description)}</div>`
             }
             if (errorMessage) {
-                helpHTML += `\n    <div id="${errorId}" class="formdown-field-error" role="alert">${errorMessage}</div>`
+                helpHTML += `\n    <div id="${errorId}" class="formdown-field-error" role="alert">${escapeHtml(errorMessage)}</div>`
             }
             return helpHTML
         }
@@ -664,7 +666,7 @@ ${fieldHTML}
                 const textareaContent = value ? escapeHtml(String(value)) : ''
                 return `
 <div ${fieldWrapperAttrs} part="field">
-    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <label for="${fieldId}" part="label">${labelHtml}${required ? ' *' : ''}</label>
     <textarea ${attrString} part="input textarea-input">${textareaContent}</textarea>${generateHelpText()}
 </div>`
 
@@ -683,7 +685,7 @@ ${fieldHTML}
 
                 return `
 <div ${fieldWrapperAttrs} part="field">
-    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <label for="${fieldId}" part="label">${labelHtml}${required ? ' *' : ''}</label>
     <select ${attrString} part="input select-input"${allowOther ? ` data-formdown-has-other="true" data-formdown-other-target="${fieldId}_other"` : ''}>
         ${optionsHTML}${unlistedOptionsHTML}${otherOptionHTML}
     </select>${otherInputHTML}${generateHelpText()}
@@ -694,7 +696,7 @@ ${fieldHTML}
                     // Radio needs options - fallback to text input
                     return `
 <div ${fieldWrapperAttrs}>
-    <label for="${fieldId}">${displayLabel}${required ? ' *' : ''}</label>
+    <label for="${fieldId}">${labelHtml}${required ? ' *' : ''}</label>
     <input type="text" ${attrString}>${generateHelpText()}
 </div>`
                 }
@@ -738,7 +740,7 @@ ${fieldHTML}
                 return `
 <div ${fieldWrapperAttrs} part="field">
     <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} part="fieldset">
-        <legend part="legend">${displayLabel}${required ? ' *' : ''}</legend>
+        <legend part="legend">${labelHtml}${required ? ' *' : ''}</legend>
         <div class="${groupClass}" role="radiogroup" part="radio-group">
 ${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
         </div>
@@ -822,7 +824,7 @@ ${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
                     return `
 <div ${fieldWrapperAttrs} part="field">
     <fieldset ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} part="fieldset">
-        <legend part="legend">${displayLabel}${required ? ' *' : ''}</legend>
+        <legend part="legend">${labelHtml}${required ? ' *' : ''}</legend>
         <div class="${groupClass}" role="group" part="checkbox-group">
 ${checkboxInputsHTML}${unlistedCheckboxesHTML}${otherCheckboxHTML}
         </div>
@@ -838,7 +840,7 @@ ${checkboxInputsHTML}${unlistedCheckboxesHTML}${otherCheckboxHTML}
                 const rangeValue = value !== undefined ? value : (attributes?.value !== undefined ? Number(attributes.value) : Math.floor((min + max) / 2))
                 return `
 <div ${fieldWrapperAttrs} part="field">
-    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <label for="${fieldId}" part="label">${labelHtml}${required ? ' *' : ''}</label>
     <input type="range" ${attrString} value="${rangeValue}" part="input range-input">
     <output for="${fieldId}" class="formdown-range-output" part="range-output">${rangeValue}</output>${generateHelpText()}
 </div>`
@@ -846,28 +848,28 @@ ${checkboxInputsHTML}${unlistedCheckboxesHTML}${otherCheckboxHTML}
             case 'file':
                 return `
 <div ${fieldWrapperAttrs} part="field">
-    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <label for="${fieldId}" part="label">${labelHtml}${required ? ' *' : ''}</label>
     <input type="file" ${attrString} part="input file-input">${generateHelpText()}
 </div>`
 
             case 'color':
                 return `
 <div ${fieldWrapperAttrs} part="field">
-    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <label for="${fieldId}" part="label">${labelHtml}${required ? ' *' : ''}</label>
     <input type="color" ${attrString} part="input color-input">${generateHelpText()}
 </div>`
 
             case 'week':
                 return `
 <div ${fieldWrapperAttrs} part="field">
-    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <label for="${fieldId}" part="label">${labelHtml}${required ? ' *' : ''}</label>
     <input type="week" ${attrString} part="input week-input">${generateHelpText()}
 </div>`
 
             case 'month':
                 return `
 <div ${fieldWrapperAttrs} part="field">
-    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <label for="${fieldId}" part="label">${labelHtml}${required ? ' *' : ''}</label>
     <input type="month" ${attrString} part="input month-input">${generateHelpText()}
 </div>`
 
@@ -939,7 +941,7 @@ ${checkboxInputsHTML}${unlistedCheckboxesHTML}${otherCheckboxHTML}
             default:
                 return `
 <div ${fieldWrapperAttrs} part="field">
-    <label for="${fieldId}" part="label">${displayLabel}${required ? ' *' : ''}</label>
+    <label for="${fieldId}" part="label">${labelHtml}${required ? ' *' : ''}</label>
     <input type="${type}" ${attrString} part="input text-input">${generateHelpText()}
 </div>`
         }

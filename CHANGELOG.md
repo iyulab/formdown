@@ -2,6 +2,16 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- A field may say how to fill it: `@amount: [number description="In won, tax included"]`. The description is shown under the field (`part="description"`, `--formdown-description-color` in `formdown-ui`), named by the field's `aria-describedby`, and carried into the form's schema. The attribute is no longer passed on to the control.
+
+### Fixed
+
+- A field's label is text, as an option's and a group's are: markup written in it — `@name(<b>Name</b>): [text]`, `label="…"` — shows as written instead of being rendered. Only checkbox text was escaped before, so a form from someone else could put HTML into the page through a label even with `body-html: escape`. Descriptions and error messages are text too.
+
 ## 0.19.1
 
 ### Fixed

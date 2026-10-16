@@ -734,6 +734,8 @@ export class FormdownParser {
                 field.label = text
             } else if (key === 'placeholder' && hasValue) {
                 field.placeholder = text
+            } else if (key === 'description' && hasValue) {
+                field.description = text
             } else if (key === 'options' && hasValue) {
                 const optionsValue = text
                 if (['radio', 'checkbox', 'select'].includes(type)) {

@@ -290,6 +290,13 @@ export const formdownStyles = css`
     font-style: normal;
   }
 
+  /* How to fill a field, under it: quiet, like a note. */
+  .formdown-field-description {
+    margin-top: var(--formdown-spacing-xs, 0.25rem);
+    font-size: var(--formdown-font-size-sm, 0.875rem);
+    color: var(--formdown-description-color, var(--formdown-text-secondary, #64748b));
+  }
+
   .formdown-field-note {
     display: flex;
     flex-wrap: wrap;

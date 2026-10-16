@@ -212,6 +212,7 @@ The `::part()` pseudo-element allows direct styling of internal elements. FormDo
 | `month-input` | `<input type="month">` | Month inputs |
 | `fieldset` | `<fieldset>` | Fieldset containers |
 | `legend` | `<legend>` | Fieldset legends |
+| `description` | `<div>` | How to fill a field (`description="…"`), under it |
 | `radio-group` | `<div>` | Radio button groups |
 | `checkbox-group` | `<div>` | Checkbox groups |
 | `button` | `<button>` | All buttons |
