@@ -268,6 +268,7 @@ FormDown supports abbreviated syntax for faster form creation:
 @bio: T[]                      // Textarea (default)
 @bio: T5[]                     // Textarea with 5 rows
 @agree: [checkbox]             // Single checkbox
+@dark_mode: c[switch]          // On/off switch (a single checkbox, value true/false)
 ```
 
 ### Required Fields
