@@ -13,6 +13,7 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 ### Added
 
 - A switch: `@notify: c[switch]` is a single checkbox shown as an on/off switch. Its value is a boolean like any single checkbox's; it renders as `<input type="checkbox" switch role="switch">`, the schema marks it `switch: true`, and `formdown-ui` draws it as a track and knob in every browser (`--formdown-switch-on-color`, `--formdown-switch-off-color`, `--formdown-switch-knob-color`). `switch` on a checkbox with options or on another type is reported (`switch-needs-single-checkbox`) and ignored.
+- Fields held as data can be written as Formdown: `formatFormdown(fields)` (and `formatField(field)`, from `@formdown/core/format` or `@formdown/core`) writes one block field per field, and parsing the text gives the same fields back — labels, options with labels, the "other" choice, values, conditions, relations and attributes included. A host whose form is JSON gives `<formdown-ui>` the text it writes, rather than writing the syntax itself. A value that is not text, a number or a boolean, an action element and an attribute name the syntax cannot hold throw instead of being written as something else.
 - `findFrontMatter(source)` finds the front matter block (`raw`, `span`, `lineCount`) without reading its YAML; `FrontMatterReader` is the type of a reader, for hosts that read front matter another way.
 - `getSchema()` also takes content that is already parsed, and does not parse it again. `FormManager` uses this, so it parses a form once instead of twice.
 

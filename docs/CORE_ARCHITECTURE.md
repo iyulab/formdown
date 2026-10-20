@@ -202,6 +202,25 @@ const values = readFrontMatter(documentSource)?.frontMatter.data ?? {}
 
 `findFrontMatter(source)` finds the block — its `raw` text, `span` and `lineCount` — without reading the YAML.
 
+### Writing Fields as Text
+
+A host that holds a form as data — fields a tool or a model produced — writes it as Formdown with `formatFormdown` rather than knowing the syntax itself. Each field becomes a block field line, and parsing the text gives the same fields back: a label the parentheses cannot hold is written as `label="…"`, text values are quoted, numbers and booleans are bare, conditions and relations are written as their syntax.
+
+```typescript
+import { formatFormdown } from '@formdown/core/format'
+
+const source = formatFormdown([
+    { name: 'title', type: 'text', required: true, pattern: '^.{3,}$', attributes: { message: 'At least three characters' } },
+    { name: 'priority', type: 'select', options: [{ value: 'low' }, { value: 'high', label: 'High (urgent)' }] },
+    { name: 'public', type: 'checkbox', attributes: { switch: true } },
+])
+// @title: [text required pattern="^.{3,}$" message="At least three characters"]
+// @priority: [select options="low,high=High (urgent)"]
+// @public: [checkbox switch]
+```
+
+A field takes the shape of a parsed `Field` (`FieldInput`); `formatField(field)` writes one. Only fields are written — form, datalist and group declarations and the Markdown around them are not, and an action element (`@[submit "Send"]`) is refused. A value that is not text, a number or a boolean throws: put it in front matter.
+
 ### Class-based API (Advanced)
 
 ```typescript

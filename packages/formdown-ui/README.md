@@ -37,6 +37,14 @@ viewer.addEventListener('form-submit', (event) => {
 })
 ```
 
+A form held as fields rather than text is written with core's `formatFormdown` and given as `content`, so the same form draws, validates and shows suggestions the same way:
+
+```typescript
+import { formatFormdown } from '@formdown/core/format'
+
+viewer.content = formatFormdown([{ name: 'title', type: 'text', required: true }, { name: 'public', type: 'checkbox', attributes: { switch: true } }])
+```
+
 ## Properties
 
 - `content` (string) - The Formdown content to render
