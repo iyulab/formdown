@@ -1,4 +1,5 @@
-// Field types the extension system adds, through the real core and component.
+// A switch and a field type a plugin adds, through the real core and component.
+import { registerPlugin } from '@formdown/core'
 import '../../src/formdown-ui'
 
 type Ui = HTMLElement & { content: string; data: Record<string, unknown>; updateComplete: Promise<boolean>; validate(): { isValid: boolean } }
@@ -19,15 +20,15 @@ afterEach(() => {
   document.body.innerHTML = ''
 })
 
-test('a built-in plugin field type renders through its plugin on the first connection', async () => {
-  const ui = await mount('@notify(알림): [toggle]')
+test('a switch renders as a checkbox with the switch role on the first connection', async () => {
+  const ui = await mount('@notify(알림): c[switch]')
   const input = ui.shadowRoot!.querySelector<HTMLInputElement>('input[name="notify"]')!
   expect(input.type).toBe('checkbox')
   expect(input.getAttribute('role')).toBe('switch')
 })
 
-test('a toggle reports a boolean, like a single checkbox, and its state is the checkbox itself', async () => {
-  const ui = await mount('@notify(알림): [toggle required]')
+test('a switch reports a boolean, like a single checkbox, and its state is the checkbox itself', async () => {
+  const ui = await mount('@notify(알림): c[switch required]')
   const input = ui.shadowRoot!.querySelector<HTMLInputElement>('input[name="notify"]')!
   expect(ui.validate().isValid).toBe(false)
   input.checked = true
@@ -42,9 +43,9 @@ test('a toggle reports a boolean, like a single checkbox, and its state is the c
   expect(ui.data).toEqual({ notify: false })
 })
 
-test('a toggle shows the value it is given', async () => {
+test('a switch shows the value it is given', async () => {
   const ui = document.createElement('formdown-ui') as Ui
-  ui.content = '@notify: [toggle]'
+  ui.content = '@notify: c[switch]'
   ui.data = { notify: true }
   document.body.appendChild(ui)
   await ui.updateComplete
@@ -60,9 +61,22 @@ const appliedCss = (ui: Ui) => {
 }
 
 test('the styles of a plugin field type apply to a form that holds one, and only then', async () => {
-  const ui = await mount('@notify: [toggle]')
-  expect(appliedCss(ui)).toContain('.formdown-toggle-slider')
+  await mount('@name: [text]') // initializes the extension system
+  await registerPlugin({
+    metadata: { name: 'stars', version: '1.0.0' },
+    fieldTypes: [{
+      type: 'stars',
+      parser: (line: string) => {
+        const match = line.match(/^@(\w+):\s*\[stars\]/)
+        return match ? { name: match[1], type: 'stars', label: 'Rate us' } : null
+      },
+      generator: (field: { name: string }) => `<div class="formdown-stars-field"><input name="${field.name}" class="stars-input"></div>`,
+      styles: '.stars-input { letter-spacing: 2px; }'
+    }]
+  })
+  const ui = await mount('@rating: [stars]')
+  expect(appliedCss(ui)).toContain('.stars-input')
   ui.content = '@name: [text]'
   await ui.updateComplete
-  expect(appliedCss(ui)).not.toContain('.formdown-toggle-slider')
+  expect(appliedCss(ui)).not.toContain('.stars-input')
 })

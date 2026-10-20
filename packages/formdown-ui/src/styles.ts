@@ -111,6 +111,50 @@ export const formdownStyles = css`
     margin-bottom: 0;
   }
 
+  /* A switch (c[switch]): drawn the same in every browser, whether or not it draws the HTML switch itself */
+  input[type="checkbox"][role="switch"] {
+    appearance: none;
+    position: relative;
+    flex-shrink: 0;
+    width: 2.25em;
+    height: 1.25em;
+    padding: 0;
+    border: none;
+    border-radius: 999px;
+    background: var(--formdown-switch-off-color, var(--formdown-border-color, #cbd5e1));
+    cursor: pointer;
+    transition: background-color 0.15s;
+  }
+
+  input[type="checkbox"][role="switch"]::before {
+    content: "";
+    position: absolute;
+    top: 0.125em;
+    left: 0.125em;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    background: var(--formdown-switch-knob-color, #ffffff);
+    transition: transform 0.15s;
+  }
+
+  input[type="checkbox"][role="switch"]:checked {
+    background: var(--formdown-switch-on-color, var(--formdown-accent-color, #3b82f6));
+  }
+
+  input[type="checkbox"][role="switch"]:checked::before {
+    transform: translateX(1em);
+  }
+
+  input[type="checkbox"][role="switch"]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    input[type="checkbox"][role="switch"], input[type="checkbox"][role="switch"]::before { transition: none; }
+  }
+
   textarea {
     min-height: 6rem;
     resize: vertical;

@@ -1,5 +1,6 @@
 import { FormdownParser } from './parser.js'
 import { yamlFrontMatter } from './front-matter.js'
+import { isSwitch } from './switch.js'
 import { Field, FieldSchema, FormdownContent, FormDownSchema, FieldType, ValidationRules } from './types.js'
 
 export class SchemaExtractor {
@@ -70,6 +71,10 @@ export class SchemaExtractor {
 
         if (field.compute) {
             schema.compute = field.compute
+        }
+
+        if (isSwitch(field)) {
+            schema.switch = true
         }
 
         if (field.errorMessage) {

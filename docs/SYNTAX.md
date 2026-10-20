@@ -626,6 +626,12 @@ Your age is ___@age[text].
 **Checkbox Types:**
 - **Single checkbox**: `[checkbox]` - Creates a single checkbox for yes/no, agreement, or subscription
 - **Checkbox group**: `[checkbox options="..."]` - Creates multiple checkboxes for multi-select
+- **Switch**: `[checkbox switch]` or `c[switch]` - A single checkbox shown as an on/off switch, for a setting that takes effect rather than a statement to agree to. It is still one checkbox: its value is a boolean, it can be `required` and `checked`, and the schema marks it `switch: true`. It renders as the HTML switch (`<input type="checkbox" switch>`) with `role="switch"`, so it is announced as a switch where a browser does not draw one; `formdown-ui` draws the track and knob the same in every browser (`--formdown-switch-on-color`, `--formdown-switch-off-color`, `--formdown-switch-knob-color`). `switch` on a checkbox with options, or on another type, is ignored and reported (`switch-needs-single-checkbox`)
+
+```formdown
+@dark_mode(Dark mode): c[switch]
+@notify(Email me about replies): [checkbox switch checked]
+```
 
 **Checkbox Content Attribute:**
 For single checkboxes, you can use the `content` attribute to specify the display text with priority: **content > label > name**
@@ -1019,6 +1025,7 @@ const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
 | `condition-unknown-field` | warning | A condition names a field the form does not have, so it never holds (or, negated, always does) |
 | `front-matter-invalid-yaml` | error | The front matter is not valid YAML. `frontMatter.raw` keeps the text; `frontMatter.data` is empty |
 | `front-matter-not-mapping` | error | The front matter is valid YAML but not a mapping of keys to values |
+| `switch-needs-single-checkbox` | warning | `switch` is written on a checkbox with options or on another type, where there is no one value to turn on or off. It is ignored |
 | `front-matter-unread` | warning | The parser found front matter but was given no reader for it (`FormdownParser` without `frontMatter`), so `frontMatter.data` is empty and the values do not reach the fields |
 
 `span` gives the location in the original source. `start` and `end` are 0-based character offsets. `line` and `column` are 1-based. `field` names the field a problem is about, when it is about one.

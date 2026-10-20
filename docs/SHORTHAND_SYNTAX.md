@@ -231,6 +231,9 @@ FormDown의 단축표기법은 자주 사용하는 패턴을 간결하게 표현
 // 단일 체크박스
 @newsletter: c[]
 @terms*: c[]
+
+// 스위치(켜고 끄는 한 칸 — 값은 단일 체크박스처럼 boolean)
+@dark_mode: c[switch]
 ```
 
 ### 변환 결과

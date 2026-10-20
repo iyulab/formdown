@@ -1,10 +1,10 @@
 /**
- * @fileoverview The built-in plugin, which adds the field types the core parser and generator
- * do not have.
+ * @fileoverview The built-in plugin. It adds nothing to parsing or rendering: every field type
+ * Formdown defines is in the core grammar, so a document reads the same whether or not the
+ * extension system is initialized. Other plugins can name it in `dependencies`.
  */
 
 import type { Plugin } from './types.js'
-import { toggleFieldPlugin } from './field-types/toggle-field.js'
 
 export const corePlugin: Plugin = {
     metadata: {
@@ -13,9 +13,7 @@ export const corePlugin: Plugin = {
         description: 'Field types Formdown adds through its extension system',
         author: 'Formdown Team'
     },
-    // Only types the core parser and generator do not have. A plugin type is consulted before the
-    // core's own, so registering text, select or range here would replace their parsing and rendering.
-    fieldTypes: [
-        toggleFieldPlugin
-    ]
+    // No field types: a type defined here would read differently before initialization. A plugin type
+    // is also consulted before the core's own, so text, select or range here would replace them.
+    fieldTypes: []
 }

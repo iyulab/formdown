@@ -13,7 +13,7 @@ describe('extension manager lifecycle', () => {
         await manager.initialize()
         await manager.destroy()
         await expect(manager.initialize()).resolves.toBeUndefined()
-        expect(manager.getStats().fieldTypes).toEqual(['toggle'])
+        expect(manager.getStats().plugins.map(p => p.name)).toEqual(['formdown-core'])
 
         const errors = jest.spyOn(console, 'error').mockImplementation(() => {})
         manager.getEventEmitter().emit('extension-system-error', { phase: 'test' })
@@ -25,13 +25,14 @@ describe('extension manager lifecycle', () => {
     test('leaves nothing of a plugin it rejects', async () => {
         await initializeExtensions({ errorStrategy: 'warn' })
         const handler = (_context: unknown, html: string) => `${html}<!--rejected-->`
+        await registerPlugin({ metadata: { name: 'stars', version: '1.0.0' }, fieldTypes: [{ type: 'stars' }] })
         await expect(registerPlugin({
             metadata: { name: 'clashing', version: '1.0.0' },
             hooks: [{ name: 'post-generate', priority: 0, handler }],
-            fieldTypes: [{ type: 'toggle' }],
-        })).rejects.toThrow("Field type 'toggle' is already registered")
+            fieldTypes: [{ type: 'stars' }],
+        })).rejects.toThrow("Field type 'stars' is already registered")
 
-        expect(getDefaultExtensionManager().getStats().plugins.map(p => p.name)).toEqual(['formdown-core'])
+        expect(getDefaultExtensionManager().getStats().plugins.map(p => p.name)).toEqual(['formdown-core', 'stars'])
         expect(generateFormHTML('@phone: [tel]')).not.toContain('<!--rejected-->')
         await getDefaultExtensionManager().destroy()
     })

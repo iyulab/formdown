@@ -37,8 +37,8 @@ test('lists the problems of the content it is given, and follows content set fro
   expect(problems(editor)).toEqual([])
 })
 
-test('previews a field type the extension system adds as that type', async () => {
-  const editor = await mount('@notify(알림): [toggle]')
+test('previews a switch as a switch', async () => {
+  const editor = await mount('@notify(알림): c[switch]')
   const preview = editor.shadowRoot!.querySelector('formdown-ui')!
   await (preview as unknown as Editor).updateComplete
   await tick()

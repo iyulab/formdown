@@ -39,8 +39,8 @@ describe('rendering once the extension system is initialized', () => {
         expect(html).toContain('x&gt;')
     })
 
-    test('adds the toggle type, with its attributes escaped', () => {
-        const html = generateFormHTML('@on: [toggle]')
+    test('renders a switch as it does before initialization', () => {
+        const html = generateFormHTML('@on: c[switch]')
         expect(html).toContain('role="switch"')
         expect(html).toContain('name="on"')
     })

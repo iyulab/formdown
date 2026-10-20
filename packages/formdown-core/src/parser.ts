@@ -115,6 +115,7 @@ export class FormdownParser {
         this.reportDuplicateNames(fields)
         this.reportConditions(fields)
         this.reportComputations(fields)
+        this.reportSwitches(fields)
 
         const result: FormdownContent = {
             markdown: this.options.preserveMarkdown ? extracted.cleanedMarkdown : '',
@@ -984,6 +985,23 @@ export class FormdownParser {
      * A computed value that cannot be read is never worked out, and one reading a field the form does not have never
      * has a value: both are reported where the field is.
      */
+    /** `switch` shows one value turned on or off, so it belongs to a single checkbox. */
+    private reportSwitches(fields: Field[]): void {
+        for (const field of fields) {
+            if (field.attributes?.switch === undefined) continue
+            if (field.type === 'checkbox' && !field.options?.length) continue
+            this.diagnostics.push({
+                code: 'switch-needs-single-checkbox',
+                message: field.type === 'checkbox'
+                    ? `"${field.name}" has options, so it is not one value to switch on or off: switch is ignored`
+                    : `switch belongs to a single checkbox (@${field.name}: c[switch]), not a ${field.type} field: it is ignored`,
+                severity: 'warning',
+                field: field.name,
+                ...(field.span && { span: field.span })
+            })
+        }
+    }
+
     private reportComputations(fields: Field[]): void {
         const names = new Set(fields.map(field => field.name))
         for (const field of fields) {

@@ -322,9 +322,8 @@ describe('Extension System', () => {
     })
 
     describe('Core Plugin', () => {
-        it('adds only field types the core does not have', () => {
-            // A plugin type is consulted before the core's own, so text, select or range here would replace them
-            expect(corePlugin.fieldTypes?.map(ft => ft.type)).toEqual(['toggle'])
+        it('adds no field types, so a document reads the same before initialization', () => {
+            expect(corePlugin.fieldTypes).toEqual([])
         })
     })
 

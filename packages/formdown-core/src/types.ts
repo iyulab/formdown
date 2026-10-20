@@ -226,6 +226,8 @@ export interface FieldSchema {
     compute?: string
     /** The record the field names (`@customer -> Customer: [select]`); see `FieldRelation`. */
     relation?: FieldRelation
+    /** A single checkbox shown as an on/off switch (`@notify: c[switch]`); its value is a boolean like any single checkbox's. */
+    switch?: true
 }
 
 export type FieldType =

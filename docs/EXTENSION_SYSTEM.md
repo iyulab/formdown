@@ -240,19 +240,18 @@ const stats = getExtensionStats()
 //   plugins: [{ name: 'formdown-core', version: '1.0.0' }],
 //   hookCount: 0,
 //   registeredHooks: [],
-//   fieldTypes: ['toggle']
+//   fieldTypes: []
 // }
 ```
 
 ## The Built-in Plugin
 
-Initialization registers the `formdown-core` plugin. It adds the `toggle` field type — `@notify: [toggle]` renders a switch (a checkbox with `role="switch"`, drawn by the plugin's `styles`), whose value is a boolean like a single checkbox's; without the plugin, `[toggle]` renders as a text input. `<formdown-ui>` draws its form once the plugin is registered. It does not change how the field types Formdown itself knows are parsed or rendered:
+Initialization registers the `formdown-core` plugin. It adds no field types: every type Formdown defines is in the core grammar (an on/off switch is `@notify: c[switch]`), so a document parses and renders the same whether or not the extension system is initialized. `<formdown-ui>` draws its form once the plugin is registered. Other plugins can depend on it:
 
 ```typescript
 const before = generateFormHTML('@name: [text]')
 await initializeExtensions()
 generateFormHTML('@name: [text]') === before // true
-generateFormHTML('@notify: [toggle]')        // <input type="checkbox" role="switch" id="notify" name="notify" ...>
 ```
 
 A plugin can name `formdown-core` in `dependencies` to require it.

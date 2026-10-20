@@ -209,7 +209,7 @@ describe('Extension System', () => {
         //   plugins: [{ name: 'formdown-core', version: '1.0.0' }],
         //   hookCount: 0,
         //   registeredHooks: [],
-        //   fieldTypes: ['toggle']
+        //   fieldTypes: []
         // }
 
         expect(stats).toEqual({
@@ -217,7 +217,7 @@ describe('Extension System', () => {
             plugins: [{ name: 'formdown-core', version: '1.0.0' }],
             hookCount: 0,
             registeredHooks: [],
-            fieldTypes: ['toggle']
+            fieldTypes: []
         })
     })
 
@@ -225,7 +225,6 @@ describe('Extension System', () => {
         const before = generateFormHTML('@name: [text]')
         await initializeExtensions()
         expect(generateFormHTML('@name: [text]')).toBe(before)
-        expect(generateFormHTML('@notify: [toggle]')).toContain('<input type="checkbox" role="switch" id="notify" name="notify"')
         await expect(registerPlugin({ metadata: { name: 'needs-core', version: '1.0.0', dependencies: ['formdown-core'] } }))
             .resolves.toBeUndefined()
     })
@@ -239,11 +238,12 @@ describe('Extension System', () => {
         await expect(manager.initialize()).resolves.toBeUndefined()
 
         const handler = (_context: unknown, html: string) => html + '<!--late-->'
+        await registerPlugin({ metadata: { name: 'stars', version: '1.0.0' }, fieldTypes: [{ type: 'stars' }] })
         await expect(registerPlugin({
-            metadata: { name: 'duplicate-toggle', version: '1.0.0' },
+            metadata: { name: 'duplicate-stars', version: '1.0.0' },
             hooks: [{ name: 'post-generate', priority: 0, handler }],
-            fieldTypes: [{ type: 'toggle' }]
-        })).rejects.toThrow("Field type 'toggle' is already registered")
+            fieldTypes: [{ type: 'stars' }]
+        })).rejects.toThrow("Field type 'stars' is already registered")
         expect(generateFormHTML('@phone: [tel]').endsWith('<!--late-->')).toBe(false)
     })
 

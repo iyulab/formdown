@@ -8,8 +8,11 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 - **Breaking:** `FormdownParser` no longer carries a YAML implementation. It still recognizes a front matter block and keeps it out of the fields, but reads its values only when given a reader: `new FormdownParser({ frontMatter: yamlFrontMatter })`, with `yamlFrontMatter` from `@formdown/core/front-matter` (or `@formdown/core`). Without one, the result's `frontMatter.data` is empty and a `front-matter-unread` warning says the values were not read. This takes `@formdown/core/parser` from about 43 KB to about 13 KB gzipped for forms that do not use front matter. `parseFormdown()`, `generateFormHTML()`, `getSchema()` and `FormManager` read front matter as before. To keep the old behavior where you construct the parser yourself, pass `frontMatter: yamlFrontMatter`.
 
+- **Breaking:** the `toggle` field type is gone. It came from the built-in extension plugin, so `@a: [toggle]` read as a text field until the extension system was initialized, and the same document parsed differently depending on it. An on/off switch is now part of the grammar: write `@a: c[switch]` (or `[checkbox switch]`). The built-in `formdown-core` plugin adds no field types.
+
 ### Added
 
+- A switch: `@notify: c[switch]` is a single checkbox shown as an on/off switch. Its value is a boolean like any single checkbox's; it renders as `<input type="checkbox" switch role="switch">`, the schema marks it `switch: true`, and `formdown-ui` draws it as a track and knob in every browser (`--formdown-switch-on-color`, `--formdown-switch-off-color`, `--formdown-switch-knob-color`). `switch` on a checkbox with options or on another type is reported (`switch-needs-single-checkbox`) and ignored.
 - `findFrontMatter(source)` finds the front matter block (`raw`, `span`, `lineCount`) without reading its YAML; `FrontMatterReader` is the type of a reader, for hosts that read front matter another way.
 - `getSchema()` also takes content that is already parsed, and does not parse it again. `FormManager` uses this, so it parses a form once instead of twice.
 

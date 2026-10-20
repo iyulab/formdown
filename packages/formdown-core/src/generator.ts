@@ -1,4 +1,5 @@
 import { Field, FieldOption, FormdownContent, FormDeclaration, DatalistDeclaration, GroupDeclaration } from './types'
+import { isSwitch } from './switch.js'
 import { optionLabel } from './options.js'
 import { getDefaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
@@ -774,11 +775,13 @@ ${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
                     const requiredAttr = required ? ' required' : ''
                     const checkedAttr = isChecked ? ' checked' : ''
                     const formAttr = formId ? ` form="${formId}"` : ''
+                    // `switch` is the HTML attribute; the role says the same where it is not yet supported
+                    const roleAttr = isSwitch(field) ? ' role="switch"' : ''
                     
                     return `
 <div ${fieldWrapperAttrs} part="field">
     <label for="${fieldId}" class="formdown-checkbox-label" part="label checkbox-label">
-        <input type="checkbox" id="${fieldId}" name="${name}" value="true"${requiredAttr}${checkedAttr}${formAttr} ${checkboxAttrString} part="input checkbox-input">
+        <input type="checkbox" id="${fieldId}" name="${name}" value="true"${requiredAttr}${checkedAttr}${formAttr}${roleAttr} ${checkboxAttrString} part="input checkbox-input">
         <span>${escapeHtml(checkboxDisplayText)}${required ? ' *' : ''}</span>
     </label>${generateHelpText()}
 </div>`

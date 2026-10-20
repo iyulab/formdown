@@ -15,10 +15,10 @@ beforeEach(async () => {
 })
 
 describe('a field type with its own container', () => {
-    it('labels the built-in toggle once: by its switch', () => {
-        const html = generateFormHTML('@notify(알림): [toggle]')
+    it('labels a switch once, by the label around it', () => {
+        const html = generateFormHTML('@notify(알림): c[switch]')
         expect(count(html, '알림')).toBe(1)
-        expect(html).not.toContain('<label for="notify"')
+        expect(count(html, '<label')).toBe(1)
     })
 
     it('takes a container with classes of its own as its own', async () => {
