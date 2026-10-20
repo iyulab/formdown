@@ -67,6 +67,8 @@ export class FormdownParser {
     private markedInlineFields: Field[] = []
     /** Conditional attributes whose value could not be read, reported once every field is known. */
     private unreadableConditions: { field: Field; attribute: string; text: string }[] = []
+    /** How many action elements of each kind the document has so far, for the names of unnamed ones. */
+    private actionCounts = new Map<string, number>()
 
     constructor(options: FormdownOptions = {}) {
         this.options = {
@@ -90,6 +92,7 @@ export class FormdownParser {
         this.diagnostics = []
         this.markedInlineFields = []
         this.unreadableConditions = []
+        this.actionCounts = new Map()
 
         // Extension hooks: a failing hook is reported, never fatal
         const onHookError = (message: string) => {
@@ -1090,14 +1093,22 @@ export class FormdownParser {
             return null
         }
         
-        // Generate a unique field name for the action
-        const fieldName = `${action}_${Math.random().toString(36).substr(2, 9)}`
-        
         // Parse additional attributes
         const attributes: Record<string, any> = {}
         if (attributesStr.trim()) {
             const attributePairs = this.parseAttributes(attributesStr.trim())
             Object.assign(attributes, attributePairs)
+        }
+
+        // The name the author gives (still the button's own name="…"), or one from the element's place
+        // among the unnamed ones of its kind, so the same source always parses to the same names
+        let fieldName: string
+        if (typeof attributes.name === 'string' && isValidName(attributes.name)) {
+            fieldName = attributes.name
+        } else {
+            const count = (this.actionCounts.get(action) ?? 0) + 1
+            this.actionCounts.set(action, count)
+            fieldName = `${action}_${count}`
         }
         
         // Create field object
@@ -1113,8 +1124,7 @@ export class FormdownParser {
         
         // Special handling for image type
         if (action === 'image' && !attributes.src) {
-            // Image button needs src attribute
-            console.warn(`Image action element missing src attribute: ${line}`)
+            this.report('image-without-src', `The image button "${label}" has no src, so it shows no image`, 0, line.length, 'warning')
         }
         
         return field

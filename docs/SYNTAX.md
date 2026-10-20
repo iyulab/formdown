@@ -703,6 +703,8 @@ FormDown supports two syntaxes for action elements (buttons):
 - **Concise**: More intuitive and less verbose
 - **Consistent**: Follows `@[action "label"]` pattern
 
+An action element is named by `name="…"` when it has one (`@[submit "Approve" name="decision" value="approve"]`); otherwise by its kind and its place among the unnamed elements of that kind, `submit_1`, `submit_2`, so the same source always gives the same names.
+
 **Action Types:**
 - `submit` - Form submission button
 - `reset` - Form reset button  
@@ -1025,6 +1027,7 @@ const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
 | `condition-unknown-field` | warning | A condition names a field the form does not have, so it never holds (or, negated, always does) |
 | `front-matter-invalid-yaml` | error | The front matter is not valid YAML. `frontMatter.raw` keeps the text; `frontMatter.data` is empty |
 | `front-matter-not-mapping` | error | The front matter is valid YAML but not a mapping of keys to values |
+| `image-without-src` | warning | An image button (`@[image "…"]`) has no `src`, so it shows no image |
 | `switch-needs-single-checkbox` | warning | `switch` is written on a checkbox with options or on another type, where there is no one value to turn on or off. It is ignored |
 | `front-matter-unread` | warning | The parser found front matter but was given no reader for it (`FormdownParser` without `frontMatter`), so `frontMatter.data` is empty and the values do not reach the fields |
 

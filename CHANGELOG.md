@@ -19,6 +19,7 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ### Fixed
 
+- The same source always parses to the same action element names. A button without a name was given a random one (`submit_5o91m0qhw`), different on every parse; it is now named by its `name="…"`, or else by its kind and its place among the unnamed ones (`submit_1`, `submit_2`). An image button without `src` is reported as a diagnostic (`image-without-src`) instead of on the console.
 - A field's schema entry carries the record it names: `getSchema('@customer -> Customer: [select]').customer.relation` is `{ target: 'Customer', type: 'fk' }` (`'many-to-many'` for `<->`). The parser read the relation, but the schema dropped it, so a host reading only the schema could not tell a reference from a plain choice.
 
 ## 0.21.0

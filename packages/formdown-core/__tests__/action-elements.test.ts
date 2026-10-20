@@ -1,6 +1,7 @@
 import { FormdownParser } from '../src/parser'
 import { FormdownGenerator } from '../src/generator'
 import { FormManager } from '../src/form-manager'
+import { parseFormdown, generateFormHTML } from '../src/index'
 
 describe('Action Elements - New Syntax', () => {
     let parser: FormdownParser
@@ -338,5 +339,29 @@ describe('Action Elements - New Syntax', () => {
                 expect(uniqueFormIds).toHaveLength(1) // All should use same form ID
             }
         })
+    })
+})
+describe('action element names', () => {
+    it('are the same every time the same source is parsed, numbered by kind in document order', () => {
+        const source = '@[submit "Send"]\n@[button "Calculate"]\n@[submit "Send again"]'
+        const names = () => parseFormdown(source).forms.map(f => f.name)
+        expect(names()).toEqual(['submit_1', 'button_1', 'submit_2'])
+        expect(names()).toEqual(names())
+    })
+
+    it('are the name the author gives, which the button keeps, and unnamed ones are counted apart', () => {
+        const source = '@[submit "Approve" name="decision" value="approve"]\n@[submit "Send"]'
+        const [named, unnamed] = parseFormdown(source).forms
+        expect(named.name).toBe('decision')
+        expect(unnamed.name).toBe('submit_1')
+        expect(generateFormHTML(source)).toMatch(/<button type="submit" id="decision"[^>]* name="decision" value="approve"/)
+    })
+
+    it('reports an image button without src as a diagnostic, not on the console', () => {
+        const warn = jest.spyOn(console, 'warn').mockImplementation(() => {})
+        const { diagnostics } = parseFormdown('@[image "Go"]')
+        expect(diagnostics).toEqual([expect.objectContaining({ code: 'image-without-src', severity: 'warning' })])
+        expect(warn).not.toHaveBeenCalled()
+        warn.mockRestore()
     })
 })
