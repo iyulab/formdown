@@ -1,5 +1,5 @@
 import type { FormDownSchema, FieldError } from './types.js'
-import { validateField, validateForm } from './index.js'
+import { validateField, validateForm } from './validate.js'
 
 type ChangeListener = (data: Record<string, any>) => void
 type FieldChangeListener = (field: string, value: any, data: Record<string, any>) => void
