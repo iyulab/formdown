@@ -4,6 +4,15 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ## Unreleased
 
+### Changed
+
+- **Breaking:** `FormdownParser` no longer carries a YAML implementation. It still recognizes a front matter block and keeps it out of the fields, but reads its values only when given a reader: `new FormdownParser({ frontMatter: yamlFrontMatter })`, with `yamlFrontMatter` from `@formdown/core/front-matter` (or `@formdown/core`). Without one, the result's `frontMatter.data` is empty and a `front-matter-unread` warning says the values were not read. This takes `@formdown/core/parser` from about 43 KB to about 13 KB gzipped for forms that do not use front matter. `parseFormdown()`, `generateFormHTML()`, `getSchema()` and `FormManager` read front matter as before. To keep the old behavior where you construct the parser yourself, pass `frontMatter: yamlFrontMatter`.
+
+### Added
+
+- `findFrontMatter(source)` finds the front matter block (`raw`, `span`, `lineCount`) without reading its YAML; `FrontMatterReader` is the type of a reader, for hosts that read front matter another way.
+- `getSchema()` also takes content that is already parsed, and does not parse it again. `FormManager` uses this, so it parses a form once instead of twice.
+
 ### Fixed
 
 - A field's schema entry carries the record it names: `getSchema('@customer -> Customer: [select]').customer.relation` is `{ target: 'Customer', type: 'fk' }` (`'many-to-many'` for `<->`). The parser read the relation, but the schema dropped it, so a host reading only the schema could not tell a reference from a plain choice.

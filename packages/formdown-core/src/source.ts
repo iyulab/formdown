@@ -2,58 +2,33 @@
  * Source regions that are not field syntax: leading front matter and code.
  */
 
-import { parseDocument, isMap } from 'yaml'
-import type { Diagnostic, FrontMatter } from './types.js'
+import type { SourceSpan } from './types.js'
 
-const FRONT_MATTER = /^﻿?---[ \t]*\r?\n(?:([\s\S]*?)\r?\n)?(?:---|\.\.\.)[ \t]*(?=\r?\n|$)/
+const FRONT_MATTER = /^\uFEFF?---[ \t]*\r?\n(?:([\s\S]*?)\r?\n)?(?:---|\.\.\.)[ \t]*(?=\r?\n|$)/
 
-export interface FrontMatterResult {
-    frontMatter: FrontMatter
-    /** Number of source lines the front matter occupies, closing line included. */
+/** A front matter block found at the start of a source, before its YAML is read. */
+export interface FrontMatterBlock {
+    /** The YAML text between the opening and closing lines, unchanged. */
+    raw: string
+    /** The whole block, opening and closing lines included. */
+    span: SourceSpan
+    /** Number of source lines the block occupies, closing line included. */
     lineCount: number
-    diagnostics: Diagnostic[]
 }
 
 /**
- * Read YAML front matter from the very start of `source`, as static site generators
- * do: an opening `---` line and a closing `---` or `...` line.
- *
- * This is the front matter `parseFormdown` reports, without parsing the fields: use it
- * where only a document's front matter is needed, such as reading many documents' values.
+ * Find YAML front matter at the very start of `source`, as static site generators
+ * do: an opening `---` line and a closing `---` or `...` line. Only finds the block;
+ * reading its YAML is a front matter reader's job (see `yamlFrontMatter`).
  * `null` when the source does not start with front matter.
  */
-export function readFrontMatter(source: string): FrontMatterResult | null {
+export function findFrontMatter(source: string): FrontMatterBlock | null {
     const match = source.match(FRONT_MATTER)
     if (!match) return null
-
-    const raw = match[1] ?? ''
-    const span = { start: 0, end: match[0].length, line: 1, column: 1 }
-    const diagnostics: Diagnostic[] = []
-    let data: Record<string, unknown> = {}
-
-    const document = parseDocument(raw)
-    if (document.errors.length > 0) {
-        diagnostics.push({
-            code: 'front-matter-invalid-yaml',
-            message: `Front matter is not valid YAML: ${document.errors[0].message.split('\n')[0]}`,
-            severity: 'error',
-            span
-        })
-    } else if (document.contents !== null && !isMap(document.contents)) {
-        diagnostics.push({
-            code: 'front-matter-not-mapping',
-            message: 'Front matter must be a mapping of keys to values',
-            severity: 'error',
-            span
-        })
-    } else {
-        data = (document.toJS() as Record<string, unknown> | null) ?? {}
-    }
-
     return {
-        frontMatter: { data, raw, span },
-        lineCount: match[0].split('\n').length,
-        diagnostics
+        raw: match[1] ?? '',
+        span: { start: 0, end: match[0].length, line: 1, column: 1 },
+        lineCount: match[0].split('\n').length
     }
 }
 

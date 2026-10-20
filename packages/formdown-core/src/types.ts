@@ -166,11 +166,28 @@ export interface FormdownContent {
     groupDeclarations?: GroupDeclaration[]
 }
 
+/**
+ * Reads the YAML text of a front matter block into the document's values. The parser
+ * finds the block; a reader interprets it. `yamlFrontMatter` (from
+ * `@formdown/core/front-matter`) is the standard one.
+ */
+export type FrontMatterReader = (raw: string, span: SourceSpan) => {
+    data: Record<string, unknown>
+    diagnostics: Diagnostic[]
+}
+
 export interface FormdownOptions {
     preserveMarkdown?: boolean
     fieldPrefix?: string
     inlineFieldDelimiter?: string
     autoGenerateFormIds?: boolean
+    /**
+     * Reads front matter values. Without one, a front matter block is still recognized
+     * and kept out of the fields, but its values are not read (a
+     * `front-matter-unread` warning says so). `parseFormdown()`, `getSchema()` and
+     * `FormManager` read front matter with `yamlFrontMatter`.
+     */
+    frontMatter?: FrontMatterReader
 }
 
 // Schema-related types for getSchema() functionality

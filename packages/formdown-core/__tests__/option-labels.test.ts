@@ -3,8 +3,9 @@ import { FormdownParser } from '../src/parser'
 import { FormdownGenerator } from '../src/generator'
 import { parseOption, parseOptionList, formatOptions, optionLabel } from '../src/options'
 import { getSchema } from '../src/index'
+import { yamlFrontMatter } from '../src/front-matter'
 
-const parse = (source: string) => new FormdownParser().parseFormdown(source)
+const parse = (source: string) => new FormdownParser({ frontMatter: yamlFrontMatter }).parseFormdown(source)
 const render = (source: string) => new FormdownGenerator().generateHTML(parse(source))
 
 describe('reading an option', () => {

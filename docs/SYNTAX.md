@@ -1019,6 +1019,7 @@ const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
 | `condition-unknown-field` | warning | A condition names a field the form does not have, so it never holds (or, negated, always does) |
 | `front-matter-invalid-yaml` | error | The front matter is not valid YAML. `frontMatter.raw` keeps the text; `frontMatter.data` is empty |
 | `front-matter-not-mapping` | error | The front matter is valid YAML but not a mapping of keys to values |
+| `front-matter-unread` | warning | The parser found front matter but was given no reader for it (`FormdownParser` without `frontMatter`), so `frontMatter.data` is empty and the values do not reach the fields |
 
 `span` gives the location in the original source. `start` and `end` are 0-based character offsets. `line` and `column` are 1-based. `field` names the field a problem is about, when it is about one.
 

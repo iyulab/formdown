@@ -8,13 +8,11 @@ import { FieldProcessor } from './field-processor.js'
 import { DOMBinder } from './dom-binder.js'
 import { ValidationManager } from './validation-manager.js'
 import { EventOrchestrator } from './event-orchestrator.js'
-import type { Field, FormdownContent, FormDeclaration, FormDownSchema, ValidationResult, FieldError } from './types'
+import { yamlFrontMatter } from './front-matter.js'
+import type { Field, FormdownContent, FormdownOptions, FormDeclaration, FormDownSchema, ValidationResult, FieldError } from './types'
 
-export interface FormManagerOptions {
-  preserveMarkdown?: boolean
-  fieldPrefix?: string
-  inlineFieldDelimiter?: string
-  autoGenerateFormIds?: boolean
+/** Parser options, plus how the form is rendered. Front matter is read with `yamlFrontMatter` unless `frontMatter` says otherwise. */
+export interface FormManagerOptions extends FormdownOptions {
   theme?: Record<string, any>
   /** What becomes of HTML written in the form's Markdown body; see {@link BodyHtml}. `trust` when left out. */
   html?: BodyHtml
@@ -56,7 +54,7 @@ export class FormManager {
   private eventOrchestrator: EventOrchestrator | null = null
   
   constructor(private options: FormManagerOptions = {}) {
-    this.parser = new FormdownParser(options)
+    this.parser = new FormdownParser({ frontMatter: yamlFrontMatter, ...options })
     this.generator = new FormdownGenerator({ html: options.html })
     
     // Initialize event listener maps
@@ -71,7 +69,7 @@ export class FormManager {
   parse(content: string): FormdownContent {
     this.content = content
     this.parsedContent = this.parser.parseFormdown(content)
-    this.schema = getSchema(content)
+    this.schema = getSchema(this.parsedContent)
     
     // Initialize reactive data binding
     this.dataBinding = new FormDataBinding(this.schema)
@@ -313,7 +311,7 @@ export class FormManager {
   }): void {
     if (config.options) {
       Object.assign(this.options, config.options)
-      this.parser = new FormdownParser(this.options)
+      this.parser = new FormdownParser({ frontMatter: yamlFrontMatter, ...this.options })
     }
 
     this.parse(config.content)

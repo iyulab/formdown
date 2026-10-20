@@ -1,4 +1,6 @@
-import { parseFormdown, generateFormHTML, readFrontMatter } from '../src/index'
+import { parseFormdown, generateFormHTML, readFrontMatter, getSchema, FormManager } from '../src/index'
+import { FormdownParser } from '../src/parser'
+import { yamlFrontMatter } from '../src/front-matter'
 
 describe('Front matter', () => {
     const doc = [
@@ -139,5 +141,45 @@ describe('Code is not parsed for fields', () => {
 
     it('treats an unclosed fence as running to the end of the document', () => {
         expect(parseFormdown('```\n___@notafield').forms).toEqual([])
+    })
+})
+
+describe('Front matter readers', () => {
+    const doc = '---\nseverity: high\n---\n\n@severity: [select options="low,high"]\n@note: [text]'
+
+    it('a parser without a reader keeps the block out of the fields and says its values were not read', () => {
+        const result = new FormdownParser().parseFormdown(doc)
+        expect(result.forms.map(f => f.name)).toEqual(['severity', 'note'])
+        expect(result.forms[0].value).toBeUndefined()
+        expect(result.frontMatter).toMatchObject({ data: {}, raw: 'severity: high' })
+        expect(result.diagnostics).toEqual([expect.objectContaining({ code: 'front-matter-unread', severity: 'warning' })])
+    })
+
+    it('says nothing when the block is empty or there is none', () => {
+        expect(new FormdownParser().parseFormdown('---\n---\n@a: [text]').diagnostics).toEqual([])
+        expect(new FormdownParser().parseFormdown('@a: [text]').diagnostics).toEqual([])
+    })
+
+    it('a parser given yamlFrontMatter reads the values as parseFormdown does', () => {
+        const result = new FormdownParser({ frontMatter: yamlFrontMatter }).parseFormdown(doc)
+        expect(result.forms[0].value).toBe('high')
+        expect(result).toEqual(parseFormdown(doc))
+    })
+
+    it('a parser can be given another reader', () => {
+        const result = new FormdownParser({ frontMatter: () => ({ data: { severity: 'low' }, diagnostics: [] }) }).parseFormdown(doc)
+        expect(result.forms[0].value).toBe('low')
+    })
+
+    it('reports invalid YAML from the standard reader', () => {
+        const result = new FormdownParser({ frontMatter: yamlFrontMatter }).parseFormdown('---\na: [\n---\n@a: [text]')
+        expect(result.diagnostics?.map(d => d.code)).toEqual(['front-matter-invalid-yaml'])
+    })
+
+    it('getSchema takes parsed content without parsing it again, and FormManager reads front matter', () => {
+        expect(getSchema(parseFormdown(doc))).toEqual(getSchema(doc))
+        const manager = new FormManager()
+        manager.parse(doc)
+        expect(manager.getSchema()?.severity.value).toBe('high')
     })
 })

@@ -1,20 +1,22 @@
 import { FormdownParser } from './parser.js'
-import { Field, FieldSchema, FormDownSchema, FieldType, ValidationRules } from './types.js'
+import { yamlFrontMatter } from './front-matter.js'
+import { Field, FieldSchema, FormdownContent, FormDownSchema, FieldType, ValidationRules } from './types.js'
 
 export class SchemaExtractor {
     private parser: FormdownParser
 
     constructor() {
-        this.parser = new FormdownParser()
+        this.parser = new FormdownParser({ frontMatter: yamlFrontMatter })
     }
 
     /**
      * Extract schema from FormDown content
      */
-    extractSchema(content: string): FormDownSchema {
+    extractSchema(content: string | FormdownContent): FormDownSchema {
         const schema: FormDownSchema = {}
 
-        this.parser.parseFormdown(content).forms.forEach((field, index) => {
+        const parsed = typeof content === 'string' ? this.parser.parseFormdown(content) : content
+        parsed.forms.forEach((field, index) => {
             schema[field.name] = this.convertFieldToSchema(field, index)
         })
 
@@ -193,10 +195,10 @@ export class SchemaExtractor {
 
 /**
  * Extract schema from FormDown content
- * @param content - FormDown content string
+ * @param content - FormDown content string, or content already parsed (not parsed again)
  * @returns FormDownSchema object
  */
-export function getSchema(content: string): FormDownSchema {
+export function getSchema(content: string | FormdownContent): FormDownSchema {
     const extractor = new SchemaExtractor()
     return extractor.extractSchema(content)
 }

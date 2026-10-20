@@ -7,7 +7,8 @@
  */
 
 import { Document, parseDocument, isMap } from 'yaml'
-import { FenceTracker, readFrontMatter } from './source.js'
+import { FenceTracker, findFrontMatter } from './source.js'
+import { readFrontMatter } from './front-matter.js'
 import { FormdownParser } from './parser.js'
 import { LABEL_SPAN, quoteAttributeValue, scanAttributes, tokenizeAttributes } from './grammar.js'
 
@@ -182,7 +183,7 @@ export function authoringCompletion(source: string, caret: number): Completion |
 /** Whether the line starting at `lineStart` is front matter or inside a fenced code block. */
 function inCode(source: string, lineStart: number, line: string): boolean {
     const earlier = lineStart === 0 ? [] : source.slice(0, lineStart - 1).split('\n')
-    const frontMatter = readFrontMatter(source)
+    const frontMatter = findFrontMatter(source)
     if (frontMatter && earlier.length < frontMatter.lineCount) return true
     const fences = new FenceTracker()
     for (const text of earlier.slice(frontMatter?.lineCount ?? 0)) fences.next(text.replace(/\r$/, ''))

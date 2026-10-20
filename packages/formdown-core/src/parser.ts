@@ -1,6 +1,6 @@
 import { Field, FieldRelation, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic, FrontMatter, SourceSpan } from './types'
 import { NAME, TARGET, LABEL, LABEL_SPAN, ATTRIBUTES, isValidName, pattern, tokenizeAttributes, attributeValue, quoteAttributeValue, scanAttributes } from './grammar.js'
-import { readFrontMatter, FenceTracker, maskCodeSpans } from './source.js'
+import { findFrontMatter, FenceTracker, maskCodeSpans } from './source.js'
 
 const TYPE_MARKER = String.raw`(?:dt|d|[#@%&t?TrscRFCMW$])`
 const RELATION = String.raw`(?:(<->|->)\s*(${TARGET})\s*)?`
@@ -140,9 +140,9 @@ export class FormdownParser {
             offset += line.length + 1
         }
 
-        const frontMatterResult = readFrontMatter(content)
-        if (frontMatterResult) this.diagnostics.push(...frontMatterResult.diagnostics)
-        const firstBodyLine = frontMatterResult?.lineCount ?? 0
+        const block = findFrontMatter(content)
+        const frontMatter = block ? this.readFrontMatter(block.raw, block.span) : undefined
+        const firstBodyLine = block?.lineCount ?? 0
         const fences = new FenceTracker()
 
         for (let i = firstBodyLine; i < lines.length; i++) {
@@ -249,7 +249,7 @@ export class FormdownParser {
 
         // Values in front matter belong to the document and take precedence over
         // defaults written in the fields themselves
-        const data = frontMatterResult?.frontMatter.data
+        const data = frontMatter?.data
         if (data) {
             for (const field of fields) {
                 if (Object.prototype.hasOwnProperty.call(data, field.name)) {
@@ -261,8 +261,27 @@ export class FormdownParser {
         return {
             fields,
             cleanedMarkdown: this.placeInlineFields(cleanedLines.join('\n'), fields),
-            frontMatter: frontMatterResult?.frontMatter
+            frontMatter
         }
+    }
+
+    /** Read a front matter block's values with the configured reader, if there is one. */
+    private readFrontMatter(raw: string, span: SourceSpan): FrontMatter {
+        const reader = this.options.frontMatter
+        if (reader) {
+            const { data, diagnostics } = reader(raw, span)
+            this.diagnostics.push(...diagnostics)
+            return { data, raw, span }
+        }
+        if (raw.trim() !== '') {
+            this.diagnostics.push({
+                code: 'front-matter-unread',
+                message: 'Front matter was found but its values were not read: give the parser a front matter reader (yamlFrontMatter from @formdown/core/front-matter)',
+                severity: 'warning',
+                span
+            })
+        }
+        return { data: {}, raw, span }
     }
 
     /**

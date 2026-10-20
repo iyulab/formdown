@@ -21,6 +21,10 @@
       "types": "./dist/generator.d.ts",
       "import": "./dist/generator.js"
     },
+    "./front-matter": {
+      "types": "./dist/front-matter.d.ts",
+      "import": "./dist/front-matter.js"
+    },
     "./schema": {
       "types": "./dist/schema.d.ts",
       "import": "./dist/schema.js"

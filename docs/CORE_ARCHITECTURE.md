@@ -24,6 +24,17 @@ const result = parser.parseFormdown('@name: [text required]')
 // Returns: { markdown: string, forms: Field[] }
 ```
 
+The parser finds a document's front matter and keeps it out of the fields, but reads its YAML values only when given a reader, so that `@formdown/core/parser` does not carry a YAML implementation for forms that have no front matter. Give it `yamlFrontMatter` to read them as `parseFormdown()` does:
+
+```typescript
+import { FormdownParser } from '@formdown/core/parser'
+import { yamlFrontMatter } from '@formdown/core/front-matter'
+
+const parser = new FormdownParser({ frontMatter: yamlFrontMatter })
+```
+
+Without a reader, `frontMatter.data` is empty and a `front-matter-unread` warning says the values were not read. A reader is any `(raw, span) => { data, diagnostics }` (`FrontMatterReader`). `parseFormdown()`, `generateFormHTML()`, `getSchema()` and `FormManager` use `yamlFrontMatter`.
+
 **Key Features:**
 - Standard syntax support: `@field_name: [type attributes]`
 - Shorthand syntax support: `@field_name*: @[]` 
@@ -188,6 +199,8 @@ import { readFrontMatter } from '@formdown/core'
 
 const values = readFrontMatter(documentSource)?.frontMatter.data ?? {}
 ```
+
+`findFrontMatter(source)` finds the block — its `raw` text, `span` and `lineCount` — without reading the YAML.
 
 ### Class-based API (Advanced)
 
