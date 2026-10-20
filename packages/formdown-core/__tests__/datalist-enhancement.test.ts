@@ -60,10 +60,8 @@ describe('Datalist Enhancement', () => {
 
             // Should have 0 datalists since all options are empty after trimming
             expect(result.datalistDeclarations).toHaveLength(0)
-            expect(consoleSpy).toHaveBeenCalledWith(
-                expect.stringContaining('empty options'),
-                expect.any(String)
-            )
+            expect(result.diagnostics).toEqual([expect.objectContaining({ code: 'datalist-without-options', severity: 'warning' })])
+            expect(consoleSpy).not.toHaveBeenCalled()
             consoleSpy.mockRestore()
         })
 

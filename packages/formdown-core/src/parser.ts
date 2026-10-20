@@ -830,6 +830,12 @@ export class FormdownParser {
         return { start, end: start + length, line: this.currentLine + 1, column: column + 1 }
     }
 
+    /** Record a diagnostic about the whole of the line being parsed, `line` as written. */
+    private reportLine(code: string, message: string, line: string, severity: Diagnostic['severity'] = 'warning'): void {
+        const column = Math.max(0, line.search(/\S/))
+        this.report(code, message, column, line.trim().length, severity)
+    }
+
     /** Record a diagnostic located at `column` (0-based) of the line being parsed. */
     private report(code: string, message: string, column: number, length: number, severity: Diagnostic['severity'] = 'error'): void {
         const start = (this.lineStarts[this.currentLine] ?? 0) + column
@@ -1208,7 +1214,7 @@ export class FormdownParser {
         const options = optionsStr.split(',').map(opt => opt.trim()).filter(opt => opt.length > 0)
 
         if (options.length === 0) {
-            console.warn('Shorthand datalist declaration has empty options:', line)
+            this.reportLine('datalist-without-options', `Datalist "${id}" lists no options`, line)
             return null
         }
 
@@ -1236,13 +1242,13 @@ export class FormdownParser {
         
         // ID is required for datalist
         if (!attributes.id) {
-            console.warn('Datalist declaration missing required id attribute:', line)
+            this.reportLine('datalist-without-id', 'A datalist declaration needs an id (@datalist[id="…" options="…"])', line)
             return null
         }
         
         // Options are required for datalist
         if (attributes.options === undefined) {
-            console.warn('Datalist declaration missing required options attribute:', line)
+            this.reportLine('datalist-without-options', `Datalist "${attributes.id}" has no options attribute`, line)
             return null
         }
         
@@ -1252,7 +1258,7 @@ export class FormdownParser {
             : []
         
         if (options.length === 0) {
-            console.warn('Datalist declaration has empty options:', line)
+            this.reportLine('datalist-without-options', `Datalist "${attributes.id}" lists no options`, line)
             return null
         }
         
@@ -1322,7 +1328,13 @@ export class FormdownParser {
         if (field.attributes?.form) {
             const formExists = this.formDeclarations.some(f => f.id === field.attributes!.form)
             if (!formExists) {
-                console.warn(`FormDown: Referenced form "${field.attributes.form}" does not exist. Using current or default form.`)
+                this.diagnostics.push({
+                    code: 'form-unknown',
+                    message: `"${field.name}" names form "${String(field.attributes.form)}", which is not declared before it: it belongs to the current form instead`,
+                    severity: 'warning',
+                    field: field.name,
+                    ...(field.span && { span: field.span })
+                })
                 field.attributes.form = this.currentFormId || this.getDefaultFormId()
             }
         } else {

@@ -1027,6 +1027,9 @@ const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
 | `condition-unknown-field` | warning | A condition names a field the form does not have, so it never holds (or, negated, always does) |
 | `front-matter-invalid-yaml` | error | The front matter is not valid YAML. `frontMatter.raw` keeps the text; `frontMatter.data` is empty |
 | `front-matter-not-mapping` | error | The front matter is valid YAML but not a mapping of keys to values |
+| `form-unknown` | warning | A field names a form (`form="…"`) that is not declared before it. The field belongs to the current form instead |
+| `datalist-without-id` | warning | A `@datalist[…]` declaration has no `id`, so nothing can name it. It is ignored |
+| `datalist-without-options` | warning | A datalist declaration (`@datalist[…]` or `@#id: …`) lists no options. It is ignored |
 | `image-without-src` | warning | An image button (`@[image "…"]`) has no `src`, so it shows no image |
 | `switch-needs-single-checkbox` | warning | `switch` is written on a checkbox with options or on another type, where there is no one value to turn on or off. It is ignored |
 | `front-matter-unread` | warning | The parser found front matter but was given no reader for it (`FormdownParser` without `frontMatter`), so `frontMatter.data` is empty and the values do not reach the fields |

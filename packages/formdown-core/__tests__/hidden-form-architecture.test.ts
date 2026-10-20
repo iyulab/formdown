@@ -167,7 +167,6 @@ Your name is ___@name[text form="survey"] and age is ___@age[number form="survey
     })
 
     test('should handle non-existent form ID references', () => {
-      // Spy on console.warn to verify warning is logged
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation()
       
       const content = `
@@ -182,7 +181,8 @@ Your name is ___@name[text form="survey"] and age is ___@age[number form="survey
       expect(result.forms[1].attributes?.form).toBe('formdown-form-default')
       
       // Should log warning about non-existent form
-      expect(consoleSpy).toHaveBeenCalledWith('FormDown: Referenced form "non-existent-form" does not exist. Using current or default form.')
+      expect(result.diagnostics).toEqual([expect.objectContaining({ code: 'form-unknown', field: 'field1', severity: 'warning' })])
+      expect(consoleSpy).not.toHaveBeenCalled()
       
       consoleSpy.mockRestore()
     })

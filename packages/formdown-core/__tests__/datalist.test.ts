@@ -47,10 +47,8 @@ describe('Datalist Support', () => {
             const result = parser.parseFormdown(content)
             
             expect(result.datalistDeclarations).toHaveLength(0)
-            expect(consoleSpy).toHaveBeenCalledWith(
-                expect.stringContaining('Datalist declaration missing required id attribute'),
-                expect.any(String)
-            )
+            expect(result.diagnostics).toEqual([expect.objectContaining({ code: 'datalist-without-id', severity: 'warning', message: expect.stringContaining('needs an id') })])
+            expect(consoleSpy).not.toHaveBeenCalled()
             consoleSpy.mockRestore()
         })
 
@@ -60,10 +58,8 @@ describe('Datalist Support', () => {
             const result = parser.parseFormdown(content)
             
             expect(result.datalistDeclarations).toHaveLength(0)
-            expect(consoleSpy).toHaveBeenCalledWith(
-                expect.stringContaining('Datalist declaration missing required options attribute'),
-                expect.any(String)
-            )
+            expect(result.diagnostics).toEqual([expect.objectContaining({ code: 'datalist-without-options', severity: 'warning', message: expect.stringContaining('has no options attribute') })])
+            expect(consoleSpy).not.toHaveBeenCalled()
             consoleSpy.mockRestore()
         })
 
@@ -74,10 +70,8 @@ describe('Datalist Support', () => {
             
             expect(result.datalistDeclarations).toHaveLength(0)
             // Check that it was properly identified as empty options, not missing options
-            expect(consoleSpy).toHaveBeenCalledWith(
-                expect.stringContaining('has empty options'),
-                expect.any(String)
-            )
+            expect(result.diagnostics).toEqual([expect.objectContaining({ code: 'datalist-without-options', severity: 'warning', message: expect.stringContaining('lists no options') })])
+            expect(consoleSpy).not.toHaveBeenCalled()
             consoleSpy.mockRestore()
         })
     })
