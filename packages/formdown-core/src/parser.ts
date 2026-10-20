@@ -1,5 +1,5 @@
 import { Field, FieldRelation, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic, FrontMatter, SourceSpan } from './types'
-import { NAME, TARGET, LABEL, LABEL_SPAN, ATTRIBUTES, isValidName, pattern, tokenizeAttributes, attributeValue, quoteAttributeValue, scanAttributes } from './grammar.js'
+import { NAME, TARGET, LABEL, LABEL_SPAN, ATTRIBUTES, CONDITIONAL_ATTRIBUTES, defaultLabel, isValidName, pattern, tokenizeAttributes, attributeValue, quoteAttributeValue, scanAttributes } from './grammar.js'
 import { findFrontMatter, FenceTracker, maskCodeSpans } from './source.js'
 
 const TYPE_MARKER = String.raw`(?:dt|d|[#@%&t?TrscRFCMW$])`
@@ -40,14 +40,6 @@ const BLOCK_FIELD_CANDIDATE = /^@([^\s:([{*\-<>@\]]+)[^:]*:\s*\S*\[/u
  */
 const BRACKETLESS_FIELD = pattern(String.raw`^@(${NAME})(?:${LABEL_SPAN})?\*?\s*:\s*(${INPUT_TYPES.join('|')})((?:\s+[\w-]+(?:=(?:"[^"]*"|'[^']*'|\S+))?)*)\s*$`)
 
-/** The conditional attributes, each with where its condition is kept on the field. */
-const CONDITIONAL_ATTRIBUTES: Record<string, keyof ConditionalAttributes> = {
-    'visible-if': 'visibleIf',
-    'hidden-if': 'hiddenIf',
-    'enabled-if': 'enabledIf',
-    'disabled-if': 'disabledIf',
-    'required-if': 'requiredIf',
-}
 import { getDefaultExtensionManager } from './extensions/extension-manager.js'
 import type { HookContext } from './extensions/types.js'
 import { escapeHtml } from './escape.js'
@@ -687,7 +679,7 @@ export class FormdownParser {
             return {
                 name,
                 type: 'text',
-                label: customLabel || this.formatLabel(name),
+                label: customLabel || defaultLabel(name),
                 attributes: {}
             }
         }
@@ -738,7 +730,7 @@ export class FormdownParser {
         const field: Field = {
             name,
             type,
-            label: customLabel || this.formatLabel(name),
+            label: customLabel || defaultLabel(name),
             attributes: {}
         }
 
@@ -1020,38 +1012,6 @@ export class FormdownParser {
                 this.diagnostics.push({ ...problem, severity: 'warning', field: field.name, ...(field.span && { span: field.span }) })
             }
         }
-    }
-
-    private formatLabel(fieldName: string): string {
-        // Handle snake_case: convert underscores to spaces and capitalize
-        if (fieldName.includes('_')) {
-            return fieldName
-                .split('_')
-                .map(word => this.capitalizeWord(word))
-                .join(' ')
-        }
-
-        // Handle camelCase: insert spaces before uppercase letters and capitalize
-        if (/[a-z][A-Z]/.test(fieldName)) {
-            return fieldName
-                .replace(/([a-z])([A-Z])/g, '$1 $2')
-                .split(' ')
-                .map(word => this.capitalizeWord(word))
-                .join(' ')
-        }
-
-        // Handle single word: just capitalize first letter
-        return this.capitalizeWord(fieldName)
-    }
-
-    /**
-     * Capitalize the first letter of a word
-     * @param word - The word to capitalize
-     * @returns The capitalized word
-     */
-    private capitalizeWord(word: string): string {
-        if (!word) return word
-        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
     }
 
     /**

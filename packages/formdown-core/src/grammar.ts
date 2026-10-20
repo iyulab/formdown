@@ -6,6 +6,8 @@
  * use the `u` flag, which is required for Unicode property escapes.
  */
 
+import type { ConditionalAttributes } from './types.js'
+
 /** A field name: a Unicode letter or underscore, then letters, digits or underscores. */
 export const NAME = String.raw`[\p{L}_][\p{L}\p{N}_]*`
 
@@ -26,6 +28,27 @@ export const LABEL = String.raw`\(((?:[^()]|\([^()]*\))+)\)`
 export const LABEL_SPAN = String.raw`\((?:[^()]|\([^()]*\))*\)`
 
 const FULL_NAME = new RegExp(`^${NAME}$`, 'u')
+
+/** The conditional attributes, each with where its condition is kept on the field. */
+export const CONDITIONAL_ATTRIBUTES: Readonly<Record<string, keyof ConditionalAttributes>> = {
+    'visible-if': 'visibleIf',
+    'hidden-if': 'hiddenIf',
+    'enabled-if': 'enabledIf',
+    'disabled-if': 'disabledIf',
+    'required-if': 'requiredIf',
+}
+
+const capitalize = (word: string) => word && word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+
+/**
+ * The label a field gets when none is written: `first_name` and `firstName` → `First Name`,
+ * `email` → `Email`.
+ */
+export function defaultLabel(name: string): string {
+    if (name.includes('_')) return name.split('_').map(capitalize).join(' ')
+    if (/[a-z][A-Z]/.test(name)) return name.replace(/([a-z])([A-Z])/g, '$1 $2').split(' ').map(capitalize).join(' ')
+    return capitalize(name)
+}
 
 /** True when `name` is a valid field name. */
 export function isValidName(name: string): boolean {
