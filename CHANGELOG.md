@@ -2,6 +2,16 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- Suggestion attributes: `suggest:role` (`judged` · `observed`), `suggest:policy` (`offer` · `confirm` · `off`), `suggest:evidence`, `suggest:parent`, `suggest:coarse` and `suggest:must-catch` say how a host that suggests values should treat a field. The parser checks them and moves them from the field's `attributes` into `field.suggest` (`{ role, policy, evidence, parent, coarse, mustCatch }`); the schema carries `suggest`, and `formatField` / `formatFormdown` write it back. A name that is not one of these, a value that cannot be read, a `parent` that is not a field, a `must-catch` value that is not an option, and a suggesting policy on an observed field are reported (`suggest-unknown`, `suggest-invalid`, `suggest-parent-unknown`, `suggest-must-catch-unlisted`, `suggest-policy-on-observed`) and left out.
+
+### Fixed
+
+- `suggest:*` attributes no longer reach the rendered control. They were drawn as HTML attributes, so `<select suggest:role="judged">` — and a `role=` written that way would have been read as the control's ARIA role.
+
 ## 0.22.0
 
 ### Changed

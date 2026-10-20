@@ -287,7 +287,36 @@ forms[1].relation // { target: 'Tag', type: 'many-to-many' }
 
 What the target names, and which values it offers, is the host's to decide: Formdown does not check that `Target` exists, and the field renders as its own type. A host fills it with the target's records through `choices` (see the UI package), keeping each record's id as the value and its name as the label. A field without an arrow has no `relation`.
 
-## Layout Options
+## Suggestion Attributes
+
+A form can say how a host that suggests values should treat a field — which fields the records can answer, which only describe what was found, and which must not be suggested at all. These are `suggest:*` attributes:
+
+```formdown
+@customer: [text suggest:evidence=false]
+@handler: [select options="kim,lee,park" suggest:role=judged suggest:policy=confirm suggest:must-catch="park"]
+@fault_code: [text suggest:role=judged suggest:coarse=2]
+@note: [textarea suggest:role=observed]
+```
+
+| Attribute | Values | Meaning |
+|---|---|---|
+| `suggest:role` | `judged`, `observed` | `judged`: a value the records can suggest — who handles it, which class it falls in. `observed`: written down as it is found — a clue for the others |
+| `suggest:policy` | `offer`, `confirm`, `off` | `offer`: suggest. `confirm`: suggest, but only the person puts the value in. `off`: never suggest |
+| `suggest:evidence` | `true`, `false` | `false` keeps the field out of the clues for other fields — an identity such as a name |
+| `suggest:parent` | a field name | The field whose value this field's choices depend on |
+| `suggest:coarse` | a whole number | How many leading characters of a value name its broader class — the chapter of a fault code |
+| `suggest:must-catch` | values, comma-separated | Values that must not be missed: where one of them is the answer, a host asks rather than stays quiet. On a field with options, each must be one of them |
+
+Formdown reads and checks them, and moves them out of the field's attributes into `suggest`, so they never reach the page (a `role=` there would be read as the control's ARIA role). What they lead to is the host's to do: Formdown does not suggest anything itself.
+
+```typescript
+const { forms } = parseFormdown(content)
+forms[1].suggest // { role: 'judged', policy: 'confirm', mustCatch: ['park'] }
+getSchema(content).handler.suggest // the same
+```
+
+`formatField` and `formatFormdown` write them back. A name Formdown does not know, or a value it cannot read, is reported and left out (see Diagnostics).
+
 
 FormDown supports declarative layout options at both form and field levels for flexible form presentation.
 
@@ -1032,6 +1061,11 @@ const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
 | `datalist-without-options` | warning | A datalist declaration (`@datalist[…]` or `@#id: …`) lists no options. It is ignored |
 | `image-without-src` | warning | An image button (`@[image "…"]`) has no `src`, so it shows no image |
 | `switch-needs-single-checkbox` | warning | `switch` is written on a checkbox with options or on another type, where there is no one value to turn on or off. It is ignored |
+| `suggest-unknown` | warning | A `suggest:` attribute Formdown does not know, e.g. `suggest:rol`. It is ignored |
+| `suggest-invalid` | warning | A `suggest:` attribute whose value cannot be read — a role other than `judged` or `observed`, a policy other than `offer`, `confirm` or `off`, `evidence` other than `true` or `false`, `coarse` not a whole number from 1, an empty `must-catch`, a `parent` naming the field itself. It is ignored |
+| `suggest-parent-unknown` | warning | `suggest:parent` names a field the form does not have. It is ignored |
+| `suggest-must-catch-unlisted` | warning | `suggest:must-catch` names a value that is not one of the field's options. That value is ignored |
+| `suggest-policy-on-observed` | warning | An observed field has `suggest:policy=offer` or `confirm`, which would suggest a field that is not suggested. The policy is ignored |
 | `front-matter-unread` | warning | The parser found front matter but was given no reader for it (`FormdownParser` without `frontMatter`), so `frontMatter.data` is empty and the values do not reach the fields |
 
 `span` gives the location in the original source. `start` and `end` are 0-based character offsets. `line` and `column` are 1-based. `field` names the field a problem is about, when it is about one.

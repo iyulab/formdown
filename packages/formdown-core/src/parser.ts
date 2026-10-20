@@ -1,4 +1,5 @@
 import { Field, FieldRelation, FormdownContent, FormdownOptions, FormDeclaration, DatalistDeclaration, GroupDeclaration, FieldCondition, ConditionalAttributes, Diagnostic, FrontMatter, SourceSpan } from './types'
+import { liftSuggestions } from './suggest.js'
 import { NAME, TARGET, LABEL, LABEL_SPAN, ATTRIBUTES, CONDITIONAL_ATTRIBUTES, defaultLabel, isValidName, pattern, tokenizeAttributes, attributeValue, quoteAttributeValue, scanAttributes } from './grammar.js'
 import { findFrontMatter, FenceTracker, maskCodeSpans } from './source.js'
 
@@ -107,6 +108,7 @@ export class FormdownParser {
             field,
             onHookError
         ))
+        liftSuggestions(fields, diagnostic => this.diagnostics.push({ ...diagnostic, severity: 'warning' }))
         this.reportDuplicateNames(fields)
         this.reportConditions(fields)
         this.reportComputations(fields)

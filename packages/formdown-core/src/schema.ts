@@ -81,6 +81,9 @@ export class SchemaExtractor {
             schema.errorMessage = field.errorMessage
         }
 
+        if (field.suggest) {
+            schema.suggest = { ...field.suggest, ...(field.suggest.mustCatch && { mustCatch: [...field.suggest.mustCatch] }) }
+        }
         if (field.relation) {
             schema.relation = { ...field.relation }
         }

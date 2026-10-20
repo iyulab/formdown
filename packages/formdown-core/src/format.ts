@@ -6,12 +6,13 @@
 
 import { LABEL, CONDITIONAL_ATTRIBUTES, TARGET, defaultLabel, isValidName, pattern, quoteAttributeValue } from './grammar.js'
 import { formatOptions } from './options.js'
+import { suggestAttributes } from './suggest.js'
 import type { Field, FieldCondition } from './types.js'
 
 /** What a field is written from: the parts of a parsed `Field` that the syntax carries. */
 export type FieldInput = Pick<Field, 'name' | 'type'> & Partial<Pick<Field,
     | 'label' | 'required' | 'placeholder' | 'description' | 'options' | 'allowOther' | 'otherLabel'
-    | 'format' | 'pattern' | 'content' | 'value' | 'conditions' | 'compute' | 'relation' | 'attributes'
+    | 'format' | 'pattern' | 'content' | 'value' | 'conditions' | 'compute' | 'relation' | 'suggest' | 'attributes'
 >>
 
 const PARENTHESIZED_LABEL = pattern(String.raw`^${LABEL}$`)
@@ -66,6 +67,7 @@ export function formatField(field: FieldInput): string {
         if (condition) parts.push(`${attributeName}=${quoteAttributeValue(formatCondition(condition))}`)
     }
     text('compute', field.compute)
+    for (const [key, value] of suggestAttributes(field.suggest)) parts.push(`${key}=${attribute(field.name, key, value)}`)
 
     for (const [key, value] of Object.entries(field.attributes ?? {})) {
         if (value === undefined || FIELD_PROPERTIES.has(key)) continue

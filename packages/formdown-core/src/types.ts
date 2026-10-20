@@ -40,6 +40,8 @@ export interface Field {
     /** Worked out from other fields' numbers (`compute="quantity * price"`), not typed in; see `parseComputation`. */
     compute?: string
     relation?: FieldRelation  // FK relation metadata (-> or <->)
+    /** What the form says about suggesting a value for the field (`suggest:*` attributes); see `FieldSuggest`. */
+    suggest?: FieldSuggest
     span?: SourceSpan  // Where the field syntax is in the original source
     [key: string]: unknown  // Index signature for compatibility with FieldSchema
 }
@@ -226,8 +228,30 @@ export interface FieldSchema {
     compute?: string
     /** The record the field names (`@customer -> Customer: [select]`); see `FieldRelation`. */
     relation?: FieldRelation
+    /** What the form says about suggesting a value for the field (`suggest:*` attributes). */
+    suggest?: FieldSuggest
     /** A single checkbox shown as an on/off switch (`@notify: c[switch]`); its value is a boolean like any single checkbox's. */
     switch?: true
+}
+
+/**
+ * What a form says about suggesting a value for a field, written as `suggest:*` attributes
+ * (`@handler: [select options="kim,lee" suggest:role=judged suggest:policy=confirm]`). Formdown only reads and
+ * checks these; a host that suggests values acts on them. They are never drawn on the page.
+ */
+export interface FieldSuggest {
+    /** `judged`: a value the records can suggest. `observed`: a value written down as found — a clue for the others. */
+    role?: 'judged' | 'observed'
+    /** `offer`: suggest. `confirm`: suggest, but only the person puts the value in. `off`: never suggest. */
+    policy?: 'offer' | 'confirm' | 'off'
+    /** `false` keeps the field out of the clues for other fields — an identity such as a name. */
+    evidence?: boolean
+    /** The field whose value this field's choices depend on. */
+    parent?: string
+    /** How many leading characters of a value name its broader class — the chapter of a fault code. */
+    coarse?: number
+    /** Values that must not be missed: where one of them is the answer, a host asks rather than stays quiet. */
+    mustCatch?: string[]
 }
 
 export type FieldType =

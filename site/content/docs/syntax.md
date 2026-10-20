@@ -252,6 +252,15 @@ I prefer ___@color[select options="Red, Blue, Green"] as my favorite color.
 @country{USA,Canada,UK,*(Other Country)}: s[]
 ```
 
+### Suggestion Attributes
+For a host that suggests values: which fields the records can answer, and how. Formdown checks them and keeps them off the page; the field carries them as `suggest`.
+```formdown
+@handler: [select options="kim,lee" suggest:role=judged suggest:policy=confirm]
+@customer: [text suggest:evidence=false]
+@note: [textarea suggest:role=observed]
+```
+`suggest:role` (`judged` · `observed`), `suggest:policy` (`offer` · `confirm` · `off`), `suggest:evidence`, `suggest:parent`, `suggest:coarse`, `suggest:must-catch` — see the full syntax guide.
+
 ## Shorthand Syntax
 
 FormDown supports abbreviated syntax for faster form creation:

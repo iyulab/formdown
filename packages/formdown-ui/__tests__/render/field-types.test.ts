@@ -80,3 +80,11 @@ test('the styles of a plugin field type apply to a form that holds one, and only
   await ui.updateComplete
   expect(appliedCss(ui)).not.toContain('.stars-input')
 })
+
+test('suggest: attributes never reach the rendered control — role= there would be its ARIA role', async () => {
+  const ui = await mount('@handler: [select options="kim,lee" suggest:role=judged suggest:policy=confirm]\n@note: [text suggest:evidence=false]')
+  for (const name of ['handler', 'note']) {
+    const control = ui.shadowRoot!.querySelector(`[name="${name}"]`)!
+    expect(control.getAttributeNames().filter((n) => n.startsWith('suggest:') || n === 'role')).toEqual([])
+  }
+})
