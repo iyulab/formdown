@@ -1,4 +1,4 @@
-import { parseFormdown } from '../src/index'
+import { getSchema, parseFormdown } from '../src/index'
 
 const relations = (src: string) => parseFormdown(src).forms.map(f => [f.name, f.relation])
 
@@ -33,5 +33,16 @@ describe('Relations', () => {
 
     it('leaves a field without an arrow without a relation', () => {
         expect(relations('@customer: [select]')).toEqual([['customer', undefined]])
+    })
+
+    it('carries the relation into the schema', () => {
+        const schema = getSchema([
+            '@customer -> Customer: [select]',
+            '@tags <-> Tag: [checkbox]',
+            '@note: [text]',
+        ].join('\n\n'))
+        expect(schema.customer.relation).toEqual({ target: 'Customer', type: 'fk' })
+        expect(schema.tags.relation).toEqual({ target: 'Tag', type: 'many-to-many' })
+        expect('relation' in schema.note).toBe(false)
     })
 })

@@ -74,6 +74,10 @@ export class SchemaExtractor {
             schema.errorMessage = field.errorMessage
         }
 
+        if (field.relation) {
+            schema.relation = { ...field.relation }
+        }
+
         // Extract validation rules from both attributes and field properties
         const validationRules = this.extractValidationRules(field.attributes || {})
         const fieldValidationRules = this.extractFieldValidationRules(field)

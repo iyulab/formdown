@@ -207,6 +207,8 @@ export interface FieldSchema {
     conditions?: ConditionalAttributes  // Conditional visibility/behavior
     /** Worked out from other fields' numbers (`compute="quantity * price"`), not typed in; see `parseComputation`. */
     compute?: string
+    /** The record the field names (`@customer -> Customer: [select]`); see `FieldRelation`. */
+    relation?: FieldRelation
 }
 
 export type FieldType =

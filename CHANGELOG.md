@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- A field's schema entry carries the record it names: `getSchema('@customer -> Customer: [select]').customer.relation` is `{ target: 'Customer', type: 'fk' }` (`'many-to-many'` for `<->`). The parser read the relation, but the schema dropped it, so a host reading only the schema could not tell a reference from a plain choice.
+
 ## 0.21.0
 
 ### Added
