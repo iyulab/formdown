@@ -14,9 +14,9 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ### Changed
 
-- One set of validation rules and sentences: `validateForm`, `ValidationManager` and `FieldProcessor.validateFieldValue` now give the same answer for the same value. `FieldProcessor`'s required sentence is `Field is required` (was `This field is required`); `ValidationManager` reports one `constraints` rule whose errors carry the broken rule as their `code` (`required`, `maxLength`, `email`, …) instead of `required` / `length` / `email_format` / `number_format` / `date_format` / `phone_format` / `url_format` / `pattern`. Date bounds are said as written (`Date must be on or before 2026-12-31`), not in the runtime's locale.
-- `pattern` matches the whole value, as the HTML `pattern` attribute does (`[0-9]{3}` no longer passes `1234`).
-- A required number field holding `0` counts as filled.
+- **Breaking:** one set of validation rules and sentences: `validateForm`, `ValidationManager` and `FieldProcessor.validateFieldValue` now give the same answer for the same value. `FieldProcessor`'s required sentence is `Field is required` (was `This field is required`); `ValidationManager` reports one `constraints` rule whose errors carry the broken rule as their `code` (`required`, `maxLength`, `email`, …) instead of `required` / `length` / `email_format` / `number_format` / `date_format` / `phone_format` / `url_format` / `pattern`. Date bounds are said as written (`Date must be on or before 2026-12-31`), not in the runtime's locale.
+- **Breaking:** `pattern` matches the whole value, as the HTML `pattern` attribute does (`[0-9]{3}` no longer passes `1234`).
+- **Breaking:** a required number field holding `0` counts as filled (it counted as missing).
 
 ### Fixed
 
