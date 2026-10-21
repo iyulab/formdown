@@ -17,6 +17,8 @@
  * - Field validation logic
  */
 
+import { constraintErrors } from './constraints.js'
+
 export interface ProcessResult<T = unknown> {
   success: boolean
   value: T
@@ -339,82 +341,19 @@ export class FieldProcessor {
    * Validate field value based on type and constraints
    */
   validateFieldValue(value: unknown, type: FieldType, constraints?: FieldConstraints): ProcessResult<unknown> {
-    const errors: string[] = []
-
-    // Required validation
-    if (constraints?.required) {
-      if (value === null || value === undefined || value === '' || 
-          (Array.isArray(value) && value.length === 0)) {
-        errors.push('This field is required')
-      }
-    }
-
-    // Type-specific validation
-    switch (type) {
-      case 'email':
-        if (value && typeof value === 'string') {
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-          if (!emailRegex.test(value)) {
-            errors.push('Please enter a valid email address')
-          }
-        }
-        break
-
-      case 'url':
-        if (value && typeof value === 'string') {
-          try {
-            new URL(value)
-          } catch {
-            errors.push('Please enter a valid URL')
-          }
-        }
-        break
-
-      case 'number':
-      case 'range':
-        if (value !== '' && value !== null && value !== undefined) {
-          const numValue = Number(value)
-          if (isNaN(numValue)) {
-            errors.push('Please enter a valid number')
-          } else {
-            if (constraints?.min !== undefined && numValue < constraints.min) {
-              errors.push(`Value must be at least ${constraints.min}`)
-            }
-            if (constraints?.max !== undefined && numValue > constraints.max) {
-              errors.push(`Value must be at most ${constraints.max}`)
-            }
-          }
-        }
-        break
-
-      case 'tel':
-        if (value && typeof value === 'string') {
-          // Basic phone number validation
-          const phoneRegex = /^[\d\s\-\+\(\)]+$/
-          if (!phoneRegex.test(value)) {
-            errors.push('Please enter a valid phone number')
-          }
-        }
-        break
-    }
-
-    // Pattern validation
-    if (constraints?.pattern && value && typeof value === 'string') {
-      const regex = new RegExp(constraints.pattern)
-      if (!regex.test(value)) {
-        errors.push(constraints.patternMessage || 'Value does not match required format')
-      }
-    }
-
-    // Length validation
-    if (typeof value === 'string') {
-      if (constraints?.minLength && value.length < constraints.minLength) {
-        errors.push(`Must be at least ${constraints.minLength} characters`)
-      }
-      if (constraints?.maxLength && value.length > constraints.maxLength) {
-        errors.push(`Must be at most ${constraints.maxLength} characters`)
-      }
-    }
+    // The same rules and sentences as validateForm (constraints.ts).
+    const errors = constraintErrors(value, {
+      type,
+      required: constraints?.required,
+      pattern: constraints?.pattern,
+      patternMessage: constraints?.patternMessage,
+      validation: {
+        min: constraints?.min,
+        max: constraints?.max,
+        minlength: constraints?.minLength,
+        maxlength: constraints?.maxLength,
+      },
+    }).map(({ message }) => message)
 
     return {
       success: errors.length === 0,

@@ -5,7 +5,9 @@ import {
   DOMBinder,
   initializeExtensions,
   type BodyHtml,
+  validateForm,
   type FormDownSchema,
+  type ValidationMessages,
   type ValidationResult
 } from '@formdown/core'
 import { applyFieldValue, isCheckedValue } from './field-value'
@@ -18,6 +20,7 @@ import { computations, computedValues } from './computed'
 import { applyFieldStates, focusFieldOf, hostFocused, type FieldStates } from './field-states'
 import { formdownStyles } from './styles'
 import { fieldTypeStyles, ShadowStyleSheet } from './field-type-styles'
+import { clearFieldErrors, errorsByField, showFieldErrors } from './field-errors'
 
 @customElement('formdown-ui')
 export class FormdownUI extends LitElement {
@@ -58,6 +61,18 @@ export class FormdownUI extends LitElement {
    */
   @property({ attribute: 'filter-select-above', type: Number })
   filterSelectAbove = 20
+
+  /**
+   * The sentences validation says, by rule, in place of the English ones — `required`, `minLength`,
+   * `maxLength`, `min`, `max`, `number`, `email`, `url`, `tel`, `date`, `dateMin`, `dateMax`, `pattern`;
+   * `{label}`, `{min}` and `{max}` are filled in. A rule left out keeps its default sentence, and a
+   * field's own `error-message` still wins for `required`. `@formdown/core/messages/ko` holds Korean ones.
+   */
+  @property({ attribute: false })
+  messages: Partial<ValidationMessages> = {}
+
+  /** The fields whose errors are drawn now: each is checked again as values change, and cleared once it passes. */
+  private shownErrors = new Set<string>()
 
   // Form ID generation removed - delegated to FormManager
 
@@ -204,7 +219,27 @@ export class FormdownUI extends LitElement {
     if (!this.formManager || !this._schema) {
       return { isValid: true, errors: [] }
     }
-    return this.formManager.validate()
+    const result = this.formManager.validate({ messages: this.messages })
+    const byField = errorsByField(result.errors)
+    const container = this.shadowRoot?.querySelector('#content-container')
+    if (container) showFieldErrors(container, byField)
+    this.shownErrors = new Set(byField.keys())
+    return result
+  }
+
+  /**
+   * Checks again the fields whose errors are drawn, against the values now: a field fixed loses its
+   * error, one still wrong says what is wrong now. Fields not yet shown an error are left alone — they
+   * are told only when the host validates.
+   */
+  private recheckShownErrors() {
+    if (this.shownErrors.size === 0 || !this._schema) return
+    const container = this.shadowRoot?.querySelector('#content-container')
+    if (!container) return
+    const now = errorsByField(validateForm(this.formManager.getData(), this._schema, { messages: this.messages }).errors)
+    const still = new Map([...now].filter(([field]) => this.shownErrors.has(field)))
+    showFieldErrors(container, still)
+    this.shownErrors = new Set(still.keys())
   }
 
   /**
@@ -308,6 +343,10 @@ export class FormdownUI extends LitElement {
       this.syncUIFromData()
     }
 
+    if ((changedProperties.has('data') || changedProperties.has('messages')) && !changedProperties.has('content')) {
+      this.recheckShownErrors()
+    }
+
     if (changedProperties.has('fieldStates') && !changedProperties.has('content')) {
       this.drawFieldStates()
     }
@@ -366,6 +405,7 @@ export class FormdownUI extends LitElement {
       }
 
       container.innerHTML = template.html
+      this.shownErrors.clear() // drawn with the fields they were on
 
       // Inject extension styles and scripts
       this.injectExtensionAssets(container)
@@ -649,11 +689,8 @@ export class FormdownUI extends LitElement {
     const container = this.shadowRoot?.querySelector('#content-container')
     if (!container) return
 
-    // Remove validation classes and messages
-    container.querySelectorAll('.field-error, .field-valid').forEach(el => {
-      el.classList.remove('field-error', 'field-valid')
-    })
-    container.querySelectorAll('.validation-error-message').forEach(el => el.remove())
+    clearFieldErrors(container)
+    this.shownErrors.clear()
   }
 
 

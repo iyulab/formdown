@@ -76,4 +76,6 @@ export function getSchema(content: string | import('./types.js').FormdownContent
     return getSchemaFunction(content)
 }
 
-export { validateField, validateForm, type BasicFieldSchema } from './validate.js'
+export { validateField, validateForm, type BasicFieldSchema, type ValidateOptions } from './validate.js'
+export { constraintErrors, defaultValidationMessages, isEmptyValue, type ValidationRule as ConstraintRule, type ValidationMessages, type ConstraintField, type ConstraintError } from './constraints.js'
+export { typedData } from './typed-data.js'

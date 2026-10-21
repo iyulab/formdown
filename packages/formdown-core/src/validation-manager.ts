@@ -25,6 +25,7 @@
  */
 
 import type { FieldType } from './field-processor.js'
+import { constraintErrors } from './constraints.js'
 
 export interface ValidationResult {
   isValid: boolean
@@ -280,55 +281,31 @@ export class ValidationManager {
   private buildValidationRules(field: FieldValidationContext): ValidationRule[] {
     const rules: ValidationRule[] = []
 
-    // Required validation
-    if (field.constraints.required) {
-      rules.push({
-        name: 'required',
-        validator: (value) => {
-          if (value === null || value === undefined || value === '' || 
-              (Array.isArray(value) && value.length === 0)) {
-            return field.constraints.requiredMessage || `${field.schema.label || field.fieldName} is required`
-          }
-          return true
+    // What the field declares: required, length, range, format, pattern — the same table validateForm uses.
+    rules.push({
+      name: 'constraints',
+      validator: (value) => {
+        const broken = constraintErrors(value, {
+          name: field.fieldName,
+          type: field.fieldType,
+          label: typeof field.schema.label === 'string' ? field.schema.label : undefined,
+          required: field.constraints.required,
+          errorMessage: field.constraints.requiredMessage,
+          pattern: field.constraints.pattern,
+          patternMessage: field.constraints.patternMessage,
+          validation: {
+            min: field.constraints.min,
+            max: field.constraints.max,
+            minlength: field.constraints.minLength,
+            maxlength: field.constraints.maxLength,
+          },
+        })
+        return {
+          isValid: broken.length === 0,
+          errors: broken.map(({ rule, message }) => ({ field: field.fieldName, code: rule, message, severity: 'error' as const })),
         }
-      })
-    }
-
-    // Type-specific validation
-    rules.push(...this.getTypeSpecificRules(field))
-
-    // Pattern validation
-    if (field.constraints.pattern) {
-      const pattern = field.constraints.pattern
-      const patternMessage = field.constraints.patternMessage
-      rules.push({
-        name: 'pattern',
-        validator: (value) => {
-          if (!value) return true // Skip pattern validation for empty values
-          const regex = new RegExp(pattern)
-          return regex.test(String(value)) ||
-            (patternMessage || 'Value does not match required format')
-        }
-      })
-    }
-
-    // Length validation
-    if (field.constraints.minLength || field.constraints.maxLength) {
-      rules.push({
-        name: 'length',
-        validator: (value) => {
-          if (!value) return true
-          const strValue = String(value)
-          if (field.constraints.minLength && strValue.length < field.constraints.minLength) {
-            return `Must be at least ${field.constraints.minLength} characters`
-          }
-          if (field.constraints.maxLength && strValue.length > field.constraints.maxLength) {
-            return `Must be at most ${field.constraints.maxLength} characters`
-          }
-          return true
-        }
-      })
-    }
+      }
+    })
 
     // Custom validators
     if (field.constraints.customValidator && this.customValidators.has(field.constraints.customValidator)) {
@@ -347,104 +324,6 @@ export class ValidationManager {
         validator: (value, field, formData) => this.validateOnServer(value, field, formData),
         async: true
       })
-    }
-
-    return rules
-  }
-
-  /**
-   * Get type-specific validation rules
-   */
-  private getTypeSpecificRules(field: FieldValidationContext): ValidationRule[] {
-    const rules: ValidationRule[] = []
-
-    switch (field.fieldType) {
-      case 'email':
-        rules.push({
-          name: 'email_format',
-          validator: (value) => {
-            if (!value) return true
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-            return emailRegex.test(String(value)) || 'Please enter a valid email address'
-          }
-        })
-        break
-
-      case 'url':
-        rules.push({
-          name: 'url_format',
-          validator: (value) => {
-            if (!value) return true
-            try {
-              new URL(String(value))
-              return true
-            } catch {
-              return 'Please enter a valid URL'
-            }
-          }
-        })
-        break
-
-      case 'number':
-      case 'range':
-        rules.push({
-          name: 'number_format',
-          validator: (value, field) => {
-            if (!value && value !== 0) return true
-            const numValue = Number(value)
-            if (isNaN(numValue)) {
-              return 'Please enter a valid number'
-            }
-            const minVal = field.constraints.min !== undefined ? Number(field.constraints.min) : undefined
-            const maxVal = field.constraints.max !== undefined ? Number(field.constraints.max) : undefined
-            if (minVal !== undefined && numValue < minVal) {
-              return `Value must be at least ${minVal}`
-            }
-            if (maxVal !== undefined && numValue > maxVal) {
-              return `Value must be at most ${maxVal}`
-            }
-            return true
-          }
-        })
-        break
-
-      case 'tel':
-        rules.push({
-          name: 'phone_format',
-          validator: (value) => {
-            if (!value) return true
-            const phoneRegex = /^[\d\s\-\+\(\)]+$/
-            return phoneRegex.test(String(value)) || 'Please enter a valid phone number'
-          }
-        })
-        break
-
-      case 'date':
-        rules.push({
-          name: 'date_format',
-          validator: (value, field) => {
-            if (!value) return true
-            const date = new Date(String(value))
-            if (isNaN(date.getTime())) {
-              return 'Please enter a valid date'
-            }
-            // Check date range if specified
-            if (field.constraints.min) {
-              const minDate = new Date(field.constraints.min)
-              if (date < minDate) {
-                return `Date must be after ${minDate.toLocaleDateString()}`
-              }
-            }
-            if (field.constraints.max) {
-              const maxDate = new Date(field.constraints.max)
-              if (date > maxDate) {
-                return `Date must be before ${maxDate.toLocaleDateString()}`
-              }
-            }
-            return true
-          }
-        })
-        break
     }
 
     return rules

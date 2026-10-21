@@ -44,6 +44,10 @@
     "./extensions": {
       "types": "./dist/extensions/index.d.ts",
       "import": "./dist/extensions/index.js"
+    },
+    "./messages/ko": {
+      "types": "./dist/messages/ko.d.ts",
+      "import": "./dist/messages/ko.js"
     }
   },
   "files": [

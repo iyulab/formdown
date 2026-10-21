@@ -320,5 +320,6 @@ module.exports = {
     DOMBinder,
     ValidationManager,
     EventOrchestrator,
-    extensionManager
+    extensionManager,
+    validateForm: () => ({ isValid: true, errors: [] })
 };

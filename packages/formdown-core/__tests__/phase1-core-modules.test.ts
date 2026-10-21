@@ -136,7 +136,7 @@ describe('Phase 1 Core Modules', () => {
       const result = processor.validateFieldValue('', 'text', { required: true })
       
       expect(result.success).toBe(false)
-      expect(result.errors).toContain('This field is required')
+      expect(result.errors).toContain('Field is required')
     })
 
     test('should validate email format', () => {

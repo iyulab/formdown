@@ -8,8 +8,19 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 - Suggestion attributes: `suggest:role` (`judged` · `observed`), `suggest:policy` (`offer` · `confirm` · `off`), `suggest:evidence`, `suggest:parent`, `suggest:coarse` and `suggest:must-catch` say how a host that suggests values should treat a field. The parser checks them and moves them from the field's `attributes` into `field.suggest` (`{ role, policy, evidence, parent, coarse, mustCatch }`); the schema carries `suggest`, and `formatField` / `formatFormdown` write it back. A name that is not one of these, a value that cannot be read, a `parent` that is not a field, a `must-catch` value that is not an option, and a suggesting policy on an observed field are reported (`suggest-unknown`, `suggest-invalid`, `suggest-parent-unknown`, `suggest-must-catch-unlisted`, `suggest-policy-on-observed`) and left out.
 
+- `<formdown-ui>` draws validation errors: after `validate()`, each field that broke a rule shows its sentences under it (`part="field-error"`), is marked `aria-invalid="true"` and points at them with `aria-describedby`; as its value changes it is checked again, and its error goes once it passes.
+- Validation sentences in the host's language: `messages` on `<formdown-ui>`, `validateForm(data, schema, { messages })`, and a Korean table at `@formdown/core/messages/ko`. Each rule (`required`, `minLength`, `maxLength`, `min`, `max`, `number`, `email`, `url`, `tel`, `date`, `dateMin`, `dateMax`, `pattern`) can be replaced, with `{label}`, `{min}` and `{max}` filled in.
+- `constraintErrors(value, field, messages?)` checks one value against a field's declaration and says which rules it broke; `typedData(data, schema)` gives the values with number fields as numbers (a field keeps the text typed, so `"0.50"` stays as written while it is typed).
+
+### Changed
+
+- One set of validation rules and sentences: `validateForm`, `ValidationManager` and `FieldProcessor.validateFieldValue` now give the same answer for the same value. `FieldProcessor`'s required sentence is `Field is required` (was `This field is required`); `ValidationManager` reports one `constraints` rule whose errors carry the broken rule as their `code` (`required`, `maxLength`, `email`, …) instead of `required` / `length` / `email_format` / `number_format` / `date_format` / `phone_format` / `url_format` / `pattern`. Date bounds are said as written (`Date must be on or before 2026-12-31`), not in the runtime's locale.
+- `pattern` matches the whole value, as the HTML `pattern` attribute does (`[0-9]{3}` no longer passes `1234`).
+- A required number field holding `0` counts as filled.
+
 ### Fixed
 
+- `validate()` (`<formdown-ui>`, `FormManager`, `validateForm`) checked only `required`: `minlength`, `maxlength`, `min`, `max`, `pattern` and the format of `email`, `url`, `number`, `tel` and `date` were drawn on the field but never checked, so a value breaking them was valid. They are now checked.
 - `suggest:*` attributes no longer reach the rendered control. They were drawn as HTML attributes, so `<select suggest:role="judged">` — and a `role=` written that way would have been read as the control's ARIA role.
 
 ## 0.22.0

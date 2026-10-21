@@ -1,5 +1,5 @@
 import type { FormDownSchema, FieldError } from './types.js'
-import { validateField, validateForm } from './validate.js'
+import { validateField, validateForm, type ValidateOptions } from './validate.js'
 
 type ChangeListener = (data: Record<string, any>) => void
 type FieldChangeListener = (field: string, value: any, data: Record<string, any>) => void
@@ -128,14 +128,14 @@ export class FormDataBinding {
   /**
    * Validate a single field
    */
-  validateField(field: string, value?: any): FieldError[] {
+  validateField(field: string, value?: any, options?: ValidateOptions): FieldError[] {
     if (!this.schema || !this.schema[field]) {
       return []
     }
 
     const fieldValue = value !== undefined ? value : this.get(field)
     const fieldSchema = { ...this.schema[field], name: field }
-    const errors = validateField(fieldValue, fieldSchema)
+    const errors = validateField(fieldValue, fieldSchema, options)
 
     this.notifyValidation(field, errors)
     return errors
@@ -144,12 +144,12 @@ export class FormDataBinding {
   /**
    * Validate all fields
    */
-  validate(): { isValid: boolean; errors: FieldError[] } {
+  validate(options?: ValidateOptions): { isValid: boolean; errors: FieldError[] } {
     if (!this.schema) {
       return { isValid: true, errors: [] }
     }
 
-    const result = validateForm(this.getAll(), this.schema)
+    const result = validateForm(this.getAll(), this.schema, options)
 
     // Notify validation listeners for each field with errors
     const errorsByField = new Map<string, FieldError[]>()

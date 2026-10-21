@@ -2,7 +2,7 @@ import { FormdownParser } from './parser.js'
 import { FormdownGenerator } from './generator.js'
 import type { BodyHtml } from './body-html.js'
 import { getSchema } from './schema.js'
-import { validateForm, validateField } from './validate.js'
+import { validateForm, validateField, type ValidateOptions } from './validate.js'
 import { FormDataBinding } from './form-data-binding.js'
 import { FieldProcessor } from './field-processor.js'
 import { DOMBinder } from './dom-binder.js'
@@ -157,12 +157,12 @@ export class FormManager {
   /**
    * Validate current form data
    */
-  validate(): ValidationResult {
+  validate(options?: ValidateOptions): ValidationResult {
     if (!this.dataBinding) {
       return { isValid: true, errors: [] }
     }
 
-    return this.dataBinding.validate()
+    return this.dataBinding.validate(options)
   }
 
   /**

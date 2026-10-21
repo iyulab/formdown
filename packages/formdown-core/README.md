@@ -29,6 +29,23 @@ Import only what you use; each subpath carries only what it needs.
 | `@formdown/core/generator` | `FormdownGenerator` — HTML from parsed content |
 | `@formdown/core/form-manager` | `FormManager` — parse, render, data binding and validation together |
 | `@formdown/core/extensions` | Hooks and plugins |
+| `@formdown/core/messages/ko` | Korean validation sentences, for `validateForm(…, { messages })` or `<formdown-ui>`'s `messages` |
+
+Validation holds what each field declares — `required` (and `required-if`), `minlength` / `maxlength`, `min` / `max`, the format of `number`, `email`, `url`, `tel` and `date`, and `pattern` matched against the whole value, as the browser does:
+
+```typescript
+import { getSchema, validateForm, typedData } from '@formdown/core'
+import { messages as ko } from '@formdown/core/messages/ko'
+
+const schema = getSchema('@title(Title)*: [minlength=3]
+@n: [number max=10]')
+validateForm({ title: 'ab', n: '12' }, schema).errors
+// [{ field: 'title', message: 'Must be at least 3 characters' }, { field: 'n', message: 'Value must be at most 10' }]
+validateForm({}, schema, { messages: ko }).errors   // [{ field: 'title', message: 'Title 칸을 채워 주세요' }]
+typedData({ n: '12' }, schema)                      // { n: 12 } — number fields' values as numbers
+```
+
+`messages` replaces the sentence of any rule (`required`, `minLength`, `maxLength`, `min`, `max`, `number`, `email`, `url`, `tel`, `date`, `dateMin`, `dateMax`, `pattern`), with `{label}`, `{min}` and `{max}` filled in; a field's own `error-message` still wins for `required`.
 
 ```typescript
 import { FormdownParser } from '@formdown/core/parser'

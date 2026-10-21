@@ -532,6 +532,13 @@ export const formdownStyles = css`
     margin-top: var(--formdown-spacing-xs, 0.25rem);
     display: block;
     font-weight: var(--formdown-font-weight-medium, 500);
+    white-space: pre-line;
+  }
+
+  /* Beside an inline field, the sentence stays in the line. */
+  span.validation-error-message {
+    display: inline;
+    margin: 0 0 0 var(--formdown-spacing-xs, 0.25rem);
   }
 
   .field-valid {
