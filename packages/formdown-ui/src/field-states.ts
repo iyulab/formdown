@@ -1,5 +1,5 @@
 import { comboboxOf } from './select-filter'
-import { isCustomControl } from './custom-controls'
+import { isCustomControl, readCustomControl } from './custom-controls'
 
 /**
  * What the host says about a field, drawn by the field: values it offers and a short note.
@@ -21,6 +21,11 @@ export interface FieldState {
    * in the host's language. Drawn only while there are suggestions.
    */
   decline?: string
+  /**
+   * The name of the offered values as a group, for a screen reader — "Suggestions for Kind", in the
+   * host's language. Without one the group is named "Suggestions for <the field's label>".
+   */
+  label?: string
 }
 
 export type FieldStates = Record<string, FieldState>
@@ -34,6 +39,7 @@ export interface FieldStateResponses {
 }
 
 const NOTE = 'data-formdown-note'
+const OFFERED = 'data-formdown-value'
 const SAVED_PLACEHOLDER = 'data-formdown-placeholder'
 const GHOST = 'formdown-ghost'
 const SUGGESTED = 'formdown-suggested'
@@ -71,13 +77,60 @@ function showGhost(el: HTMLElement, value: string) {
   el.classList.add(GHOST)
 }
 
-function noteElement(doc: Document, name: string, state: FieldState, inline: boolean, respond: FieldStateResponses) {
+/** What a person calls `value` in the field: the name the form gives that option, or the value itself. */
+function nameOfValue(elements: HTMLElement[], value: string): string {
+  const [first] = elements
+  if (first instanceof HTMLSelectElement) {
+    const option = Array.from(first.options).find((o) => o.value === value)
+    return option?.textContent?.trim() || value
+  }
+  const option = elements.find((el) => el instanceof HTMLInputElement && (el.type === 'radio' || el.type === 'checkbox') && el.value === value)
+  return option?.closest('label')?.textContent?.trim() || value
+}
+
+/** The values a field shows it holds now. */
+function heldValues(elements: HTMLElement[]): string[] {
+  const [first] = elements
+  if (first instanceof HTMLSelectElement) return Array.from(first.selectedOptions).map((o) => o.value).filter(Boolean)
+  if (first instanceof HTMLInputElement && (first.type === 'radio' || first.type === 'checkbox'))
+    return elements.filter((el) => el instanceof HTMLInputElement && el.checked).map((el) => (el as HTMLInputElement).value)
+  let value: string | string[] | boolean
+  if (isCustomControl(first)) value = readCustomControl(first)
+  else if (first instanceof HTMLInputElement || first instanceof HTMLTextAreaElement) value = first.value
+  else value = isInline(first) ? (first.textContent ?? '').trim() : ''
+  return (Array.isArray(value) ? value : [String(value)]).filter((v) => v !== '')
+}
+
+/** The field's label as the form shows it, without the required mark. */
+function labelOf(elements: HTMLElement[], name: string): string {
+  const shown = elements[0].closest('.formdown-field')?.querySelector('[part~="label"], [part~="legend"]')?.textContent?.trim()
+  return shown ? shown.replace(/\s*\*$/, '') : name
+}
+
+/**
+ * Says on each offered value whether the field holds it now (`aria-pressed`) — picking one is a toggle
+ * that puts that value in. Called as the field's value changes.
+ */
+export function markHeldSuggestions(container: ParentNode) {
+  for (const note of Array.from(container.querySelectorAll<HTMLElement>(`[${NOTE}]`))) {
+    const elements = fieldElements(container, note.getAttribute(NOTE)!)
+    const held = elements.length > 0 ? heldValues(elements) : []
+    for (const button of Array.from(note.querySelectorAll<HTMLElement>(`[${OFFERED}]`)))
+      button.setAttribute('aria-pressed', String(held.includes(button.getAttribute(OFFERED)!)))
+  }
+}
+
+function noteElement(doc: Document, name: string, state: FieldState, inline: boolean, respond: FieldStateResponses, elements: HTMLElement[]) {
   const suggestions = state.suggestions ?? []
   if (!state.note && suggestions.length === 0) return undefined
   const note = doc.createElement(inline ? 'span' : 'div')
   note.className = 'formdown-field-note'
   note.setAttribute('part', 'field-note')
   note.setAttribute(NOTE, name)
+  if (suggestions.length > 0) {
+    note.setAttribute('role', 'group')
+    note.setAttribute('aria-label', state.label ?? `Suggestions for ${labelOf(elements, name)}`)
+  }
   if (state.note) {
     const text = doc.createElement('span')
     text.className = 'formdown-field-note-text'
@@ -89,7 +142,8 @@ function noteElement(doc: Document, name: string, state: FieldState, inline: boo
     button.type = 'button'
     button.className = 'formdown-suggestion'
     button.setAttribute('part', 'suggestion')
-    button.textContent = value
+    button.setAttribute(OFFERED, value)
+    button.textContent = nameOfValue(elements, value)
     button.addEventListener('click', () => respond.onPick(name, value))
     note.append(button)
   }
@@ -139,11 +193,12 @@ export function applyFieldStates(container: ParentNode, states: FieldStates, res
         el.closest('label')?.classList.add(SUGGESTED)
     }
     const inline = isInline(first)
-    const note = noteElement(doc, name, state, inline, respond)
+    const note = noteElement(doc, name, state, inline, respond, elements)
     if (!note) continue
     if (inline) first.after(note)
     else (first.closest('.formdown-field') ?? first.parentElement ?? first).append(note)
   }
+  markHeldSuggestions(container)
   if (returning !== null) focusField(container, returning)
 }
 

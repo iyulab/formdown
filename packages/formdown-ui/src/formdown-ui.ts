@@ -18,7 +18,7 @@ import { applyChoices, type Choices } from './choices'
 import { applySelectFilters } from './select-filter'
 import { applyConditions, type ConditionalField } from './conditions'
 import { computations, computedValues } from './computed'
-import { applyFieldStates, focusFieldOf, hostFocused, type FieldStates } from './field-states'
+import { applyFieldStates, focusFieldOf, hostFocused, markHeldSuggestions, type FieldStates } from './field-states'
 import { formdownStyles } from './styles'
 import { fieldTypeStyles, ShadowStyleSheet } from './field-type-styles'
 import { clearFieldErrors, errorsByField, showFieldErrors } from './field-errors'
@@ -612,6 +612,9 @@ export class FormdownUI extends LitElement {
 
       // Last: a long select's combobox shows the value and follows the state just applied.
       if (container) applySelectFilters(container, this.filterSelectAbove)
+
+      // Which offered value the field now holds.
+      if (container) markHeldSuggestions(container)
     } finally {
       this._isUpdatingUI = false
       this.domBinder.releaseSyncLock()

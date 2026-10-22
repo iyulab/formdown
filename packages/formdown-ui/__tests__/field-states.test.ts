@@ -1,4 +1,4 @@
-import { applyFieldStates, clearFieldStates } from '../src/field-states'
+import { applyFieldStates, clearFieldStates, markHeldSuggestions } from '../src/field-states'
 
 const none = { onPick: () => {}, onDecline: () => {} }
 
@@ -133,5 +133,69 @@ describe('applyFieldStates', () => {
     const before = container.innerHTML
     applyFieldStates(container, { missing: { suggestions: ['x'], note: 'y' } }, none)
     expect(container.innerHTML).toBe(before)
+  })
+})
+
+describe('offered values as choices a person reads', () => {
+  afterEach(() => {
+    document.body.innerHTML = ''
+  })
+
+  // Options named apart from their values, as `options="hw=Hardware,sw=Software"` gives them.
+  function named() {
+    const container = document.createElement('div')
+    container.innerHTML = `
+      <div class="formdown-field-container"><div class="formdown-field">
+        <label for="kind" part="label">Kind *</label>
+        <select id="kind" name="kind"><option value="">-</option><option value="hw">Hardware</option><option value="sw">Software</option></select>
+      </div></div>
+      <div class="formdown-field-container"><div class="formdown-field"><fieldset><legend part="legend">Size</legend><div class="radio-group">
+        <label class="formdown-option-label"><input type="radio" name="size" value="s"><span>Small</span></label>
+        <label class="formdown-option-label"><input type="radio" name="size" value="l"><span>Large</span></label>
+      </div></fieldset></div></div>
+      <div class="formdown-field-container"><div class="formdown-field">
+        <label for="code" part="label">Code</label><input type="text" id="code" name="code">
+      </div></div>`
+    document.body.append(container)
+    return container
+  }
+  const buttons = (container: HTMLElement, name: string) =>
+    Array.from(container.querySelector(`[name="${name}"]`)!.closest('.formdown-field')!.querySelectorAll<HTMLButtonElement>('.formdown-suggestion'))
+
+  it('names an offered option the way the form names it, and a value the options do not hold as it is', () => {
+    const container = named()
+    applyFieldStates(container, { kind: { suggestions: ['hw', 'other'] }, size: { suggestions: ['l'] }, code: { suggestions: ['A-1'] } }, none)
+    expect(buttons(container, 'kind').map((b) => b.textContent)).toEqual(['Hardware', 'other'])
+    expect(buttons(container, 'size').map((b) => b.textContent)).toEqual(['Large'])
+    expect(buttons(container, 'code').map((b) => b.textContent)).toEqual(['A-1'])
+  })
+
+  it('picks the value, not the name', () => {
+    const container = named()
+    const picked: string[] = []
+    applyFieldStates(container, { kind: { suggestions: ['hw'] } }, { ...none, onPick: (_field, value) => picked.push(value) })
+    buttons(container, 'kind')[0].click()
+    expect(picked).toEqual(['hw'])
+  })
+
+  it('says on each offered value whether the field holds it now, as the value changes', () => {
+    const container = named()
+    applyFieldStates(container, { kind: { suggestions: ['hw', 'sw'] }, size: { suggestions: ['s'] } }, none)
+    expect(buttons(container, 'kind').map((b) => b.getAttribute('aria-pressed'))).toEqual(['false', 'false'])
+    container.querySelector<HTMLSelectElement>('[name="kind"]')!.value = 'sw'
+    container.querySelector<HTMLInputElement>('[name="size"][value="s"]')!.checked = true
+    markHeldSuggestions(container)
+    expect(buttons(container, 'kind').map((b) => b.getAttribute('aria-pressed'))).toEqual(['false', 'true'])
+    expect(buttons(container, 'size').map((b) => b.getAttribute('aria-pressed'))).toEqual(['true'])
+  })
+
+  it("names the group of offered values after the field, or as the host says", () => {
+    const container = named()
+    applyFieldStates(container, { kind: { suggestions: ['hw'] }, size: { suggestions: ['s'], label: 'Size 제안' }, code: { note: 'No suggestion yet' } }, none)
+    const note = (name: string) => container.querySelector(`[name="${name}"]`)!.closest('.formdown-field')!.querySelector('.formdown-field-note')!
+    expect([note('kind').getAttribute('role'), note('kind').getAttribute('aria-label')]).toEqual(['group', 'Suggestions for Kind'])
+    expect(note('size').getAttribute('aria-label')).toBe('Size 제안')
+    // A note alone offers nothing to choose between.
+    expect(note('code').hasAttribute('role')).toBe(false)
   })
 })

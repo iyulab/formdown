@@ -6,6 +6,7 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ### Added
 
+- `fieldStates`: an offered value of a choice field shows the option's name (`hw=Hardware` → «Hardware»), not its value; each offered value says whether the field holds it now (`aria-pressed`); and the offered values are a group named for the field (`role="group"`, «Suggestions for <label>», or `FieldState.label` in the host's language).
 - `error-message="…"` in a form is the field's own sentence (`field.errorMessage`, kept in the schema and written back by `formatField` / `formatFormdown`). It was kept as a plain attribute, so a sentence written in the form never reached `validate()`.
 - `<formdown-ui>` binds a form-associated custom element (`static formAssociated = true`) with a field's `name` as that field's control — the platform's contract for a control of one's own, such as a design system's date picker a field-type plugin draws. Its `value` is read on `input` / `change` and written from the form's data; `focusField()`, the error marks after `validate()` and the field's conditions (`disabled` / `required` attributes) reach it. One defined after the form is drawn is bound when it is defined. Before, such a control was drawn but its value never reached the data.
 
