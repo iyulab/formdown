@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- `@formdown/ui` and `@formdown/editor` no longer carry their own copy of Lit's `ReactiveElement`. `lit/decorators.js` was inlined into `dist/index.es.js` / `index.umd.js` (only `lit` itself was kept external), so importing either package under Node failed with `ReferenceError: HTMLElement is not defined`, and in a browser the decorators ran on a second Lit base next to the page's. Every `lit/*` and `@lit/*` import path now stays external.
+
 ## 0.23.0
 
 ### Added

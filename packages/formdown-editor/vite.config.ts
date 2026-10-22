@@ -1,5 +1,8 @@
 import { defineConfig } from 'vite'
 
+// Every import path of a dependency stays outside the bundle — `lit/decorators.js` as well as `lit`.
+const external = [/^lit(\/|$)/, /^@lit\//, /^@formdown\/(core|ui)(\/|$)/]
+
 export default defineConfig({
     build: {
         lib: {
@@ -9,13 +12,10 @@ export default defineConfig({
             formats: ['es', 'umd']
         },
         rolldownOptions: {
-            external: ['lit', '@formdown/core', '@formdown/ui'],
+            external,
             output: {
-                globals: {
-                    lit: 'Lit',
-                    '@formdown/core': 'FormdownCore',
-                    '@formdown/ui': 'FormdownUI'
-                }
+                globals: (id) =>
+                    id.startsWith('@formdown/core') ? 'FormdownCore' : id.startsWith('@formdown/ui') ? 'FormdownUI' : 'Lit'
             }
         }
     }
