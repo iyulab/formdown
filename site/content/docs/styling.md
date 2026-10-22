@@ -139,6 +139,7 @@ The `::part()` pseudo-element enables direct styling of internal elements.
 | `legend` | `<legend>` | Legends |
 | `radio-group` | `<div>` | Radio groups |
 | `checkbox-group` | `<div>` | Checkbox groups |
+| `option-label` | `<label>` | One option of a radio or checkbox group |
 | `button` | `<button>` | All buttons |
 | `submit-button` | `<button type="submit">` | Submit buttons |
 | `reset-button` | `<button type="reset">` | Reset buttons |

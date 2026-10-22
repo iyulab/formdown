@@ -54,6 +54,7 @@ export function addUnlistedChoices(container: ParentNode, data: Record<string, u
       text.textContent = v
       const label = document.createElement('label')
       label.className = lastLabel?.className || 'formdown-option-label'
+      label.setAttribute('part', lastLabel?.getAttribute('part') || 'option-label')
       label.htmlFor = input.id
       label.append(input, text)
       anchor.after(label)

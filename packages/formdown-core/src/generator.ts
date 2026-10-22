@@ -681,7 +681,7 @@ ${fieldHTML}
                     const checkedAttr = isChecked ? ' checked' : ''
                     const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
                     return `
-        <label for="${inputId}" class="formdown-option-label">
+        <label for="${inputId}" class="formdown-option-label" part="option-label">
             <input type="radio" id="${inputId}" name="${name}" value="${escapeHtml(opt.value)}"${requiredAttr}${checkedAttr}${ariaAttr}${hideOtherAttr}>
             <span>${escapeHtml(optionLabel(opt))}</span>
         </label>`
@@ -691,7 +691,7 @@ ${fieldHTML}
                     const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
                     const escaped = escapeHtml(v)
                     return `
-        <label for="${inputId}" class="formdown-option-label">
+        <label for="${inputId}" class="formdown-option-label" part="option-label">
             <input type="radio" id="${inputId}" name="${name}" value="${escaped}" checked${ariaAttr} data-formdown-unlisted="true">
             <span>${escaped}</span>
         </label>`
@@ -699,7 +699,7 @@ ${fieldHTML}
 
                 const otherRadioId = this.generateUniqueId(`${name}_other_radio`, defaultFormId)
                 const otherRadioHTML = allowOther ? `
-        <label for="${otherRadioId}" class="formdown-option-label">
+        <label for="${otherRadioId}" class="formdown-option-label" part="option-label">
             <input type="radio" id="${otherRadioId}" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} data-formdown-other-radio="true">
             <span>${escapeHtml(field.otherLabel || 'Other')}:</span>
             <input type="text" placeholder="Please specify..." class="formdown-other-input" data-formdown-other-for="${name}">
@@ -767,7 +767,7 @@ ${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
                         const checkedAttr = isChecked ? ' checked' : ''
                         const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
                         return `
-        <label for="${inputId}" class="formdown-option-label">
+        <label for="${inputId}" class="formdown-option-label" part="option-label">
             <input type="checkbox" id="${inputId}" name="${name}" value="${escapeHtml(opt.value)}"${requiredAttr}${checkedAttr}${ariaAttr}>
             <span>${escapeHtml(optionLabel(opt))}</span>
         </label>`
@@ -777,7 +777,7 @@ ${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
                         const ariaAttr = descriptionId ? ` aria-describedby="${descriptionId}"` : ''
                         const escaped = escapeHtml(v)
                         return `
-        <label for="${inputId}" class="formdown-option-label">
+        <label for="${inputId}" class="formdown-option-label" part="option-label">
             <input type="checkbox" id="${inputId}" name="${name}" value="${escaped}" checked${ariaAttr} data-formdown-unlisted="true">
             <span>${escaped}</span>
         </label>`
@@ -785,7 +785,7 @@ ${radioInputsHTML}${unlistedRadiosHTML}${otherRadioHTML}
 
                     const otherCheckboxId = this.generateUniqueId(`${name}_other_checkbox`, defaultFormId)
                     const otherCheckboxHTML = allowOther ? `
-        <label for="${otherCheckboxId}" class="formdown-option-label">
+        <label for="${otherCheckboxId}" class="formdown-option-label" part="option-label">
             <input type="checkbox" id="${otherCheckboxId}" name="${name}" value="" ${descriptionId ? `aria-describedby="${descriptionId}"` : ''} data-formdown-other-checkbox="true">
             <span>${escapeHtml(field.otherLabel || 'Other')}:</span>
             <input type="text" placeholder="Please specify..." class="formdown-other-input" data-formdown-other-for="${name}">

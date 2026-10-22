@@ -215,6 +215,7 @@ The `::part()` pseudo-element allows direct styling of internal elements. FormDo
 | `description` | `<div>` | How to fill a field (`description="…"`), under it |
 | `radio-group` | `<div>` | Radio button groups |
 | `checkbox-group` | `<div>` | Checkbox groups |
+| `option-label` | `<label>` | One option of a radio or checkbox group — at least 24 px tall, the area a person presses |
 | `button` | `<button>` | All buttons |
 | `submit-button` | `<button type="submit">` | Submit buttons |
 | `reset-button` | `<button type="reset">` | Reset buttons |

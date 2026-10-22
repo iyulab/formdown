@@ -85,6 +85,7 @@ export function applyChoices(container: ParentNode, choices: Choices): HTMLInput
       span.textContent = text(choice)
       const label = document.createElement('label')
       label.className = lastLabel?.className || 'formdown-option-label'
+      label.setAttribute('part', lastLabel?.getAttribute('part') || 'option-label')
       label.htmlFor = input.id
       label.append(input, span)
       ;(lastLabel ?? last).after(label)

@@ -729,6 +729,18 @@ export const formdownStyles = css`
     white-space: nowrap;
   }
 
+  /* A label a person presses to tick or pick is a target of at least 24 by 24 px (WCAG 2.2 SC 2.5.8). The
+     row has the height, not the input: sizing a checkbox or radio would redraw its glyph. */
+  .formdown-option-label, .formdown-checkbox-label {
+    min-block-size: 24px;
+  }
+
+  .formdown-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--formdown-spacing-sm, 0.5rem);
+  }
+
   .formdown-option-label input {
     margin-right: var(--formdown-spacing-sm, 0.5rem);
     margin-bottom: 0;
