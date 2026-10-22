@@ -6,6 +6,7 @@ import {
   initializeExtensions,
   type BodyHtml,
   validateForm,
+  type ConditionState,
   type FormDownSchema,
   type ValidationMessages,
   type ValidationResult
@@ -700,6 +701,14 @@ export class FormdownUI extends LitElement {
 
   getFormData() {
     return this.formManager.getData()
+  }
+
+  /**
+   * How each field stands under its conditions for the current data — hidden or disabled by one, or not. The form's data
+   * keeps a hidden field's value, so this is what tells it from an answer, and a field hidden by a condition from one left blank.
+   */
+  getConditionStates(): Record<string, ConditionState> {
+    return this.formManager.getConditionStates()
   }
 
   getDefaultValues() {

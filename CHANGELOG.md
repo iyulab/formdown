@@ -4,6 +4,10 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ## Unreleased
 
+### Added
+
+- How each field stands under its conditions, read beside the data: `conditionStates(schema, data)` in `@formdown/core`, `getConditionStates()` on `FormManager` and on `<formdown-ui>` — `{ visible, enabled, required }` for every field by name. The data keeps a hidden field's value, so this is what tells a field hidden by a condition from one left blank, and a value kept in a field that is hidden now from an answer.
+
 ### Fixed
 
 - `getSchema()` describes a name used by more than one field as the field where the name first appears. The last one replaced it — its type, label and position — while the parser reports each occurrence after the first as the duplicate (`duplicate-field-name`).

@@ -1,4 +1,4 @@
-import { conditionHolds, conditionState, getSchema, parseFormdown, validateForm } from '../src/index'
+import { conditionHolds, conditionState, conditionStates, FormManager, getSchema, parseFormdown, validateForm } from '../src/index'
 
 describe('conditionHolds', () => {
     it('compares text exactly, and finds a value in a list', () => {
@@ -68,5 +68,29 @@ describe('validateForm with conditions', () => {
     it('does not ask for a field its conditions hide', () => {
         expect(validateForm({ 구분: '개인', 이름: '김' }, schema).isValid).toBe(true)
         expect(validateForm({ 구분: '개인' }, schema).errors.map((e) => e.field)).toEqual(['이름'])
+    })
+})
+
+describe('conditionStates', () => {
+    const content = '@구분{개인,법인}: r[]\n@회사명: [text visible-if="구분=법인"]\n@메모: [text disabled-if="구분=개인"]'
+
+    it('says how every field stands for the data, so a hidden field is told from a blank one', () => {
+        const states = conditionStates(getSchema(content), { 구분: '개인', 회사명: '주식회사' })
+        expect(Object.keys(states)).toEqual(['구분', '회사명', '메모'])
+        expect(states.구분).toEqual({ visible: true, enabled: true, required: false })
+        // 회사명 still holds the value written before 구분 changed — hidden now, so not an answer.
+        expect(states.회사명.visible).toBe(false)
+        expect(states.메모.enabled).toBe(false)
+        expect(conditionStates(getSchema(content), { 구분: '법인' }).회사명.visible).toBe(true)
+    })
+
+    it('is what a form manager says beside its data', () => {
+        const form = new FormManager()
+        form.parse(content)
+        form.updateData({ 구분: '법인', 회사명: '주식회사' })
+        expect(form.getConditionStates().회사명.visible).toBe(true)
+        form.setFieldValue('구분', '개인')
+        expect(form.getData().회사명).toBe('주식회사')
+        expect(form.getConditionStates().회사명.visible).toBe(false)
     })
 })

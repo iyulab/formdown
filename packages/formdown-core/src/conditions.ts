@@ -51,3 +51,18 @@ export function conditionState(conditions: ConditionalAttributes | undefined, da
     const enabled = holds(conditions?.enabledIf, true) && !holds(conditions?.disabledIf, false)
     return { visible, enabled, required: visible && enabled && holds(conditions?.requiredIf, false) }
 }
+
+/**
+ * How every field of a form stands under its conditions for `data` — what `conditionState` says of each field of
+ * `schema`, by name. Read beside the form's data, it tells a field hidden or disabled by a condition from one left
+ * blank, and a value kept in a field that is hidden now from an answer: the data alone cannot, since hiding a field
+ * keeps its value. Whoever stores the data decides what to make of each.
+ */
+export function conditionStates(
+    schema: Record<string, { conditions?: ConditionalAttributes }>,
+    data: Record<string, unknown>,
+): Record<string, ConditionState> {
+    const states: Record<string, ConditionState> = {}
+    for (const [name, field] of Object.entries(schema)) states[name] = conditionState(field.conditions, data)
+    return states
+}

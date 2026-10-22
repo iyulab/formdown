@@ -8,6 +8,7 @@ import { FieldProcessor } from './field-processor.js'
 import { DOMBinder } from './dom-binder.js'
 import { ValidationManager } from './validation-manager.js'
 import { EventOrchestrator } from './event-orchestrator.js'
+import { conditionStates, type ConditionState } from './conditions.js'
 import { yamlFrontMatter } from './front-matter.js'
 import type { Field, FormdownContent, FormdownOptions, FormDeclaration, FormDownSchema, ValidationResult, FieldError } from './types'
 
@@ -114,6 +115,14 @@ export class FormManager {
   getData(): Record<string, any> {
     if (!this.dataBinding) return {}
     return this.dataBinding.getAll()
+  }
+
+  /**
+   * How each field stands under its conditions for the current data (`conditionStates`): hidden or disabled by a
+   * condition, or not. `getData` keeps a hidden field's value, so this is what tells it from an answer.
+   */
+  getConditionStates(): Record<string, ConditionState> {
+    return this.schema ? conditionStates(this.schema, this.getData()) : {}
   }
 
   /**
