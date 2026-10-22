@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- `getSchema()` describes a name used by more than one field as the field where the name first appears. The last one replaced it — its type, label and position — while the parser reports each occurrence after the first as the duplicate (`duplicate-field-name`).
+
 ## 0.24.0
 
 ### Added

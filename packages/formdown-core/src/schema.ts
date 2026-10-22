@@ -17,7 +17,11 @@ export class SchemaExtractor {
         const schema: FormDownSchema = {}
 
         const parsed = typeof content === 'string' ? this.parser.parseFormdown(content) : content
+        // A name used by more than one field is the field where it first appears — the parser reports each later one.
+        const seen = new Set<string>()
         parsed.forms.forEach((field, index) => {
+            if (seen.has(field.name)) return
+            seen.add(field.name)
             schema[field.name] = this.convertFieldToSchema(field, index)
         })
 

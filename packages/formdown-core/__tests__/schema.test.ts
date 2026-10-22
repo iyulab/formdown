@@ -436,4 +436,14 @@ Some regular markdown content.
             expect(schema).toEqual({})
         })
     })
+
+    describe('A name used by more than one field', () => {
+        // The parser keeps every occurrence and reports each one after the first: the first is the field of that name.
+        test('describes the field where the name first appears', () => {
+            const schema = getSchema('@amount(Amount): [number]\n@note: [text]\n@amount: [text]')
+
+            expect(Object.keys(schema)).toEqual(['amount', 'note'])
+            expect(schema.amount).toMatchObject({ type: 'number', label: 'Amount', position: 1 })
+        })
+    })
 })
