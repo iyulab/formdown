@@ -52,10 +52,12 @@ export interface ConstraintField {
     type?: string
     label?: string
     required?: boolean
-    /** Said instead of the required sentence. */
+    /** The field's own sentence, said instead of the sentence of whichever rule its value breaks first. */
     errorMessage?: string
+    /** Said instead of the required sentence — and of `errorMessage` when the value is missing. */
+    requiredMessage?: string
     pattern?: string
-    /** Said instead of the pattern sentence. */
+    /** Said instead of the pattern sentence — and of `errorMessage` when the pattern is what the value breaks. */
     patternMessage?: string
     validation?: ValidationRules
 }
@@ -94,13 +96,22 @@ function bound(value: number | string | undefined): number | undefined {
 /**
  * The rules `value` breaks, in the order a person would fix them: a missing value says only that; a
  * value of the wrong form says that before any bound. `messages` replaces some or all of the default
- * sentences; a field's own `errorMessage` and `patternMessage` still win.
+ * sentences. A field with a sentence of its own (`errorMessage`) says only that one, for the first rule
+ * its value breaks — `requiredMessage` and `patternMessage` still win for their rule.
  */
 export function constraintErrors(
     value: unknown,
     field: ConstraintField,
     messages: Partial<ValidationMessages> = {},
 ): ConstraintError[] {
+    const errors = brokenRules(value, field, messages)
+    if (errors.length === 0 || !field.errorMessage) return errors
+    const [first] = errors
+    const ownForRule = first.rule === 'required' ? field.requiredMessage : first.rule === 'pattern' ? field.patternMessage : undefined
+    return [{ rule: first.rule, message: ownForRule || field.errorMessage }]
+}
+
+function brokenRules(value: unknown, field: ConstraintField, messages: Partial<ValidationMessages>): ConstraintError[] {
     const table = { ...defaultValidationMessages, ...messages }
     const broke = (rule: ValidationRule, bounds?: { min?: unknown; max?: unknown }): ConstraintError => ({
         rule,
@@ -108,7 +119,7 @@ export function constraintErrors(
     })
 
     if (isEmptyValue(value)) {
-        return field.required ? [{ rule: 'required', message: field.errorMessage || say(table.required, field) }] : []
+        return field.required ? [{ rule: 'required', message: field.requiredMessage || say(table.required, field) }] : []
     }
 
     const rules = field.validation ?? {}

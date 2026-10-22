@@ -290,7 +290,7 @@ export class ValidationManager {
           type: field.fieldType,
           label: typeof field.schema.label === 'string' ? field.schema.label : undefined,
           required: field.constraints.required,
-          errorMessage: field.constraints.requiredMessage,
+          requiredMessage: field.constraints.requiredMessage,
           pattern: field.constraints.pattern,
           patternMessage: field.constraints.patternMessage,
           validation: {

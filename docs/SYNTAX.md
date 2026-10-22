@@ -789,6 +789,9 @@ Please enter ___@age and ___@email.
 - `required` - Field is mandatory
 - `placeholder="text"` - Placeholder text
 - `description="text"` - How to fill the field, shown under it and named by the field's `aria-describedby`
+- `error-message="text"` - The field's own sentence when its value breaks a rule it declares — said instead of the
+  rule's sentence, once, for whichever rule it breaks first (`@code: [text required pattern="[0-9]{3}" error-message="Three digits, please"]`).
+  It is what `validate()` says; it is not drawn before the form is checked
 - `compute="expression"` - A value worked out from other fields' numbers, not typed in: numbers and field names with
   `+ - * /` and parentheses (`*` and `/` first), as in `@amount: [number compute="quantity * price"]`. The field is
   read-only and follows the fields it reads as they change; while one of them holds no number, or it divides by zero,

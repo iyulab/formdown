@@ -441,7 +441,7 @@ ${fieldHTML}
     }
 
     generateFieldHTML(field: Field, defaultFormId?: string): string {
-        const { name, type, label, required, placeholder, attributes, options, description, errorMessage, pattern, format, allowOther, content, value } = field
+        const { name, type, label, required, placeholder, attributes, options, description, pattern, format, allowOther, content, value } = field
 
         // Try to generate HTML using registered field type extensions first
         const context: HookContext = {
@@ -474,7 +474,6 @@ ${fieldHTML}
         // Generate unique IDs for accessibility
         const fieldId = this.generateUniqueId(name, defaultFormId)
         const descriptionId = description ? `${fieldId}-description` : undefined
-        const errorId = errorMessage ? `${fieldId}-error` : undefined
 
         // Form attribute auto-connection logic
         const formId = this.determineFormId(field, defaultFormId)
@@ -523,7 +522,6 @@ ${fieldHTML}
             ...(format && { format }),
             ...(value !== undefined && value !== null && !['textarea', 'select', 'radio', 'checkbox', 'range', 'file'].includes(type) && { value }),
             ...(description && { 'aria-describedby': descriptionId }),
-            ...(errorMessage && { 'aria-describedby': `${descriptionId ? descriptionId + ' ' : ''}${errorId}` }),
             ...(formId && { form: formId }),
             ...(suggestedAutocomplete && !attributes?.autocomplete && { autocomplete: suggestedAutocomplete }),
             // Worked out, not typed in: read-only, saying what from.
@@ -541,14 +539,11 @@ ${fieldHTML}
             .filter(Boolean)
             .join(' ')
 
-        // Helper function to generate description and error HTML
+        // Helper function to generate description HTML — a field's error sentence is said by validation, not drawn up front
         const generateHelpText = () => {
             let helpHTML = ''
             if (description) {
                 helpHTML += `\n    <div id="${descriptionId}" class="formdown-field-description" part="description">${escapeHtml(description)}</div>`
-            }
-            if (errorMessage) {
-                helpHTML += `\n    <div id="${errorId}" class="formdown-field-error" role="alert">${escapeHtml(errorMessage)}</div>`
             }
             return helpHTML
         }

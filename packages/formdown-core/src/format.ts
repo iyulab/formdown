@@ -11,7 +11,7 @@ import type { Field, FieldCondition } from './types.js'
 
 /** What a field is written from: the parts of a parsed `Field` that the syntax carries. */
 export type FieldInput = Pick<Field, 'name' | 'type'> & Partial<Pick<Field,
-    | 'label' | 'required' | 'placeholder' | 'description' | 'options' | 'allowOther' | 'otherLabel'
+    | 'label' | 'required' | 'placeholder' | 'description' | 'errorMessage' | 'options' | 'allowOther' | 'otherLabel'
     | 'format' | 'pattern' | 'content' | 'value' | 'conditions' | 'compute' | 'relation' | 'suggest' | 'attributes'
 >>
 
@@ -20,7 +20,7 @@ const FULL_TARGET = pattern(String.raw`^${TARGET}$`)
 const ATTRIBUTE_KEY = /^[^\s="'\]]+$/
 const TYPE = /^[\w-]+$/
 /** Attributes the parser keeps on the field itself, so they are written from there. */
-const FIELD_PROPERTIES = new Set(['required', 'label', 'placeholder', 'description', 'compute', 'options', 'allow-other',
+const FIELD_PROPERTIES = new Set(['required', 'label', 'placeholder', 'description', 'error-message', 'compute', 'options', 'allow-other',
     'other-label', 'format', 'pattern', 'content', 'value', 'datalist', ...Object.keys(CONDITIONAL_ATTRIBUTES)])
 /** The ids the parser gives forms it declares itself; it records them on each field it places in one. */
 const GENERATED_FORM = /^formdown-form-(?:default|\d+)$/
@@ -55,6 +55,7 @@ export function formatField(field: FieldInput): string {
     const text = (key: string, value: string | undefined) => { if (value !== undefined) parts.push(`${key}=${quoteAttributeValue(value)}`) }
     text('placeholder', field.placeholder)
     text('description', field.description)
+    text('error-message', field.errorMessage)
     if (field.options) parts.push(`options=${quoteAttributeValue(formatOptions(field.options))}`)
     if (field.allowOther) parts.push('allow-other')
     text('other-label', field.otherLabel)

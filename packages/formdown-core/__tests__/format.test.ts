@@ -32,8 +32,10 @@ describe('formatField', () => {
             '@tags <-> Tag: [select]',
             '@due(마감일 (선택)): [date]',
             '@first_name: [text]',
+            '@code: [text required pattern="[0-9]{3}" error-message="Three digits, please"]',
         ].join('\n')
         const fields = parseFormdown(source).forms
+        expect(fields.find((f) => f.name === 'code')).toMatchObject({ errorMessage: 'Three digits, please', attributes: {} })
         expect(parseFormdown(source).diagnostics).toEqual([])
         expect(roundTrip(fields)).toEqual(fields.map(meaning))
     })
@@ -43,16 +45,19 @@ describe('formatField', () => {
             { name: 'title', type: 'text', label: 'Title', required: true, pattern: '^.{3,}$', attributes: { message: 'At least three characters' } },
             { name: 'priority', type: 'select', options: [{ value: 'low' }, { value: 'high', label: 'High (urgent)' }], value: 'low' },
             { name: 'public', type: 'checkbox', attributes: { switch: true } },
+            { name: 'a', type: 'text', required: true, errorMessage: 'X!' },
         ])
         expect(text).toBe([
             '@title: [text required pattern="^.{3,}$" message="At least three characters"]',
             '@priority: [select options="low,high=High (urgent)" value="low"]',
             '@public: [checkbox switch]',
+            '@a: [text required error-message="X!"]',
         ].join('\n'))
         const schema = getSchema(text)
         expect(schema.title).toMatchObject({ required: true, label: 'Title' })
         expect(schema.priority.options).toEqual([{ value: 'low' }, { value: 'high', label: 'High (urgent)' }])
         expect(schema.public.switch).toBe(true)
+        expect(schema.a.errorMessage).toBe('X!')
     })
 
     it('writes a label the parentheses cannot hold as an attribute', () => {

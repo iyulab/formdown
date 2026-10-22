@@ -45,7 +45,7 @@ validateForm({}, schema, { messages: ko }).errors   // [{ field: 'title', messag
 typedData({ n: '12' }, schema)                      // { n: 12 } — number fields' values as numbers
 ```
 
-`messages` replaces the sentence of any rule (`required`, `minLength`, `maxLength`, `min`, `max`, `number`, `email`, `url`, `tel`, `date`, `dateMin`, `dateMax`, `pattern`), with `{label}`, `{min}` and `{max}` filled in; a field's own `error-message` still wins for `required`.
+`messages` replaces the sentence of any rule (`required`, `minLength`, `maxLength`, `min`, `max`, `number`, `email`, `url`, `tel`, `date`, `dateMin`, `dateMax`, `pattern`), with `{label}`, `{min}` and `{max}` filled in; a field's own `error-message` wins over them all — it is the one sentence that field says, for the first rule its value breaks.
 
 ```typescript
 import { FormdownParser } from '@formdown/core/parser'

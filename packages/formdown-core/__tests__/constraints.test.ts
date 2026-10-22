@@ -65,6 +65,20 @@ describe('constraintErrors', () => {
         expect(constraintErrors('x', { name: 'a', pattern: '[0-9]+', patternMessage: 'Digits only' })).toEqual([{ rule: 'pattern', message: 'Digits only' }])
     })
 
+    it("says a field's own sentence once, for the first rule its value breaks", () => {
+        const field = { name: 'code', type: 'text', errorMessage: 'A code is three to five digits', pattern: '[0-9]+', validation: { minlength: 3 } }
+        expect(constraintErrors('ab', field)).toEqual([{ rule: 'minLength', message: 'A code is three to five digits' }])
+        expect(constraintErrors('', { ...field, required: true })).toEqual([{ rule: 'required', message: 'A code is three to five digits' }])
+        expect(constraintErrors('123', field)).toEqual([])
+    })
+
+    it('lets the sentence of one rule win over the field sentence for that rule', () => {
+        const field = { name: 'code', required: true, errorMessage: 'Wrong code', requiredMessage: 'Give a code', pattern: '[0-9]+', patternMessage: 'Digits only' }
+        expect(constraintErrors('', field)).toEqual([{ rule: 'required', message: 'Give a code' }])
+        expect(constraintErrors('x', field)).toEqual([{ rule: 'pattern', message: 'Digits only' }])
+        expect(constraintErrors('x', { ...field, patternMessage: undefined })).toEqual([{ rule: 'pattern', message: 'Wrong code' }])
+    })
+
     it('counts zero as given', () => {
         expect(constraintErrors(0, { type: 'number', required: true })).toEqual([])
     })

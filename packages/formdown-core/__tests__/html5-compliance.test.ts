@@ -107,19 +107,14 @@ describe('HTML5 Compliance', () => {
             expect(html).toContain('class="formdown-field-description"')
         })
 
-        test('should generate ARIA attributes for error messages', () => {
-            const content = '@email: [email]'
-            const parsed = parser.parseFormdown(content)
-            
-            // Add error message to test ARIA generation
-            parsed.forms[0].errorMessage = "Invalid email format"
-            
+        test("does not draw a field's error sentence before anything is checked", () => {
+            const parsed = parser.parseFormdown('@email: [email error-message="Give an address we can write to"]')
             const html = generator.generateHTML(parsed)
-            
-            expect(html).toContain('aria-describedby="email-error"')
-            expect(html).toContain('id="email-error"')
-            expect(html).toContain('class="formdown-field-error"')
-            expect(html).toContain('role="alert"')
+
+            // It is what validation says once the value breaks a rule, not an alert on an untouched form.
+            expect(html).not.toContain('Give an address we can write to')
+            expect(html).not.toContain('role="alert"')
+            expect(html).not.toContain('error-message')
         })
 
         test('should handle required field indicators', () => {

@@ -103,6 +103,15 @@ test('says the host sentences, Korean among them', async () => {
   expect(errorOf(ui, 'title')?.textContent).toBe('5자까지 입력할 수 있습니다')
 })
 
+test("says the field's own sentence written in the form, for whichever rule it breaks", async () => {
+  const ui = await mount('@name(Name): [text required minlength=2 error-message="Tell us your name"]')
+  ui.messages = ko
+  expect(ui.validate().errors).toEqual([{ field: 'name', message: 'Tell us your name' }])
+  expect(errorOf(ui, 'name')?.textContent).toBe('Tell us your name')
+  await set(ui, { name: 'J' })
+  expect(ui.validate().errors).toEqual([{ field: 'name', message: 'Tell us your name' }])
+})
+
 test('keeps the description the field already pointed to', async () => {
   const ui = await mount('@title(Title): [text required help="Two words"]')
   const before = field(ui, 'title').getAttribute('aria-describedby')

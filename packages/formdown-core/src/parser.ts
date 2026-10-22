@@ -755,6 +755,8 @@ export class FormdownParser {
                 field.placeholder = text
             } else if (key === 'description' && hasValue) {
                 field.description = text
+            } else if (key === 'error-message' && hasValue) {
+                field.errorMessage = text
             } else if (key === 'compute' && hasValue) {
                 field.compute = text
             } else if (key === 'options' && hasValue) {

@@ -6,7 +6,13 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ### Added
 
+- `error-message="…"` in a form is the field's own sentence (`field.errorMessage`, kept in the schema and written back by `formatField` / `formatFormdown`). It was kept as a plain attribute, so a sentence written in the form never reached `validate()`.
 - `<formdown-ui>` binds a form-associated custom element (`static formAssociated = true`) with a field's `name` as that field's control — the platform's contract for a control of one's own, such as a design system's date picker a field-type plugin draws. Its `value` is read on `input` / `change` and written from the form's data; `focusField()`, the error marks after `validate()` and the field's conditions (`disabled` / `required` attributes) reach it. One defined after the form is drawn is bound when it is defined. Before, such a control was drawn but its value never reached the data.
+
+### Changed
+
+- **Breaking:** a field's own sentence (`errorMessage`) is said for whichever rule its value breaks first, once, instead of only for `required`; `ConstraintField.requiredMessage` (and `ValidationManager`'s `requiredMessage`) says the required sentence alone, and `patternMessage` still wins for `pattern`.
+- **Breaking:** the generator no longer draws a field's `errorMessage` up front (`<div class="formdown-field-error" role="alert">` named by `aria-describedby`): it was shown — and announced — on a form nobody had checked. `<formdown-ui>` draws it by the field after `validate()`.
 
 ### Fixed
 
