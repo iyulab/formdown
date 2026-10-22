@@ -11,6 +11,7 @@ import {
   type ValidationResult
 } from '@formdown/core'
 import { applyFieldValue, isCheckedValue } from './field-value'
+import { customControlsIn, isCustomControl, readCustomControl, undefinedControlTags } from './custom-controls'
 import { addUnlistedChoices } from './unlisted'
 import { markUnreadValues } from './unread'
 import { applyChoices, type Choices } from './choices'
@@ -455,10 +456,30 @@ export class FormdownUI extends LitElement {
         this.setupFieldEventHandlers(htmlElement, fieldName)
       }
     })
+    this.setupCustomControls(container)
+
+    // A control the page defines after the form is drawn becomes a field when it is defined.
+    for (const tag of undefinedControlTags(container)) {
+      customElements.whenDefined(tag).then(() => {
+        if (!container.isConnected) return
+        this.setupCustomControls(container)
+        this.syncUIFromData()
+      })
+    }
 
     // Setup keyboard navigation
     const allInputs = container.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), [contenteditable="true"]')
     this.setupBasicKeyboardNavigation(allInputs)
+  }
+
+  /** Binds the page's own controls (form-associated custom elements) not bound yet, as fields. */
+  private setupCustomControls(container: Element) {
+    for (const control of customControlsIn(container)) {
+      const fieldName = control.getAttribute('name')!
+      if (this.fieldRegistry.get(fieldName)?.has(control)) continue
+      this.registerField(fieldName, control)
+      this.setupFieldEventHandlers(control, fieldName)
+    }
   }
 
   private setupBasicKeyboardNavigation(inputs: NodeListOf<Element>) {
@@ -610,7 +631,9 @@ export class FormdownUI extends LitElement {
 
   // Simplified field value extraction
   private getFieldValueFromElement(element: HTMLElement): string | string[] | boolean {
-    if (element instanceof HTMLInputElement) {
+    if (isCustomControl(element)) {
+      return readCustomControl(element)
+    } else if (element instanceof HTMLInputElement) {
       if (element.type === 'checkbox') {
         // For checkbox groups, use FieldProcessor to get all selected values
         const fieldName = element.name

@@ -1,4 +1,5 @@
 import { conditionState, type ConditionalAttributes } from '@formdown/core'
+import { customControlsIn, isCustomControl, setCustomControlState } from './custom-controls'
 
 /** What a field's schema says about it that conditions act on. */
 export interface ConditionalField {
@@ -19,9 +20,9 @@ export function applyConditions(
   for (const [name, field] of Object.entries(schema)) {
     if (!field.conditions) continue
     const state = conditionState(field.conditions, data)
-    const elements = Array.from(container.querySelectorAll<HTMLElement>('input, select, textarea, [data-field-name]')).filter(
-      (el) => (el.getAttribute('name') ?? el.getAttribute('data-field-name')) === name,
-    )
+    const elements = Array.from(container.querySelectorAll<HTMLElement>('input, select, textarea, [data-field-name]'))
+      .concat(customControlsIn(container))
+      .filter((el) => (el.getAttribute('name') ?? el.getAttribute('data-field-name')) === name)
     for (const element of elements) {
       const block = element.closest<HTMLElement>('.formdown-field') ?? element
       block.hidden = !state.visible
@@ -30,6 +31,8 @@ export function applyConditions(
         element.disabled = !state.enabled
         // A radio or checkbox group is required as a whole: the generator marks only its first option.
         if (!(element instanceof HTMLInputElement && (element.type === 'radio' || element.type === 'checkbox'))) element.required = required
+      } else if (isCustomControl(element)) {
+        setCustomControlState(element, state.enabled, required)
       } else {
         element.setAttribute('contenteditable', state.enabled ? 'true' : 'false')
       }

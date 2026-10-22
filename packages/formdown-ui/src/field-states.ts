@@ -1,4 +1,5 @@
 import { comboboxOf } from './select-filter'
+import { isCustomControl } from './custom-controls'
 
 /**
  * What the host says about a field, drawn by the field: values it offers and a short note.
@@ -186,6 +187,7 @@ function reachable(el: HTMLElement): boolean {
   if (el.closest('[hidden]')) return false
   if (el instanceof HTMLInputElement && el.type === 'hidden') return false
   if ('disabled' in el && (el as HTMLInputElement).disabled) return false
+  if (isCustomControl(el) && el.hasAttribute('disabled')) return false
   return !isInline(el) || el.getAttribute('contenteditable') !== 'false'
 }
 

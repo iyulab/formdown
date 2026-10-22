@@ -1,3 +1,5 @@
+import { isCustomControl, writeCustomControl } from './custom-controls'
+
 /**
  * Whether a value checks a single checkbox. Front matter and form data carry it as a boolean,
  * and text sources as "true"/"false" — the same reading the core generator uses when it renders.
@@ -8,7 +10,9 @@ export function isCheckedValue(value: unknown): boolean {
 
 /** Shows `value` in one field element. A radio or checkbox-group option checks itself when the value names it. */
 export function applyFieldValue(element: HTMLElement, value: unknown, fieldType: string): void {
-  if (element instanceof HTMLInputElement) {
+  if (isCustomControl(element)) {
+    writeCustomControl(element, value)
+  } else if (element instanceof HTMLInputElement) {
     if (fieldType === 'checkbox' || element.type === 'checkbox') {
       // A single checkbox carries value "true"; a group option carries its option text.
       if (Array.isArray(value)) element.checked = value.map(String).includes(element.value)
