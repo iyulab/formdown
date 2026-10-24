@@ -1,6 +1,6 @@
 {
   "name": "@formdown/core",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "description": "Core parsing and generation engine for Formdown",
   "type": "module",
   "main": "dist/index.js",
