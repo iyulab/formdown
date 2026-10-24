@@ -508,6 +508,8 @@ export class FormManager {
     if (fieldName && event.type === 'change') {
       const processor = this.createFieldProcessor()
       const fieldType = processor.getFieldType(target)
+      // A chosen file is the host's to store; the field keeps whatever the host put in the data.
+      if (fieldType === 'file') return
       const value = processor.extractFieldValue(target, fieldType)
       
       this.setFieldValue(fieldName, value)

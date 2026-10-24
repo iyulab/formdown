@@ -82,6 +82,9 @@ All events bubble.
   - `detail.value` - The value picked
 - `formdown-suggestion-decline` - Fired when the offered values are declined (see `fieldStates.decline`). Nothing in the form changes: the host decides what declining means
   - `detail.field` - Field name
+- `formdown-file-pick` - Fired when files are chosen in a file field (`[file]`). The form keeps no value for them — a browser gives only a made-up path — so the host stores the files and sets the field's value through `data` if it keeps one
+  - `detail.field` - Field name
+  - `detail.files` - The `File` objects chosen
 
 ## Features
 

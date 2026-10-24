@@ -88,3 +88,20 @@ test('suggest: attributes never reach the rendered control — role= there would
     expect(control.getAttributeNames().filter((n) => n.startsWith('suggest:') || n === 'role')).toEqual([])
   }
 })
+
+test('a file field keeps no made-up path in the data and hands the chosen files to the host', async () => {
+  const ui = await mount('@attachment(첨부): [file]')
+  const input = ui.shadowRoot!.querySelector<HTMLInputElement>('input[name="attachment"]')!
+  expect(input.type).toBe('file')
+  let picked: { field: string; files: File[] } | undefined
+  ui.addEventListener('formdown-file-pick', (e) => (picked = (e as CustomEvent<{ field: string; files: File[] }>).detail))
+  const file = new File(['x'], 'report.pdf')
+  // What a browser gives for a chosen file: the file, and a made-up path as the input's value.
+  Object.defineProperty(input, 'files', { value: [file] })
+  Object.defineProperty(input, 'value', { value: 'C:\fakepath\report.pdf' })
+  input.dispatchEvent(new Event('input', { bubbles: true }))
+  input.dispatchEvent(new Event('change', { bubbles: true }))
+  await ui.updateComplete
+  expect(ui.data.attachment ?? '').toBe('')
+  expect(picked).toEqual({ field: 'attachment', files: [file] })
+})

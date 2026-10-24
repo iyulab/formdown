@@ -10,6 +10,8 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 
 ### Fixed
 
+- A file field (`[file]`) no longer puts a made-up path in the data. `<formdown-ui>` took the browser's `C:\fakepath\…` as the field's value, and `FormManager` took the file's name; a host saving the data stored text that named no stored file. The data now keeps whatever the host sets for the field, and `<formdown-ui>` hands the chosen files to the host in a new `formdown-file-pick` event.
+
 - `getSchema()` describes a name used by more than one field as the field where the name first appears. The last one replaced it — its type, label and position — while the parser reports each occurrence after the first as the duplicate (`duplicate-field-name`).
 
 ## 0.24.0

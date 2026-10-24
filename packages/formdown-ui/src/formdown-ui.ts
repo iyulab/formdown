@@ -504,6 +504,15 @@ export class FormdownUI extends LitElement {
 
     // Simple UI event handler for real-time updates
     const handleChange = (event: Event) => {
+      if (element instanceof HTMLInputElement && element.type === 'file') {
+        // The browser gives a made-up path for a chosen file, and the file itself is the host's to store: the data
+        // keeps what the host puts in it, and the host is handed the files.
+        if (event.type === 'change') {
+          const files = Array.from(element.files ?? [])
+          this.dispatchEvent(new CustomEvent('formdown-file-pick', { detail: { field: fieldName, files }, bubbles: true, composed: true }))
+        }
+        return
+      }
       const held = this.data[fieldName]
       this.formManager.handleUIEvent(event, this.domBinder)
       const value = this.getFieldValueFromElement(element)

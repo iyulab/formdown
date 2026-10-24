@@ -221,8 +221,9 @@ export class FieldProcessor {
         return element.value || ''
         
       case 'file':
-        // File handling would need FileList - return filename for now
-        return element.value ? element.value.split('\\').pop() || '' : ''
+        // A file input holds no value the form can keep: the browser gives a made-up path, and the file itself is
+        // the host's to store. The field's value is what the host puts in the data.
+        return ''
         
       default:
         return element.value || ''
