@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- `suggest:together=<group>` names fields settled together — an industry and an occupation, a class and its detail. Where one open field of the group has no suggestion, a host shows none for the others either. It is carried in `field.suggest.together` and the schema's `suggest`, and written back by `formatField` / `formatFormdown`. A group no other field shares (`suggest-together-alone`), an empty name (`suggest-invalid`) and a group on an observed field (`suggest-together-on-observed`) are reported and left out.
+
 ## 0.25.0
 
 ### Added

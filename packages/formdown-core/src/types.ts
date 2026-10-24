@@ -252,6 +252,11 @@ export interface FieldSuggest {
     coarse?: number
     /** Values that must not be missed: where one of them is the answer, a host asks rather than stays quiet. */
     mustCatch?: string[]
+    /**
+     * The name of a group of fields settled together — an industry and an occupation, a class and its detail. Where
+     * one open field of the group has no suggestion, a host shows none for the others either.
+     */
+    together?: string
 }
 
 export type FieldType =

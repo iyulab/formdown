@@ -10,7 +10,7 @@ const ROLES = ['judged', 'observed'] as const
 const POLICIES = ['offer', 'confirm', 'off'] as const
 
 /** The attribute names, in the order they are written. */
-const NAMES = ['role', 'policy', 'evidence', 'parent', 'coarse', 'must-catch'] as const
+const NAMES = ['role', 'policy', 'evidence', 'parent', 'coarse', 'must-catch', 'together'] as const
 
 type Report = (diagnostic: Omit<Diagnostic, 'severity'>) => void
 
@@ -23,6 +23,30 @@ export function liftSuggestions(fields: Field[], report: Report): void {
     for (const field of fields) {
         const suggest = readField(field, names, report)
         if (suggest) field.suggest = suggest
+    }
+    dropLoneGroups(fields, report)
+}
+
+/** A group of one holds nothing back: each `together` no other field shares is reported and left out. */
+function dropLoneGroups(fields: Field[], report: Report): void {
+    const counts = new Map<string, number>()
+    for (const field of fields) {
+        const group = field.suggest?.together
+        if (group !== undefined) counts.set(group, (counts.get(group) ?? 0) + 1)
+    }
+    for (const field of fields) {
+        const suggest = field.suggest
+        const group = suggest?.together
+        if (!suggest || group === undefined || counts.get(group)! > 1) continue
+        report({
+            code: 'suggest-together-alone',
+            message: `"${field.name}" is the only field in the group "${group}" (${PREFIX}together): it is ignored`,
+            related: group,
+            field: field.name,
+            ...(field.span && { span: field.span })
+        })
+        delete suggest.together
+        if (Object.keys(suggest).length === 0) delete field.suggest
     }
 }
 
@@ -88,6 +112,10 @@ function readField(field: Field, names: ReadonlySet<string>, report: Report): Fi
                 if (kept.length) suggest.mustCatch = kept
                 break
             }
+            case 'together':
+                if (typeof value === 'string' && value.trim() !== '') suggest.together = value.trim()
+                else invalid(name, value, 'the name of a group')
+                break
             default:
                 report({
                     code: 'suggest-unknown',
@@ -105,6 +133,14 @@ function readField(field: Field, names: ReadonlySet<string>, report: Report): Fi
         })
         delete suggest.policy
     }
+    if (suggest.role === 'observed' && suggest.together !== undefined) {
+        report({
+            code: 'suggest-together-on-observed',
+            message: `"${field.name}" is observed, so ${PREFIX}together=${suggest.together} has nothing to hold back: it is ignored`,
+            ...where
+        })
+        delete suggest.together
+    }
     return Object.keys(suggest).length ? suggest : undefined
 }
 
@@ -121,7 +157,8 @@ export function suggestAttributes(suggest: FieldSuggest | undefined): Array<[str
         evidence: suggest.evidence,
         parent: suggest.parent,
         coarse: suggest.coarse,
-        'must-catch': suggest.mustCatch?.join(', ')
+        'must-catch': suggest.mustCatch?.join(', '),
+        together: suggest.together
     }
     return NAMES.flatMap(name => values[name] === undefined ? [] : [[PREFIX + name, values[name]!] as [string, string | number | boolean]])
 }

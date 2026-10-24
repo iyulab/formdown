@@ -259,7 +259,7 @@ For a host that suggests values: which fields the records can answer, and how. F
 @customer: [text suggest:evidence=false]
 @note: [textarea suggest:role=observed]
 ```
-`suggest:role` (`judged` · `observed`), `suggest:policy` (`offer` · `confirm` · `off`), `suggest:evidence`, `suggest:parent`, `suggest:coarse`, `suggest:must-catch` — see the full syntax guide.
+`suggest:role` (`judged` · `observed`), `suggest:policy` (`offer` · `confirm` · `off`), `suggest:evidence`, `suggest:parent`, `suggest:coarse`, `suggest:must-catch`, `suggest:together` — see the full syntax guide.
 
 ## Shorthand Syntax
 

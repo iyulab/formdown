@@ -296,6 +296,8 @@ A form can say how a host that suggests values should treat a field — which fi
 @handler: [select options="kim,lee,park" suggest:role=judged suggest:policy=confirm suggest:must-catch="park"]
 @fault_code: [text suggest:role=judged suggest:coarse=2]
 @note: [textarea suggest:role=observed]
+@industry: [select options="farming,retail" suggest:role=judged suggest:together=coding]
+@occupation: [select options="clerk,driver" suggest:role=judged suggest:together=coding]
 ```
 
 | Attribute | Values | Meaning |
@@ -306,6 +308,7 @@ A form can say how a host that suggests values should treat a field — which fi
 | `suggest:parent` | a field name | The field whose value this field's choices depend on |
 | `suggest:coarse` | a whole number | How many leading characters of a value name its broader class — the chapter of a fault code |
 | `suggest:must-catch` | values, comma-separated | Values that must not be missed: where one of them is the answer, a host asks rather than stays quiet. On a field with options, each must be one of them |
+| `suggest:together` | a group name | Fields settled together — an industry and an occupation, a class and its detail. Where one open field of the group has no suggestion, a host shows none for the others either, so a person deciding the unsure one is not led by the sure one. Two or more fields share the name |
 
 Formdown reads and checks them, and moves them out of the field's attributes into `suggest`, so they never reach the page (a `role=` there would be read as the control's ARIA role). What they lead to is the host's to do: Formdown does not suggest anything itself.
 
@@ -1065,10 +1068,12 @@ const { forms, diagnostics } = parseFormdown('@1st: [text]\n\n___@a and ___@a')
 | `image-without-src` | warning | An image button (`@[image "…"]`) has no `src`, so it shows no image |
 | `switch-needs-single-checkbox` | warning | `switch` is written on a checkbox with options or on another type, where there is no one value to turn on or off. It is ignored |
 | `suggest-unknown` | warning | A `suggest:` attribute Formdown does not know, e.g. `suggest:rol`. It is ignored |
-| `suggest-invalid` | warning | A `suggest:` attribute whose value cannot be read — a role other than `judged` or `observed`, a policy other than `offer`, `confirm` or `off`, `evidence` other than `true` or `false`, `coarse` not a whole number from 1, an empty `must-catch`, a `parent` naming the field itself. It is ignored |
+| `suggest-invalid` | warning | A `suggest:` attribute whose value cannot be read — a role other than `judged` or `observed`, a policy other than `offer`, `confirm` or `off`, `evidence` other than `true` or `false`, `coarse` not a whole number from 1, an empty `must-catch`, a `parent` naming the field itself, an empty `together`. It is ignored |
 | `suggest-parent-unknown` | warning | `suggest:parent` names a field the form does not have. It is ignored |
 | `suggest-must-catch-unlisted` | warning | `suggest:must-catch` names a value that is not one of the field's options. That value is ignored |
 | `suggest-policy-on-observed` | warning | An observed field has `suggest:policy=offer` or `confirm`, which would suggest a field that is not suggested. The policy is ignored |
+| `suggest-together-on-observed` | warning | An observed field has `suggest:together`, but an observed field is never suggested, so there is nothing to hold back. It is ignored |
+| `suggest-together-alone` | warning | `suggest:together` names a group no other field of the form shares, so it holds nothing back. It is ignored |
 | `front-matter-unread` | warning | The parser found front matter but was given no reader for it (`FormdownParser` without `frontMatter`), so `frontMatter.data` is empty and the values do not reach the fields |
 
 `span` gives the location in the original source. `start` and `end` are 0-based character offsets. `line` and `column` are 1-based. `field` names the field a problem is about, when it is about one.

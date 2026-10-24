@@ -81,6 +81,37 @@ describe('suggest: attributes', () => {
         expect(parseFormdown('@note: [text suggest:role=observed suggest:policy=off]').diagnostics).toEqual([])
     })
 
+    it('read a group of fields settled together, and write it back', () => {
+        const content = [
+            '@industry: [select options="a,b" suggest:role=judged suggest:together=coding]',
+            '@occupation: [select options="x,y" suggest:role=judged suggest:together=" coding "]'
+        ].join('\n')
+        const { forms, diagnostics } = parseFormdown(content)
+        expect(diagnostics ?? []).toEqual([])
+        expect(forms.map(f => f.suggest)).toEqual([
+            { role: 'judged', together: 'coding' },
+            { role: 'judged', together: 'coding' }
+        ])
+        expect(getSchema(content).occupation.suggest).toEqual({ role: 'judged', together: 'coding' })
+        expect(formatField(forms[0])).toBe('@industry: [select options="a,b" suggest:role="judged" suggest:together="coding"]')
+    })
+
+    it('report a group of one, an empty group and a group on an observed field, and leave them out', () => {
+        const { forms, diagnostics } = parseFormdown([
+            '@a: [text suggest:role=judged suggest:together=alone]',
+            '@b: [text suggest:together=""]',
+            '@c: [text suggest:role=observed suggest:together=g]',
+            '@d: [text suggest:together=g]'
+        ].join('\n'))
+        expect(forms.map(f => f.suggest)).toEqual([{ role: 'judged' }, undefined, { role: 'observed' }, undefined])
+        expect(diagnostics?.map(d => [d.code, d.field])).toEqual([
+            ['suggest-invalid', 'b'],
+            ['suggest-together-on-observed', 'c'],
+            ['suggest-together-alone', 'a'],
+            ['suggest-together-alone', 'd']
+        ])
+    })
+
     it('read in the shorthand syntax too', () => {
         const [field] = parseFormdown('@handler{kim,lee}: r[suggest:role=judged]').forms
         expect(field.suggest).toEqual({ role: 'judged' })
