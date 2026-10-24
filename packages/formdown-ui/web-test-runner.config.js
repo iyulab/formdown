@@ -2,6 +2,8 @@ import { esbuildPlugin } from '@web/dev-server-esbuild'
 
 // Layout the jsdom tests cannot see — widths, scrolling, what covers what — in a real browser.
 export default {
+  // A CI runner can take longer than the default 30 s to open the first test page; a slow start is not a failure.
+  browserStartTimeout: 120000,
   files: 'browser/**/*.test.ts',
   // One page at a time: only the focused page gets focus and blur, and the focus and layout tests depend on them.
   concurrency: 1,
