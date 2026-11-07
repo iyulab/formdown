@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "build": "node ../../node_modules/vite/bin/vite.js build && node ../../node_modules/vite/bin/vite.js build --config vite.standalone.config.ts && node ../../node_modules/typescript/bin/tsc -p tsconfig.build.json",
-    "test": "node ../../node_modules/jest/bin/jest.js && npm run test:browser",
+    "test": "node ../../node_modules/typescript/bin/tsc -p tsconfig.test.json && node ../../node_modules/jest/bin/jest.js && npm run test:browser",
     "test:browser": "web-test-runner"
   },
   "dependencies": {
@@ -32,6 +32,8 @@
   },
   "devDependencies": {
     "@open-wc/testing": "^5.0.0",
+    "@swc/core": "^1.16.22",
+    "@swc/jest": "^0.2.39",
     "@testing-library/dom": "^10.4.2",
     "@types/jest": "^30.0.0",
     "@types/mocha": "^10.0.10",
@@ -41,8 +43,7 @@
     "jest": "^30.5.2",
     "jest-environment-jsdom": "^30.5.2",
     "jsdom": "^31.0.0",
-    "ts-jest": "^29.4.14",
-    "typescript": "~6.0.3",
+    "typescript": "^7.0.2",
     "vite": "^8.3.1"
   },
   "keywords": [

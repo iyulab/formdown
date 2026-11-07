@@ -1,7 +1,6 @@
 {
     "projects": [
         {
-            "preset": "ts-jest",
             "testEnvironment": "jsdom",
             "roots": [
                 "<rootDir>/src",
@@ -24,21 +23,24 @@
                 "^lit/decorators.js$": "<rootDir>/__tests__/mocks/lit-decorators.js",
                 "^@formdown/core$": "<rootDir>/__tests__/mocks/formdown-core.js"
             },
-            "extensionsToTreatAsEsm": [
-                ".ts"
-            ],
             "transform": {
-                "^.+\\.ts$": [
-                    "ts-jest",
+                "^.+\\.[jt]s$": [
+                    "@swc/jest",
                     {
-                        "useESM": true,
-                        "tsconfig": {
-                            "verbatimModuleSyntax": false,
-                            "esModuleInterop": true,
-                            "allowSyntheticDefaultImports": true,
-                            "types": [
-                                "jest"
-                            ]
+                        "jsc": {
+                            "parser": {
+                                "syntax": "typescript",
+                                "decorators": true
+                            },
+                            "transform": {
+                                "legacyDecorator": true,
+                                "decoratorMetadata": false,
+                                "useDefineForClassFields": false
+                            },
+                            "target": "es2020"
+                        },
+                        "module": {
+                            "type": "commonjs"
                         }
                     }
                 ]
@@ -50,7 +52,6 @@
         },
         {
             "displayName": "render",
-            "preset": "ts-jest",
             "testEnvironment": "jsdom",
             "roots": [
                 "<rootDir>/__tests__/render"
@@ -65,21 +66,23 @@
             },
             "transform": {
                 "^.+\\.[jt]s$": [
-                    "ts-jest",
+                    "@swc/jest",
                     {
-                        "tsconfig": {
-                            "allowJs": true,
-                            "experimentalDecorators": true,
-                            "useDefineForClassFields": false,
-                            "verbatimModuleSyntax": false,
-                            "esModuleInterop": true,
-                            "module": "commonjs",
-                            "target": "ES2020",
-                            "types": [
-                                "jest"
-                            ]
+                        "jsc": {
+                            "parser": {
+                                "syntax": "typescript",
+                                "decorators": true
+                            },
+                            "transform": {
+                                "legacyDecorator": true,
+                                "decoratorMetadata": false,
+                                "useDefineForClassFields": false
+                            },
+                            "target": "es2020"
                         },
-                        "diagnostics": false
+                        "module": {
+                            "type": "commonjs"
+                        }
                     }
                 ]
             },

@@ -2,7 +2,6 @@
     "projects": [
         {
             "displayName": "unit",
-            "preset": "ts-jest",
             "testEnvironment": "jsdom",
             "roots": [
                 "<rootDir>/src",
@@ -26,19 +25,23 @@
             },
             "transform": {
                 "^.+\\.[jt]s$": [
-                    "ts-jest",
+                    "@swc/jest",
                     {
-                        "tsconfig": {
-                            "verbatimModuleSyntax": false,
-                            "esModuleInterop": true,
-                            "allowJs": true,
-                            "experimentalDecorators": true,
-                            "useDefineForClassFields": false,
-                            "types": [
-                                "jest"
-                            ]
+                        "jsc": {
+                            "parser": {
+                                "syntax": "typescript",
+                                "decorators": true
+                            },
+                            "transform": {
+                                "legacyDecorator": true,
+                                "decoratorMetadata": false,
+                                "useDefineForClassFields": false
+                            },
+                            "target": "es2020"
                         },
-                        "diagnostics": false
+                        "module": {
+                            "type": "commonjs"
+                        }
                     }
                 ]
             },
@@ -48,7 +51,6 @@
         },
         {
             "displayName": "render",
-            "preset": "ts-jest",
             "testEnvironment": "jsdom",
             "roots": [
                 "<rootDir>/__tests__/render"
@@ -64,21 +66,23 @@
             },
             "transform": {
                 "^.+\\.[jt]s$": [
-                    "ts-jest",
+                    "@swc/jest",
                     {
-                        "tsconfig": {
-                            "allowJs": true,
-                            "experimentalDecorators": true,
-                            "useDefineForClassFields": false,
-                            "verbatimModuleSyntax": false,
-                            "esModuleInterop": true,
-                            "module": "commonjs",
-                            "target": "ES2020",
-                            "types": [
-                                "jest"
-                            ]
+                        "jsc": {
+                            "parser": {
+                                "syntax": "typescript",
+                                "decorators": true
+                            },
+                            "transform": {
+                                "legacyDecorator": true,
+                                "decoratorMetadata": false,
+                                "useDefineForClassFields": false
+                            },
+                            "target": "es2020"
                         },
-                        "diagnostics": false
+                        "module": {
+                            "type": "commonjs"
+                        }
                     }
                 ]
             },

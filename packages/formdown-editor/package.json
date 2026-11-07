@@ -31,10 +31,11 @@
     "lit": "^3.3.3"
   },
   "devDependencies": {
+    "@swc/core": "^1.16.22",
+    "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
     "jest": "^30.5.2",
-    "ts-jest": "^29.4.14",
-    "typescript": "~6.0.3",
+    "typescript": "^7.0.2",
     "vite": "^8.3.1"
   },
   "keywords": [
