@@ -253,6 +253,25 @@ function reachable(el: HTMLElement): boolean {
  */
 export const hostFocused = new WeakSet<HTMLElement>()
 
+/**
+ * Runs `select` — selecting what the field holds — once focus has settled: after the click that gave it focus, whose
+ * mouse-up would undo a selection made at once. Not when the person has typed in the field meanwhile: selected then,
+ * the first key typed would be replaced by the next.
+ */
+export function selectOnceSettled(field: HTMLElement, select: () => void): void {
+  let typed = false
+  const onTyped = () => {
+    typed = true
+  }
+  field.addEventListener('beforeinput', onTyped)
+  field.addEventListener('input', onTyped)
+  setTimeout(() => {
+    field.removeEventListener('beforeinput', onTyped)
+    field.removeEventListener('input', onTyped)
+    if (!typed) select()
+  }, 0)
+}
+
 /** Puts the caret at the end of a control's value. */
 export function caretAtEnd(el: HTMLElement) {
   if (el.isContentEditable) {

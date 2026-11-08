@@ -53,3 +53,27 @@ describe('an offered value taken', () => {
     expect([input.selectionStart, input.selectionEnd]).to.deep.equal([2, 2])
   })
 })
+
+describe('a field a person moves into', () => {
+  it('selects its value, so typing replaces it', async () => {
+    const ui = await mount('@code: [text]')
+    ui.data = { code: '32' }
+    await ui.updateComplete
+    const input = ui.shadowRoot!.querySelector<HTMLInputElement>('input[name="code"]')!
+    input.focus()
+    await tick()
+    expect([input.selectionStart, input.selectionEnd]).to.deep.equal([0, 2])
+  })
+
+  it('keeps a key typed at once after focus — the selection made once focus settles does not take it back', async () => {
+    const ui = await mount('@customer: [text]')
+    const input = ui.shadowRoot!.querySelector<HTMLInputElement>('input[name="customer"]')!
+    input.focus()
+    // Typed before the focus handling's deferred selection runs, as an automated tool or a quick person does.
+    input.value = 'A'
+    input.setSelectionRange(1, 1)
+    input.dispatchEvent(new InputEvent('input', { bubbles: true, data: 'A', inputType: 'insertText' }))
+    await tick()
+    expect([input.selectionStart, input.selectionEnd]).to.deep.equal([1, 1])
+  })
+})

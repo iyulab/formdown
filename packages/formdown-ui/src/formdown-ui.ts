@@ -19,7 +19,7 @@ import { applyChoices, type Choices } from './choices'
 import { applySelectFilters } from './select-filter'
 import { applyConditions, type ConditionalField } from './conditions'
 import { computations, computedValues } from './computed'
-import { applyFieldStates, focusFieldOf, hostFocused, markHeldSuggestions, type FieldStates } from './field-states'
+import { applyFieldStates, focusFieldOf, hostFocused, markHeldSuggestions, selectOnceSettled, type FieldStates } from './field-states'
 import { formdownStyles } from './styles'
 import { fieldTypeStyles, ShadowStyleSheet } from './field-type-styles'
 import { clearFieldErrors, errorsByField, showFieldErrors } from './field-errors'
@@ -531,7 +531,7 @@ export class FormdownUI extends LitElement {
       // For contenteditable elements (inline fields)
       if (target.hasAttribute('contenteditable')) {
         // Select all text content on focus
-        setTimeout(() => {
+        selectOnceSettled(target, () => {
           const range = document.createRange()
           const selection = window.getSelection()
           if (selection && target.textContent) {
@@ -539,14 +539,12 @@ export class FormdownUI extends LitElement {
             selection.removeAllRanges()
             selection.addRange(range)
           }
-        }, 0)
+        })
       }
 
       // For regular input elements (not multiline)
       if (target instanceof HTMLInputElement && target.type !== 'file' && target.type !== 'checkbox' && target.type !== 'radio') {
-        setTimeout(() => {
-          target.select()
-        }, 0)
+        selectOnceSettled(target, () => target.select())
       }
     }
 

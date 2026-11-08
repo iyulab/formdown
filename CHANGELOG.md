@@ -2,6 +2,12 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Fixed
+
+- A key typed right after moving into a field is kept. A field selects its value once focus settles, so typing replaces it; a key typed before then — by a quick hand or an automated tool — was selected by that and replaced by the next one. The selection is now skipped once something was typed. Text fields, inline fields and the filter of a long select list.
+
 ## 0.26.0
 
 ### Added

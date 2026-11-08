@@ -10,7 +10,7 @@
  * chosen option's label when the input is left.
  */
 
-import { hostFocused } from './field-states'
+import { hostFocused, selectOnceSettled } from './field-states'
 
 const FILTERED = 'data-formdown-filtered'
 
@@ -107,7 +107,7 @@ function create(select: HTMLSelectElement): Combobox {
   // A person moving in gets the label selected, so typing starts a new filter; the host putting the
   // cursor back (`focusField`) leaves it as it is.
   input.addEventListener('focus', () => {
-    if (!hostFocused.delete(input)) setTimeout(() => input.select(), 0)
+    if (!hostFocused.delete(input)) selectOnceSettled(input, () => input.select())
   })
   input.addEventListener('click', () => (list.hidden ? open(box, '') : close(box)))
   input.addEventListener('input', () => open(box, input.value))
