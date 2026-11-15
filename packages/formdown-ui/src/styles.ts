@@ -103,6 +103,14 @@ export const formdownStyles = css`
     border-color: var(--formdown-text-secondary, #64748b);
   }
 
+  /* A number is read left to right whatever the page is: a native number input takes the page as its
+     paragraph direction, so in a right-to-left page the sign of -1234.5 goes to the end (1234.5-). The digits
+     keep the page's start edge — an ltr input's end is the right. A left-to-right page is not touched. */
+  input[type="number"]:dir(rtl) {
+    direction: ltr;
+    text-align: end;
+  }
+
   input[type="radio"], input[type="checkbox"] {
     accent-color: var(--formdown-accent-color, #3b82f6);
     width: auto;

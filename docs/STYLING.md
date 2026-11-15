@@ -202,6 +202,7 @@ The `::part()` pseudo-element allows direct styling of internal elements. FormDo
 | `label` | `<label>` | Field labels |
 | `input` | `<input>` | All input elements |
 | `text-input` | `<input type="text">` | Text inputs |
+| `number-input` | `<input type="number">` | Number inputs (also carry `text-input`) |
 | `textarea-input` | `<textarea>` | Textarea elements |
 | `select-input` | `<select>` | Select dropdowns |
 | `checkbox-input` | `<input type="checkbox">` | Checkboxes |

@@ -915,7 +915,7 @@ ${checkboxInputsHTML}${unlistedCheckboxesHTML}${otherCheckboxHTML}
                 return `
 <div ${fieldWrapperAttrs} part="field">
     <label for="${fieldId}" part="label">${labelHtml}${required ? ' *' : ''}</label>
-    <input type="${type}" ${attrString} part="input text-input">${generateHelpText()}
+    <input type="${type}" ${attrString} part="${type === 'number' ? 'input text-input number-input' : 'input text-input'}">${generateHelpText()}
 </div>`
         }
     }

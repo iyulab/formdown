@@ -2,6 +2,16 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- A number field's input carries its own part, `number-input`, next to `input` and `text-input`, so a host can style it apart from the other text-like inputs (`formdown-ui::part(number-input)`). Types: markup only, nothing is removed.
+
+### Fixed
+
+- A number field in a right-to-left page reads left to right. A native number input takes the page as its paragraph direction, so `-1234.5` showed as `1234.5-`; the input is now `direction: ltr` with `text-align: end` (the digits keep the page's start edge) in a right-to-left context. A left-to-right page is unchanged. Text fields stay right to left.
+
 ## 0.26.1
 
 ### Fixed
