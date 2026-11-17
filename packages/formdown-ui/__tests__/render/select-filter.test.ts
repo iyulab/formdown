@@ -159,3 +159,18 @@ test('a select with an "other" choice is left alone', async () => {
   const ui = await mount(`@shop(가게): [select options="${many},*"]`)
   expect(combobox(ui)).toBeNull()
 })
+
+test('an error found after the form is drawn is said from the input one types into, and taken back with it', async () => {
+  const ui = (await mount('@shop(가게)*: [select]', { choices: shops })) as Ui & { validate(): { isValid: boolean } }
+  expect(ui.validate().isValid).toBe(false)
+  await ui.updateComplete
+  const error = ui.shadowRoot!.querySelector('[part=field-error]')!
+  expect(combobox(ui)!.getAttribute('aria-invalid')).toBe('true')
+  expect(combobox(ui)!.getAttribute('aria-describedby')!.split(' ')).toContain(error.id)
+  ui.data = { shop: 'id-3' }
+  await ui.updateComplete
+  await tick()
+  expect(ui.shadowRoot!.querySelector('[part=field-error]')).toBeNull()
+  expect(combobox(ui)!.hasAttribute('aria-invalid')).toBe(false)
+  expect(combobox(ui)!.hasAttribute('aria-describedby')).toBe(false)
+})

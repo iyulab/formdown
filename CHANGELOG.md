@@ -11,6 +11,7 @@ All notable changes to the `@formdown/*` packages. The packages share one versio
 ### Fixed
 
 - Clearing a field's validation error takes back only the error's own id from `aria-describedby`. It used to put back the value from before the error was shown, so an id another part of the form added in between (an unread value, a chosen choice's description) was lost, and one taken away in between came back pointing at nothing.
+- A long select shown as a filter input says what is said of the select after it is drawn — an error found by `validate()`, `aria-invalid`, a description, a field disabled or made required. The input copied these only when the form was drawn, so a screen reader reaching it heard nothing of an error found later.
 
 ## 0.27.0
 
