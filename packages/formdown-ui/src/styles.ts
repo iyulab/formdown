@@ -229,6 +229,25 @@ export const formdownStyles = css`
     overflow-wrap: anywhere;
   }
 
+  /* What a host's choice means (choices.ts): beside it in a list or group, and under a select once chosen. */
+  .formdown-select-filter-description,
+  .formdown-choice-description {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    opacity: 0.75;
+  }
+
+  .formdown-chosen-description {
+    margin-top: 0.25rem;
+    font-size: 0.8125rem;
+    color: var(--formdown-text-secondary, #64748b);
+  }
+
+  .formdown-chosen-description[hidden] {
+    display: none;
+  }
+
   .formdown-select-filter-list [role="option"][aria-selected="true"] {
     font-weight: 600;
   }
@@ -756,6 +775,16 @@ export const formdownStyles = css`
 
   .formdown-option-label span {
     user-select: none;
+  }
+
+  /* A host choice's meaning beside it in a group (choices.ts): after its text, quieter, wrapping rather than widening the row. */
+  .formdown-option-label .formdown-choice-description {
+    display: inline;
+    margin-left: var(--formdown-spacing-sm, 0.5rem);
+    white-space: normal;
+    font-size: 0.8125rem;
+    color: var(--formdown-text-secondary, #64748b);
+    opacity: 1;
   }
 
   /* A value from the data the field could not take (unread.ts): shown as written, beside the empty field. */

@@ -169,6 +169,14 @@ function open(box: Combobox, filter: string) {
       item.setAttribute('data-index', String(i))
       item.setAttribute('aria-selected', String(option.selected))
       item.textContent = labelOf(option)
+      // What the host says the value means, on a line of its own under it; the filter reads the label only.
+      const description = option.getAttribute('data-formdown-description')
+      if (description) {
+        const note = doc.createElement('span')
+        note.className = 'formdown-select-filter-description'
+        note.textContent = description
+        item.append(note)
+      }
       return item
     }),
   )
