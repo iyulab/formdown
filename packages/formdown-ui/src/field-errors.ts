@@ -7,8 +7,17 @@ import type { FieldError } from '@formdown/core'
  */
 
 const ERROR_FOR = 'data-formdown-error-for'
+/** The id of the message a field points at, kept so only that token is taken back: other parts of the form describe the field too. */
 const DESCRIBED = 'data-formdown-described-by'
 const INVALID = 'field-error'
+
+/** Adds or takes back one id in `aria-describedby`, leaving the others as they are. */
+function pointAt(el: HTMLElement, id: string, add: boolean) {
+  const ids = (el.getAttribute('aria-describedby') ?? '').split(/\s+/).filter((v) => v && v !== id)
+  if (add) ids.push(id)
+  if (ids.length > 0) el.setAttribute('aria-describedby', ids.join(' '))
+  else el.removeAttribute('aria-describedby')
+}
 
 /** The elements that make up a field: one control, or every option of a radio or checkbox group. */
 function fieldElements(container: ParentNode, name: string): HTMLElement[] {
@@ -42,9 +51,7 @@ export function clearFieldErrors(container: ParentNode, name?: string) {
   const marked = Array.from(container.querySelectorAll<HTMLElement>(`[${DESCRIBED}]`))
   for (const el of marked) {
     if (name !== undefined && (el.getAttribute('name') ?? el.dataset.fieldName) !== name) continue
-    const before = el.getAttribute(DESCRIBED)!
-    if (before) el.setAttribute('aria-describedby', before)
-    else el.removeAttribute('aria-describedby')
+    pointAt(el, el.getAttribute(DESCRIBED)!, false)
     el.removeAttribute(DESCRIBED)
     el.removeAttribute('aria-invalid')
     el.classList.remove(INVALID)
@@ -68,8 +75,8 @@ export function showFieldError(container: ParentNode, name: string, messages: st
   message.textContent = messages.join('\n')
 
   for (const el of elements) {
-    el.setAttribute(DESCRIBED, el.getAttribute('aria-describedby') ?? '')
-    el.setAttribute('aria-describedby', [el.getAttribute('aria-describedby'), message.id].filter(Boolean).join(' '))
+    el.setAttribute(DESCRIBED, message.id)
+    pointAt(el, message.id, true)
     el.setAttribute('aria-invalid', 'true')
     el.classList.add(INVALID)
   }

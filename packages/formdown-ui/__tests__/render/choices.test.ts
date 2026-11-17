@@ -155,3 +155,51 @@ test('a long select lists what each choice means under it, filters by the label 
   expect(line.textContent).toBe('사들이는 일')
   expect(line.previousElementSibling?.classList.contains('formdown-select-filter')).toBe(true)
 })
+
+describe('a chosen description beside what else describes the field', () => {
+  type Full = Ui & { fieldStates: Record<string, unknown>; validate(): { isValid: boolean } }
+  const form = '@owner(담당)*: [select]'
+  const offered = { owner: [{ value: 'c-17', label: '이유랩', description: '본사 운영팀' }] }
+  const root = (ui: Ui) => ui.shadowRoot!
+  const described = (ui: Ui) => (select(ui, 'owner').getAttribute('aria-describedby') ?? '').split(' ').filter(Boolean)
+  const parts = (ui: Ui) => described(ui).map((id) => root(ui).getElementById(id)?.getAttribute('part'))
+
+  test('a suggestion note, an error and the description line all show, each pointed at once', async () => {
+    const ui = (await mount(form, { choices: offered, data: { owner: 'c-17' } })) as Full
+    ui.fieldStates = { owner: { note: '지난 기록에서' } }
+    await ui.updateComplete
+    ui.data = { owner: '' }
+    await ui.updateComplete
+    ui.validate()
+    await ui.updateComplete
+    expect(parts(ui)).toEqual(['chosen-description', 'field-error'])
+    expect(root(ui).querySelector('[part=chosen-description]')!.hasAttribute('hidden')).toBe(true)
+    expect(root(ui).querySelector('[part=field-error]')).not.toBeNull()
+    expect(root(ui).querySelector('.formdown-field-note, [data-formdown-note]')).not.toBeNull()
+  })
+
+  test('descriptions given while an error shows stay pointed at once the error goes', async () => {
+    const ui = (await mount(form)) as Full
+    ui.validate()
+    await ui.updateComplete
+    ui.choices = offered
+    await ui.updateComplete
+    expect(parts(ui)).toEqual(['field-error', 'chosen-description'])
+    ui.data = { owner: 'c-17' }
+    await ui.updateComplete
+    expect(parts(ui)).toEqual(['chosen-description'])
+    expect(root(ui).querySelector('[part=chosen-description]')!.textContent).toBe('본사 운영팀')
+  })
+
+  test('descriptions taken away while an error shows leave nothing pointed at once the error goes', async () => {
+    const ui = (await mount(form, { choices: offered })) as Full
+    ui.validate()
+    await ui.updateComplete
+    ui.choices = { owner: [{ value: 'c-17', label: '이유랩' }] }
+    await ui.updateComplete
+    expect(parts(ui)).toEqual(['field-error'])
+    ui.data = { owner: 'c-17' }
+    await ui.updateComplete
+    expect(select(ui, 'owner').hasAttribute('aria-describedby')).toBe(false)
+  })
+})
