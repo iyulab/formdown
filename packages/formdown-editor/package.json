@@ -26,8 +26,8 @@
     "test": "node ../../node_modules/jest/bin/jest.js"
   },
   "dependencies": {
-    "@formdown/core": "0.27.0",
-    "@formdown/ui": "0.27.0",
+    "@formdown/core": "0.28.0",
+    "@formdown/ui": "0.28.0",
     "lit": "^3.3.3"
   },
   "devDependencies": {
