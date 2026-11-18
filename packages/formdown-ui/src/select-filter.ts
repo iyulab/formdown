@@ -102,7 +102,13 @@ function create(select: HTMLSelectElement): Combobox {
 
   const onSelectFocus = () => input.focus()
   select.addEventListener('focus', onSelectFocus)
-  ;(box as Combobox & { off?: () => void }).off = () => select.removeEventListener('focus', onSelectFocus)
+  // What is said of the select after it is drawn (an error found, a field disabled) is said from the input too.
+  const watch = new MutationObserver(() => sync(box))
+  watch.observe(select, { attributes: true, attributeFilter: [...MIRRORED, 'disabled', 'required'] })
+  ;(box as Combobox & { off?: () => void }).off = () => {
+    select.removeEventListener('focus', onSelectFocus)
+    watch.disconnect()
+  }
 
   // A person moving in gets the label selected, so typing starts a new filter; the host putting the
   // cursor back (`focusField`) leaves it as it is.
@@ -137,11 +143,14 @@ function remove(box: Combobox) {
   comboboxes.delete(select)
 }
 
+/** The select's attributes the input carries in its place, since the select is hidden from assistive technology. */
+const MIRRORED = ['aria-required', 'aria-disabled', 'aria-invalid', 'aria-describedby']
+
 function sync(box: Combobox) {
   const { select, input } = box
   input.disabled = select.disabled
   input.required = select.required
-  for (const name of ['aria-required', 'aria-disabled', 'aria-invalid', 'aria-describedby']) {
+  for (const name of MIRRORED) {
     const value = select.getAttribute(name)
     if (value === null) input.removeAttribute(name)
     else input.setAttribute(name, value)
@@ -169,6 +178,14 @@ function open(box: Combobox, filter: string) {
       item.setAttribute('data-index', String(i))
       item.setAttribute('aria-selected', String(option.selected))
       item.textContent = labelOf(option)
+      // What the host says the value means, on a line of its own under it; the filter reads the label only.
+      const description = option.getAttribute('data-formdown-description')
+      if (description) {
+        const note = doc.createElement('span')
+        note.className = 'formdown-select-filter-description'
+        note.textContent = description
+        item.append(note)
+      }
       return item
     }),
   )

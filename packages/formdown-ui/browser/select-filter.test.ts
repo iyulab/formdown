@@ -72,3 +72,42 @@ describe('a long select narrowed by typing', () => {
     expect(inside(ui, '[role="listbox"]').hidden).to.equal(true)
   })
 })
+
+describe('a long select whose choices say what they mean', () => {
+  async function described(): Promise<FormdownUI> {
+    const ui = document.createElement('formdown-ui') as FormdownUI
+    ui.style.display = 'block'
+    ui.style.width = '360px'
+    ui.content = '@shop(가게): [select]\n\n@memo(메모): [text]'
+    ui.choices = { shop: shops.map((s, i) => ({ ...s, description: i % 2 ? `${i}번 가게는 주말에만 문을 열고, 배달은 하지 않는 업소다` : undefined })) }
+    ui.data = { shop: 'id-1' }
+    document.body.appendChild(ui)
+    await ui.updateComplete
+    await new Promise((resolve) => setTimeout(resolve, 0))
+    return ui
+  }
+
+  it('says the chosen one under the field, above what follows, within the field’s width', async () => {
+    const ui = await described()
+    const input = inside(ui, 'input[role="combobox"]').getBoundingClientRect()
+    const line = inside(ui, '.formdown-chosen-description')
+    const box = line.getBoundingClientRect()
+    const memo = inside(ui, 'input[name="memo"]').getBoundingClientRect()
+    expect(line.hidden).to.equal(false)
+    expect(box.top).to.be.at.least(input.bottom)
+    expect(memo.top).to.be.at.least(box.bottom)
+    expect(box.right).to.be.at.most(input.right + 1)
+  })
+
+  it('lists each meaning under its label, wrapping inside the list', async () => {
+    const ui = await described()
+    const input = inside(ui, 'input[role="combobox"]') as HTMLInputElement
+    input.focus()
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }))
+    const list = inside(ui, '[role="listbox"]')
+    const note = list.querySelector<HTMLElement>('.formdown-select-filter-description')!
+    const item = note.closest('[role="option"]')!.getBoundingClientRect()
+    expect(note.getBoundingClientRect().top).to.be.at.least(item.top + 8)
+    expect(list.scrollWidth).to.be.at.most(list.clientWidth + 1)
+  })
+})

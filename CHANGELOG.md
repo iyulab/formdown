@@ -2,6 +2,17 @@
 
 All notable changes to the `@formdown/*` packages. The packages share one version.
 
+## Unreleased
+
+### Added
+
+- A host choice can say what its value means: `choices` takes `{ value, label?, description? }`. The sentence shows under the choice in a radio or checkbox group (`part="choice-description"`) and in a long select's list (the filter still reads the label only), as the option's `title` in a plain select, and under a select once the value is chosen (`part="chosen-description"`, added to the field's `aria-describedby`, hidden while the chosen value has none). It is set as text, never markup. An author's options are unchanged — the grammar has no description, and an author's option with the same value as a host choice stays as written. Types: `Choice` is now an interface extending `FieldOption` with `description?: string`.
+
+### Fixed
+
+- Clearing a field's validation error takes back only the error's own id from `aria-describedby`. It used to put back the value from before the error was shown, so an id another part of the form added in between (an unread value, a chosen choice's description) was lost, and one taken away in between came back pointing at nothing.
+- A long select shown as a filter input says what is said of the select after it is drawn — an error found by `validate()`, `aria-invalid`, a description, a field disabled or made required. The input copied these only when the form was drawn, so a screen reader reaching it heard nothing of an error found later.
+
 ## 0.27.0
 
 ### Added

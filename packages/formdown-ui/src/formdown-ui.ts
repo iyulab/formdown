@@ -15,7 +15,7 @@ import { applyFieldValue, isCheckedValue } from './field-value'
 import { customControlsIn, isCustomControl, readCustomControl, undefinedControlTags } from './custom-controls'
 import { addUnlistedChoices } from './unlisted'
 import { markUnreadValues } from './unread'
-import { applyChoices, type Choices } from './choices'
+import { applyChoices, applyChosenDescriptions, type Choices } from './choices'
 import { applySelectFilters } from './select-filter'
 import { applyConditions, type ConditionalField } from './conditions'
 import { computations, computedValues } from './computed'
@@ -617,6 +617,9 @@ export class FormdownUI extends LitElement {
 
       // What the values now show, enable and require.
       if (container && this._schema) applyConditions(container, this._schema as Record<string, ConditionalField>, this.data)
+
+      // What the chosen value means, named by the field — before the combobox copies the field's description.
+      if (container) applyChosenDescriptions(container)
 
       // Last: a long select's combobox shows the value and follows the state just applied.
       if (container) applySelectFilters(container, this.filterSelectAbove)
